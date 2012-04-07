@@ -1,11 +1,10 @@
-[Language type]
+﻿[Language type]
 CHAR_set=UTF-8
 PASS_LANG=lisan:
 LANG_select=Dili seçin
 LANG_EN=English
-LANG_TW=繁体中文
+LANG_TW=繁體中文
 LANG_CN=简体中文
-LANG_KR=한국어
 LANG_CZ=Česky
 LANG_PL=Polski
 LANG_RU=Pусский
@@ -13,7 +12,14 @@ LANG_DE=Deutsch
 LANG_FR=Français
 LANG_TR=Türkçe
 LANG_TH=ไทย
-LANG_MS=Malaysia
+LANG_MS=Malay
+LANG_NO=Norsk
+LANG_FI=Finsk
+LANG_DA=Dansk
+LANG_SV=Svensk
+LANG_BR=Brazil
+[iTunes]
+iTunesMediaServer=iTunes Medya Sunucusu
 [untranslate]
 IPConnection_VSList_ftpport=FTP Server Port:
 Adm_System_telnetd=Enable Telnet Server?
@@ -363,10 +369,10 @@ HowToSharebyFTP3=FTP üzerinden erişime izin vermek üzere DDNS hizmetini etkin
 HowToSharebyFTP4=(Yalnızca Yerel Ağ’da erişilebilir.)
 [LeftMenu]
 menu1=Ağ Eşleme
-menu2=UPnP
+menu2=Media Server
 menu3=AiDisk
 menu4=EzQoS<br/> Bant Genişliği<br/> Yönetimi
-menu5=<br/> Gelişmiş Ayar
+menu5=<div style=\"padding-top:10px;\">Gelişmiş Ayar</div>
 menu5_title=Gelişmiş Ayar
 menu5_1=Kablosuz
 menu5_2=Yerel Ağ
@@ -606,7 +612,7 @@ DiskStatus_refresh1=USB diski taktım,
 DiskStatus_refresh2=sistem durumunu 
 DiskStatus_refresh3= yenile.
 EZQoS=EZQoS Bant Genişliği Yönetimi
-footer_copyright_desc=2010 ASUSTek Computer Inc. Tüm hakları saklıdır.
+footer_copyright_desc=2011 ASUSTek Computer Inc. Tüm hakları saklıdır.
 Help_button_default_hint=Yardım’ı açmak için tıklatın.
 Help_init_word1=Yardım, yönlendirici işlevlerini kullanmayla ilgili size rehberlik ve bilgi sağlar.  Yardım almak
 Help_init_word2=için sarı ve mavi altı çizili köprü bağlantılı sözcükleri
@@ -660,7 +666,7 @@ QKSet_detect_sanglass=otomatik algılama
 QKSet_detect_desc1=Bağlantı türünüz algılanıyor
 QKSet_detect_desc2=Bağlantı durumunuz yeniden algılanıyor
 QKSet_detect_wanconnfault=Lütfen ethernet kablosunun WAN bağlantı noktasına düzgün bağlandığını kontrol edin.
-QKSet_detect_APdesc=RT-N56U çalışma modu: \"AP\". Ayarları yapılandırmayı başlatın... 
+QKSet_detect_APdesc=RT-N56U çalışma modu: 'AP'. Ayarları yapılandırmayı başlatın... 
 QKSet_detect_skipbtn=El ile ayarı atla
 QKSet_detect_freshbtn=Yeniden algıla
 QKSet_detect_waitdesc=Bağlantı türünüzü algılamayı başlatın...

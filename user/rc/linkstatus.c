@@ -7,26 +7,7 @@
 #include <nvram/bcmnvram.h>
 #include <rtxxxx.h>
 #include <time.h>
-
-#if 0
-void conntrack_and_dns_cache_cleanup()
-{
-	int i, num = 1;
-
-	dbg("conntrack & dns cache cleanup\n");
-
-	track_set("101");
-	for (i = 0; i < num; i++)
-	{
-		dbg("**** clean ip_conntrack %d time(s). ****\n", i + 1);
-		system("cat /proc/net/nf_conntrack 1>/dev/null 2>&1");		
-	}
-	track_set("100");
-
-	system("rm -f /tmp/dproxy.cache");
-	restart_dns();
-}
-#endif
+#include <semaphore_mfp.h>
 
 static int count = 0;
 
@@ -67,7 +48,9 @@ static unsigned int linkspeed_wan = 0;
 char str_linkspeed_wan[2];
 
 static unsigned int timer_speed = -1;
+#ifdef HTTPD_CHECK
 static unsigned int timer_wget = 0;
+#endif
 
 struct itimerval itv;
 
@@ -96,13 +79,17 @@ usb_status()
 void catch_sig_linkstatus(int sig)
 {
 	time_t now;
+#ifdef HTTPD_CHECK
 	char *p_wget_timestamp;
+#endif
+	int try_count;
 
 	if (sig == SIGALRM)
 	{
 		timer_speed = (timer_speed + 1) % 8;
+#ifdef HTTPD_CHECK
 		timer_wget = (timer_wget + 1) % 6;
-
+#endif
 		if (nvram_match("wan_route_x", "IP_Routed"))
 			linkstatus_wan_old = linkstatus_wan;
 		linkstatus_lan_old = linkstatus_lan;
@@ -124,7 +111,7 @@ void catch_sig_linkstatus(int sig)
 		linkstatus_usb = usb_status();
 //		dbg("linkstatus_wan: %d\n", linkstatus_wan);
 //		dbg("linkstatus_lan: %d\n", linkstatus_lan);
-
+#ifdef HTTPD_CHECK
 		if (!timer_wget && (p_wget_timestamp = nvram_get("wget_timestamp")))
 		{
 			now = uptime();
@@ -149,7 +136,7 @@ void catch_sig_linkstatus(int sig)
 					system("killall wget");
 			}
 		}
-
+#endif
 		if (	nvram_match("wan_route_x", "IP_Routed") &&
 			(linkstatus_wan != linkstatus_wan_old)	)
 		{
@@ -168,11 +155,16 @@ void catch_sig_linkstatus(int sig)
 				nvram_set("link_internet", "0");
 				LED_CONTROL(LED_WAN, LED_OFF);
 
+				spinlock_lock(SPINLOCK_DHCPRenew);
 				if (	nvram_match("wan0_proto", "dhcp") &&
 					pids("udhcpc") &&
 					nvram_match("dhcp_renew", "0")	)
 				{
 					nvram_set("dhcp_renew", "1");	// for detectWAN
+					spinlock_unlock(SPINLOCK_DHCPRenew);
+
+					logmessage("linkstatus", "WAN link down detected");
+
 /*
 					time_t renew_timestamp;
 					char renew_timestampstr[32];
@@ -181,20 +173,29 @@ void catch_sig_linkstatus(int sig)
 					sprintf(renew_timestampstr, "%lu", renew_timestamp);
 					nvram_set("renew_timestamp", renew_timestampstr);
 */
+
+#if 0
 					logmessage("linkstatus", "perform DHCP release");
 					system("killall -SIGUSR2 udhcpc");
-
-//					conntrack_and_dns_cache_cleanup();
 					sleep(1);
 //					dbg("[linkstatus] wan_ipaddr_t: %s, wan_gateway_t: %s\n", nvram_safe_get("wan_ipaddr_t"), nvram_safe_get("wan_gateway_t"));
 					kill_pidfile_s("/var/run/wanduck.pid", SIGUSR1);
 					kill_pidfile_s("/var/run/wanduck.pid", SIGUSR2);
-
+#else
+					stop_wanduck();
+#endif
 					logmessage("linkstatus", "perform DHCP renew");
 					system("killall -SIGUSR1 udhcpc");
+
+					try_count = 0;
+					while (!pids("wanduck") && (++try_count < 6))
+					{
+						sleep(3);
+						start_wanduck();
+					}
 				}
-//				else
-//					conntrack_and_dns_cache_cleanup();	
+				else
+					spinlock_unlock(SPINLOCK_DHCPRenew);
 			}
 		}
 
@@ -281,7 +282,9 @@ linkstatus_monitor(int argc, char *argv[])
 	nvram_set("link_wan", "0");
 	nvram_set("link_lan", "0");
 	nvram_set("link_spd_wan", "0");
+#ifdef HTTPD_CHECK
 	nvram_unset("wget_timestamp");
+#endif
 #ifdef SR3
 	system("8367m 11");	// for SR3 LAN LED
 #endif

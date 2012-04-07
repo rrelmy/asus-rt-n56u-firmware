@@ -30,6 +30,7 @@
 #include <signal.h>
 
 #include <nvram/bcmnvram.h>
+#include <semaphore_mfp.h>
 
 #define ETHER_ADDR_STR_LEN	18
 #define MAC_BCAST_ADDR		(uint8_t *) "\xff\xff\xff\xff\xff\xff"
@@ -64,51 +65,15 @@ long uptime(void)
 	return info.uptime;
 }
 
-static void catch_sig(int sig)
-{
-/*
-	if (sig == SIGUSR1 && nvram_match("dhcp_renew", "1"))
-	{
-		nvram_set("dhcp_renew", "0");
-
-		if (nvram_match("wan_route_x", "IP_Bridged"))
-		{
-			nvram_set("dw_busy", "1");
-
-			logmessage("detectWAN", "link down LAN ports");
-			system("rtl8367m_AllPort_linkDown");
-			logmessage("detectWAN", "radio off");
-			if (nvram_match("wl_radio_x", "1"))
-				system("radioctrl 0");
-			if (nvram_match("rt_radio_x", "1"))
-				system("radioctrl_rt 0");
-			sleep(10);
-			logmessage("detectWAN", "link up LAN ports");
-			system("rtl8367m_AllPort_linkUp");
-			sleep(5);
-			logmessage("detectWAN", "radio on");
-			if (nvram_match("wl_radio_x", "1"))
-				system("radioctrl 1");
-			if (nvram_match("rt_radio_x", "1"))
-				system("radioctrl_rt 1");
-
-			nvram_set("dw_busy", "0");
-		}
-	}
-*/
-}
-
 void
 chk_udhcpc()
 {
 	char *gateway_ip;
+	int try_count;
 
 	if (	(nvram_match("wan_route_x", "IP_Routed") && nvram_match("wan0_proto", "dhcp") && !nvram_match("manually_disconnect_wan", "1")) ||
 		nvram_match("wan_route_x", "IP_Bridged"))
 	{
-//		if (nvram_match("wan_route_x", "IP_Bridged") && nvram_match("dw_busy", "1"))
-//			return;
-
 		if (nvram_match("wan_route_x", "IP_Routed"))
 			gateway_ip = nvram_get("wan_gateway_t");
 		else
@@ -143,15 +108,21 @@ chk_udhcpc()
 			}
 		}
 
+		spinlock_lock(SPINLOCK_DHCPRenew);
 		if (nvram_match("dhcp_renew", "1"))
 		{
+			spinlock_unlock(SPINLOCK_DHCPRenew);
+
 			if (nvram_match("dw_debug", "1"))
 				fprintf(stderr, "[detectWAN] skip udhcpc refresh...\n");
 
 			return;
 		}
 		else
+		{
 			nvram_set("dhcp_renew", "1");
+			spinlock_unlock(SPINLOCK_DHCPRenew);
+		}
 
 		if (nvram_match("dw_debug", "1"))
 			fprintf(stderr, "[detectWAN] try to refresh udhcpc\n");
@@ -159,6 +130,7 @@ chk_udhcpc()
 		if (nvram_match("wan_route_x", "IP_Routed"))
 		{
 			{
+#if 0
 				if (strcmp(get_wan_ipaddr(), "0.0.0.0"))
 				{
 					logmessage("detectWAN", "perform DHCP release");
@@ -169,9 +141,19 @@ chk_udhcpc()
 					kill_pidfile_s("/var/run/wanduck.pid", SIGUSR1);
 					kill_pidfile_s("/var/run/wanduck.pid", SIGUSR2);
 				}
-
+#else
+//				system("killall -SIGTERM wanduck");
+				system("/sbin/stop_wanduck");
+#endif
 				logmessage("detectWAN", "perform DHCP renew");
 				system("killall -SIGUSR1 udhcpc");
+
+				try_count = 0;
+				while (!pids("wanduck") && (++try_count < 6))
+				{
+					sleep(3);
+					system("/sbin/start_wanduck");
+				}
 			}
 		}
 		else
@@ -464,12 +446,6 @@ int detectWAN_arp()
 
 		while (count < MAX_ARP_RETRY)
 		{
-			/*
-			if (nvram_match("wan_route_x", "IP_Bridged") && nvram_match("dw_busy", "1"))
-			{
-				break;
-			}
-			else */
 			if (nvram_match("wan_route_x", "IP_Routed") && !is_phyconnected())
 			{
 				if (nvram_match("dw_debug", "1"))
@@ -520,10 +496,6 @@ int main(int argc, char *argv[])
 		fprintf(fp, "%d", getpid());
 		fclose(fp);
 	}
-
-//	signal(SIGUSR1, catch_sig);
-//	nvram_set("dhcp_renew", "0");
-//	nvram_set("dw_busy", "0");
 
 	for(;;)
 	{

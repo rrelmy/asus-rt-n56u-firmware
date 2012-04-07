@@ -37,7 +37,7 @@ function initial(){
 	else if(sw_mode == "2")
 		show_menu(5,1,2);
 	else
-		show_menu(5,1,2);
+		show_menu(5,1,3);
 	
 	show_footer();	
 }

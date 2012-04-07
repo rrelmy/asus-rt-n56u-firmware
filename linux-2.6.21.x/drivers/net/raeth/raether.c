@@ -1108,8 +1108,8 @@ static int ei_start_xmit(struct sk_buff* skb, struct net_device *dev, int gmac_n
 	unsigned long flags;
 	unsigned long tx_cpu_owner_idx;
 	unsigned int tx_cpu_owner_idx_next;
-#if	!defined(CONFIG_RAETH_QOS)
 	unsigned int tx_cpu_owner_idx_next2;
+#if	!defined(CONFIG_RAETH_QOS)
 	struct PDMA_txdesc* tx_desc;
 #else
 	int ring_no, queue_no, port_no;
@@ -1419,7 +1419,7 @@ void ra2880_setup_dev_fptable(struct net_device *dev)
 }
 
 
-#define TX_TIMEOUT (20*HZ/100)
+#define TX_TIMEOUT (2*HZ/100)
 void ei_tx_timeout(struct net_device *dev)
 {
 	END_DEVICE* ei_local = netdev_priv(dev);

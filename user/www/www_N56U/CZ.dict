@@ -1,11 +1,10 @@
-[Language type]
+﻿[Language type]
 CHAR_set=UTF-8
 PASS_LANG=Jazyk:
 LANG_select=Zvolte Jazyk:
 LANG_EN=English
 LANG_TW=繁體中文
 LANG_CN=简体中文
-LANG_KR=한국어
 LANG_CZ=Česky
 LANG_PL=Polski
 LANG_RU=Pусский
@@ -13,7 +12,14 @@ LANG_DE=Deutsch
 LANG_FR=Français
 LANG_TR=Türkçe
 LANG_TH=ไทย
-LANG_MS=Malaysia
+LANG_MS=Malay
+LANG_NO=Norsk
+LANG_FI=Finsk
+LANG_DA=Dansk
+LANG_SV=Svensk
+LANG_BR=Brazil
+[iTunes]
+iTunesMediaServer=iTunes Media Server
 [untranslate]
 IPConnection_VSList_ftpport=FTP Server Port:
 Adm_System_telnetd=Enable Telnet Server?
@@ -43,7 +49,7 @@ PrinterStatus_x_Monopoly_itemdesc=Pokud vaše tiskárna neposkytuje podporu sdí
 Switch_band=Spínací frekvence
 Current_band=Frequency
 LANHostConfig_DomainName_itemdesc2=může obsahovat pouze alfanumerické znaky a pomlčku.
-qis_ssid_desc=Kopírovat nastavení 2,4 GHz do nastavení 5 GHz
+qis_ssid_desc=Kopírovat nastavení 2.4 GHz do nastavení 5 GHz
 RouterConfig_IPTV_itemname=Vícesměnové vysílání IPTV UDP na port HTTP Proxy
 RHELP_desc9=Zadáním 0 (nula) deaktivujete tuto funkci.
 WLANConfig11b_TxPower_itemname=Úprava výkonu Tx
@@ -113,9 +119,9 @@ LAN_IP_changed_suggedtion2=.Pokud se později nebudete moci vrátit na tuto str�
 BasicConfig_HWNAT_suggestion=Funkce hardwarového překladu adres koliduje s aktuálními nastaveními vašeho směrovače. Opravdu chcete zakázat HW NAT?
 WLANConfig11b_x_Mode11g_5_itemdesc=V této položce lze vybrat některou z těchto možností bezdrátového režimu rozhraní 802.11n: <p>[Auto] (Automaticky): Umožňuje, aby se klienti 802.11n, 802.11a mohli připojit k RT-N56U.</p><p>[n Only] (Pouze n): Maximalizuje výkon, ale neumožňuje, aby se klienti 802.11a mohli připojit k vašemu zařízení.</p>
 WLANConfig11b_x_WPSband_itemname=Current Band
-WLANConfig11b_x_WPSband_itemdesc=Před používáním funkce WPS (Wi-Fi Protected Setup) vyberte provozní pásmo (2,4 GHz nebo 5 GHz).
+WLANConfig11b_x_WPSband_itemdesc=Před používáním funkce WPS (Wi-Fi Protected Setup) vyberte provozní pásmo (2.4 GHz nebo 5 GHz).
 QKSet_Internet_Setup_fail_reason7=Pokud se přesto nemůžete připojit k Internetu, zkontrolujte nastavení ISP (Internet Service Provider) ve směrovači nebo kontaktujte vašeho ISP.
-QKSet_Wireless_ssid_warning=Toto nastavení se bude vztahovat pro nastavení 2,4 GHz a 5 GHz WLAN
+QKSet_Wireless_ssid_warning=Toto nastavení se bude vztahovat pro nastavení 2.4 GHz a 5 GHz WLAN
 LANConfig_ChangedLANIP=Adresa IP vašeho směrovače byla změněna. Pomocí nástroje Device Discovery (Vyhledání zařízení) vyhledejte novou adresu IP vašeho směrovače.
 BasicConfig_HWNAT_alert=Funkce hardwarového překladu adres koliduje s aktuálními nastaveními vašeho směrovače. Deaktivujte funkci hardwarového překladu adres v části Advanced Setting (Upřesnit nastavení) > WAN > Internet connection (Internetové připojení) v navigační nabídce.
 [RT-N1X new item]
@@ -363,10 +369,10 @@ HowToSharebyFTP3=Povolte službu DDNS pro přístup k FTP, nebo klikněte na ná
 HowToSharebyFTP4=(přístupné pouze z místní sítě.)
 [LeftMenu]
 menu1=Mapa sítě
-menu2=UPnP Media Server
+menu2=Media Server
 menu3=AiDisk
 menu4=EzQoS<br>Správa<br>šířky pásma<br>
-menu5=<br/>Pokročilá nastavení
+menu5=<div style=\"padding-top:3px;\">Pokročilá<br/>nastavení</div>
 menu5_title=Pokročilá nastavení
 menu5_1=Bezdrátové
 menu5_2=LAN
@@ -606,7 +612,7 @@ DiskStatus_refresh1=Disk USB byl zapojen,
 DiskStatus_refresh2=obnovit
 DiskStatus_refresh3=stav systému.
 EZQoS=Správa EZQoS připojení
-footer_copyright_desc=2010 ASUSTek Computer Inc. Všechna práva vyhrazena.
+footer_copyright_desc=2011 ASUSTek Computer Inc. Všechna práva vyhrazena.
 Help_button_default_hint=Kliknutím otevřete nápovědu.
 Help_init_word1=Nápověda nabízí příručky a informace o využití funkcí routeru. Klikněte na
 Help_init_word2=žlutě a modře podtržený hypertextový odkaz.
@@ -660,7 +666,7 @@ QKSet_detect_sanglass=Automatická detekce
 QKSet_detect_desc1=Zjišťuje se stav vašeho připojení
 QKSet_detect_desc2=Zjišťuje se stav vašeho připojení
 QKSet_detect_wanconnfault=Prosím ověřte, zda je síťový kabel správně připojen do portu WAN.
-QKSet_detect_APdesc=RT-N56U je v režimu provozu \"AP\". Začněte konfigurací nastavení…
+QKSet_detect_APdesc=RT-N56U je v režimu provozu 'AP'. Začněte konfigurací nastavení…
 QKSet_detect_skipbtn=Přejít k ručnímu nastavení
 QKSet_detect_freshbtn=Znovu detekovat
 QKSet_detect_waitdesc=Zjišťuje se typ vašeho připojení…

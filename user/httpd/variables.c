@@ -139,6 +139,8 @@
 
 		{"apps_dms", "", validate_range, ARGV("0","1"), FALSE, RESTART_DMS},	// 2007.10 James
 
+		{"apps_itunes", "", validate_range, ARGV("0","1"), FALSE, RESTART_ITUNES},
+
 //		{"dms_comp_mode", "", validate_range, ARGV("0","1"), FALSE, RESTART_DMS},
 		
 		{"apps_dms_usb_port", "", validate_range, ARGV("1","2"), FALSE, FALSE},
@@ -401,6 +403,10 @@
 		
 		{"x_BootloaderVersion", "Status", NULL, ARGV("general.log","BootloaderVer"), FALSE, FALSE},
 		
+		{"modem_enable", "", validate_range, ARGV("0","1"), FALSE, RESTART_REBOOT},
+
+		{"EVDO_on", "", validate_range, ARGV("0","1"), FALSE, RESTART_REBOOT},
+
 		{"Dev3G", "", validate_choice, ARGV(
 
 		   "AUTO:AUTO",
@@ -429,7 +435,7 @@
 
 		0), FALSE, RESTART_REBOOT},       // 3g device
 
-		{"hsdpa_country", "", validate_choice, ARGV(
+		{"modem_country", "", validate_choice, ARGV(
 
 		   "AU:AU",
 
@@ -475,7 +481,7 @@
 
 		0), FALSE, RESTART_REBOOT},       // 3g device
 
-		{"hsdpa_isp", "", validate_choice, ARGV(
+		{"modem_isp", "", validate_choice, ARGV(
 
 		   "Telstra:Telstra",
 
@@ -631,13 +637,13 @@
 
 		0), FALSE, RESTART_REBOOT},       // 3g device
 
-		{"hsdpa_apn", "", validate_string, ARGV("32"), FALSE, RESTART_REBOOT},
+		{"modem_apn", "", validate_string, ARGV("32"), FALSE, RESTART_REBOOT},
 
-		{"hsdpa_dialnum", "", validate_string, ARGV("32"), FALSE, RESTART_REBOOT},
+		{"modem_dialnum", "", validate_string, ARGV("32"), FALSE, RESTART_REBOOT},
 
-		{"hsdpa_user", "", validate_string, ARGV("32"), FALSE, RESTART_REBOOT},
+		{"modem_user", "", validate_string, ARGV("32"), FALSE, RESTART_REBOOT},
 
-		{"hsdpa_pass", "", validate_string, ARGV("32"), FALSE, RESTART_REBOOT},
+		{"modem_pass", "", validate_string, ARGV("32"), FALSE, RESTART_REBOOT},
 
 		{"wan_3g_pin", "", validate_string, ARGV("8"), FALSE, RESTART_REBOOT},
 

@@ -161,7 +161,6 @@ getStorageStatus(STORAGE_INFO_T *st)
 	unsigned long apps_status=0;
 
 	// count apps_status
-//	if (nvram_match("swap_on", "1"))
 	if (swap_check())
 	{
 		apps_status|=APPS_STATUS_SWAP;
@@ -174,22 +173,19 @@ getStorageStatus(STORAGE_INFO_T *st)
 	{
 		apps_status|=APPS_STATUS_FREESPACE;
 	}
-//	if (nvram_match("ftp_running", "1"))
 	if (pids("smbd"))
 	{
 		apps_status|=APPS_STATUS_SAMBAMODE;
 	}
-//	if (nvram_match("apps_running", "1") && nvram_match("apps_dl_x", "1"))
-	if (is_apps_running() && nvram_match("apps_dl_x", "1"))
+	if (is_apps_running() /*&& nvram_match("apps_dl_ex", "1")*/)
 	{
 		apps_status|=APPS_STATUS_RUNNING;
 	}
-//	if (nvram_invmatch("usb_disc0_dev", ""))
 	if (nvram_match("usb_path1", "storage") || nvram_match("usb_path2", "storage"))
 	{
 		apps_status|=APPS_STATUS_DISCONPORT;
 	}
-	if (nvram_match("apps_dlx", "1"))
+	if (nvram_match("apps_dl", "1"))
 	{
 		apps_status|=APPS_STATUS_DMMODE;
 	}

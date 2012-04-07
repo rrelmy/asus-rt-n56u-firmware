@@ -31,7 +31,7 @@
 #define _FOE_FDB_WANTED
 
 #include "hwnat_ioctl.h"
-
+#include "frame_engine.h" 
 /*
  * DEFINITIONS AND MACROS
  */

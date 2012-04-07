@@ -82,18 +82,16 @@ dir_$(CONFIG_ASUS_WWW)				+= www
 dir_$(CONFIG_PPPD)				+= pppd
 dir_$(CONFIG_PPPOE_RELAY)			+= pppoe-relay
 dir_$(CONFIG_BPALOGIN)				+= bpalogin
-#dir_$(CONFIG_TC)				+= iproute2
 dir_$(CONFIG_DPROXY)				+= dproxy
 dir_$(CONFIG_UDHCPD)				+= udhcpd
 dir_$(CONFIG_ASUS_INFOSVR)			+= infosvr
 dir_$(CONFIG_ASUS_NTPCLIENT)			+= ntpclient.asus
 dir_$(CONFIG_EZ_IPUPDATE)			+= ez-ipupdate
-dir_$(CONFIG_ASUS_WANDUCK)			+= wanduck
 dir_$(CONFIG_ASUS_NETWORK_MAP)			+= network_map
 dir_$(CONFIG_ASUS_LPRNG)			+= LPRng
 dir_$(CONFIG_ASUS_U2EC)				+= u2ec
 #dir_$(CONFIG_ASUS_NTFS3G)			+= ntfs-3g.asus
-#dir_$(CONFIG_USB_TEST)				+= usbtest
+dir_$(CONFIG_USB_TEST)				+= usbtest
 dir_$(CONFIG_VSFTPD)				+= vsftpd
 dir_$(CONFIG_ASUS_SAMBA)			+= attr
 dir_$(CONFIG_ASUS_SAMBA)			+= acl
@@ -123,7 +121,6 @@ dir_$(CONFIG_USER_PPPOECD)                  += ppp-2.4.1/pppoecd
 dir_$(CONFIG_USER_PPPD)                     += ppp-2.4.2
 dir_$(CONFIG_USER_PPPD_PPPSTATS)            += ppp-2.4.2
 dir_$(CONFIG_USER_PPPD_PPPDUMP)             += ppp-2.4.2
-#dir_$(CONFIG_USER_PPTP_CLIENT)              += pptp-client
 #dir_$(CONFIG_USER_PPTP_CLIENT)              += pptp-1.7.2
 dir_$(CONFIG_USER_PCIUTIL_LSPCI)            += pciutils-3.0.0
 dir_$(CONFIG_USER_PCIUTIL_SETPCI)           += pciutils-3.0.0
@@ -138,7 +135,6 @@ dir_$(CONFIG_USER_RPPPPOE_RELAY)  	    += rp-pppoe-3.8
 dir_$(CONFIG_USER_RPPPPOE_SNIFF)  	    += rp-pppoe-3.8
 dir_$(CONFIG_USER_STRACE_STRACE)            += strace
 dir_$(CONFIG_USER_STUPID_FTPD)              += stupid-ftpd
-#dir_$(CONFIG_USER_SAMBA)		    += samba-3.0.2
 dir_$(CONFIG_USER_SNORT)                    += snort-2.8.5.2
 dir_$(CONFIG_USER_TOTD)                     += totd-1.5
 dir_$(CONFIG_USER_TCPDUMP)                  += tcpdump
@@ -150,10 +146,9 @@ dir_$(CONFIG_USER_WPA_SUPPLICANT)	    += wpa_supplicant-0.5.7
 dir_$(CONFIG_USER_WSC)			    += wsc_upnp
 dir_$(CONFIG_USER_ETHTOOL)		    += ethtool
 dir_$(CONFIG_USER_ZEBRA)		    += zebra-0.95a_ripd
-#dir_$(CONFIG_USER_USBMODESWITCH)	    += usb_modeswitch-0.9.5
-#dir_$(CONFIG_USER_USBMODESWITCH)	    += usb-modeswitch-1.1.2
-#dir_$(CONFIG_USER_COMGT)		    += comgt-0.32
-#dir_$(CONFIG_USER_SDPARM) 		    += sdparm-1.02
+dir_$(CONFIG_USER_USBMODESWITCH)	    += usb_modeswitch-1.0.7
+dir_$(CONFIG_USER_COMGT)		    += comgt-0.32
+dir_$(CONFIG_USER_SDPARM) 		    += sdparm-1.02
 #dir_$(CONFIG_USER_3G)	 		    += hso-1.6
 dir_$(CONFIG_USER_SNMPD) 		    += snmpd
 
@@ -162,6 +157,7 @@ dir_$(CONFIG_USER_SNMPD) 		    += snmpd
 dir_$(CONFIG_USER_HELLO_WORLD)		    += hello_world
 #--
 
+dir_y						+= wanduck
 dir_y						+= extra_bin
 #dir_y						+= xfr_test
 #dir_y						+= libmplus
@@ -177,10 +173,11 @@ dir_y						+= e2fsprogs
 dir_y						+= dosfstools-3.0.10
 #dir_y						+= cutter-1.03
 #dir_y						+= epi_ttcp
-dir_y						+= ffmpeg-0.6.1
-dir_y						+= sqlite-autoconf-3070400
+dir_y						+= ffmpeg-0.6.2
+dir_y						+= sqlite-autoconf-3070500
 dir_y						+= libexif-0.6.20
-dir_y						+= jpeg-8b
+dir_y						+= jpeg-6b
+#dir_y						+= jpeg-8c
 dir_y						+= libogg-1.2.2
 dir_y						+= libvorbis-1.3.2
 dir_y						+= flac-1.2.1
@@ -198,6 +195,9 @@ all: config
 
 $(sort $(dir_y) $(dir_p)):  config
 	[ ! -d "$@" ] || ( touch $@/.sgbuilt_user && $(MAKE) -j1 -C $@ ) || exit $$?
+
+%_romfs:
+	$(MAKE) -j1 -C $(@:_romfs=) romfs
 
 %_only:
 	touch $(@:_only=)/.sgbuilt_user && $(MAKE) -j1 -C $(@:_only=)

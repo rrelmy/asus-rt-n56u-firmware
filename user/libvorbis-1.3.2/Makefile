@@ -29,6 +29,7 @@ clean:
 romfs:
 #	echo "do nothing"
 	cp install/lib/libvorbis.so.0.4.5 .
+	$(STRIP) libvorbis.so.0.4.5
 	$(ROMFSINST) /lib/libvorbis.so.0.4.5
 	cd $(INSTALLDIR)/lib && ln -sf libvorbis.so.0.4.5 libvorbis.so.0
 	cd $(INSTALLDIR)/lib && ln -sf libvorbis.so.0.4.5 libvorbis.so

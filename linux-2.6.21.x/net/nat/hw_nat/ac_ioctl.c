@@ -28,7 +28,6 @@
 */
 
 #include <linux/init.h>
-#include <linux/config.h>
 #include <linux/module.h>
 #include <linux/kernel.h>   
 #include <linux/fs.h>       
@@ -115,9 +114,13 @@ uint32_t  AcBndryCheck(AcPlcyNode *NewNode)
 
 }
 
-
+#if LINUX_VERSION_CODE > KERNEL_VERSION(2,6,35)
+long AcIoctl(struct file *file, unsigned int cmd,
+	                unsigned long arg)
+#else
 int AcIoctl(struct inode *inode, struct file *filp,
                   unsigned int cmd, unsigned long arg)
+#endif
 {
     struct ac_args *opt=(struct ac_args *)arg;
     AcPlcyNode node;
@@ -169,7 +172,11 @@ int AcIoctl(struct inode *inode, struct file *filp,
 }
 
 struct file_operations ac_fops = {
-    ioctl:      AcIoctl,
+#if LINUX_VERSION_CODE > KERNEL_VERSION(2,6,35)
+    unlocked_ioctl:     AcIoctl,
+#else
+    ioctl:		AcIoctl,
+#endif
 };
 
 

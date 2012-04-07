@@ -55,7 +55,6 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
-#include <signal.h>	// J++
 
 #include "pppd.h"
 #include "fsm.h"
@@ -1992,8 +1991,6 @@ ipcp_down(f)
 	ipcp_script_state = s_down;
 	ipcp_script(path_ipdown, 0);
     }
-
-    kill(1, SIGTSTP);   // J++
 }
 
 

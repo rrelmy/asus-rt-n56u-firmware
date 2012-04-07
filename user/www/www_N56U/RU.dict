@@ -1,11 +1,10 @@
-[Language type]
+﻿[Language type]
 CHAR_set=UTF-8
 PASS_LANG=язык
 LANG_select=Выбор языка
 LANG_EN=English
 LANG_TW=繁體中文
 LANG_CN=简体中文
-LANG_KR=한국어
 LANG_CZ=Česky
 LANG_PL=Polski
 LANG_RU=Pусский
@@ -13,7 +12,14 @@ LANG_DE=Deutsch
 LANG_FR=Français
 LANG_TR=Türkçe
 LANG_TH=ไทย
-LANG_MS=Malaysia
+LANG_MS=Malay
+LANG_NO=Norsk
+LANG_FI=Finsk
+LANG_DA=Dansk
+LANG_SV=Svensk
+LANG_BR=Brazil
+[iTunes]
+iTunesMediaServer=Медиасервер iTunes
 [untranslate]
 IPConnection_VSList_ftpport=FTP Server Port:
 Adm_System_telnetd=Enable Telnet Server?
@@ -43,7 +49,7 @@ PrinterStatus_x_Monopoly_itemdesc=Если Ваш принтер не подде
 Switch_band=Частата пераключэнняў
 Current_band=Частота тока
 LANHostConfig_DomainName_itemdesc2=может содержать только буквы, цифры и дефисы. 
-qis_ssid_desc=Копировать настройки 2.4 Ghz в 5GHz.
+qis_ssid_desc=Копировать настройки 2.4 GHz в 5GHz.
 RouterConfig_IPTV_itemname=IPTV UDP Multicast в HTTP Proxy порт.
 RHELP_desc9=Введите 0 для отключения этой функции.
 WLANConfig11b_TxPower_itemname=Настройка мощности передачи.
@@ -113,9 +119,9 @@ LAN_IP_changed_suggedtion2=.При невозможности последующ
 BasicConfig_HWNAT_suggestion=Аппаратный NAT конфликтует с текущими настройками роутера. Выключить HW NAT?
 WLANConfig11b_x_Mode11g_5_itemdesc=Этот пункт позволяет Вам выбрать режим для интерфейса 802.11n. <p>[Auto]: Позволяет 802.11n, 802.11a клиентам подлкючаться к RT-N56U.</p><p>[n Only]: Максимальная производительность, но 802.11a клиенты не смогут подключиться к Вашему устройству.</p>
 WLANConfig11b_x_WPSband_itemname=Current Band
-WLANConfig11b_x_WPSband_itemdesc=Перед использованием функции WPS (настройка защищенной беспроводной сети) выберите рабочий диапазон (2,4 ГГц или 5 ГГц)
+WLANConfig11b_x_WPSband_itemdesc=Перед использованием функции WPS (настройка защищенной беспроводной сети) выберите рабочий диапазон (2.4 ГГц или 5 ГГц)
 QKSet_Internet_Setup_fail_reason7=Если Вы все же не можете подключиться к Интернету, проверьте настройки провайдера (ISP) в роутере или свяжитесь с Вашим провайдером
-QKSet_Wireless_ssid_warning=Эти настройки будут применены для диапазонов 2,4 ГГц и 5 ГГц.
+QKSet_Wireless_ssid_warning=Эти настройки будут применены для диапазонов 2.4 ГГц и 5 ГГц.
 LANConfig_ChangedLANIP=IP адрес Вашего роутера был изменен. Пожалуйста, используйте утилиту Device Discovery для поиска нового IP адреса роутера
 BasicConfig_HWNAT_alert=Аппаратный NAT конфликтует с текущими настройками роутера. Отключите Аппаратный NAT в меню Advanced Setting > WAN > Интернет-соединение.
 [RT-N1X new item]
@@ -363,10 +369,10 @@ HowToSharebyFTP3=Чтобы разрешить доступ через FTP, вк
 HowToSharebyFTP4=(Доступно только в ЛВС).
 [LeftMenu]
 menu1=Карта сети
-menu2=Медиасервер UPnP
+menu2=Медиасервер
 menu3=AiDisk
 menu4=Управление<br/>полосой<br/>пропускания EzQoS
-menu5=Дополнительные настройки
+menu5=<div style=\"padding-top:3px;\">Дополнительные<br/>настройки</div>
 menu5_title=Дополнительные настройки
 menu5_1=Беспроводная
 menu5_2=ЛВС
@@ -606,7 +612,7 @@ DiskStatus_refresh1=Подключен USB-диск,
 DiskStatus_refresh2=обновить
 DiskStatus_refresh3= статус системы.
 EZQoS=Управление полосой пропускания EZQoS
-footer_copyright_desc=2010 ASUSTek Computer Inc. Все права защищены.
+footer_copyright_desc=2011 ASUSTek Computer Inc. Все права защищены.
 Help_button_default_hint=Нажмите, чтобы открыть справку.
 Help_init_word1=В справке приведены рекомендации и сведения о том, как использовать функции маршрутизатора.  Нажимайте
 Help_init_word2=гиперссылки, подчеркнутые желтым или синим.

@@ -171,7 +171,8 @@ dir_filelist() {
 	${dep_list}header "$1"
 
 	srcdir=$(echo "$1" | sed -e 's://*:/:g')
-	dirlist=$(find "${srcdir}" -printf "%p %m %U %G\n" 2>/dev/null)
+	#dirlist=$(find "${srcdir}" -printf "%p %m %U %G\n" 2>/dev/null)
+	dirlist=$(find "${srcdir}" -printf "%p %m 0 0\n" 2>/dev/null)
 
 	# If $dirlist is only one line, then the directory is empty
 	if [  "$(echo "${dirlist}" | wc -l)" -gt 1 ]; then

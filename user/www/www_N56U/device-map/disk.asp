@@ -163,7 +163,7 @@ function DMhint(){
     <td><span id="disk_avail_size"></span> GB</td>
   </tr>
   <tr>
-    <th><#UPnPMediaServer#>:</th>
+    <th><#menu2#>:</th>
     <td>
 	<input type="button" class="button" onclick="goUPnP();" value="<#btn_go#>" >
 	</td>

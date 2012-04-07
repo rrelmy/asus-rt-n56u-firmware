@@ -30,8 +30,8 @@
 #define SN_Option_iCON401			0x0019
 #define SN_Vodafone_K3760			0x0020
 #define SN_ATT_USBConnect_Quicksilver		0x0021
-#define SN_HUAWEI_E169				0x0030
-#define SN_HUAWEI_E220				0x0031
+#define SN_Huawei_E169				0x0030
+#define SN_Huawei_E220				0x0031
 #define SN_Huawei_E180				0x0032
 #define SN_Huawei_E630				0x0033
 #define SN_Huawei_E270				0x0034
@@ -75,6 +75,7 @@
 #define SN_Samsung_SGH_Z810			0x0135
 #define SN_MobiData_MBD_200HU			0x0140
 #define SN_ST_Mobile				0x0145
+#define SN_BSNL_310G				0x0146
 #define SN_MyWave_SW006				0x0150
 #define SN_Cricket_A600				0x0155
 #define SN_EpiValley_SEC7089			0x0160

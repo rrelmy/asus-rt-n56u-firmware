@@ -29,6 +29,7 @@ clean:
 romfs:
 #	echo "do nothing"
 	cp install/lib/libFLAC.so.8.2.0 .
+	$(STRIP) libFLAC.so.8.2.0
 	$(ROMFSINST) /lib/libFLAC.so.8.2.0
 	cd $(INSTALLDIR)/lib && ln -sf libFLAC.so.8.2.0 libFLAC.so.8
 	cd $(INSTALLDIR)/lib && ln -sf libFLAC.so.8.2.0 libFLAC.so

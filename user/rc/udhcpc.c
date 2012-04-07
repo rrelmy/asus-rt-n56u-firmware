@@ -42,6 +42,7 @@
 #include <netconf.h>
 #include <shutils.h>
 #include <rc.h>
+#include <semaphore_mfp.h>
 
 char udhcpstate[8];
 
@@ -233,7 +234,9 @@ bound(void)	// udhcpc bound here, also call wanup
 		 nvram_safe_get(strcat_r(prefix, "ipaddr", tmp)),
 		 nvram_safe_get(strcat_r(prefix, "netmask", tmp)));
 
+	spinlock_lock(SPINLOCK_DHCPRenew);
 	nvram_set("dhcp_renew", "0");	// for detectWAN
+	spinlock_unlock(SPINLOCK_DHCPRenew);
 
 	wan_up(wan_ifname);
 

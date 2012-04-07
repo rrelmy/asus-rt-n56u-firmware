@@ -32,10 +32,26 @@
 
 //#include <bcmconfig.h>
 #include <netinet/in.h>
-       #include <sys/socket.h>
-       #include <arpa/inet.h>
+#include <sys/socket.h>
+#include <arpa/inet.h>
+
+//#define USB_MODEM
+//#define DEBUG_USB
 
 #define IFUP (IFF_UP | IFF_RUNNING | IFF_BROADCAST | IFF_MULTICAST)
+
+#ifdef DEBUG_USB
+#define usb_dbg(fmt, args...) do{ \
+		FILE *fp = fopen("/tmp/usb.log", "a+"); \
+		if(fp){ \
+			fprintf(fp, "[usb_dbg: %s]", __FUNCTION__); \
+			fprintf(fp, fmt, ## args); \
+			fclose(fp); \
+		} \
+	}while(0)
+#else
+#define usb_dbg(fmt, args...)
+#endif
 
 #define sin_addr(s) (((struct sockaddr_in *)(s))->sin_addr)
 

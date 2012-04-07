@@ -132,7 +132,7 @@ old_postuninstall_cmds=""
 LTCC="/opt/buildroot-gcc342/bin/mipsel-linux-uclibc-gcc "
 
 # LTCC compiler flags.
-LTCFLAGS="-O2 -fomit-frame-pointer -pipe  -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source "
+LTCFLAGS="-O2 -fomit-frame-pointer -pipe  -Dlinux -D__linux__ -Dunix -DEMBED -I/home/defjovi/projects/RT-N56U/source/lib/include -I/home/defjovi/projects/RT-N56U/source/uClibc++/include -I/home/defjovi/projects/RT-N56U/source "
 
 # Take the output of nm and produce a listing of raw symbols and C names.
 global_symbol_pipe="sed -n -e 's/^.*[	 ]\\([ABCDGIRSTW][ABCDGIRSTW]*\\)[	 ][	 ]*\\([_A-Za-z][_A-Za-z0-9]*\\)\$/\\1 \\2 \\2/p'"
@@ -237,7 +237,7 @@ hardcode_into_libs=yes
 sys_lib_search_path_spec="/opt/buildroot-gcc342/lib/gcc/mipsel-linux-uclibc/3.4.2 /opt/buildroot-gcc342/lib/gcc /opt/buildroot-gcc342/mipsel-linux-uclibc/lib"
 
 # Run-time system search path for libraries.
-sys_lib_dlsearch_path_spec="/lib /usr/lib /usr/lib/qt-3.3/lib /usr/lib/root /usr/lib/vmware-tools/lib32/libvmGuestLib.so /usr/lib/vmware-tools/lib64/libvmGuestLib.so /usr/lib/vmware-tools/lib32/libvmGuestLibJava.so /usr/lib/vmware-tools/lib64/libvmGuestLibJava.so /usr/lib/vmware-tools/lib32/libDeployPkg.so /usr/lib/vmware-tools/lib64/libDeployPkg.so /usr/lib/xulrunner-1.9.2 "
+sys_lib_dlsearch_path_spec="/lib /usr/lib /usr/lib/qt-3.3/lib /usr/lib/vmware-tools/lib32/libvmGuestLib.so /usr/lib/vmware-tools/lib64/libvmGuestLib.so /usr/lib/vmware-tools/lib32/libvmGuestLibJava.so /usr/lib/vmware-tools/lib64/libvmGuestLibJava.so /usr/lib/vmware-tools/lib32/libDeployPkg.so /usr/lib/vmware-tools/lib64/libDeployPkg.so "
 
 # Whether dlopen is supported.
 dlopen_support=unknown

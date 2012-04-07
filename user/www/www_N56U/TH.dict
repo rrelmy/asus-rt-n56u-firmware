@@ -1,11 +1,10 @@
-[Language type]
+﻿[Language type]
 CHAR_set=UTF-8
 PASS_LANG=ภาษา:
 LANG_select=เลือกภาษา
 LANG_EN=English
-LANG_TW=繁体中文
+LANG_TW=繁體中文
 LANG_CN=简体中文
-LANG_KR=한국어
 LANG_CZ=Česky
 LANG_PL=Polski
 LANG_RU=Pусский
@@ -13,7 +12,14 @@ LANG_DE=Deutsch
 LANG_FR=Français
 LANG_TR=Türkçe
 LANG_TH=ไทย
-LANG_MS=Malaysia
+LANG_MS=Malay
+LANG_NO=Norsk
+LANG_FI=Finsk
+LANG_DA=Dansk
+LANG_SV=Svensk
+LANG_BR=Brazil
+[iTunes]
+iTunesMediaServer=iTunes มีเดีย เซิร์ฟเวอร์
 [untranslate]
 IPConnection_VSList_ftpport=FTP Server Port:
 Adm_System_telnetd=Enable Telnet Server?
@@ -363,10 +369,10 @@ HowToSharebyFTP3=เปิดทำงานบริการ DDNS เพื่
 HowToSharebyFTP4=(เข้าถึงได้เฉพาะใน LAN เท่านั้น)
 [LeftMenu]
 menu1=เน็ตเวิร์ก แมป
-menu2=UPnP มีเดีย เซิร์ฟเวอร์
+menu2=มีเดีย เซิร์ฟเวอร์
 menu3=AiDisk
 menu4=การจัดการ<br/> แบนด์วิดธ์<br/> EzQoS
-menu5=<br/> การตั้งค่าขั้นสูง
+menu5=<div style=\"padding-top:10px;\">การตั้งค่าขั้นสูง</div>
 menu5_title=การตั้งค่าขั้นสูง
 menu5_1=ไร้สาย
 menu5_2=LAN
@@ -606,7 +612,7 @@ DiskStatus_refresh1=ฉันเสียบ USB ดิสก์แล้ว
 DiskStatus_refresh2=เปลี่ยนใหม่
 DiskStatus_refresh3= สถานะระบบ
 EZQoS=การจัดการแบนด์วิดธ์ EZQoS 
-footer_copyright_desc=2010 ASUSTek Computer Inc. สงวนลิขสิทธิ์
+footer_copyright_desc=2011 ASUSTek Computer Inc. สงวนลิขสิทธิ์
 Help_button_default_hint=คลิกเพื่อเปิด วิธีใช้
 Help_init_word1=วิธีใช้ จะให้คำแนะนำและข้อมูลต่างๆ เกี่ยวกับการใช้ฟังก์ชั่นต่างๆ ของเราเตอร์  คลิก
 Help_init_word2=คำที่เป็นไฮเปอร์ลิงค์ที่มีสีเหลือง และขีดเส้นใต้สีน้ำเงิน
@@ -660,7 +666,7 @@ QKSet_detect_sanglass=การตรวจจับอัตโนมัติ
 QKSet_detect_desc1=กำลังตรวจจับชนิดการเชื่อมต่อของคุณ
 QKSet_detect_desc2=กำลังตรวจจับสถานะการเชื่อมต่อของคุณใหม่
 QKSet_detect_wanconnfault=โปรดตรวจสอบว่าสายเคเบิลอีเธอร์เน็ตเชื่อมต่อไปยังพอร์ต WAN อย่างเหมาะสม
-QKSet_detect_APdesc=โหมดการทำงานของ RT-N56U คือ \"AP\" เริ่มกำหนดค่าการตั้งค่า... 
+QKSet_detect_APdesc=โหมดการทำงานของ RT-N56U คือ 'AP' เริ่มกำหนดค่าการตั้งค่า... 
 QKSet_detect_skipbtn=ข้ามไปยังการตั้งค่าด้วยตนเอง
 QKSet_detect_freshbtn=ตรวจจับอีกครั้ง
 QKSet_detect_waitdesc=เริ่มตรวจจับชนิดการเชื่อมต่อของคุณ...

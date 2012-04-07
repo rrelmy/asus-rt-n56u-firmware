@@ -317,43 +317,58 @@ static void make_device(char *path, int delete)
 
 #if ENABLE_FEATURE_MDEV_EXEC
 	if (command) {
-		char aidisk_cmd[64];
-		char aidisk_path[64];
-		memset(aidisk_cmd, 0, sizeof(aidisk_cmd));
-		if (device_name[3] == '\0')	// sda, sdb, sdc...
-		{
-			if (!check_partition(device_name))
-			{
-				sprintf(aidisk_cmd, "/sbin/automount.sh $MDEV AiDisk_%c%c", device_name[2], '1');
-				sprintf(aidisk_path, "/media/AiDisk_%c%c", device_name[2], '1');
-			}
-			else
-				goto No_Need_To_Mount;
-		}
-		else
-		{
-			sprintf(aidisk_cmd, "/sbin/automount.sh $MDEV AiDisk_%c%c", device_name[2], device_name[3]);
-			sprintf(aidisk_path, "/media/AiDisk_%c%c", device_name[2], device_name[3]);
-		}
-//		tmp_log(aidisk_cmd);
-
 		/* setenv will leak memory, use putenv/unsetenv/free */
 		char *s = xasprintf("MDEV=%s", device_name);
 		putenv(s);
-		umask(0000);
-		chmod("/media", 0777);
-		chmod("/tmp", 0777);
-		if (system(aidisk_cmd) == -1)
-			bb_perror_msg_and_die("can't run '%s'", aidisk_cmd);
+		char *s2;
+		if(delete)
+			s2 = xasprintf("ACTION=remove");
 		else
-			chmod(aidisk_path, 0777);
-		sprintf(aidisk_cmd, "/sbin/test_of_var_files_in_mount_path %s", aidisk_path);
-		system(aidisk_cmd);
-		//if (system(command) == -1)
-		//	bb_perror_msg_and_die("can't run '%s'", command);
+			s2 = xasprintf("ACTION=add");
+		putenv(s2);
+		
+		if(!strncmp(device_name, "sd", 2)){
+			char aidisk_cmd[64];
+			char aidisk_path[64];
+			memset(aidisk_cmd, 0, sizeof(aidisk_cmd));
+			if (device_name[3] == '\0')	// sda, sdb, sdc...
+			{
+				if (!check_partition(device_name))
+				{
+					sprintf(aidisk_cmd, "/sbin/automount.sh $MDEV AiDisk_%c%c", device_name[2], '1');
+					sprintf(aidisk_path, "/media/AiDisk_%c%c", device_name[2], '1');
+				}
+				else
+					goto No_Need_To_Mount;
+			}
+			else
+			{
+				sprintf(aidisk_cmd, "/sbin/automount.sh $MDEV AiDisk_%c%c", device_name[2], device_name[3]);
+				sprintf(aidisk_path, "/media/AiDisk_%c%c", device_name[2], device_name[3]);
+			}
+//		tmp_log(aidisk_cmd);
+
+			umask(0000);
+			chmod("/media", 0777);
+			chmod("/tmp", 0777);
+			if (system(aidisk_cmd) == -1)
+				bb_perror_msg_and_die("can't run '%s'", aidisk_cmd);
+			else
+				chmod(aidisk_path, 0777);
+			sprintf(aidisk_cmd, "/sbin/test_of_var_files_in_mount_path %s", aidisk_path);
+			system(aidisk_cmd);
+		}
+		else{
+			if (system(command) == -1)
+				bb_perror_msg_and_die("can't run '%s'", command);
+		}
+		
 		s[4] = '\0';
 		unsetenv(s);
 		free(s);
+		s2[6] = '\0';
+		unsetenv(s2);
+		free(s2);
 No_Need_To_Mount:
 		free(command);
 	}

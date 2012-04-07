@@ -374,6 +374,14 @@ distclean: mrproper
 	-$(MAKEARCH_KERNEL) -C $(LINUXDIR) distclean
 	-rm -f user/tinylogin/applet_source_list user/tinylogin/config.h
 
+%_romfs:
+	@case "$(@)" in \
+	*/*) d=`expr $(@) : '\([^/]*\)/.*'`; \
+	     t=`expr $(@) : '[^/]*/\(.*\)'`; \
+	     $(MAKEARCH) -C $$d $$t;; \
+	*)   $(MAKEARCH) -C $(@:_romfs=) romfs;; \
+	esac
+
 %_only:
 	@case "$(@)" in \
 	*/*) d=`expr $(@) : '\([^/]*\)/.*'`; \

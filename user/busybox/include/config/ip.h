@@ -1,1 +1,1 @@
-#define CONFIG_IP 1
+#undef CONFIG_IP

@@ -56,7 +56,7 @@ typedef unsigned char bool;
 #include <ralink.h>
 
 #define BCM47XX_SOFTWARE_RESET  0x40		/* GPIO 6 */
-#define RESET_WAIT		2		/* seconds */
+#define RESET_WAIT		3		/* seconds */
 #define RESET_WAIT_COUNT	RESET_WAIT * 10 /* 10 times a second */
 
 #define TEST_PERIOD		100		/* second */
@@ -78,6 +78,7 @@ static int cpu_timer = 0;
 static int mem_timer = -1;
 static int httpd_timer = 0;
 static int u2ec_timer = 0;
+static int pppd_timer = 0;
 
 struct itimerval itv;
 int watchdog_period = 0;
@@ -126,7 +127,7 @@ sys_exit()
 
 	kill(1, SIGTERM);
 }
-
+#ifdef HTTPD_CHECK
 #define DETECT_HTTPD_FILE "/tmp/httpd_check_result"
 
 int httpd_error_count = 0;
@@ -227,7 +228,9 @@ httpd_check_v2()
 	FILE *fp = NULL;
 	char line[80], cmd[128], url[80];
 
-	sprintf(url, "http://%s/httpd_check.htm", get_lan_ipaddr());
+	/* httpd will not count 127.0.0.1 */
+	//sprintf(url, "http://%s/httpd_check.htm", get_lan_ipaddr());
+	sprintf(url, "http://%s/httpd_check.htm", "127.0.0.1");
 	remove(DETECT_HTTPD_FILE);
 
 	wget_timestamp = uptime();
@@ -295,6 +298,7 @@ httpd_check_v2()
 	return 1;
 #endif
 }
+#endif
 
 void 
 ra_gpio_init()
@@ -888,10 +892,16 @@ httpd_processcheck(void)
 		printf("## httpd is gone! ##\n");
 
 #ifndef ASUS_DDNS
-	if (httpd_is_missing || !httpd_check_v2())
+	if (httpd_is_missing 
+#ifdef HTTPD_CHECK
+	    || !httpd_check_v2()
+#endif
+	)
 #else	// 2007.03.27 Yau add for prevent httpd die when doing hostname check
-	if (	httpd_is_missing ||
-		(/*!nvram_match("httpd_check_ddns", "1") && J++ */!httpd_check_v2())
+	if (httpd_is_missing
+#ifdef HTTPD_CHECK
+	    || (/*!nvram_match("httpd_check_ddns", "1") && */!httpd_check_v2())
+#endif
 	)
 #endif
 	{
@@ -905,16 +915,18 @@ httpd_processcheck(void)
 
 		stop_httpd();
 		sleep(1);
+#ifdef HTTPD_CHECK
 		if (pids("httpdcheck"))
 			system("killall -SIGTERM httpdcheck");
 		remove(DETECT_HTTPD_FILE);
+#endif
 		start_httpd();
 	}
 }
 
 void u2ec_processcheck(void)
 {
-        u2ec_timer = (u2ec_timer + 1) % 2;
+        u2ec_timer = (u2ec_timer + 1) % 3;
         if (u2ec_timer) return 1;
 
 	if (nvram_match("apps_u2ec_ex", "1") && !pids("u2ec"))
@@ -998,6 +1010,31 @@ void nm_processcheck(void)
 	}
 }
 
+void pppd_processcheck()
+{
+	int unit = 0;
+	char prefix[] = "wanXXXXXXXXXX_";
+	char *wan_proto = nvram_safe_get("wan_proto");
+
+	if (!strcmp(wan_proto, "pppoe") &&
+	    !strcmp(wan_proto, "pptp") &&
+	    !strcmp(wan_proto, "l2tp"))
+		return;
+
+	pppd_timer = (pppd_timer + 1) % 15;
+
+	if (pppd_timer) return;
+
+	if (!pids("pppd"))
+	{
+		snprintf(prefix, sizeof(prefix), "wan%d_", unit);
+		start_pppd(prefix);
+
+		if (pids("pppd"))
+			logmessage("watchdog", "restart pppd");
+	}
+}
+
 unsigned int
 get_cpu_usage()
 {
@@ -1051,11 +1088,13 @@ static void catch_sig(int sig)
 {
 	if (sig == SIGUSR1)
 	{
-		dbg("[watchdog] Catch Reset to Default Signal 1\n");
+		dbg("[watchdog] Catch SIGUSR1 for rc_service\n");
+		if (nvram_get("rc_service"))
+			service_handle();
 	}
 	else if (sig == SIGUSR2)
 	{
-		dbg("[watchdog] Catch Reset to Default Signal 2\n");
+//		dbg("[watchdog] Catch Reset to Default Signal 2\n");
 	}
 	else if (sig == SIGTSTP && !nvram_match("sw_mode_ex", "3"))
 	{
@@ -1334,8 +1373,10 @@ void watchdog(void)
 #endif
 		if (pids("tcpcheck"))
 			system("killall -SIGTERM tcpcheck");
+#ifdef HTTPD_CHECK
 		if (pids("httpdcheck"))
 			system("killall -SIGTERM httpdcheck");
+#endif
 		if (pids("traceroute"))
 			system("killall traceroute");
 		if (pids("usbled"))
@@ -1390,12 +1431,15 @@ void watchdog(void)
 
 	if (!watchdog_count)
 		watchdog_count++;
-	else if (watchdog_count == 1)
+	else if (watchdog_count++ == 1)
 	{
-		watchdog_count++;
-
+#if 0
+		if (!strcmp(nvram_safe_get("rc_service"), "restart_upnp"))
+			service_handle();
+		else
+#endif
 		if (	nvram_match("router_disable", "0") &&
-			nvram_match("upnp_enable_ex", "1") && 
+			nvram_match("upnp_enable", "1") &&
 			nvram_match("upnp_started", "0")	)
 		{
 //			if (has_wan_ip())
@@ -1404,8 +1448,6 @@ void watchdog(void)
 				stop_upnp();
 				start_upnp();
 			}
-
-			nvram_set("upnp_started", "1");	
 		}
 	}
 
@@ -1420,6 +1462,8 @@ void watchdog(void)
 	media_processcheck();
 
 	samba_processcheck();
+
+	pppd_processcheck();
 
 	if (nvram_match("wan_route_x", "IP_Routed"))
 		nm_processcheck();
@@ -1517,7 +1561,7 @@ void watchdog(void)
 	}
 	else
 	{
-		if (!nvram_match("lan_dns_t", "") && !nvram_match("lan_gateway_t", ""))
+		if (/*!nvram_match("lan_dns_t", "") && */!nvram_match("lan_gateway_t", ""))
 			ntp_timesync();
 	}
 }

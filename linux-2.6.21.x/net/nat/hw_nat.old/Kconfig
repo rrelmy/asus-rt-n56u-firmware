@@ -281,9 +281,24 @@ config  RA_HW_NAT_IPV6
 	help
 	"ipv6 routing accelerated by HNAT"
 
+choice
+        prompt "Marker Rule"
+	depends on RA_HW_NAT
+	default RA_HW_NAT_NONE2UP
+
 config  RA_HW_NAT_ACL2UP_HELPER
-        bool "Acl to UP Helper"
-	depends on RA_HW_NAT && (RALINK_RT2880 || RALINK_RT3052 || RALINK_RT3883)
-	default n
+        bool "Acl Remark Helper"
+	depends on RA_HW_NAT
 	help
-	"use FoE UP instead of ACL UP"
+	"use FoE UP to remark VPRI value"
+
+config  RA_HW_NAT_DSCP2UP_HELPER
+        bool "DSCP Remark Helper"
+	depends on RA_HW_NAT
+	help
+	"use FoE UP to remark DSCP value"
+
+config  RA_HW_NAT_NONE2UP
+	bool "No Remark Helper"
+
+endchoice

@@ -14,6 +14,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston,
  * MA 02111-1307 USA
  */
+
 #ifndef RTXXXXH
 #define RTXXXXH
 
@@ -36,11 +37,6 @@
 #else
 #define LED_LAN		19
 #endif
-/*
-#define RTN13U_SW1	9
-#define RTN13U_SW2	13
-#define RTN13U_SW3	11
-*/
 
 #define GPIO_DIR_OUT	1
 #define GPIO_DIR_IN	0
@@ -54,51 +50,5 @@
 #define GPIO6		0x0040
 #define GPIO7		0x0080
 #define GPIO15		0x8000
-
-#define TASK_HTTPD       0
-#define TASK_UDHCPD      1
-#define TASK_LLD2D       2
-#define TASK_WANDUCK     3
-#define TASK_UDHCPC      4
-#define TASK_NETWORKMAP  5
-#define TASK_DPROXY      6
-#define TASK_NTP         7
-#define TASK_U2EC        8
-#define TASK_OTS         9
-#define TASK_LPD         10
-#define TASK_UPNPD       11
-#define TASK_WATCHDOG    12
-#define TASK_INFOSVR     13
-#define TASK_SYSLOGD     14
-#define TASK_KLOGD       15
-#define TASK_PPPD        16
-#define TASK_PPPOE_RELAY 17
-#define TASK_IGMP	 18
-
-unsigned long task_mask;
-
-int switch_init(void);
-
-void switch_fini(void);
-
-int ra3052_reg_read(int offset, int *value);
-
-int ra3052_reg_write(int offset, int value);
-
-int config_3052(int type);
-
-int restore_3052();
-
-void ra_gpio_write_spec(bit_idx, flag);
-
-int check_all_tasks();
-
-int ra_gpio_set_dir(int dir);
-
-int ra_gpio_write_int(int value);
-
-int ra_gpio_read_int(int *value);
-
-int ra_gpio_write_bit(int idx, int value);
 
 #endif

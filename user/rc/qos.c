@@ -166,7 +166,7 @@ void start_qos(char *wan_ipaddr)	//modified by angela 2008.05
 	/* 1200 = suggested trasmmit packet size */
 	if ( nvram_match("qos_dfragment_enable", "1")) {
 		int mss_size = 1200;
-		mss_size = 536 + (1200-536)*atoi(nvram_get("qos_dfragment_size"))/100;
+		mss_size = 536 + (1200-536)*atoi(nvram_safe_get("qos_dfragment_size"))/100;
 
 		fprintf(fp, "-A POSTROUTING -p tcp --tcp-flags SYN,ACK SYN,ACK -j TCPMSS --set-mss %d\n", mss_size);
 	}
@@ -192,7 +192,7 @@ void start_qos(char *wan_ipaddr)	//modified by angela 2008.05
 
 	// tmp declare here
 	char lan_ipaddr[32];
-	sprintf(lan_ipaddr, "%s%s", nvram_get("lan_ipaddr"), "/24");
+	sprintf(lan_ipaddr, "%s%s", nvram_safe_get("lan_ipaddr"), "/24");
 
 	/*Decide all the max/min=qos_ubw/qos_ubw bandwidth for each classes */		
 	ubw = atoi(nvram_safe_get("qos_ubw_real"));
@@ -299,7 +299,7 @@ void start_qos(char *wan_ipaddr)	//modified by angela 2008.05
 		}
 
 		/* Add root class 10:2(for download) and BW = unlimited */
-		if (atoi(nvram_get("qos_ubw")) > 640)
+		if (atoi(nvram_safe_get("qos_ubw_real")) >= 640)
 			sprintf(qos_down,"1Mbit");
 		else
 			sprintf(qos_down,"256kbit");
@@ -340,8 +340,8 @@ void start_qos(char *wan_ipaddr)	//modified by angela 2008.05
 		eval("tc", "filter", "add", "dev", wan_net_name, "parent", "10:", "protocol", "ip", "prio", "8", \
 			"handle", "100", "fw", "classid", "10:100");
 
-		fprintf(fp, "-A POSTROUTING -s %s -d %s -j MARK --set-mark 100\n", nvram_get("lan_ipaddr"), lan_ipaddr);
-		fprintf(fp, "-A POSTROUTING -s %s -d %s -j RETURN\n", nvram_get("lan_ipaddr"), lan_ipaddr);
+		fprintf(fp, "-A POSTROUTING -s %s -d %s -j MARK --set-mark 100\n", nvram_safe_get("lan_ipaddr"), lan_ipaddr);
+		fprintf(fp, "-A POSTROUTING -s %s -d %s -j RETURN\n", nvram_safe_get("lan_ipaddr"), lan_ipaddr);
 	}
 
 	/* Add class for User specify, 10:20(high), 10:40(middle), 10:60(low)*/
@@ -401,10 +401,10 @@ void start_qos(char *wan_ipaddr)	//modified by angela 2008.05
 	if ( nvram_match("qos_dfragment_enable", "1")) {
 
 		//fprintf(fp, "-A POSTROUTING -p tcp --tcp-flags SYN,ACK SYN,ACK \
-		//		-j TCPMSS --set-mss %s\n",nvram_get("qos_dfragment_size"));
+		//		-j TCPMSS --set-mss %s\n",nvram_safe_get("qos_dfragment_size"));
 
 		int mss_size = 1200;
-		mss_size = 536 + (1200-536)*atoi(nvram_get("qos_dfragment_size"))/100;
+		mss_size = 536 + (1200-536)*atoi(nvram_safe_get("qos_dfragment_size"))/100;
 
 		fprintf(fp, "-A POSTROUTING -p tcp --tcp-flags SYN,ACK SYN,ACK -j TCPMSS --set-mss %d\n", mss_size);
 	}
@@ -431,7 +431,7 @@ void start_dfragment_standalone()
 	if ( nvram_match("qos_dfragment_enable", "1"))
 	{
 		int mss_size = 1200;
-		mss_size = 536 + (1200-536)*atoi(nvram_get("qos_dfragment_size"))/100;
+		mss_size = 536 + (1200-536)*atoi(nvram_safe_get("qos_dfragment_size"))/100;
 
 		fprintf(fp, "-A POSTROUTING -p tcp --tcp-flags SYN,ACK SYN,ACK -j TCPMSS --set-mss %d\n", mss_size);
 	}

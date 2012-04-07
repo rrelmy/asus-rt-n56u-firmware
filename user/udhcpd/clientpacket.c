@@ -130,7 +130,7 @@ int send_discover(unsigned long xid, unsigned long requested)
 
 	init_packet(&packet, DHCPDISCOVER);
 	packet.xid = xid;
-	packet.secs = htons(3);	// oleg patch
+	packet.secs = htons(3);
 	if (requested)
 		add_simple_option(packet.options, DHCP_REQUESTED_IP, requested);
 
@@ -148,7 +148,7 @@ int send_selecting(unsigned long xid, unsigned long server, unsigned long reques
 
 	init_packet(&packet, DHCPREQUEST);
 	packet.xid = xid;
-	packet.secs = htons(3);	// oleg patch
+	packet.secs = htons(3);
 
 	add_simple_option(packet.options, DHCP_REQUESTED_IP, requested);
 	add_simple_option(packet.options, DHCP_SERVER_ID, server);
@@ -169,7 +169,7 @@ int send_renew(unsigned long xid, unsigned long server, unsigned long ciaddr)
 
 	init_packet(&packet, DHCPREQUEST);
 	packet.xid = xid;
-	packet.secs = htons(3);	// oleg patch
+	packet.secs = htons(3);
 
 	packet.ciaddr = ciaddr;
 
@@ -190,7 +190,7 @@ int send_release(unsigned long server, unsigned long ciaddr)
 
 	init_packet(&packet, DHCPRELEASE);
 	packet.xid = random_xid();
-	packet.secs = htons(3);	// oleg patch
+	packet.secs = htons(3);
 	packet.ciaddr = ciaddr;
 	
 	add_simple_option(packet.options, DHCP_REQUESTED_IP, ciaddr);

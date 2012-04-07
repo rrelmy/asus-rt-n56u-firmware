@@ -48,10 +48,10 @@ choice
 	bool "3T3R (RT3883)"
 endchoice
 
-#source "drivers/net/wireless/rt2860v2_ap/Kconfig"
+source "drivers/net/wireless/rt2860v2_ap/Kconfig"
 #source "drivers/net/wireless/rt2860v2_sta/Kconfig"
 #source "drivers/net/wireless/rt2860v2_apsta/Kconfig"
-#source "drivers/net/wireless/RT3090_ap/Kconfig"
+source "drivers/net/wireless/RT3090_ap/Kconfig"
 #source "drivers/net/wireless/RT3572_ap/Kconfig"
 #source "drivers/net/wireless/iNIC/Kconfig"
 #source "drivers/net/wireless/iNIC_RT305x/Kconfig"

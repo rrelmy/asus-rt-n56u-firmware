@@ -14,7 +14,7 @@
 # $Id$
 #***********************************************************************
 
-DESTDIR = $(INSTROOT)/@DESTDIR@
+DESTDIR = $(INSTROOT)@DESTDIR@
 BINDIR = $(DESTDIR)/sbin
 LIBDIR = $(DESTDIR)/lib/pppd/$(PPPDVERSION)
 

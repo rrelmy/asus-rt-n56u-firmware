@@ -50,9 +50,8 @@ struct dhcp_option options[] = {
 	{"ipttl",	OPTION_U8,				0x17},
 	{"mtu",		OPTION_U16,				0x1a},
 	{"broadcast",	OPTION_IP | OPTION_REQ,			0x1c},
+	{"routes",	OPTION_IP | OPTION_LIST | OPTION_REQ,	0x21},
 	{"ntpsrv",	OPTION_IP | OPTION_LIST,		0x2a},
-	{"routes",      OPTION_IP | OPTION_LIST | OPTION_REQ,   0x21},	// oleg patch
-	{"msroutes",    OPTION_U8 | OPTION_LIST | OPTION_REQ,   0xF9},	// oleg patch
 	{"wins",	OPTION_IP | OPTION_LIST | OPTION_REQ,	0x2c},
 	{"requestip",	OPTION_IP,				0x32},
 	{"lease",	OPTION_U32,				0x33},
@@ -62,6 +61,7 @@ struct dhcp_option options[] = {
 	{"max-size",	OPTION_U16,				0x39},
 	{"tftp",	OPTION_STRING,				0x42},
 	{"bootfile",	OPTION_STRING,				0x43},
+	{"msroutes",	OPTION_U8 | OPTION_LIST | OPTION_REQ,	0xf9},
 	{"",		0x00,				0x00}
 };
 

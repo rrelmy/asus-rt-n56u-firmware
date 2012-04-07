@@ -123,11 +123,14 @@ int HandleSubscriptionRequest(struct Upnp_Subscription_Request *sr_event)
 			GetIpAddressStr(ExternalIPAddress, g_vars.extInterfaceName);
 			trace(3, "Received request to subscribe to WANIPConn1");
 			UpnpAddToPropertySet(&propSet, "PossibleConnectionTypes","IP_Routed");
-//			UpnpAddToPropertySet(&propSet, "ConnectionStatus","Connected");
+#if 1
+			UpnpAddToPropertySet(&propSet, "ConnectionStatus","Connected");
+#else
 			if (nvram_match("link_wan", "1"))	// J++
 				UpnpAddToPropertySet(&propSet, "ConnectionStatus","Connected");
 			else
 				UpnpAddToPropertySet(&propSet, "ConnectionStatus","Disconnected");
+#endif
 			UpnpAddToPropertySet(&propSet, "ExternalIPAddress", ExternalIPAddress);
 			sprintf(num, "%d", pmlist_Size());
 			UpnpAddToPropertySet(&propSet, "PortMappingNumberOfEntries", num);
@@ -344,11 +347,14 @@ int RequestConnection(struct Upnp_Action_Request *ca_event)
 	IXML_Document *propSet = NULL;
 	
 	//Immediatley Set connectionstatus to connected, and lastconnectionerror to none.
-//	strcpy(ConnectionStatus,"Connected");
+#if 1
+	strcpy(ConnectionStatus,"Connected");
+#else
 	if (nvram_match("link_wan", "1"))
 		strcpy(ConnectionStatus,"Connected");
 	else
 		strcpy(ConnectionStatus,"Disconnected");
+#endif
 	strcpy(LastConnectionError, "ERROR_NONE");
 	trace(3, "RequestConnection recieved ... Setting Status to %s.", ConnectionStatus);
 
@@ -394,7 +400,7 @@ int GetCommonLinkProperties(struct Upnp_Action_Request *ca_event)
 		"<NewLayer1UpstreamMaxBitRate>%s</NewLayer1UpstreamMaxBitRate>\n"
 		"<NewLayer1DownstreamMaxBitRate>%s</NewLayer1DownstreamMaxBitRate>\n"
 		"<NewPhysicalLinkStatus>%s</NewPhysicalLinkStatus>\n"
-		"</u:GetCommonLinkPropertiesResponse>","0","0", "Down");
+		"</u:GetCommonLinkPropertiesResponse>","0","0", LinkStatus);
 	else if (nvram_match("link_spd_wan", "2"))
 	snprintf(resultStr, RESULT_LEN,
 		"<u:GetCommonLinkPropertiesResponse xmlns:u=\"urn:schemas-upnp-org:service:WANCommonInterfaceConfig:1\">\n"
@@ -576,7 +582,7 @@ int GetStatusInfo(struct Upnp_Action_Request *ca_event)
 //   uptime = (time(NULL) - startup_time); // J++
    uptime = (uptime_sys() - startup_time);
 
-#if 0
+#if 1
 	snprintf(resultStr, RESULT_LEN,
 		"<u:GetStatusInfoResponse xmlns:u=\"urn:schemas-upnp-org:service:GetStatusInfo:1\">\n"
 		"<NewConnectionStatus>Connected</NewConnectionStatus>\n"
@@ -585,7 +591,7 @@ int GetStatusInfo(struct Upnp_Action_Request *ca_event)
 		"<NewUptime>%lu</NewUptime>\n"
 		"</u:GetStatusInfoResponse>", 
 		uptime);
-#endif
+#else
 	if (nvram_match("link_wan", "1"))
 	snprintf(resultStr, RESULT_LEN,
 		"<u:GetStatusInfoResponse xmlns:u=\"urn:schemas-upnp-org:service:GetStatusInfo:1\">\n"
@@ -602,6 +608,7 @@ int GetStatusInfo(struct Upnp_Action_Request *ca_event)
 		"<NewUptime>%lu</NewUptime>\n"
 		"</u:GetStatusInfoResponse>", 
 		uptime);
+#endif
 	// Create a IXML_Document from resultStr and return with ca_event
    if ((result = ixmlParseBuffer(resultStr)) != NULL)
    {
@@ -1165,10 +1172,14 @@ static void PeriodicallyCheck()
 //FIXME: get link status should be implemented according to platform
 static int GetLinkStatus()
 {
+#if 0
 	if (nvram_match("link_wan", "1"))	// J++
 		return 1;
 	else
 		return 0;
+#else
+	return 1;
+#endif
 
 /*
 	int sk;

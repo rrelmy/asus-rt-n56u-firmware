@@ -333,6 +333,8 @@ shutdown_system(void)
 		eval("killall", "pppd");
 	sleep(1);
 
+	stop_usb();
+
 	cprintf("Sending SIGTERM to all processes\n");
 	kill(-1, SIGTERM);
 	sleep(1);

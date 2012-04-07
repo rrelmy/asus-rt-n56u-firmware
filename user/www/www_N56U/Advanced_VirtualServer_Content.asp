@@ -21,7 +21,7 @@
 <script language="JavaScript" type="text/javascript" src="/detect.js"></script>
 <script>
 var wItem = new Array(new Array("", "", "TCP"),
-											new Array("FTP", "20:21", "TCP"),
+											new Array("FTP", "2021", "TCP"),
 											new Array("TELNET", "23", "TCP"),
 											new Array("SMTP", "25", "TCP"),
 											new Array("DNS", "53", "UDP"),
@@ -125,6 +125,10 @@ function change_wizard(o, id){
 				break;
 			}
 		}
+		if(document.form.KnownApps.options[1].selected == 1)
+			document.form.vts_lport_x_0.value = "21";
+		else
+			document.form.vts_lport_x_0.value = "";
 	}
 	else if(id == "KnownGames"){
 		$("KnownApps").value = 0;

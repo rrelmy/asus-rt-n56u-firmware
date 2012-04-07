@@ -162,7 +162,7 @@ int start_pppd(char *prefix)
 	//fprintf(fp, "lcp-echo-failure 4\n");		// disable for tmp
 
 	fprintf(fp, "unit %s\n",
-		nvram_get(strcat_r(prefix, "unit", tmp)) ? : "0");
+		nvram_safe_get(strcat_r(prefix, "unit", tmp)) ? : "0");
 
 	/* user specific options */
 	fprintf(fp, "%s\n",
@@ -233,9 +233,3 @@ void start_pppoe_relay(char *wan_if)
 		ret = _eval(pppoerelay_argv, NULL, 0, &pid);
 	}
 }
-
-/*
-void setup_ethernet(char *wan_if)
-{
-}
-*/

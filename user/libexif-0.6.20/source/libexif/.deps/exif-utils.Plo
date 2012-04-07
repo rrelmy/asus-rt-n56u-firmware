@@ -1,12 +1,12 @@
 exif-utils.lo exif-utils.o: exif-utils.c ../config.h \
   ../libexif/exif-utils.h ../libexif/exif-byte-order.h \
   ../libexif/exif-format.h ../libexif/_stdint.h \
-  /root/RT-N56U/source/lib/include/stdint.h \
-  /root/RT-N56U/source/lib/include/features.h \
-  /root/RT-N56U/source/lib/include/bits/uClibc_config.h \
-  /root/RT-N56U/source/lib/include/sys/cdefs.h \
-  /root/RT-N56U/source/lib/include/bits/wchar.h \
-  /root/RT-N56U/source/lib/include/bits/wordsize.h
+  /home/defjovi/projects/RT-N56U/source/lib/include/stdint.h \
+  /home/defjovi/projects/RT-N56U/source/lib/include/features.h \
+  /home/defjovi/projects/RT-N56U/source/lib/include/bits/uClibc_config.h \
+  /home/defjovi/projects/RT-N56U/source/lib/include/sys/cdefs.h \
+  /home/defjovi/projects/RT-N56U/source/lib/include/bits/wchar.h \
+  /home/defjovi/projects/RT-N56U/source/lib/include/bits/wordsize.h
 
 ../config.h:
 
@@ -18,14 +18,14 @@ exif-utils.lo exif-utils.o: exif-utils.c ../config.h \
 
 ../libexif/_stdint.h:
 
-/root/RT-N56U/source/lib/include/stdint.h:
+/home/defjovi/projects/RT-N56U/source/lib/include/stdint.h:
 
-/root/RT-N56U/source/lib/include/features.h:
+/home/defjovi/projects/RT-N56U/source/lib/include/features.h:
 
-/root/RT-N56U/source/lib/include/bits/uClibc_config.h:
+/home/defjovi/projects/RT-N56U/source/lib/include/bits/uClibc_config.h:
 
-/root/RT-N56U/source/lib/include/sys/cdefs.h:
+/home/defjovi/projects/RT-N56U/source/lib/include/sys/cdefs.h:
 
-/root/RT-N56U/source/lib/include/bits/wchar.h:
+/home/defjovi/projects/RT-N56U/source/lib/include/bits/wchar.h:
 
-/root/RT-N56U/source/lib/include/bits/wordsize.h:
+/home/defjovi/projects/RT-N56U/source/lib/include/bits/wordsize.h:

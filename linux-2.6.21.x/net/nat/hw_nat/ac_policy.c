@@ -28,7 +28,6 @@
     Steven Liu  2007-01-24      Initial version
 */
 
-#include <linux/config.h>
 #include <linux/version.h>
 #include <linux/module.h>
 #include <linux/kernel.h>

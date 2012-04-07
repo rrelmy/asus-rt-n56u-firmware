@@ -433,7 +433,7 @@ function disableAdvFn(){
 			  
 			  <tr>
 				<th><a class="hintstyle" href="javascript:void(0);" onClick="openHint(0, 11);"><#WLANConfig11b_x_Rekey_itemname#></a></th>
-				<td><input type="text" maxlength="5" size="5" name="rt_wpa_gtk_rekey" class="input"  value="<% nvram_get_x("WLANConfig11b", "rt_wpa_gtk_rekey"); %>"></td>
+				<td><input type="text" maxlength="7" size="7" name="rt_wpa_gtk_rekey" class="input"  value="<% nvram_get_x("WLANConfig11b", "rt_wpa_gtk_rekey"); %>"></td>
 			  </tr>
 
 			  <tr>
@@ -475,7 +475,7 @@ function disableAdvFn(){
 		  <tbody>
 		  <tr>
 			<td valign="top">
-			  <div id="hint_body" class="hint_body2" style="width:200px"></div>
+			  <div id="hint_body" class="hint_body2"></div>
 			  <iframe id="statusframe" name="statusframe" class="statusframe" src="" frameborder="0"></iframe>
 			</td>
 		  </tr>

@@ -63,6 +63,8 @@ ppp_ifunit(char *ifname)
 int
 ipup_main(int argc, char **argv)
 {
+	dbg("%s() CP 1\n", __FUNCTION__);
+
 	FILE *fp;
 	char *wan_ifname = safe_getenv("IFNAME");
 	char *value;
@@ -143,6 +145,9 @@ ipup_main(int argc, char **argv)
 	logmessage(nvram_safe_get("wan_proto_t"), "connect to ISP");
 	wanmessage("");
 
+//	logmessage(nvram_safe_get("wan_proto_t"), "restart wanduck");
+//	restart_wanduck_ppp();
+
 	return 0;
 }
 
@@ -178,7 +183,7 @@ ipdown_main(int argc, char **argv)
 
 	return 0;
 }
-
+#if 0
 void
 ipdown_main_sp(int sig)
 {
@@ -195,4 +200,4 @@ ipdown_main_sp(int sig)
 	nvram_set("wan_gateway_t", "0.0.0.0");
 */
 }
-
+#endif

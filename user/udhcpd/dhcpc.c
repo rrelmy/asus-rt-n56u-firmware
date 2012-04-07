@@ -67,7 +67,7 @@ static unsigned long requested_ip; /* = 0 */
 static unsigned long server_addr;
 static unsigned long timeout;
 static int packet_num; /* = 0 */
-static int fd = -1;	// oleg patch
+static int fd = -1;
 static int signal_pipe[2];
 
 #define LISTEN_NONE 0
@@ -125,7 +125,7 @@ static void change_mode(int new_mode)
 		new_mode ? (new_mode == 1 ? "kernel" : "raw") : "none");
 
 	listen_mode = new_mode;
-	if(fd >= 0) {
+	if (fd >= 0) {
 		close(fd);
 		fd = -1;
 	}
@@ -222,7 +222,7 @@ static void background(void)
 		exit_client(1);
 	}
 	client_config.foreground = 1; /* Do not fork again. */
-	client_config.background_if_no_lease = 0;	// oleg patch
+	client_config.background_if_no_lease = 0;
 	pidfile_write_release(pid_fd);
 }
 
@@ -505,7 +505,7 @@ int main(int argc, char *argv[])
 				continue;
 			}
 			
-                        /* Ignore packets that aren't for us */	// oleg patch
+                        /* Ignore packets that aren't for us */
                         if (memcmp(client_config.arp,packet.chaddr,6))	
                                 continue;
 

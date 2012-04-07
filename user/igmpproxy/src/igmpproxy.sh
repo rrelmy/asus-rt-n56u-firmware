@@ -2,9 +2,9 @@
 
 CONF_FILE=/etc/igmpproxy.conf
 
-if [ ! -n "$3" ]; then
+if [ ! -n "$2" ]; then
   echo "insufficient arguments!"
-  echo "Usage: $0 <Upstream_If> <Downstream_If> <Disabled_If>"
+  echo "Usage: $0 <Upstream_If> <Downstream_If>"
   exit 0
 fi
 
@@ -31,4 +31,4 @@ echo "phyint $DOWNSTREAM_IF downstream  ratelimit 0  threshold 1" >> $CONF_FILE
 echo "##------------------------------------------------------" >> $CONF_FILE
 echo "## Configuration for eth2 (Disabled Interface)" >> $CONF_FILE
 echo "##------------------------------------------------------" >> $CONF_FILE
-echo "phyint $DISABLED_IF disabled" >> $CONF_FILE
+echo "#phyint $DISABLED_IF disabled" >> $CONF_FILE

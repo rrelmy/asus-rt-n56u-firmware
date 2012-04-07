@@ -1,11 +1,10 @@
-[Language type]
+﻿[Language type]
 CHAR_set=UTF-8
 PASS_LANG=語言選項：
 LANG_select=選擇語系
 LANG_EN=English
 LANG_TW=繁體中文
 LANG_CN=简体中文
-LANG_KR=한국어
 LANG_CZ=Česky
 LANG_PL=Polski
 LANG_RU=Pусский
@@ -13,10 +12,17 @@ LANG_DE=Deutsch
 LANG_FR=Français
 LANG_TR=Türkçe
 LANG_TH=ไทย
-LANG_MS=Malaysia
+LANG_MS=Malay
+LANG_NO=Norsk
+LANG_FI=Finsk
+LANG_DA=Dansk
+LANG_SV=Svensk
+LANG_BR=Brazil
+[iTunes]
+iTunesMediaServer=iTunes媒體伺服器
 [untranslate]
 IPConnection_VSList_ftpport=FTP伺服器埠號:
-Adm_System_telnetd=启用远程登录伺服器?
+Adm_System_telnetd=啟用Telnet伺服器?
 wps_start_btn=起始
 USB_Application_account_alert=用戶賬號不能為‘root’, ‘Root’, ‘ROOT’, ‘admin’, ‘Admin’, ‘ADMIN’, ‘family’, ‘Family’, ‘FAMILY’請輸入有效的賬號名稱！
 BasicConfig_USBStorageWhiteist_itemdesc=此欄位範圍為十六進位 1 到 FFFF。輸入 0（零）以關閉此功能。
@@ -363,10 +369,10 @@ HowToSharebyFTP3=您可開啟DDNS服務，允許外部網路使用者存取FTP�
 HowToSharebyFTP4=(僅於內部網路使用)。
 [LeftMenu]
 menu1=網路地圖
-menu2=UPnP媒體伺服器
+menu2=媒體伺服器
 menu3=AiDisk
 menu4=<br/>EzQoS頻寬管理
-menu5=<br/>進階設定
+menu5=<div style=\"padding-top:10px;\">進階設定</div>
 menu5_title=進階設定
 menu5_1=無線網路
 menu5_2=內部網路
@@ -606,7 +612,7 @@ DiskStatus_refresh1=我已接上磁碟，
 DiskStatus_refresh2=更新
 DiskStatus_refresh3=我的系統狀況。
 EZQoS=EZQoS頻寬管理
-footer_copyright_desc=2010 版權屬於 華碩電腦股份有限公司
+footer_copyright_desc=2011 版權屬於 華碩電腦股份有限公司
 Help_button_default_hint=請按此觀看說明
 Help_init_word1=在說明功能中，我們為一些艱澀或進階的功能提供導引與解釋，而這些詞彙會以
 Help_init_word2=黃色字藍色底虛線
@@ -660,7 +666,7 @@ QKSet_detect_sanglass=自動偵測
 QKSet_detect_desc1=自動偵測網路連線類型
 QKSet_detect_desc2=重新偵測網路連線狀態
 QKSet_detect_wanconnfault=連線有誤，可能是WAN埠的網路線未接上。請連接上並重試一次...
-QKSet_detect_APdesc=RT-N56U的目前是\"AP\"模式，開始設定....
+QKSet_detect_APdesc=RT-N56U的目前是 'AP' 模式，開始設定....
 QKSet_detect_skipbtn=略過並手動設定
 QKSet_detect_freshbtn=重新偵測
 QKSet_detect_waitdesc=開始偵測網際網路連線類型...

@@ -962,11 +962,7 @@ extern int xfrm6_find_1stfragopt(struct xfrm_state *x, struct sk_buff *skb,
 				 u8 **prevhdr);
 
 #ifdef CONFIG_XFRM
-#if 0	
-extern int xfrm4_rcv_encap(struct sk_buff *skb, __u16 encap_type);
-#else	/* l2tp-encap */
 extern int xfrm4_udp_encap_rcv(struct sock *sk, struct sk_buff *skb);
-#endif
 extern int xfrm_user_policy(struct sock *sk, int optname, u8 __user *optval, int optlen);
 extern int xfrm_dst_lookup(struct xfrm_dst **dst, struct flowi *fl, unsigned short family);
 #else
@@ -975,11 +971,7 @@ static inline int xfrm_user_policy(struct sock *sk, int optname, u8 __user *optv
  	return -ENOPROTOOPT;
 } 
 
-#if 0
-static inline int xfrm4_rcv_encap(struct sk_buff *skb, __u16 encap_type)
-#else	/* l2tp-encap */
 static inline int xfrm4_udp_encap_rcv(struct sock *sk, struct sk_buff *skb)
-#endif
 {
  	/* should not happen */
  	kfree_skb(skb);

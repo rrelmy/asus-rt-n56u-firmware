@@ -168,6 +168,7 @@ void umount_usb_path(char *port);
 char *find_sddev_by_mountpoint(char *mountpoint);
 int count_sddev_mountpoint();
 int count_sddev_partition();
+void restart_apps();
 
 int file_to_buf(char *path, char *buf, int len)
 {
@@ -329,7 +330,7 @@ stop_dhcpd(void)
 int
 restart_dhcpd()
 {
-	printf("restart udhcpd\n");	//tmp test
+	dbg("restart udhcpd\n");	//tmp test
 
 	stop_dhcpd();
 	sleep(1);
@@ -492,13 +493,14 @@ ddns_updated_main(int argc, char *argv[])
 	nvram_set("ddns_hostname_x_old", nvram_safe_get("ddns_hostname_x"));
 	nvram_commit_safe();
 
+	unlink("/tmp/dproxy.cache");
+
 	logmessage("ddns", "ddns update ok");
 
 	dprintf("done\n");
 
 	return 0;
 }
-	
 
 int 
 start_ddns(void)
@@ -596,7 +598,13 @@ start_ddns(void)
 	sprintf(usrstr, "%s:%s", user, passwd);
 	
 	if (	nvram_match("wan_proto", "pppoe") || nvram_match("wan_proto", "pptp") ||
-		nvram_match("wan_proto", "l2tp") || nvram_match("wan_proto", "3g"))	// oleg patch
+		nvram_match("wan_proto", "l2tp")
+#ifndef USB_MODEM
+			|| nvram_match("wan_proto", "3g")
+#else
+			|| get_usb_modem_state()
+#endif
+			)	// oleg patch
 
 	{
 		strcpy(wan_ifname, nvram_safe_get("wan0_pppoe_ifname"));
@@ -606,7 +614,7 @@ start_ddns(void)
 		strcpy(wan_ifname, nvram_safe_get("wan0_ifname"));
 	}	
 
-	printf("wan_ifname: %s\n\n\n\n", wan_ifname);	// tmp test
+	dbg("wan_ifname: %s\n\n\n\n", wan_ifname);	// tmp test
 
 	nvram_set("bak_ddns_enable_x", nvram_safe_get("ddns_enable_x"));
 	nvram_set("bak_ddns_server_x", nvram_safe_get("ddns_server_x"));
@@ -676,9 +684,6 @@ stop_klogd()
 int 
 start_syslogd()
 {
-//	if (nvram_match("router_disable", "1"))
-//		return 0;
-
 	pid_t pid;
 
 	time_zone_x_mapping();
@@ -701,9 +706,6 @@ start_syslogd()
 int
 start_klogd()
 {
-	//if (nvram_match("router_disable", "1"))
-	//	return 0;
-
 	pid_t pid;
 
 	if (nvram_invmatch("log_ipaddr", ""))
@@ -843,6 +845,11 @@ stop_u2ec()
 		system("killall -SIGKILL u2ec");
 }
 
+extern char usb_path1[];
+extern char usb_path1_old[];
+extern char usb_path2[];
+extern char usb_path2_old[];
+
 int
 start_usb(void)
 {
@@ -858,26 +865,38 @@ start_usb(void)
 	system("insmod usbserial.o vendor=0x1165 product=0x0001");
 #endif
 */
+	start_u2ec();
+	start_lpd();
 }
 
 void
 stop_usb(void)
 {
+	dbg("%s()...\n", __FUNCTION__);
+
 #ifdef U2EC
 	stop_u2ec();
 	stop_lpd();
 #endif
-//	nvram_set("ftp_running", "0");
-//	nvram_set("samba_running", "0");
-
-//	remove_usb_mass(NULL);
-	remove_usb_mass("0");
-
+	if (!strcmp(usb_path1, "storage"))
+		remove_usb_mass("1");
+	if (!strcmp(usb_path2, "storage"))
+		remove_usb_mass("2");
+#if 0
+#ifndef USB_MODEM
 	if (nvram_match("wan0_proto", "3g"))
+#else
+	if(get_usb_modem_state())
+#endif
 	{
-		printf("stop usb:stop 3g\n");   // tmp test
+		dbg("stop usb:stop 3g\n");   // tmp test
+#ifndef USB_MODEM
 		stop_3g();
+#else
+		stop_wan_ppp();
+#endif
 	}
+#endif
 }
 
 #ifdef DLM
@@ -938,10 +957,6 @@ void write_ftpd_conf()
 	}
 
 	fclose(fp);
-
-//	memset(test_path, 0, sizeof(test_path));
-//	strcpy(test_path, "/tmp/harddisk/part0");
-//	nvram_set("first_partition", test_path);
 }
 
 void
@@ -955,11 +970,10 @@ start_ftpd()	// added by Jiahao for WL500gP
 	write_ftpd_conf();
 
 	if (nvram_match("st_ftp_modex", "1"))
-		printf("ftp mode: login to first partition\n");
+		dbg("ftp mode: login to first partition\n");
 	else if (nvram_match("st_ftp_modex", "2"))
-		printf("ftp mode: login to first matched shared node\n");
+		dbg("ftp mode: login to first matched shared node\n");
 
-//	nvram_set("ftp_running", "1");
 	system("vsftpd&");
 
 	if (pids("vsftpd"))
@@ -1002,7 +1016,7 @@ usbtpt(int argc, char *argv[])
 
 	if (strcmp("argv[1]", "-h") == 0)
 	{
-		printf("usage: utpt [file] [size(Mb)] [buflen(Kb)]\n");
+		dbg("usage: utpt [file] [size(Mb)] [buflen(Kb)]\n");
 		return 0;
 	}
 
@@ -1015,7 +1029,7 @@ usbtpt(int argc, char *argv[])
 	memset(buf, 'a', sizeof(buf));
 	unlink(argv[1]);
 
-	printf("write size is %d, buf len is %d, counts is %d\n", Mbsize, len, counts);
+	dbg("write size is %d, buf len is %d, counts is %d\n", Mbsize, len, counts);
 
 	gettimeofday(&tv1, &tz1);
 
@@ -1034,7 +1048,7 @@ usbtpt(int argc, char *argv[])
 
 	diff = (float)((float)(tv2.tv_sec - tv1.tv_sec) + ((float)(tv2.tv_usec - tv1.tv_usec))/1000000);
 	rate = (float)((float)Mbsize/diff)/(float)(1024*1024);
-	printf("tv1 = (%d, %d), tv2 = (%d, %d), diff is %.6f, rate is %.3f Mbps\n", tv1.tv_sec, tv1.tv_usec, tv2.tv_sec, tv2.tv_usec, diff, rate);
+	dbg("tv1 = (%d, %d), tv2 = (%d, %d), diff is %.6f, rate is %.3f Mbps\n", tv1.tv_sec, tv1.tv_usec, tv2.tv_sec, tv2.tv_usec, diff, rate);
 	char tmpstr[40];
 	sprintf(tmpstr, "chmod 666 %s", argv[1]);
 	system(tmpstr);
@@ -1048,17 +1062,16 @@ int
 remove_usb_mass(char *port)
 {
 	FILE *fp;
+	int is_apps_running_when_umount = 0;
+	dbg("is_apps_running_when_umount: %d\n", is_apps_running_when_umount);
 
 	if (!port)
 	{
-		dbg("do umount ejected only\n");
+		dbg("%s() umount ejected only\n", __FUNCTION__);
 		goto do_umount;
 	}
-
-#ifndef NO_DM
-	int ret;
-	ret = swap_check();
-#endif
+	else
+		dbg("%s() port: %s\n", __FUNCTION__, port);
 
 #ifdef REMOVE
 	if (product!=NULL)
@@ -1066,92 +1079,76 @@ remove_usb_mass(char *port)
 	else
 		logmessage("USB storage", "NULL");
 #endif
-
-	stop_samba();
 #ifndef NO_DM
-	if (is_apps_running())
+	int delay_for_DM = 0;
+	is_apps_running_when_umount = is_apps_running();
+	dbg("is_apps_running_when_umount: %d\n", is_apps_running_when_umount);
+	if (is_apps_running_when_umount)
+	{
+		delay_for_DM = 1;
 		nvram_set("dm_block", "1");
 
-	if (pids("snarf"))
-		system("killall -SIGKILL snarf");
-	if (pids("giftd"))
-		system("killall -SIGKILL giftd");
-	if (pids("rtorrent"))
-		system("killall -SIGKILL rtorrent");
-	if (pids("dmathined"))
-		system("killall -SIGKILL dmathined");
-/*
-	FILE *fp;
-	if ((fp=fopen("/proc/sys/net/nf_conntrack_max", "w+")))
-	{
-		dbg("\nrestoring nf_conntract_max...\n\n");
-		if (nvram_get("misc_conntrack_x") == NULL)
-			fputs("4096", fp);
-		else
-			fputs(nvram_safe_get("misc_conntrack_x"), fp);
-		fclose(fp);
+		if (pids("snarf"))
+			system("killall -SIGKILL snarf");
+		if (pids("giftd"))
+			system("killall -SIGKILL giftd");
+		if (pids("rtorrent"))
+			system("killall -SIGKILL rtorrent");
+		if (pids("dmathined"))
+			system("killall -SIGKILL dmathined");
 	}
-*/
 #endif
+	stop_samba();
+	stop_ftp();
 	stop_dms();
 #ifdef CONFIG_USER_MTDAAPD
 	stop_mt_daapd();
 #endif
-	stop_ftp();
 	if (pids("usbtest"))
 		system("killall -SIGKILL usbtest");
-#if 0
-	system("swapoff /tmp/harddisk/part0/.swap");
-	system("rm -f /tmp/harddisk/part0/.swap");
-	unlink("/tmp/harddisk/part0");
-	system("rm -Rf /media/*");
-#endif
-	/* force stop if necessary */
-#ifndef NO_DM
-	if (pids("snarf"))
-		system("killall -SIGKILL snarf");
-	if (pids("giftd"))
-		system("killall -SIGKILL giftd");
-	if (pids("rtorrent"))
-		system("killall -SIGKILL rtorrent");
-	if (pids("dmathined"))
-		system("killall -SIGKILL dmathined");
-#endif
-
-//	system("rm -f /tmp/harddisk/part0/.swap");
-//	unlink("/tmp/harddisk/part0");
+	if (delay_for_DM)
+	{
+		dbg("sleep 10 seconds for DM termination\n");
+		sleep(10);
+	}
 
 do_umount:
 	umount_usb_path(port);
-//	chk_partitions(USB_PLUG_OFF);
 	umount_ejected();
 	chk_partitions(USB_PLUG_ON);
 
-	if ((fp=fopen("/proc/sys/net/nf_conntrack_max", "w+")))
+	dbg("is_apps_running_when_umount: %d\n", is_apps_running_when_umount);
+	if (is_apps_running_when_umount)
 	{
-		if (!is_apps_running())
+                stop_infosvr();
+                start_infosvr();
+
+		dbg("rc_restart_firewall...\n");
+		rc_restart_firewall();
+#if 0
+		if ((fp=fopen("/proc/sys/net/nf_conntrack_max", "w+")))
 		{
 			if (nvram_get("misc_conntrack_x") == NULL)
 				fputs("8192", fp);
 			else
 			{
-//				dbg("\nrestore nf_conntract_max...\n\n");
+				dbg("\nrestore nf_conntract_max...\n\n");
 				fputs(nvram_safe_get("misc_conntrack_x"), fp);
 			}
-		}
 
-		fclose(fp);
+			fclose(fp);
+		}
+#endif
 	}
 
-//	nvram_set("usb_mass_hotplug", "0");
-	printf("You can plugoff usb now\n");
+	dbg("You can plugoff usb now\n");
 	return 0;
 }
 
 int
 remove_usb_3g()
 {
-	printf("## remove usb 3g dev\n");	// tmp test
+	dbg("## remove usb 3g dev\n");	// tmp test
 	if (pids("pppd"))
 		system("killall -SIGKILL pppd");
 	system("rmmod usbserial");
@@ -1214,26 +1211,26 @@ ckeck_apps_completeness(const char *dirname)
 	unsigned long crc;
 	unsigned long crc_org;
 	
-	printf("chk apps completness\n");	// tmp test
+	dbg("chk apps completness\n");	// tmp test
 	sprintf(appsdir, "%s%s", dirname, "/.apps");
 
-	//printf("check apps completeness...ing\n");	// tmp test
+	//dbg("check apps completeness...ing\n");	// tmp test
 	if ((fp=fopen(listfilename, "r"))==NULL)
 	{
-		printf("Cannot find %s.\n", listfilename);
-		printf("Make sure it's available.\n");
+		dbg("Cannot find %s.\n", listfilename);
+		dbg("Make sure it's available.\n");
 		return 0;
 	}
 	
 	if ((fp2=fopen(crcfilename, "r"))==NULL)
 	{
-		printf("Cannot find %s.\n", crcfilename);
-		printf("Make sure it's available.\n");
+		dbg("Cannot find %s.\n", crcfilename);
+		dbg("Make sure it's available.\n");
 		fclose(fp);
 		return 0;
 	}
 
-	printf("chk comp 1\n");	// tmp test
+	dbg("chk comp 1\n");	// tmp test
 	while (!feof(fp))
 	{
 		if (fgets(line,sizeof(line),fp)==NULL) break;	/* end-of-file */
@@ -1244,10 +1241,10 @@ ckeck_apps_completeness(const char *dirname)
 		sprintf(tmp, "%s%s", appsdir, line+1);		/* file path */
 		tmp[strlen(tmp)-1]='\0';
 
-		printf("check crc [%s]\n", tmp);	// tmp test
+		dbg("check crc [%s]\n", tmp);	// tmp test
 		if (calc_crc32(tmp, &crc) != 0)
 		{
-			printf("Error reading file %s.\n", tmp);
+			dbg("Error reading file %s.\n", tmp);
 			sprintf(tmp, "rm -rf %s", appsdir);
 			system(tmp);	
 			fclose(fp);
@@ -1257,7 +1254,7 @@ ckeck_apps_completeness(const char *dirname)
 		
 		if (fgets(line2,sizeof(line2),fp2)==NULL)
 		{
-			printf("fgets err\n");	// tmp test
+			dbg("fgets err\n");	// tmp test
 			sprintf(tmp, "rm -rf %s", appsdir);
 			system(tmp);
 			fclose(fp);
@@ -1265,14 +1262,14 @@ ckeck_apps_completeness(const char *dirname)
 			return 0;
 		}
 		sprintf(crc_str, "%08lX", crc);
-		printf("CRC32 now: %s\n", crc_str);	// tmp test
+		dbg("CRC32 now: %s\n", crc_str);	// tmp test
 
 		line2[strlen(line2)-1]='\0';
-		printf("CRC32 org: %s\n", line2);
+		dbg("CRC32 org: %s\n", line2);
 		
 		if (strcmp(crc_str, line2)!=0)
 		{
-			printf("compare crc err\n");	// tmp test
+			dbg("compare crc err\n");	// tmp test
 			sprintf(tmp, "rm -rf %s", appsdir);
 			system(tmp);
 			fclose(fp);
@@ -1289,80 +1286,6 @@ ckeck_apps_completeness(const char *dirname)
 
 #endif	// #ifdef DLM
 
-#if 0
-void
-stop_usblp()
-{
-	system("rmmod usblp");
-}
-
-int 
-start_usblp()
-{
-	return system("insmod -q usblp");
-}
-
-void 
-squeeze_mem()
-{
-	FILE *fp;
-
-	stop_u2ec();
-	stop_telnetd();
-	stop_ntpc();
-	stop_ots();
-	stop_upnp();
-	stop_lpd();
-	stop_dns();
-	stop_watchdog();
-#if (!defined(W7_LOGO) && !defined(WIFI_LOGO))
-	stop_pspfix();
-#endif
-	stop_infosvr();
-	stop_logger();
-	stop_usblp();
-
-	if ((fp=fopen("/proc/sys/net/nf_conntrack_max", "w+")))
-	{
-		fputs("16384", fp);
-		fclose(fp);
-	}
-}
-
-void
-recover_squeeze_mem()
-{
-	FILE *fp;
-
-	start_usblp();
-	start_dns();
-	start_ntpc();
-	start_u2ec();
-	start_ots();
-	start_lpd();
-
-	stop_upnp();
-	start_upnp();
-	start_watchdog();
-	start_infosvr();
-	start_logger();
-
-	if (nvram_invmatch("wsc_config_state", "1") &&
-		(nvram_match("sw_mode_ex", "1") || nvram_match("sw_mode_ex", "4")))
-	{
-#if (!defined(W7_LOGO) && !defined(WIFI_LOGO))
-		start_pspfix();
-#endif
-	}
-
-	if ((fp=fopen("/proc/sys/net/ipv4/netfilter/ip_conntrack_max", "w+")))
-	{
-		fputs("15360", fp);
-		fclose(fp);
-	}
-}
-#endif
-
 int
 write_file(char *swap_path, int buf_size, int runs, int index)
 {
@@ -1372,10 +1295,10 @@ write_file(char *swap_path, int buf_size, int runs, int index)
 
 	memset(write_buf, 0, buf_size);
 
-	fp=fopen(swap_path, "a");
+	fp = fopen(swap_path, "a");
 	if (fp!=NULL)
 	{
-		printf("--(cric) start to write swap file[%d]:(runs:%d)--\n", index, runs);	// tmp test
+		dbg("--(cric) start to write swap file[%d]:(runs:%d)--\n", index, runs);	// tmp test
 		for (i=0; i< runs; ++i)
 		{
 			fwrite(write_buf, buf_size, 1, fp);
@@ -1388,25 +1311,27 @@ write_file(char *swap_path, int buf_size, int runs, int index)
 	}
 
 	fclose(fp);
-	printf("--(cric) end to write swap file[%d]--\n", index);  // tmp test
+	dbg("--(cric) end to write swap file[%d]--\n", index);  // tmp test
 	return 0;
 }
+
+unsigned long file_size(const char *filepath);
 
 int swap_write_count = 0;
 
 int 
-create_swap_file(char *swap_path)
+create_swap_file(const char *swap_path)
 {
-	unsigned int total_swap_size = 1024*1024*64;
-	unsigned int unit_size = 1024*256;
-	unsigned int wr_num = 8;
-	unsigned int truncate_run = total_swap_size / unit_size / wr_num;
+	unsigned long total_swap_size = 1024*1024*128;
+	unsigned long unit_size = 1024*256;
+	unsigned long wr_num = 8;
+	unsigned long truncate_run = total_swap_size / unit_size / wr_num;
 	char test_path[128];
 	int result = 0, i;
 	time_t now, elapsed;
-	time_t start_time = time(NULL);
-	time_t timeout = start_time + 40;
-	int swap_timeout;	// seconds
+	time_t start_time = uptime();
+	time_t timeout = start_time + 60;
+	int swap_timeout;
 
 	if (nvram_invmatch("asus_mfg", "0"))
 		return -1;
@@ -1420,27 +1345,30 @@ create_swap_file(char *swap_path)
 	memset(test_path, 0, sizeof(test_path));
 
 	if(nvram_match("mnt_type", "ntfs"))
-		timeout = timeout + 40;
+		timeout = timeout + 30;
 
 	swap_write_count = 0;
 	for (i=0; i < wr_num; ++i)
 	{
-		sleep(1);
+		if (i) usleep(200 * 1000);
 		if ((result = write_file(swap_path, unit_size, truncate_run, i)) < 0)
 			break;
-		now = time(NULL);
+
+		now = uptime();
 		elapsed = now - start_time;
-		printf(" # elapsed %d seconds\n", elapsed);			// tmp test
+		dbg("# elapsed %d seconds\n", elapsed);
 		if (now >= timeout)
-		{
-			// stop create & stop service
-			printf("flash disk slow, stop creating swap\n");	// tmp test
-			logmessage("USB storage", "flash disk slow, stop creating swap");
+		{	// stop create & stop service
+			dbg("slow usb storage writing speed, stop swap creating\n");
+			logmessage("USB storage", "slow usb storage writing speed, stop swap creating.");
 			break;
 		}
+
+		if (file_size(swap_path) >= total_swap_size)
+			break;
 	}
 	swap_write_count = i;
-	printf("swap write count is %d\n", swap_write_count);			// tmp test
+	dbg("swap write count is %d\n", swap_write_count);
 
 	if (result == 0)
 	{
@@ -1451,11 +1379,8 @@ create_swap_file(char *swap_path)
 		sprintf(test_path, "swapon %s", swap_path);
 		system(test_path);
 
-		logmessage("USB storage", "128MB swap file is added");
-//		nvram_set("swap_on", "1");
+		logmessage("USB storage", "%dk swap file is added", swap_check() / 1024);
 	}	
-	else
-//		nvram_set("swap_on", "0");
 
 	return result;
 }
@@ -1464,113 +1389,100 @@ create_swap_file(char *swap_path)
 int
 hotplug_usb_mass(char *product)
 {	
-	char tmp[128];
-	int n=0, m=0, p=0;
+	int n = 0, m = 0, p = 0;
 	struct dirent *dp, *dp_disc, **dpopen;
-	char tmpstr[128], test_path[128];
+	char swap_path[128], test_path[128];
 	int i, j;
 	int chk_freeDisk;
-	int apps_comp=0;
-	int apps_status=0;
-	int apps_disk_free=0;
+	int apps_comp = 0;
+	int apps_status = 0;
+	int apps_disk_free = 0;
 	int new_disc[2];
-	new_disc[0]=0;
-	new_disc[1]=0;
+	new_disc[0] = 0;
+	new_disc[1] = 0;
 # ifdef DLM
 	int buflen=0;
 # endif
-	int skip_DM=1;
+	int skip_DM = 1;
 
-	char *usb_mass_first_path = nvram_get("usb_mnt_first_path");
-	if (!usb_mass_first_path)
+	char *usb_mass_first_path = nvram_safe_get("usb_mnt_first_path");
+	if (!strlen(usb_mass_first_path))
 		usb_mass_first_path = "fail_path";
+	dbg("\n[hotplug] get usb mass first path = %s\n", usb_mass_first_path);
 
-	printf("\n[rc] get usb mass first path = %s\n", usb_mass_first_path);	// tmp test
+//	nvram_set("usb_disc_mount_path", usb_mass_first_path);
+//	nvram_set("usb_disc_fs_path", usb_mass_first_path);
+//	nvram_set("usb_disc_path", "/tmp/harddisk/part0");
 
-//	LED_CONTROL(LED_POWER, LED_OFF);
-
-//	nvram_set("usb_mass_hotplug", "1");
-
-//	squeeze_mem();
-
-	memset(tmp, 0, sizeof(tmp));
-#ifdef DLM
-	nvram_set("usb_storage_busy", "1");
-	nvram_set("apps_status_checked", "1");	// it means need to check
-#endif
-	nvram_set("usb_disc_mount_path", usb_mass_first_path);
-	nvram_set("usb_disc_fs_path", usb_mass_first_path);
-	nvram_set("usb_disc_path", "/tmp/harddisk/part0");
-	printf("\n### [hotplug] link part0 to the first usb path (%s)\n", usb_mass_first_path);	// tmp test
-
-	unlink("/tmp/harddisk/part0");
-	for (i=0; i<3; ++i)
+	if (!check_if_dir_exist("/tmp/harddisk/part0"))
 	{
-		if (symlink(usb_mass_first_path, "/tmp/harddisk/part0") == 0)
-			break;
-		else
+		dbg("\n[hotplug] link part0 to the first usb path (%s)\n", usb_mass_first_path);
+
+		for (i = 0; i < 3; ++i)
 		{
-			printf("link to part0 fail, retrying...(%d)\n", i);	// tmp test
-			sleep(1);
+			if (symlink(usb_mass_first_path, "/tmp/harddisk/part0") == 0)
+				break;
+			else
+			{
+				dbg("[hotplug] link to part0 fail, retrying...(%d)\n", i);
+				sleep(1);
+			}
 		}
 	}
-	
-	nvram_set("usb_disc0_path0", "/tmp/harddisk/part0");
-//	nvram_set("usb_disc0_port", "1");
-//	nvram_set("usb_disc0_port", nvram_safe_get("usb_mnt_first_path_port"));	// J++
-//	nvram_set("usb_disc0_dev", usb_mass_first_path);
-//	nvram_set("apps_dlx", "1");
-	nvram_set("apps_dlx", nvram_safe_get("apps_dl"));
+
+//	nvram_set("usb_disc0_path0", "/tmp/harddisk/part0");
 	
 #ifdef DLM
-//	nvram_set("eject_from_web", "0");
-		
 	memset(test_path, 0, sizeof(test_path));
 	strcpy(test_path, "/tmp/harddisk/part0");
-	memset(tmp, 0, sizeof(tmp));
-	strcpy(tmp, test_path);
 
 #ifndef NO_DM
-	if ((apps_comp=ckeck_apps_completeness(tmp))==1)
-		nvram_set("apps_comp", "1");
-	else
+	if (nvram_match("asus_mfg", "0") && !is_apps_running())
 	{
-		printf("verify apps fail\n");	// tmp test
-		system("rm -Rf /tmp/harddisk/part0/.apps");
-		nvram_set("apps_comp", "0");
-		nvram_set("dm_block", "0");	// 0716 chk
+		if ((apps_comp=ckeck_apps_completeness(test_path))==1)
+			nvram_set("apps_comp", "1");
+		else
+		{
+			dbg("verify apps fail\n");	// tmp test
+			system("rm -Rf /tmp/harddisk/part0/.apps");
+
+			nvram_set("apps_comp", "0");
+			nvram_set("dm_block", "0");	// 0716 chk
+		}
 	}
 #else
 	nvram_set("apps_comp", "1");
 #endif	// #ifndef NO_DM
 
 #ifndef NO_DM
-	printf("\n\n**apps_completeness=%d\n\n", apps_comp);	// tmp test
-
-	sprintf(tmpstr, "%s/.swap", test_path);
-	//unlink("/tmp/harddisk/part0/.swap");
-	system("rm -f /tmp/harddisk/part0/.swap");
+	dbg("\n\n**apps_completeness = %d\n\n", apps_comp);	// tmp test
 
 	/* chk disk total > 1G */
-	nvram_set("apps_disk_free", "0");
-	chk_freeDisk = check_disk_free_GE_1G(test_path);
-			
-	printf("chk freeDisk result= %d\n", chk_freeDisk);	// tmp test
-
-	if ((chk_freeDisk == 2)/* || (chk_freeDisk == 3)*/)
+	if (nvram_match("asus_mfg", "0") && !is_apps_running())
 	{
-		nvram_set("apps_disk_free", "1");
+		nvram_set("apps_disk_free", "0");
 
-		if (nvram_match("apps_dl", "1") /*&& apps_comp*/ /*&& (create_swap_file(tmpstr) >= 0)*/)
-//			return -1;
-			skip_DM=0;
+		chk_freeDisk = check_disk_free_GE_1G(test_path);			
+		dbg("chk freeDisk result= %d\n", chk_freeDisk);	// tmp test
+
+		if ((chk_freeDisk == 2)/* || (chk_freeDisk == 3)*/)
+		{
+			nvram_set("apps_disk_free", "1");
+
+			if (nvram_match("apps_dl", "1"))
+				skip_DM = 0;
+		}
+		else if (chk_freeDisk == 1)
+			logmessage("USB storage", "The swap file is not added for free space is less than 128 Mb");
+		else if (chk_freeDisk == 3)	/* accept to create swap */
+			logmessage("USB storage", "The swap file is not added for partition size is less than 1 G");
+		else if (chk_freeDisk == 0)
+			logmessage("USB storage", "The swap file is not added for unknown reasons");
 	}
-	else if (chk_freeDisk == 1)
-		logmessage("USB storage", "The swap file is not added for free space is less than 128 Mb");
-	else if (chk_freeDisk == 3)	/* accept to create swap */
-		logmessage("USB storage", "The swap file is not added for partition size is less than 1 G");
-	else if (chk_freeDisk == 0)
-		logmessage("USB storage", "The swap file is not added for unknown reasons");
+	else
+	{
+		logmessage("USB storage", "ATE mode? DM is already running?");
+	}
 #else
 	check_disk_free_GE_1G(test_path);
 #endif	// #ifndef NO_DM
@@ -1578,89 +1490,74 @@ hotplug_usb_mass(char *product)
 	/* make necessary dir */
 #ifndef NO_DM
 	if (!skip_DM)
-	init_apps();
+		init_apps();
 #endif
-
-//	recover_squeeze_mem();
 
 	/* run ftp latter*/
 //	doSystem("/sbin/test_of_var_files_in_mount_path %s", usb_mass_first_path);	// move to busybox mdev.c
 
 #ifdef CONFIG_USER_MTDAAPD
-	if (nvram_match("wan_route_x", "IP_Routed") && !pids("mDNSResponder"))
+	if (nvram_match("asus_mfg", "0") && nvram_match("wan_route_x", "IP_Routed") && !pids("mDNSResponder"))
 		doSystem("mDNSResponder %s thehost %s _daap._tcp. 3689 &", nvram_safe_get("lan_ipaddr_t"), nvram_safe_get("computer_name"));
 #endif
-
 	if (nvram_match("asus_mfg", "0"))
 		run_dms();
 
 	run_ftpsamba();
 #ifdef CONFIG_USER_MTDAAPD
-	start_mt_daapd();
+	if (nvram_match("asus_mfg", "0"))
+		start_mt_daapd();
 #endif
 	/* chk disk free */
 #ifndef NO_DM
-	apps_disk_free=check_disk_free_apps(tmp, apps_comp);
-//	if (apps_disk_free==1)
-//		nvram_set("apps_disk_free", "1");
-//	else
-//		nvram_set("apps_disk_free", "0");
+	if (!skip_DM)
+		apps_disk_free = check_disk_free_apps(test_path, apps_comp);
 #else
 	nvram_set("apps_disk_free", "1");
 #endif	// #ifndef NO_DM
-	/* before exec apps, we check all tasks first */
-//	check_all_tasks();
 
-	//printf("\nchk apps ready: apps_comp=%d, apps_dl=%s, apps_running=%d, chk_freeDisk=%d, swap_write_count=%d\n", apps_comp, nvram_safe_get("apps_dl"), is_apps_running(), chk_freeDisk, swap_write_count);	// tmp test
-	//printf("it supposed to be 1, 1, 0, 2, 6");	// tmp test
+	//dbg("\nchk apps ready: apps_comp=%d, apps_dl=%s, apps_running=%d, chk_freeDisk=%d, swap_write_count=%d\n", apps_comp, nvram_safe_get("apps_dl"), is_apps_running(), chk_freeDisk, swap_write_count);	// tmp test
+	//dbg("it supposed to be 1, 1, 0, 2, 6");	// tmp test
 	/* if apps is ready and not running, then run it */
 #ifndef NO_DM
-	if (nvram_match("apps_dl", "0"))
+	if (!skip_DM)
 	{
-		dbg("skip running DM: apps disabled\n");
-		logmessage("Download Master", "apps disabled, daemon is not started");
-	}
-/*
-	else if (skip_DM)
-	{
-		dbg("skip running DM: no swap memory\n");
-		logmessage("Download Master", "no swap memory");
-	}
-*/
-	else if ((apps_comp==1) &&
-	   nvram_match("apps_dl", "1") &&
-	   !is_apps_running() &&
-	(swap_check() || create_swap_file(tmpstr) >= 0)
-	  )
-	{
-		if ((chk_freeDisk == 2) && (swap_write_count >= 3) && (!nvram_match("dm_block", "1")))
+		sprintf(swap_path, "%s/.swap", test_path);
+
+		if (nvram_match("apps_dl", "0"))
 		{
-			if (apps_comp==1 && apps_disk_free==1)
+			dbg("skip running DM: apps disabled\n");
+			logmessage("Download Master", "apps disabled, daemon is not started");
+		}
+		else if ((apps_comp == 1) && nvram_match("apps_dl", "1") && !is_apps_running() &&
+			 (swap_check() || create_swap_file(swap_path) >= 0))
+		{
+			if ((chk_freeDisk == 2) && (swap_write_count >= 3) && (!nvram_match("dm_block", "1")))
 			{
-				if(swap_write_count < 6)
-					nvram_set("slow_disk", "1");
-//				nvram_set("apps_dms_usb_port_x", "1");
-				nvram_set("apps_dms_usb_port_x", nvram_safe_get("usb_mnt_first_path_port"));
-				exec_apps();
+				if (apps_comp==1 && apps_disk_free==1)
+				{
+					if(swap_write_count < 6)
+						nvram_set("slow_disk", "1");
+
+					exec_apps();
+				}
+			}
+			else
+			{
+				dbg("skip running DM: not enough disk space or slow disk\n");
+				logmessage("Download Master", "not enough space or slow disk, daemon is not started");
 			}
 		}
 		else
 		{
-			dbg("skip running DM: not enough disk space or slow disk\n");
-			logmessage("Download Master", "not enough space or slow disk, daemon is not started");
+			dbg("skip running DM: apps not ready\n");
+			logmessage("Download Master", "apps not ready, daemon is not started");
 		}
-	}
-	else
-	{
-		dbg("skip running DM: apps not ready\n");
-		logmessage("Download Master", "apps not ready, daemon is not started");
 	}
 #endif
 
-	nvram_set("usb_storage_busy", "0");
 #endif	// #ifdef DLM
 
-//	LED_CONTROL(LED_POWER, LED_ON);
 	return 0;
 }
 
@@ -1679,7 +1576,7 @@ chk_free(char *diskpath)
 	}
 
 	free_size = (double)((double)((double)fsbuf.f_bfree * fsbuf.f_bsize)/(1024*1024));
-	printf("\n[compete free] chk free: free=%fMB\n", free_size);	// tmp test
+	dbg("\n[compete free] chk free: free=%fMB\n", free_size);	// tmp test
 
 	if ( free_size > free_max )
 	{
@@ -1720,44 +1617,49 @@ mnt_op(int disk_num, int part_num, int op_mode)
 		memset(cmd, 0, sizeof(cmd));
 		sprintf(cmd, "/sbin/automount.sh %s %s", dev_path, mnt_path);
 		system(cmd);
-		printf("\n##[mnt_op]: MOUNT: %s(%d,%d)\n", cmd, disk_num, part_num);	// tmp test
+		dbg("\n##[mnt_op]: MOUNT: %s(%d,%d)\n", cmd, disk_num, part_num);	// tmp test
 		break;
 	case OP_UMOUNT:
 		sprintf(mnt_path, "/media/AiDisk_%c%d", disk_num+97, part_num);
 
 		memset(cmd, 0, sizeof(cmd));
 		sprintf(cmd, "swapoff %s/.swap", mnt_path);
-		printf("### [mnt_op] ready to %s\n", cmd);	// tmp test
+		dbg("### [mnt_op] ready to %s\n", cmd);	// tmp test
 		system(cmd);
 		sleep(1);
 
-		printf("### [mnt_op] ready to remove .swap\n");	// tmp test
+		dbg("### [mnt_op] ready to remove .swap\n");	// tmp test
 		system("rm -f /tmp/harddisk/part0/.swap");
 
 		memset(cmd, 0, sizeof(cmd));
 		sprintf(cmd, "umount2 %s", mnt_path);
 		system(cmd);
-		printf("### [mnt_op]: UMOUNT: %s\n", cmd);	// tmp test
+		dbg("### [mnt_op]: UMOUNT: %s\n", cmd);	// tmp test
 		break;
 */
 	case OP_SETNVRAM:
 		sprintf(mnt_path, "/media/AiDisk_%c%d", disk_num+97, part_num);
 
-		printf("[mnt_op]: set usb_mnt_first_path as %s\n", mnt_path);	// tmp test
+		dbg("[mnt_op]: set usb_mnt_first_path as %s\n", mnt_path);	// tmp test
 
-		if (!found_mountpoint_with_apps())
+		if (!strlen(nvram_safe_get("usb_mnt_first_path")) && !found_mountpoint_with_apps())
+		{
+			dbg("\n\n\nmnt path: %s, path1 dev: %s, path2 dev: %s, find...: %s %d %d\n\n\n", mnt_path, nvram_safe_get("usb_path1_sddev"), nvram_safe_get("usb_path2_sddev"), find_sddev_by_mountpoint(mnt_path), nvram_match("usb_path1_sddev", find_sddev_by_mountpoint(mnt_path)), nvram_match("usb_path2_sddev", find_sddev_by_mountpoint(mnt_path)));
+
 			nvram_set("usb_mnt_first_path", mnt_path);
+			if (!strncmp(nvram_safe_get("usb_path1_sddev"), find_sddev_by_mountpoint(mnt_path), 3))
+				nvram_set("usb_mnt_first_path_port", "1");
+			else if (!strncmp(nvram_safe_get("usb_path2_sddev"), find_sddev_by_mountpoint(mnt_path), 3))
+				nvram_set("usb_mnt_first_path_port", "2");
+			else
+				nvram_set("usb_mnt_first_path_port", "0");
 
-		dbg("\n\n\nmnt path: %s, path1 dev: %s, path2 dev: %s, find...: %s %d %d\n\n\n", mnt_path, nvram_get("usb_path1_sddev"), nvram_get("usb_path2_sddev"), find_sddev_by_mountpoint(mnt_path), nvram_match("usb_path1_sddev", find_sddev_by_mountpoint(mnt_path)), nvram_match("usb_path2_sddev", find_sddev_by_mountpoint(mnt_path)));
-
-		if (!strncmp(nvram_safe_get("usb_path1_sddev"), find_sddev_by_mountpoint(mnt_path), 3))
-			nvram_set("usb_mnt_first_path_port", "1");
-		else if (!strncmp(nvram_safe_get("usb_path2_sddev"), find_sddev_by_mountpoint(mnt_path), 3))
-			nvram_set("usb_mnt_first_path_port", "2");
-		else
-			nvram_set("usb_mnt_first_path_port", "0");
-		
+			nvram_set("apps_status_checked", "1");	// it means need to check
+			nvram_set("apps_comp", "0");
+			nvram_set("apps_disk_free", "0");
+		}	
 		break;
+
 	default:
 		break;
 	}
@@ -1778,12 +1680,12 @@ test_write_firstP()
 
 	if ((fd = open(test_file, O_CREAT|O_RDWR)) <= 0)
 	{
-		printf("[failed open...test write before start apps\n]");
+		dbg("[failed open...test write before start apps\n]");
 		return -1;
 	}
 	if (write(fd, "test write", 10) <= 0)
 	{
-		printf("[failed write...test write before start apps\n]");
+		dbg("[failed write...test write before start apps\n]");
 		return -1;
 	}
 	close(fd);
@@ -1842,7 +1744,7 @@ pre_chk_mount()
 	{
 		if (try_counts > 10)
 		{
-			printf("cannot open mounts/partitions\n");
+			dbg("cannot open mounts/partitions\n");
 			return;
 		}
 
@@ -1852,7 +1754,7 @@ pre_chk_mount()
 			fp_p = fopen("/proc/partitions", "r");
 
 		++try_counts;
-		printf("open mounts/part fail, try [%d]\n", try_counts);
+		dbg("open mounts/part fail, try [%d]\n", try_counts);
 		sleep(1);
 	}
 
@@ -1936,12 +1838,12 @@ chk_partitions(int state)
 	int  need_choose_fs = 0;
 	int  choose_case = 0, op_i = -1, op_j = -1;
 
-	printf("chk_partition tables\n");	// tmp test
+	dbg("chk_partition tables\n");	// tmp test
 	while ((!fp_m) || (!fp_p))
 	{
 		if (try_counts > 10)
 		{
-			printf("cannot open mounts/partitions\n");
+			dbg("cannot open mounts/partitions\n");
 			return;
 		}
 
@@ -1951,7 +1853,7 @@ chk_partitions(int state)
 			fp_p = fopen("/proc/partitions", "r");
 
 		++try_counts;
-		printf("open mounts/part fail, try [%d]\n", try_counts);
+		dbg("open mounts/part fail, try [%d]\n", try_counts);
 		sleep(1);
 	}
 
@@ -1973,7 +1875,7 @@ chk_partitions(int state)
 			if (pc >= 97)	// 'a' is 97
 			{
 				par_n[pc-97][pd] = 'h';
-				//printf("**set part[%d][%d] **\n", pc-97, pd);	// tmp test
+				//dbg("**set part[%d][%d] **\n", pc-97, pd);	// tmp test
 			}
 		}
 		memset(buf, 0, sizeof(buf));
@@ -2024,11 +1926,11 @@ chk_partitions(int state)
 
 #if 0
 	/* dump mnt_n/par_n */
-	printf("\n\n############partitions##############\n\n");
+	dbg("\n\n############partitions##############\n\n");
 	for (i=0, j=0, k=0; i<2; ++k)
 	//for (i=25, j=0, k=0; i<26; ++k)
 	{
-		printf("(%d,%d)=[%c] ", i, j, par_n[i][j]);
+		dbg("(%d,%d)=[%c] ", i, j, par_n[i][j]);
 		++j;
 		if (j==20)
 		{
@@ -2038,15 +1940,15 @@ chk_partitions(int state)
 		}
 		if (k == 5)
 		{
-			printf("\n");
+			dbg("\n");
 			k = 0;
 		}
 	}
-	printf("\n\n############mounts##############\n\n");
+	dbg("\n\n############mounts##############\n\n");
 	for (i=0, j=0, k=0; i<2; ++k)
 	//for (i=25, j=0, k=0; i<26; ++k)
 	{
-		printf("(%d,%d)=[%c] ", i, j, mnt_n[i][j]);
+		dbg("(%d,%d)=[%c] ", i, j, mnt_n[i][j]);
 		++j;
 		if (j==20)
 		{
@@ -2056,14 +1958,14 @@ chk_partitions(int state)
 		}
 		if (k == 5)
 		{
-			printf("\n");
+			dbg("\n");
 			k = 0;
 		}
 	}
-	printf("\n\n############fs##############\n\n");
+	dbg("\n\n############fs##############\n\n");
 	for (i=0, j=0, k=0; i<2; ++k)
 	{
-		printf("(%d,%d)=[%c] ", i, j, fs_n[i][j]);
+		dbg("(%d,%d)=[%c] ", i, j, fs_n[i][j]);
 		++j;
 		if (j==20)
 		{
@@ -2073,7 +1975,7 @@ chk_partitions(int state)
 		}
 		if (k == 5)
 		{
-			printf("\n");
+			dbg("\n");
 			k = 0;
 		}
 	}
@@ -2107,14 +2009,14 @@ chk_partitions(int state)
 #if 0
 			if (((i == new_mount) && ((par_n[i][0] == 'h') && (par_n[i][1] != 'h') && (mnt_n[i][1] != 'h')) /*&& chk_safe_fs(need_choose_fs, fs_n[i][1])*/))	// tmp test
 			{
-				printf("### SETNV case 2, skip it\n");	// tmp test
+				dbg("### SETNV case 2, skip it\n");	// tmp test
 			}
 #endif
 #if 0
 			if (((par_n[i][1] == 'h') || (par_n[i][0] == 'h')) && ((mnt_n[i][1] == 'h') || (mnt_n[i][0] == 'h')) /*&& chk_safe_fs(need_choose_fs, fs_n[i][1])*/)  // consider sdx1 first, storage maybe small flash
 			{
 				choose_case = 1;
-				printf("### SETNVRAM case 1\n");	// tmp test
+				dbg("### SETNVRAM case 1\n");	// tmp test
 				if (compete_choose(i, 1) > 0)
 				{
 					op_i = i;
@@ -2128,7 +2030,7 @@ chk_partitions(int state)
 					if ((par_n[i][j] == 'h') && (mnt_n[i][j] == 'h') /*&& chk_safe_fs(need_choose_fs, fs_n[i][j])*/)
 					{
 						choose_case = 3;
-						printf("### SETNVRAM case 3\n");	// tmp test
+						dbg("### SETNVRAM case 3\n");	// tmp test
 						if (compete_choose(i, j) > 0)
 						{
 							op_i = i;
@@ -2143,7 +2045,7 @@ chk_partitions(int state)
 				if ((j == 0) && (par_n[i][j] == 'h') && (par_n[i][1] != 'h') && (mnt_n[i][1] == 'h'))
 				{
 					choose_case = 4;
-					printf("### SETNVRAM case 4\n");	// tmp test
+					dbg("### SETNVRAM case 4\n");	// tmp test
 					if (compete_choose(i, 1) > 0)
 					{
 						op_i = i;
@@ -2153,7 +2055,7 @@ chk_partitions(int state)
 				else if ((par_n[i][j] == 'h') && (mnt_n[i][j] == 'h') /*&& chk_safe_fs(need_choose_fs, fs_n[i][j])*/)
 				{
 					choose_case = 3;
-					printf("### SETNVRAM case 3\n");	// tmp test
+					dbg("### SETNVRAM case 3\n");	// tmp test
 					if (compete_choose(i, j) > 0)
 					{
 						op_i = i;
@@ -2162,15 +2064,17 @@ chk_partitions(int state)
 				}
 			}
 		}
-		printf("NV case is %d(%d, %d)\n", choose_case, op_i, op_j);	// tmp test
+		dbg("NV case is %d(%d, %d)\n", choose_case, op_i, op_j);	// tmp test
 
-		if ((op_i >= 0) && (op_j >= 0) && (!swap_check()) && nvram_match("usb_mnt_first_path", ""))
+		if (	((op_i >= 0) && (op_j >= 0)) && 
+			(!is_apps_running() || !swap_check()) && 
+			!strlen(nvram_safe_get("usb_mnt_first_path")))
 		{
 			set_mnt_type(fs_n[op_i][op_j]);
 			mnt_op(op_i, op_j, OP_SETNVRAM);
 		}
 		else
-			printf("OP SETNVRAM fail\n");	
+			dbg("OP SETNVRAM fail\n");	
 
 		break;
 /*
@@ -2193,7 +2097,7 @@ chk_partitions(int state)
 void
 set_dev_class(char *dev, int *num)
 {
-	//printf("set dev class:[%c][%c]\n", dev[0], dev[1]);	// tmp test
+	//dbg("set dev class:[%c][%c]\n", dev[0], dev[1]);	// tmp test
 	if ((dev[0] == '0') && (dev[1] =='0'))
 		*num = USB_CLS_PER_INTERFACE;
 	else if ((dev[0] == '0') && (dev[1] =='1'))
@@ -2278,9 +2182,10 @@ set_dev_class(char *dev, int *num)
 		*num = USB_CLS_VENDOR_SPEC;
 //		nvram_set("usb_path1", "vendor_spec");
 	}
-	//printf("get usb_path is %s\n", nvram_safe_get("usb_path1"));	// tmp test
+	//dbg("get usb_path is %s\n", nvram_safe_get("usb_path1"));	// tmp test
 }
 
+#ifndef USB_MODEM
 int
 get_dev_info(int *dev_class, char *product_id, char *vendor_id, char *prod_id)
 {
@@ -2292,10 +2197,10 @@ get_dev_info(int *dev_class, char *product_id, char *vendor_id, char *prod_id)
 	char *skey_11 = "Port=", *skey_12 = "T:", *bp, *tmp_p;
 	char buf[8192], b_class[3], vendor[5], prodid[5], rev[6], tmp_name[100], port[3];
 
-	printf("get dev info\n");	// tmp test
+	dbg("get dev info\n");	// tmp test
 	if ((fd=open(usb_dev_file, O_RDONLY)) <= 0)
 	{
-		printf("open usb devices fail\n");
+		dbg("open usb devices fail\n");
 		dbg("...%s()\n", __FUNCTION__);
 		return 0;
 	}
@@ -2303,7 +2208,7 @@ get_dev_info(int *dev_class, char *product_id, char *vendor_id, char *prod_id)
 	memset(buf, 0, sizeof(buf));
 	if (read(fd, buf, sizeof(buf)) <= 0)
 	{
-		printf("read usb devices fail\n");
+		dbg("read usb devices fail\n");
 		close(fd);
 		dbg("...%s()\n", __FUNCTION__);
 		return 0;
@@ -2383,7 +2288,7 @@ E:  Ad=02(O) Atr=02(Bulk) MxPS= 512 Ivl=0ms
 		sprintf(product_id, "%s/%s/%s", vendor, prodid, rev);
 		sprintf(vendor_id, "%s", vendor);
 		sprintf(prod_id, "%s", prodid);
-//		printf("set product_id as %s/%s/%s\n", vendor, prodid, rev);	// tmp test
+//		dbg("set product_id as %s/%s/%s\n", vendor, prodid, rev);	// tmp test
 
 		/* get manufact */
 		tmp_p = strstr(bp, skey_8);
@@ -2393,7 +2298,7 @@ E:  Ad=02(O) Atr=02(Bulk) MxPS= 512 Ivl=0ms
 			tmp_p+=strlen(skey_8);
 			for (i=0; (*(tmp_p+i)!='\n')&&(i<100); ++i)
 				tmp_name[i] = *(tmp_p+i);
-			printf("get Manufacturer=%s\n", tmp_name);	// tmp test
+			dbg("get Manufacturer=%s\n", tmp_name);	// tmp test
 			nvram_set("usb_Manufacturer", tmp_name);
 		}
 		else
@@ -2407,7 +2312,7 @@ E:  Ad=02(O) Atr=02(Bulk) MxPS= 512 Ivl=0ms
 			tmp_p+=strlen(skey_9);
 			for (i=0; (*(tmp_p+i)!='\n')&&(i<100); ++i)
 				tmp_name[i] = *(tmp_p+i);
-			printf("get productname=%s\n", tmp_name);      // tmp test
+			dbg("get productname=%s\n", tmp_name);      // tmp test
 			nvram_set("usb_Product", tmp_name);
 		}
 		else
@@ -2421,7 +2326,7 @@ E:  Ad=02(O) Atr=02(Bulk) MxPS= 512 Ivl=0ms
 			tmp_p+=strlen(skey_10);
 			for (i=0; (*(tmp_p+i)!='\n')&&(i<100); ++i)
 				tmp_name[i] = *(tmp_p+i);
-			printf("get serialnum=%s\n", tmp_name);      // tmp test
+			dbg("get serialnum=%s\n", tmp_name);      // tmp test
 			nvram_set("usb_SerialNumber", tmp_name);
 		}
 		else
@@ -2464,12 +2369,13 @@ E:  Ad=02(O) Atr=02(Bulk) MxPS= 512 Ivl=0ms
 		return 0;
 	}
 
-	printf("get productid=%s, devnum=%d, port=%s\n", product_id, dev_num, port);	// tmp test
+	dbg("get productid=%s, devnum=%d, port=%s\n", product_id, dev_num, port);	// tmp test
 
 	dbg("...%s()\n", __FUNCTION__);
 
 	return 1;
 }
+#endif
 
 int
 get_dev_info_storage(const char *buf)
@@ -2583,14 +2489,14 @@ parse_proc_bus_usb_devices()
 
 	if ((fd=open("/proc/bus/usb/devices", O_RDONLY)) <= 0)
 	{
-		printf("open usb devices fail\n");
+		dbg("open usb devices fail\n");
 		return 0;
 	}
 
 	memset(buf, 0, sizeof(buf));
 	if ((count = read(fd, buf, sizeof(buf))) <= 0)
 	{
-		printf("read usb devices fail\n");
+		dbg("read usb devices fail\n");
 		close(fd);
 		return 0;
 	}
@@ -2614,7 +2520,7 @@ parse_proc_bus_usb_devices()
 			if (count2 > 2)
 			{
 				strncpy(buf2, bufp_old - 1, count - ((bufp_old - 1) - buf) - 1);
-				printf("%s\n\n", buf2);
+				dbg("%s\n\n", buf2);
 //				get_dev_info_storage(buf2);
 			}
 			break;
@@ -2629,7 +2535,7 @@ parse_proc_bus_usb_devices()
 		if (count2 > 2)
 		{
 			strncpy(buf2, bufp_old - 1, bufp - bufp_old - 1);
-			printf("%s\n\n", buf2);
+			dbg("%s\n\n", buf2);
 //			get_dev_info_storage(buf2);
 		}
 		bufp_old = bufp + 1;
@@ -2639,6 +2545,7 @@ parse_proc_bus_usb_devices()
 	return 1;
 }
 
+#ifndef USB_MODEM
 int write_genconn()
 {
 	FILE *fp;
@@ -2784,13 +2691,13 @@ int write_3g_conf(FILE *fp, int dno, int aut, char *vid, char *pid)
 		fprintf(fp, "TargetClass=    0xff\n");
 		fprintf(fp, "MessageContent=\"55534243785634120100000080000601000000000000000000000000000000\"\n");
 		break;
-	case SN_HUAWEI_E169:
+	case SN_Huawei_E169:
 		fprintf(fp, "DefaultVendor=  0x12d1;\n");
 		fprintf(fp, "DefaultProduct= 0x1001\n");
 		fprintf(fp, "DetachStorageOnly=1\n");
 		fprintf(fp, "HuaweiMode=1\n");
 		break;
-	case SN_HUAWEI_E220:
+	case SN_Huawei_E220:
 		fprintf(fp, "DefaultVendor=  0x12d1;\n");
 		fprintf(fp, "DefaultProduct= 0x1003\n");
 		fprintf(fp, "TargetClass=    0xff\n");
@@ -3252,9 +3159,9 @@ int init_3g_param(char *vid, char *pid)
 			write_3g_conf(fp, SN_ATT_USBConnect_Quicksilver, 1, vid, pid);
 		}
 		else if ((strcmp(vid, "12d1")==0) && (strcmp(pid, "1001")==0))
-			write_3g_conf(fp, SN_HUAWEI_E169, 1, vid, pid);
+			write_3g_conf(fp, SN_Huawei_E169, 1, vid, pid);
 		else if ((strcmp(vid, "12d1")==0) && (strcmp(pid, "1003")==0))
-			write_3g_conf(fp, SN_HUAWEI_E220, 1, vid, pid);
+			write_3g_conf(fp, SN_Huawei_E220, 1, vid, pid);
 		else if ((strcmp(vid, "12d1")==0) && (strcmp(pid, "1414")==0))
 			write_3g_conf(fp, SN_Huawei_E180, 1, vid, pid);
 		else if ((strcmp(vid, "1033")==0) && (strcmp(pid, "0035")==0))
@@ -3370,13 +3277,13 @@ int init_3g_param(char *vid, char *pid)
 		} else if (strcmp(nvram_safe_get("Dev3G"), "HUAWEI-E160G") == 0) {			// on list
 			write_3g_conf(fp, UNKNOWNDEV, 0, vid, pid);
 		} else if (strcmp(nvram_safe_get("Dev3G"), "HUAWEI-E169") == 0) {			// on list
-			write_3g_conf(fp, SN_HUAWEI_E169, 0, vid, pid);
+			write_3g_conf(fp, SN_Huawei_E169, 0, vid, pid);
 		} else if (strcmp(nvram_safe_get("Dev3G"), "HUAWEI-E176") == 0) {			// on list
 			write_3g_conf(fp, UNKNOWNDEV, 0, vid, pid);
 		} else if (strcmp(nvram_safe_get("Dev3G"), "Huawei-E180") == 0) {			// on list
 			write_3g_conf(fp, SN_Huawei_E180, 0, vid, pid);
 		} else if (strcmp(nvram_safe_get("Dev3G"), "HUAWEI-E220") == 0) {			// on list
-			write_3g_conf(fp, SN_HUAWEI_E220, 0, vid, pid);
+			write_3g_conf(fp, SN_Huawei_E220, 0, vid, pid);
 		} else if (strcmp(nvram_safe_get("Dev3G"), "Huawei-E630") == 0) {
 			write_3g_conf(fp, SN_Huawei_E630, 0, vid, pid);
 		} else if (strcmp(nvram_safe_get("Dev3G"), "Huawei-E270") == 0) {
@@ -3513,15 +3420,14 @@ int rc_start_3g()
 	get_dev_info(&usb_dev_class_num, product, vendorID, productID);
 	if ((strlen(vendorID) > 0) && (strlen(productID) > 0))
 	{
-		printf("get vendor=%s, product=%s\n", vendorID, productID);     // tmp test
+		dbg("get vendor=%s, product=%s\n", vendorID, productID);     // tmp test
 		logmessage("USB device", "usb device %s(%s/%s) plugged", nvram_safe_get("usb_Product"), vendorID, productID);
 	}
 	else
 	{
-		printf("rc 3g: invalid vid/pid\n");	// tmp test
+		dbg("rc 3g: invalid vid/pid\n");	// tmp test
 		logmessage("USB device", "invalid usb device vid/pid");
 		nvram_set("usb_dev_state", "off");
-		nvram_set("usb_mnt_first_path", "");
 		track_set("203");
 		return -1;
 	}
@@ -3534,6 +3440,7 @@ int rc_start_3g()
 	start_3g_process();
 	return 0;
 }
+#endif
 
 /*
 int 
@@ -3547,13 +3454,13 @@ do_eject(char *dev_name)
 		char cmd[256];
 	} scsi_cmd;
 
-	printf("Ejecting SCSI(%s) of CDROM ...", dev_name);
+	dbg("Ejecting SCSI(%s) of CDROM ...", dev_name);
 
 	if ((ejectfd = open(dev_name, O_RDONLY)) < 0) {
-		printf("there wasn't any CD-ROM device!\n");
+		dbg("there wasn't any CD-ROM device!\n");
 		return -1;
 	}
-	printf("there was a CD-ROM device!\n");
+	dbg("there was a CD-ROM device!\n");
 
 	scsi_cmd.inlen  = 0;
 	scsi_cmd.outlen = 0;
@@ -3566,7 +3473,7 @@ do_eject(char *dev_name)
 
 	status = ioctl(ejectfd, SCSI_IOCTL_SEND_COMMAND, (void *)&scsi_cmd);
 	if (status < 0) {
-		printf("Failed to send first START_STOP!\n");
+		dbg("Failed to send first START_STOP!\n");
 		perror("send first START_STOP");
 		close(ejectfd);
 		return -1;
@@ -3582,14 +3489,14 @@ do_eject(char *dev_name)
 	scsi_cmd.cmd[5] = 0;
 	status = ioctl(ejectfd, SCSI_IOCTL_SEND_COMMAND, (void *)&scsi_cmd);
 	if (status != 0) {
-		printf("Failed to send second START_STOP!\n");
+		dbg("Failed to send second START_STOP!\n");
 		perror("send second START_STOP");
 		close(ejectfd);
 		return 0;
 	}
 
 	close(ejectfd);
-	printf("end do eject\n");	// tmp test
+	dbg("end do eject\n");	// tmp test
 	return 0;
 }
 */
@@ -3615,49 +3522,49 @@ hotplug_usb_test()
 
 	if (action)
 	{
-		printf("ACTION: %s\n", action);
+		dbg("ACTION: %s\n", action);
 		if (fp)
 			fprintf(fp, "ACTION: %s\n", action);
 	}
 	if (devpath)
 	{
-		printf("DEVPATH: %s\n", devpath);
+		dbg("DEVPATH: %s\n", devpath);
 		if (fp)
 			fprintf(fp, "DEVPATH: %s\n", devpath);
 	}
 	if (subsystem)
 	{
-		printf("SUBSYSTEM: %s\n", subsystem);
+		dbg("SUBSYSTEM: %s\n", subsystem);
 		if (fp)
 			fprintf(fp, "SUBSYSTEM: %s\n", subsystem);
 	}
 	if (device)
 	{
-		printf("DEVICE: %s\n", device);
+		dbg("DEVICE: %s\n", device);
 		if (fp)
 			fprintf(fp, "DEVICE: %s\n", device);
 	}
 	if (usbdevice_path)
 	{
-		printf("USBDEVICE_PATH: %s\n", usbdevice_path);
+		dbg("USBDEVICE_PATH: %s\n", usbdevice_path);
 		if (fp)
 			fprintf(fp, "USBDEVICE_PATH: %s\n", usbdevice_path);
 	}
 	if (product)
 	{
-		printf("PRODUCT: %s\n", product);
+		dbg("PRODUCT: %s\n", product);
 		if (fp)
 			fprintf(fp, "PRODUCT: %s\n", product);
 	}
 	if (type)
 	{
-		printf("TYPE: %s\n", type);
+		dbg("TYPE: %s\n", type);
 		if (fp)
 			fprintf(fp, "TYPE: %s\n", type);
 	}
 	if (interface)
 	{
-		printf("INTERFACE: %s\n", interface);
+		dbg("INTERFACE: %s\n", interface);
 		if (fp)
 			fprintf(fp, "INTERFACE: %s\n", interface);
 	}
@@ -3681,10 +3588,7 @@ int is_usb_storage_loaded()
 		return 0;
 }
 
-extern char usb_path1[];
-extern char usb_path1_old[];
-extern char usb_path2[];
-extern char usb_path2_old[];
+int count_umount_ejected;
 
 int 
 hotplug_usb()
@@ -3698,6 +3602,8 @@ hotplug_usb()
 	char usbpath_nvram[16];
 	char temp_usbpath_device[16];
 	FILE *fp;
+
+	count_umount_ejected = 0;
 
 //	if (nvram_match("asus_mfg", "1"))
 //	{
@@ -3727,22 +3633,8 @@ hotplug_usb()
 	memset(productID, 0, sizeof(productID));
 
 //	bus_plugged =  get_dev_info(&usb_dev_class_num, productID, veid, prid);
-
 //	if (bus_plugged)
-//	printf("hotplug_usb: bus plugged is %d, pID is %s, class_num is %d\n", bus_plugged, productID, usb_dev_class_num);  // tmp test
-
-//	if (strlen(productID) > 0)
-//		nvram_set("usb_vidpid", productID);
-//	else
-//		nvram_set("usb_vidpid", "");
-
-	/* to apart 'wanup func' and 'usb storage func'*/
-//	if (usb_dev_class_num == USB_CLS_MASS_STORAGE)
-//	{
-//		while (strcmp(nvram_safe_get("wanup_mem_cric"), "0") != 0)
-//			sleep(1);
-//		nvram_set("hotplug_usb_mem_cric", "1");
-//	}
+//	dbg("hotplug_usb: bus plugged is %d, pID is %s, class_num is %d\n", bus_plugged, productID, usb_dev_class_num);  // tmp test
 
 	memset(usb_path1_old, 0x0, 16);
 	memset(usb_path2_old, 0x0, 16);
@@ -3781,27 +3673,24 @@ hotplug_usb()
 	{
 		nvram_set("usb_mnt_first_path", "");
 		nvram_set("usb_mnt_first_path_port", "0");
-		nvram_set("apps_status_checked", "1");	// it means need to check
-//		nvram_set("swap_on", "0");
-//		nvram_set("usb_disc0_port", "0");
-//		nvram_set("usb_disc1_port", "0");
 
-//		nvram_set("usb_disc0_dev", "");
+		nvram_set("apps_status_checked", "1");	// it means need to check
+		nvram_set("apps_comp", "0");
+		nvram_set("apps_disk_free", "0");
 	}
 
 	if (bus_plugged == 1)
 	{
+MANUAL_HOTPLUG_USB_MASS:
 		dbg("!!! %s(): action ADD !!!\n", __FUNCTION__);
 
-//		nvram_set("usb_device", "1");
-//		nvram_set("usb_storage_device", productID);
 //		logmessage("USB storage", "\"%s\" was plugged in.", productID);
 		logmessage("USB storage", "plugged in");
 
-//		printf("service_ex: start excuting usb_hotplug process, type: %d\n", usb_dev_class_num);	// tmp test
+//		dbg("service_ex: start excuting usb_hotplug process, type: %d\n", usb_dev_class_num);	// tmp test
 //		if (usb_dev_class_num == USB_CLS_MASS_STORAGE)
 		{
-			printf("we got storage dev\n"); // tmp test
+			dbg("we got storage dev\n"); // tmp test
 
 			pre_chk_mount();
 			sleep(1);
@@ -3813,23 +3702,11 @@ hotplug_usb()
 				;
 			else
 			{
-//				nvram_set("swap_on", "0");
-				printf("[usb test write]: disk error\n");	// tmp test
+				dbg("[usb test write]: disk error\n");	// tmp test
 				logmessage("USB storage", "Disk error with unknown reason\n");
 			}
 */
 		}
-/*
-		else if (usb_dev_class_num == USB_CLS_3GDEV)
-		{
-			printf("we got 3g dev\n");		// tmp test
-			start_3g_process();
-		}
-		else
-		{
-			printf("other usb dev class\n");	// tmp test
-		}
-*/
 	}
 	else if (bus_plugged == 0)
 	{
@@ -3839,29 +3716,7 @@ hotplug_usb()
 	else
 	{
 		dbg("!!! %s(): action REMOVE !!!\n", __FUNCTION__);
-
 		logmessage("USB storage", "removed");
-
-/*
-		chk_partitions(USB_PLUG_OFF);
-
-		nvram_set("usb_device", "0");
-		nvram_set("usb_storage_device", "");
-		nvram_set("usb_mass_hotplug", "0");	
-		nvram_set("ftp_running", "0");
-		nvram_set("samba_running", "0");
-		nvram_set("apps_dlx", "0");
-		nvram_set("usb_disc0_dev", "");
-		nvram_set("usb_disc1_dev", "");
-		nvram_set("usb_path1", "");
-		nvram_set("usb_path2", "");
-
-		if (usb_dev_class_num == USB_CLS_MASS_STORAGE)
-			remove_usb_mass(NULL);
-
-		if (usb_dev_class_num == USB_CLS_3GDEV)
-			remove_usb_3g();
-*/
 
 		if (	strcmp(usb_path1, "storage") &&
 			strcmp(usb_path2, "storage")/* &&
@@ -3873,7 +3728,8 @@ hotplug_usb()
 			/* 0708 check: umount */
 			nvram_set("apps_comp", "0");
 			nvram_set("apps_disk_free", "0");
-			nvram_set("apps_dlx", "0");
+
+//			nvram_set("apps_dl_ex", "0");
 			nvram_set("mnt_type", "");
 			nvram_set("slow_disk", "0");
 			/* 0708 check end */
@@ -3904,22 +3760,42 @@ hotplug_usb()
 		else if (strcmp(usb_path1, "storage") && !strcmp(usb_path1_old, "storage"))
 		{
 			dbg("!!! %s(): action REMOVE case 2 !!!\n", __FUNCTION__);
-			remove_usb_mass("1");
+//			remove_usb_mass("1");
+			remove_usb_mass(NULL);
+
+			if (count_umount_ejected)
+			{
+				count_umount_ejected = 0;
+				restart_apps();
+			}
 		}
 		else if (strcmp(usb_path2, "storage") && !strcmp(usb_path2_old, "storage"))
 		{
 			dbg("!!! %s(): action REMOVE case 3 !!!\n", __FUNCTION__);
-			remove_usb_mass("2");
+//			remove_usb_mass("2");
+			remove_usb_mass(NULL);
+
+			if (count_umount_ejected)
+			{
+				count_umount_ejected = 0;
+				restart_apps();
+			}
 		}
 		else
 		{
 			dbg("!!! %s(): action REMOVE case 4 !!!\n", __FUNCTION__);
 			remove_usb_mass(NULL);
+
+			if (count_umount_ejected)
+			{
+				count_umount_ejected = 0;
+				restart_apps();
+			}
 		}
 
-		if ((fp=fopen("/proc/sys/net/nf_conntrack_max", "w+")))
+		if (!is_apps_running())
 		{
-			if (!is_apps_running())
+			if ((fp=fopen("/proc/sys/net/nf_conntrack_max", "w+")))
 			{
 				if (nvram_get("misc_conntrack_x") == NULL)
 					fputs("8192", fp);
@@ -3928,19 +3804,11 @@ hotplug_usb()
 //					dbg("\nrestore nf_conntract_max...\n\n");
 					fputs(nvram_safe_get("misc_conntrack_x"), fp);
 				}
+				fclose(fp);
 			}
-
-			fclose(fp);
-		}
-
-		if (atoi(nvram_safe_get("usb_mnt_first_path_port")) > 0)
-		{
-			nvram_set("usb_mnt_first_path_port", "0");
-			nvram_set("apps_status_checked", "1");
 		}
 	}
 
-//	nvram_set("hotplug_usb_mem_cric", "0");
 	return 0;
 }
 
@@ -3981,10 +3849,10 @@ stop_service_main(int type)
 		stop_wanduck();
 		stop_upnp();
 		stop_dhcpd();
-		stop_dns();
+//		stop_dns();
 		stop_ots();
 		stop_networkmap();
-		stop_telnetd();
+//		stop_telnetd();
 		if (pids("igmpproxy"))
 			system("killall igmpproxy");
 	}
@@ -4003,13 +3871,21 @@ int service_handle(void)
 
 	if (!service)
 	{
-		printf("[rc] chk sys restart 1\n");	// tmp test
+		dbg("[rc] chk sys restart 1\n");	// tmp test
 		//if (nvram_match("wan0_proto", "3g") && (strlen(nvram_safe_get("usb_path1")) > 0))
+#ifndef USB_MODEM
 		if (strlen(nvram_safe_get("usb_path1")) > 0)
+#else
+		if(strlen(nvram_safe_get("usb_path1")) > 0 || strlen(nvram_safe_get("usb_path2")) > 0)
+#endif
 		{
-			printf("[rc] service_hanble ejusb");
+			dbg("[rc] service_hanble ejusb");
 			system("ejusb");
+#ifndef USB_MODEM
 			if (nvram_match("wan0_proto", "3g"))
+#else
+			if(get_usb_modem_state())
+#endif
 				sleep(10);
 			else
 				sleep(3);
@@ -4021,8 +3897,14 @@ int service_handle(void)
 	if (strstr(service,"wan_disconnect")!=NULL)
 	{
 		logmessage("wan", "disconnected manually");
-		printf("wan disconnect manually\n");	// tmp test
+		dbg("wan disconnect manually\n");	// tmp test
 
+#ifdef USB_MODEM
+		if(get_usb_modem_state()){
+			stop_wan_ppp();
+		}
+		else
+#endif
 		if (nvram_match("wan0_proto", "dhcp") ||
 #ifdef CDMA_REMOVE
 		    nvram_match("wan0_proto", "cdma") ||
@@ -4043,12 +3925,12 @@ int service_handle(void)
 		nvram_match("wan0_proto", "l2tp")
 		)
 		{	/* pptp, l2tp, pppoe */
-			printf("stop wan ppp manually\n");	// tmp test
+			dbg("stop wan ppp manually\n");	// tmp test
 			stop_wan_ppp();
 		}
 		else 	/* static */
 		{			
-			printf("services stop wan2 \n");	// tmp test
+			dbg("services stop wan2 \n");	// tmp test
 			stop_wan2();
 			update_wan_status(0);
 			//sleep(2);
@@ -4057,18 +3939,25 @@ int service_handle(void)
 			{
 				system("ifconfig eth3 0.0.0.0");
 			}
+#ifndef USB_MODEM
 			else if (nvram_match("wan0_proto", "3g"))
 			{
 				nvram_set("wan0_ipaddr", "");
 			}
+#endif
 		}
 	}
 	else if (strstr(service,"wan_connect")!=NULL)
 	{
 		logmessage("wan", "connected manually");
-		printf("wan connect manually\n");	// tmp test
-//		setup_ethernet(nvram_safe_get("wan_ifname"));
+		dbg("wan connect manually\n");	// tmp test
 
+#ifdef USB_MODEM
+		if(get_usb_modem_state()){
+			restart_wan_ppp();
+		}
+		else
+#endif
 		if (nvram_match("wan0_proto", "dhcp") ||
 #ifdef CDMA_REMOVE
 		    nvram_match("wan0_proto", "cdma") ||
@@ -4089,7 +3978,7 @@ int service_handle(void)
 		nvram_match("wan0_proto", "l2tp")
 		)
 		{	/* pptp, l2tp, pppoe */
-			printf("start wan ppp manually\n");	// tmp test
+			dbg("start wan ppp manually\n");	// tmp test
 			restart_wan_ppp();
 		}
 		else 
@@ -4097,18 +3986,20 @@ int service_handle(void)
 			// pppoe or ppptp, check if /tmp/ppp exist
 			if (nvram_invmatch("wan0_proto", "static") && nvram_invmatch("wan0_proto", "3g") && (fp=fopen("/tmp/ppp/ip-up", "r"))!=NULL)
 			{	/* none */
-				printf("chk none\n");	// tmp test
+				dbg("chk none\n");	// tmp test
 				fclose(fp);
 				_eval(ping_argv, NULL, 0, &pid);
 			}
+#ifndef USB_MODEM
 			else if (nvram_match("wan0_proto", "3g"))
 			{
-				printf("start 3g manually\n");	// tmp test
+				dbg("start 3g manually\n");	// tmp test
 				rc_start_3g();
 			}
+#endif
 			else
 			{	/* static */
-				printf("chk staic\n");	// tmp test
+				dbg("chk staic\n");	// tmp test
 				stop_wan();
 				unlink("/tmp/ppp/link.ppp0");
 				unlink("/tmp/ppp/options.wan0");
@@ -4152,23 +4043,33 @@ int service_handle(void)
 	}
 	else if (strstr(service,"restart_upnp") && nvram_match("router_disable", "0"))
 	{
-//		dbg("[rc] ntp restart upnp...\n");
 
-		if (nvram_match("upnp_enable_ex", "1") && nvram_match("ntp_restart_upnp", "0"))
+		if (nvram_match("upnp_enable", "1") && nvram_match("ntp_restart_upnp", "0"))
 		{
 			if (!nvram_match("ntp_ready", "0"))
+			{
 				nvram_set("ntp_restart_upnp", "1");
+			}
 
 			if (	nvram_match("ntp_ready", "1") ||
 				(nvram_match("ntp_ready", "2") && nvram_match("upnp_started", "0")) )
 			{
+				dbg("[rc] ntp restart upnp...\n");
 				stop_upnp();
 				start_upnp();
 			}
-
-			if (nvram_match("upnp_started", "0"))
-				nvram_set("upnp_started", "1");
 		}
+	}
+#endif
+#ifdef USB_MODEM
+	else if(strstr(service, "restart_wan_line")){
+usb_dbg("service_handle: Start to restart_wan_line.\n");
+		stop_wan();
+		start_wan();
+
+		stop_httpd();
+		start_httpd();
+usb_dbg("service_handle: End to restart_wan_line.\n");
 	}
 #endif
 	nvram_unset("rc_service");
@@ -4343,7 +4244,7 @@ start_samba(void)
 	fp = fopen("/etc/passwd", "w");
 	fprintf(fp, "nobody:x:99:99::/:\n");
 	sh_num = atoi(nvram_safe_get("acc_num"));
-	printf("sh num is %d\n", sh_num);	// tmp test
+	dbg("sh num is %d\n", sh_num);	// tmp test
 	memset(tmpuser, 0, sizeof(tmpuser));
 	for (i=0, n=500; i<sh_num; i++, n++)
 	{
@@ -4388,8 +4289,6 @@ start_samba(void)
 		sprintf(cmd, "smbpasswd -a %s -s < /tmp/smbpasswd", tmpuser);
 		system(cmd);
 	}
-
-//	nvram_set("samba_running", "1");
 
 //	system("/sbin/nmbd -D -s /etc/smb.conf");
 //	system("/sbin/smbd -D -s /etc/smb.conf");
@@ -4450,7 +4349,7 @@ check_disk_free_GE_1G(char *diskpath)	// added by Jiahao for WL500gP
 
 	free_size = (double)((double)((double)fsbuf.f_bfree * fsbuf.f_bsize)/(1024*1024));
 	block_size = (double)((double)((double)fsbuf.f_blocks * fsbuf.f_bsize)/(1024*1024));
-	printf("\nchk disk: free=%fMB, blocksize=%fMB\n", free_size, block_size);	// tmp test
+	dbg("\nchk disk: free=%fMB, blocksize=%fMB\n", free_size, block_size);	// tmp test
 
 	if ( free_size < (double)128 )
 		return 1;
@@ -4466,7 +4365,7 @@ check_disk_free_apps(char *diskpath, int ac_flag)			// added by Jiahao for WL500
 	struct statfs fsbuf;
 	double free_size;
 
-	//printf("chk disk free apps\n");	// tmp test
+	//dbg("chk disk free apps\n");	// tmp test
 	if (statfs(diskpath, &fsbuf))
 	{
 		perror("*** check_disk_free_apps: statfs fail!");
@@ -4474,11 +4373,11 @@ check_disk_free_apps(char *diskpath, int ac_flag)			// added by Jiahao for WL500
 	}
 
 	free_size = (double)((double)((double)fsbuf.f_bfree * fsbuf.f_bsize)/(1024*1024));
-	//printf("free_size = %f\n", free_size);	// tmp test
+	//dbg("free_size = %f\n", free_size);	// tmp test
 
 	if (ac_flag==1)
 	{
-		if (nvram_match("apps_dlx", "0"))
+		if (nvram_match("apps_dl", "0"))
 			return 1;
 
 		if ( free_size < (double)1 )
@@ -4520,12 +4419,12 @@ void exec_apps()
 
 	char tmpstr[256];
 	char tmpstr2[256];
-	char share_port_from[5];
-	char share_port_to[5];
+//	char share_port_from[5];
+//	char share_port_to[5];
 
 	umask(0000);
 
-	printf("\n## exec apps\n");	// tmp test
+	dbg("\n## exec apps\n");	// tmp test
 	memset(test_path, 0, sizeof(test_path));
 	strcpy(test_path, "/tmp/harddisk/part0");
 	strcpy(tmpstr, EXBIN);
@@ -4541,46 +4440,55 @@ void exec_apps()
 		system("killall -SIGKILL dmathined");
 
 	nvram_set("apps_installed", "0");
-	nvram_set("apps_dl_x", "0");
+//	nvram_set("apps_dl_ex", "0");
 
 	strcpy(pool, nvram_safe_get("apps_pool"));
 	strcpy(share, nvram_safe_get("apps_share"));
-	strcpy(rundl, nvram_safe_get("apps_dlx"));
-	strcpy(rundms, nvram_safe_get("apps_dmsx"));
+	strcpy(rundl, nvram_safe_get("apps_dl"));
+	strcpy(rundms, nvram_safe_get("apps_dms"));
 	strcpy(name, nvram_safe_get("computer_name"));
 	strcpy(mymac, nvram_safe_get("lan_hwaddr"));
 	
-	strcpy(share_port_from, nvram_safe_get("apps_dl_share_port_from"));
-	strcpy(share_port_to, nvram_safe_get("apps_dl_share_port_to"));
+//	strcpy(share_port_from, nvram_safe_get("apps_dl_share_port_from"));
+//	strcpy(share_port_to, nvram_safe_get("apps_dl_share_port_to"));
 	
 	fp=fopen("/tmp/.prange", "w");
 	if (fp)
 	{
-		fprintf(fp,"%s:%s", share_port_from, share_port_to);
+//		fprintf(fp,"%s:%s", share_port_from, share_port_to);
+		fprintf(fp,"%s:%s", "10001", "10050");
 		fclose(fp);
 	}
-	if (nvram_match("apps_dlx", "1") && /*nvram_match("swap_on", "1")*/ swap_check())
+
+	if (nvram_match("apps_dl", "1") && swap_check())
 	{
 		sprintf(tmpstr2, "%s/dmex", EXBIN);
-		ret=system(tmpstr2);	
+		ret=system(tmpstr2);
+/*
 		if (!ret)
 		{
-			nvram_set("apps_dl_x", "1");
+			nvram_set("apps_dl_ex", "1");
 			logmessage("Download Master", "daemon is started");
 		}
+*/
 	}
-	nvram_set("apps_installed", "1");
-	nvram_set("apps_status_checked", "0");
 
-	if ((fp=fopen("/proc/sys/net/nf_conntrack_max", "w+")))
+	if (is_apps_running())
 	{
-		if (is_apps_running())
-		{
-//			dbg("\nreset nf_conntract_max...\n\n");
-			fputs("8192", fp);
-		}
+		logmessage("Download Master", "daemon is started");
+		nvram_set("apps_installed", "1");
+		nvram_set("apps_status_checked", "0");
 
-		fclose(fp);
+		dbg("rc_restart_firewall...\n");
+		rc_restart_firewall();
+#if 0
+		if ((fp=fopen("/proc/sys/net/nf_conntrack_max", "w+")))
+		{
+			dbg("\nreset nf_conntract_max...\n\n");
+			fputs("8192", fp);
+			fclose(fp);
+		}
+#endif
 	}
 }
 
@@ -4642,19 +4550,19 @@ void init_apps()
 
 	sprintf(tmpstr, "%s/Music", target_dir);
 	if (mkdir_if_none(tmpstr)==0)
-		printf("Music DIR exist\n");
+		dbg("Music DIR exist\n");
 
 	sprintf(tmpstr, "%s/Video", target_dir);
 	if (mkdir_if_none(tmpstr)==0)
-		printf("Video DIR exist\n");
+		dbg("Video DIR exist\n");
 
 	sprintf(tmpstr, "%s/Photo", target_dir);
 	if (mkdir_if_none(tmpstr)==0)
-		printf("PHOTO DIR exist\n");
+		dbg("PHOTO DIR exist\n");
 
 	sprintf(tmpstr, "%s/Download", target_dir);
 	if (mkdir_if_none(tmpstr)==0)
-		printf("DOWNLOAD DIR exist\n");
+		dbg("DOWNLOAD DIR exist\n");
 
 	sprintf(tmpstr, "%s/Download/config", target_dir);
 	mkdir_if_none(tmpstr);
@@ -4676,7 +4584,7 @@ void init_apps()
 	
 	sprintf(tmpstr, "%s/asus_gift.conf", EXETC);
 	if (check_if_file_exist(tmpstr)==1)
-		printf("FILE asus_gift exist\n");
+		dbg("FILE asus_gift exist\n");
 	else
 	{
 		sprintf(tmpstr, "%s/gift-nasoc/bin/asus_gift.conf", EXUSR);
@@ -4686,7 +4594,7 @@ void init_apps()
 	
 	sprintf(tmpstr, "%s/.giFT", EXETC);
 	if (mkdir_if_none(tmpstr)==0)
-		printf(".giFT DIR exist\n");
+		dbg(".giFT DIR exist\n");
 	else
 	{
 		sprintf(tmpstr2, "%s/.", tmpstr);
@@ -4805,16 +4713,11 @@ int is_apps_running()
  */
 
 void stop_ftp() {
-	//if (nvram_match("ftp_running", "0"))
-	//	return ;
-
 	if (pids("vsftpd"))
 		system("killall -SIGKILL vsftpd");
 	unlink("/tmp/vsftpd.conf");
-//	nvram_set("ftp_running", "0");
 
 	logmessage("FTP Server", "daemon is stoped");
-
 }
 
 void stop_samba() {
@@ -4828,7 +4731,6 @@ void stop_samba() {
 
 	logmessage("Samba Server", "smb daemon is stoped");
 
-//	nvram_set("samba_running", "0");
 	nvram_set("st_samba_mode_x", "0");      // 2007.11 James.
 /*
 	sleep(1);
@@ -4837,23 +4739,46 @@ void stop_samba() {
 */
 }
 
-void stop_apps() {
-	if (pids("snarf"))
-		system("killall -SIGKILL snarf");
-	if (pids("rtorrent"))
-		system("killall -SIGKILL rtorrent");
-	if (pids("giftd"))
-		system("killall -SIGKILL giftd");
-	if (pids("dmathined"))
-		system("killall -SIGKILL dmathined");
+void restart_apps() {
+	int is_apps_running_when_umount = is_apps_running();
 
+	if (is_apps_running_when_umount)
+	{
+		if (pids("snarf"))
+			system("killall -SIGKILL snarf");
+		if (pids("rtorrent"))
+			system("killall -SIGKILL rtorrent");
+		if (pids("giftd"))
+			system("killall -SIGKILL giftd");
+		if (pids("dmathined"))
+			system("killall -SIGKILL dmathined");
+
+		nvram_set("apps_dl_ex", "0");
+		nvram_set("dm_block", "0");
+	}
+
+	stop_samba();
+	stop_ftp();
 	stop_dms();
 #ifdef CONFIG_USER_MTDAAPD
 	stop_mt_daapd();
 #endif
 
-	nvram_set("apps_dl_x", "0");
-	sleep(1);
+        if (is_apps_running_when_umount)
+        {
+		stop_infosvr();
+		start_infosvr();
+
+                dbg("rc_restart_firewall...\n");
+                rc_restart_firewall();
+	}
+
+	if (count_sddev_mountpoint())
+	{
+		pre_chk_mount();
+		chk_partitions(USB_PLUG_ON);
+		hotplug_usb_mass(NULL);
+	}
 }
 
 void stop_ftpsamba() {
@@ -4862,21 +4787,21 @@ void stop_ftpsamba() {
 }
 
 void start_usb_apps() {
-	printf("*** start_usb_apps() ***\n");
+	dbg("*** start_usb_apps() ***\n");
 	run_ftpsamba();
 }
-
+#if 0
 void stop_usb_apps() {
-	printf("*** stop_usb_apps() ***\n");
+	dbg("*** stop_usb_apps() ***\n");
 	stop_apps();
 	stop_ftpsamba();
 	sleep(1);
 }
-
+#endif
 void
 run_ftp()
 {
-	printf("[rc] run ftp\n");	// tmp test
+	dbg("[rc] run ftp\n");	// tmp test
 	start_ftpd();
 }
 
@@ -4898,7 +4823,7 @@ int start_dms() {
 	pid_t pid;
 	char *argvs[5];
 
-	if (nvram_invmatch("apps_dmsx", "1"))
+	if (nvram_invmatch("apps_dms", "1"))
 		return;
 
 	mkdir_if_none(DMS_ROOT);
@@ -4909,7 +4834,6 @@ int start_dms() {
 
 	ret = system(tmpstr2);
 	if (!ret) {
-		nvram_set("dms_running", "1");  // 2007.11 James.
 		logmessage("Media Server", "daemon is started");
 
 		return 0;
@@ -4975,10 +4899,11 @@ write_dms_conf()	/* write /etc/ushare.conf */
 }
 #endif
 
+int
 start_dms()
 {
-	if (nvram_invmatch("apps_dmsx", "1"))
-		return;
+	if (nvram_invmatch("apps_dms", "1"))
+		return 0;
 
 	stop_dms();
 #if 0
@@ -5039,8 +4964,10 @@ write_mt_daapd_conf()
 int
 start_mt_daapd()
 {
-	if (nvram_invmatch("apps_dmsx", "1"))
+	if (nvram_invmatch("apps_itunes", "1"))
 		return;
+
+	dbg("starting iTunes server\n");
 
 	stop_mt_daapd();
 	write_mt_daapd_conf();
@@ -5077,6 +5004,7 @@ stop_mt_daapd()
 }
 #endif
 
+void
 stop_dms()
 {
 	if (!pids("minidlna") && !pids("ushare"))
@@ -5086,7 +5014,6 @@ stop_dms()
 	
 	if (pids("minidlna"))
 	{
-//		system("killall -SIGTERM minidlna");
 		kill_pidfile_s("/var/run/minidlna.pid", SIGTERM);
 	}
 
@@ -5105,7 +5032,7 @@ stop_dms()
 void
 run_ftpsamba()
 {
-	printf("[rc] run ftp samba\n");	// tmp test
+	dbg("[rc] run ftp samba\n");	// tmp test
 	run_ftp();
 	sleep(1);
 	run_samba();
@@ -5116,28 +5043,12 @@ run_samba()
 {
 	if (nvram_match("enable_samba", "0")) return;
 
-	printf("[rc] Run samba\n");  // tmp test
-/*
-//	if (nvram_match("samba_running", "0"))
-	if (!pids("smbd"))
+	dbg("[rc] Run samba\n");  // tmp test
+	if (nvram_invmatch("st_samba_mode", "0"))	// 2007.11 James.
 	{
-*/
-		if (nvram_invmatch("st_samba_mode", "0"))	// 2007.11 James.
-		{
-			dbg("starting samba\n");
-			start_samba();
-		}
-/*
+		dbg("starting samba\n");
+		start_samba();
 	}
-	else
-	{
-		if (nvram_invmatch("st_samba_mode", "0"))	// 2007.11 James.
-		{
-			dbg("restarting samba\n");
-			start_samba();
-		}
-	}
-*/
 }
 
 #ifndef NO_DM
@@ -5156,13 +5067,13 @@ run_apps()
 	char *buf=NULL;
 	int buflen=0;
 
-	printf("\nrun apps\n");	// tmp test
+	dbg("\nrun apps\n");	// tmp test
 
 	start_usbled();
 
 	if (rename("/tmp/harddisk/part0/share/.apps", "/tmp/harddisk/part0/.apps") < 0)
 	{
-		perror("mv apps fail\n");
+		dbg("mv apps fail\n");
 		//return -1;
 	}
 
@@ -5170,8 +5081,7 @@ run_apps()
 		nvram_set("apps_comp", "1");
 	else
 	{
-		printf("invalid apps\n");   // tmp test
-		//system("rm -Rf /media/AiDisk_a1/.apps");	// tmp disable
+		dbg("invalid apps\n");   // tmp test
 		nvram_set("apps_comp", "0");
 		stop_usbled();
 		return -1;
@@ -5183,7 +5093,6 @@ run_apps()
 		return -1;
 	}
 
-	nvram_set("usb_storage_busy", "1");
 	init_apps();
 	exec_apps();
 
@@ -5199,16 +5108,9 @@ run_apps()
 #endif	// #ifndef NO_DM
 #endif	// #ifdef DLM
 
-int					// added by Jiahao for WL500gP
+int
 check_if_dir_exist(const char *dirpath)
 {
-/*
-	DIR *dp;
-	if (!(dp=opendir(dir)))
-		return 0;
-	closedir(dp);
-	return 1;
-*/
 	struct stat stat_buf;
 
 	if (!stat(dirpath, &stat_buf))
@@ -5217,20 +5119,9 @@ check_if_dir_exist(const char *dirpath)
 		return 0;
 }
 
-int					// added by Jiahao for WL500gP
+int
 check_if_file_exist(const char *filepath)
 {
-/*
-	FILE *fp;
-	fp=fopen(filename, "r");
-	if (fp)
-	{
-		fclose(fp);
-		return 1;
-	}
-	else
-		return 0;
-*/
 	struct stat stat_buf;
 
 	if (!stat(filepath, &stat_buf))
@@ -5240,7 +5131,7 @@ check_if_file_exist(const char *filepath)
 }
 
 int
-mkdir_if_none(char *dir)		// added by Jiahao for WL500gP
+mkdir_if_none(char *dir)
 {
 	DIR *dp;
 	if (!(dp=opendir(dir)))
@@ -5251,6 +5142,17 @@ mkdir_if_none(char *dir)		// added by Jiahao for WL500gP
 	}
 	closedir(dp);
 	return 0;
+}
+
+unsigned long
+file_size(const char *filepath)
+{
+	struct stat stat_buf;
+
+	if (!stat(filepath, &stat_buf) && S_ISREG(stat_buf.st_mode))
+		return ((unsigned long) stat_buf.st_size);
+	else
+		return 0;
 }
 
 //2008.10 magic{
@@ -5267,7 +5169,6 @@ int start_networkmap(void)
 		return 0;
 
 	_eval(networkmap_argv, NULL, 0, &pid);
-	//_eval(networkmap_argv, NULL, 0, NULL);
 	
 	return 0;
 }
@@ -5279,157 +5180,6 @@ void stop_networkmap()
 	if (pids("networkmap"))
 		system("killall networkmap");
 }
-
-#if 0
-int 
-restart_task()
-{
-	if (!(task_mask & (1 << TASK_HTTPD)))
-		start_httpd();
-	if (!(task_mask & (1 << TASK_UDHCPD)))
-	{
-		if (!nvram_match("sw_mode_ex", "2"))
-			start_dhcpd();
-	}
-	if (!(task_mask & (1 << TASK_LLD2D)))
-		start_lltd();
-	if (!(task_mask & (1 << TASK_WANDUCK)))
-		start_wanduck();
-	if (!(task_mask & (1 << TASK_UDHCPC)))
-		start_udhcpc();
-	if (!(task_mask & (1 << TASK_NETWORKMAP)))
-		start_networkmap();
-	if (!(task_mask & (1 << TASK_DPROXY)))
-		start_dns();
-	if (!(task_mask & (1 << TASK_NTP)))
-		start_ntpc();
-	if (!(task_mask & (1 << TASK_U2EC)))
-		start_u2ec();
-	if (!(task_mask & (1 << TASK_OTS)))
-		start_ots();
-	if (!(task_mask & (1 << TASK_LPD)))
-		start_lpd();
-	if (!(task_mask & (1 << TASK_UPNPD)))
-		start_upnp();
-	if (!(task_mask & (1 << TASK_WATCHDOG)))
-		start_watchdog();
-	if (!(task_mask & (1 << TASK_INFOSVR)))
-		start_infosvr();
-	if (!(task_mask & (1 << TASK_SYSLOGD)))
-		start_syslogd();
-	if (!(task_mask & (1 << TASK_KLOGD)))
-		start_klogd();
-	//if (!(task_mask & (1 << TASK_PPPD)))	// illegal if wan down
-	//	start_pppd();
-	if (!(task_mask & (1 << TASK_PPPOE_RELAY)))
-		start_pppoe_relay(nvram_safe_get("wan_ifname"));
-	if (!(task_mask & (1 << TASK_IGMP)))
-		start_igmpproxy("eth3");
-}
-
-int
-check_task(char *cmd)
-{
-	if (strstr(cmd, "httpd")) {
-		task_mask |= (1 << TASK_HTTPD);
-		return 0;
-	} else if (strstr(cmd, "udhcpd")) {
-		task_mask |= (1 << TASK_UDHCPD);
-		return 0;
-	} else if (strstr(cmd, "lld2d")) {
-		task_mask |= (1 << TASK_LLD2D);
-		return 0;
-	} else if (strstr(cmd, "wanduck")) {
-		task_mask |= (1 << TASK_WANDUCK);
-		return 0;
-	} else if (strstr(cmd, "udhcpc")) {
-		task_mask |= (1 << TASK_UDHCPC);
-		return 0;
-	} else if (strstr(cmd, "networkmap")) {
-		task_mask |= (1 << TASK_NETWORKMAP);
-		return 0;
-	} else if (strstr(cmd, "dproxy")) {
-		task_mask |= (1 << TASK_DPROXY);
-		return 0;
-	} else if (strstr(cmd, "ntp")) {
-		task_mask |= (1 << TASK_NTP);
-		return 0;
-	} else if (strstr(cmd, "u2ec")) {
-		task_mask |= (1 << TASK_U2EC);
-		return 0;
-	} else if (strstr(cmd, "ots")) {
-		task_mask |= (1 << TASK_OTS);
-		return 0;
-	} else if (strstr(cmd, "lpd")) {
-		task_mask |= (1 << TASK_LPD);
-		return 0;
-	} else if (strstr(cmd, "upnpd")) {
-		task_mask |= (1 << TASK_UPNPD);
-		return 0;
-	} else if (strstr(cmd, "watchdog")) {
-		task_mask |= (1 << TASK_WATCHDOG);
-		return 0;
-	} else if (strstr(cmd, "infosvr")) {
-		task_mask |= (1 << TASK_INFOSVR);
-		return 0;
-	} else if (strstr(cmd, "syslogd")) {
-		task_mask |= (1 << TASK_SYSLOGD);
-		return 0;
-	} else if (strstr(cmd, "klogd")) {
-		task_mask |= (1 << TASK_KLOGD);
-		return 0;
-	} else if (strstr(cmd, "pppd")) {
-		task_mask |= (1 << TASK_PPPD);
-		return 0;
-	} else if (strstr(cmd, "pppoe-relay")) {
-		task_mask |= (1 << TASK_PPPOE_RELAY);
-		return 0;
-	} else if (strstr(cmd, "igmpproxy")) {
-		task_mask |= (1 << TASK_IGMP);
-		return 0;
-	}
-	return -1;
-}
-
-int
-check_all_tasks()
-{
-	DIR  *dir;
-	struct dirent *dent;
-	char task_file[50], cmdline[64];
-	int pid, fd;
-
-	if (!(dir=opendir("/proc")))
-	{
-		perror("open proc");
-		return -1;
-	}
-
-	task_mask = 0;
-	while (dent = readdir(dir))
-	{
-		if ((pid=atoi(dent->d_name)) > 1)
-		{
-			memset(task_file, 0, sizeof(task_file));
-			sprintf(task_file, "/proc/%d/cmdline", pid);
-			if ((fd=open(task_file, O_RDONLY)) > 0)
-			{
-				memset(cmdline, 0, sizeof(cmdline));
-				read(fd, cmdline, sizeof(cmdline));
-				check_task(cmdline);
-				close(fd);
-			} else
-				printf("cannot open %s\n", task_file);
-		}
-	}
-
-	printf("** task mask is %lu\n", task_mask); // tmp test
-	restart_task();
-
-	closedir(dir);
-	return 0;
-}
-#endif
 
 FILE* fopen_or_warn(const char *path, const char *mode)
 {
@@ -5476,12 +5226,26 @@ umount_ejected()	// umount mount point(s) which was(were) already ejected
 
 				if (!active)
 				{
+					count_umount_ejected++;
+					dbg("count_umount_ejected: %d\n", count_umount_ejected);
+
 					dbg("umounting %s...\n", mpname);
 					umount2(mpname, MS_NOEXEC | MS_NOSUID | 0x00000002);    // 0x00000002: MNT_DETACH
 					rmdir(mpname);
 
-					if (!strcmp(mpname, nvram_safe_get("usb_mnt_first_path")))
+					if (strlen(nvram_safe_get("usb_mnt_first_path")) && !strcmp(mpname, nvram_safe_get("usb_mnt_first_path")))
+					{
 						nvram_set("usb_mnt_first_path", "");
+						if (atoi(nvram_safe_get("usb_mnt_first_path_port")) > 0)
+						{
+							nvram_set("usb_mnt_first_path_port", "0");
+
+							nvram_set("apps_status_checked", "1");	// it means need to check
+							nvram_set("apps_comp", "0");
+							nvram_set("apps_disk_free", "0");
+						}
+						unlink("/tmp/harddisk/part0");
+					}
 				}
 
 				fclose(procpt2);
@@ -5521,17 +5285,27 @@ umount_dev(char *sd_dev)	// umount sd_dev
 				{
 					sprintf(cmd, "swapoff %s", swap_file_path);
 					system(cmd);
-//					sleep(1);
 					unlink(swap_file_path);
-					unlink("/tmp/harddisk/part0");
 				}
 
 				dbg("umounting %s ..\n", mpname);
 				umount2(mpname, MS_NOEXEC | MS_NOSUID | 0x00000002);    // 0x00000002: MNT_DETACH
 				rmdir(mpname);
 
-				if (!strcmp(mpname, nvram_safe_get("usb_mnt_first_path")))
+				if (strlen(nvram_safe_get("usb_mnt_first_path")) && !strcmp(mpname, nvram_safe_get("usb_mnt_first_path")))
+				{
 					nvram_set("usb_mnt_first_path", "");
+					if (atoi(nvram_safe_get("usb_mnt_first_path_port")) > 0)
+					{
+						nvram_set("usb_mnt_first_path_port", "0");
+
+						nvram_set("apps_status_checked", "1");	// it means need to check
+						nvram_set("apps_comp", "0");
+						nvram_set("apps_disk_free", "0");
+					}
+					unlink("/tmp/harddisk/part0");
+				}
+
 				break;
 			}
 		}
@@ -5569,17 +5343,26 @@ umount_dev_all(char *sd_dev)	// umount sd_dev
 				{
 					sprintf(cmd, "swapoff %s", swap_file_path);
 					system(cmd);
-//					sleep(1);
 					unlink(swap_file_path);
-					unlink("/tmp/harddisk/part0");
 				}
 
 				dbg("umounting %s ..\n", mpname);
 				umount2(mpname, MS_NOEXEC | MS_NOSUID | 0x00000002);    // 0x00000002: MNT_DETACH
 				rmdir(mpname);
 
-				if (!strcmp(mpname, nvram_safe_get("usb_mnt_first_path")))
+				if (strlen(nvram_safe_get("usb_mnt_first_path")) && !strcmp(mpname, nvram_safe_get("usb_mnt_first_path")))
+				{
 					nvram_set("usb_mnt_first_path", "");
+					if (atoi(nvram_safe_get("usb_mnt_first_path_port")) > 0)
+					{
+						nvram_set("usb_mnt_first_path_port", "0");
+
+						nvram_set("apps_status_checked", "1");	// it means need to check
+						nvram_set("apps_comp", "0");
+						nvram_set("apps_disk_free", "0");
+					}
+					unlink("/tmp/harddisk/part0");
+				}
 			}
 		}
 	}
@@ -5627,20 +5410,13 @@ umount_usb_path(char *port)
 		return;
 
 	char nvram_name[20], sdx1[5];
-//	int index;
 	int i, len;
-
-//	sprintf(nvram_name, "usb_path%d", atoi(port));
 
 	if (!strcmp(nvram_name, "printer"))
 		return;
 
 	dbg("umount usb path for port %d\n", atoi(port));
 	
-//	sprintf(nvram_name, "usb_path%d_index", atoi(port));
-//	index = atoi(nvram_safe_get(nvram_name));
-//	dbg("usb path index %d\n", index);
-
 //	for (i = 0; i < index + 1 ; i++)
 	for (i = 0; i < 16 ; i++)
 	{
@@ -5662,10 +5438,6 @@ umount_usb_path(char *port)
 		}
 	}
 
-//	sprintf(nvram_name, "usb_path%d_index", atoi(port));
-//	nvram_set(nvram_name, "0");
-//	sprintf(nvram_name, "usb_path%d", atoi(port));
-//	nvram_set(nvram_name, "");
 	sprintf(nvram_name, "usb_path%d_sddev", atoi(port));
 	umount_dev_all(nvram_name);
 	nvram_set(nvram_name, "");
@@ -5673,8 +5445,12 @@ umount_usb_path(char *port)
 
 	if (atoi(nvram_safe_get("usb_mnt_first_path_port")) == atoi(port))
 	{
+		nvram_set("usb_mnt_first_path", "");
+		nvram_set("usb_mnt_first_path_port", "0");
+
+		nvram_set("apps_status_checked", "1");	// it means need to check
 		nvram_set("apps_comp", "0");
-                nvram_set("apps_disk_free", "0");
+		nvram_set("apps_disk_free", "0");
 	}
 }
 /*
@@ -5691,7 +5467,7 @@ process_check_by_pidfile(const char *pid_file)
 //	read(fd, pid_buf, sizeof(pid_buf));
 	if (read(fd, pid_buf, sizeof(pid_buf)) <= 0)
 	{
-		printf("read usb devices fail\n");
+		dbg("read usb devices fail\n");
 		close(fd);
 		return 0;
 	}
@@ -5778,7 +5554,18 @@ found_mountpoint_with_apps()
 			if (check_if_dir_exist(apps_path))
 			{
 				dbg("found partition with .apps: %s\n", mpname);
+
 				nvram_set("usb_mnt_first_path", mpname);
+				if (!strncmp(nvram_safe_get("usb_path1_sddev"), find_sddev_by_mountpoint(mpname), 3))
+					nvram_set("usb_mnt_first_path_port", "1");
+				else if (!strncmp(nvram_safe_get("usb_path2_sddev"), find_sddev_by_mountpoint(mpname), 3))
+					nvram_set("usb_mnt_first_path_port", "2");
+				else
+					nvram_set("usb_mnt_first_path_port", "0");
+
+				nvram_set("apps_status_checked", "1");	// it means need to check
+				nvram_set("apps_comp", "0");
+				nvram_set("apps_disk_free", "0");
 
 				return 1;
 			}
@@ -5818,13 +5605,13 @@ count_sddev_partition()
 void
 tmp_log(char *buf)
 {
-	FILE* fd;
-	fd = fopen("/tmp/mdev02", "a");
-	if(fd > 0)
+	FILE* fp;
+	fp = fopen("/tmp/mdev02", "a");
+	if(fp)
 	{
-		fprintf(fd, buf);
-		fprintf(fd, "\n");
-		close(fd);
+		fprintf(fp, buf);
+		fprintf(fp, "\n");
+		fclose(fp);
 	}
 }
 
@@ -5861,7 +5648,7 @@ void usb_path_nvram(char *action, char *env_path)
 		return;
 
 	int i, usb_path = 0;
-	char nvram_name[20];
+	char nvram_name[32];
 
 	if (!strcmp(action, "add"))
 	{
@@ -5880,28 +5667,24 @@ void usb_path_nvram(char *action, char *env_path)
 
 			sprintf(nvram_name, "usb_path%d_fs_path0", usb_path);
 			nvram_set(nvram_name, &env_path[7]);
-//			sprintf(nvram_name, "usb_path%d_index", usb_path);
-//			nvram_set(nvram_name, "0");
+#ifndef USB_MODEM
 			sprintf(nvram_name, "usb_path%d", usb_path);
 			nvram_set(nvram_name, "storage");
+#endif
 			sprintf(nvram_name, "usb_path%d_sddev", usb_path);
 			nvram_set(nvram_name, &env_path[7]);
-			sprintf(nvram_name, "usb_path%d_add", usb_path);
-			nvram_set(nvram_name, "1");
+//			sprintf(nvram_name, "usb_path%d_add", usb_path);
+//			nvram_set(nvram_name, "1");
 		}
 		else if (env_path[14] == '1')				// sda1, sdb1, sdc1...
 		{
 			sprintf(nvram_name, "usb_path%d_fs_path0", usb_path);
 			nvram_set(nvram_name, &env_path[11]);
-//			sprintf(nvram_name, "usb_path%d_index", usb_path);
-//			nvram_set(nvram_name, "0");
 		}
 		else if (check_dev_sb_block_count(&env_path[11]))	// sda2, sdb2, sdc2...
 		{
 			sprintf(nvram_name, "usb_path%d_fs_path%c", usb_path, env_path[14] - 1);
 			nvram_set(nvram_name, &env_path[11]);
-//			sprintf(nvram_name, "usb_path%d_index", usb_path);
-//			nvram_set(nvram_name, &env_path[14]);
 		}
 	}
 /*
@@ -5922,9 +5705,6 @@ void usb_path_nvram(char *action, char *env_path)
 			sprintf(nvram_name, "usb_path%d_fs_path%c", usb_path, env_path[14] - 1);
 			nvram_set(nvram_name, "");
 		}
-
-		sprintf(nvram_name, "usb_path%d_index", usb_path);
-		nvram_set(nvram_name, "");
 	}
 */
 }

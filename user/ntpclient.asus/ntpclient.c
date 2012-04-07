@@ -257,8 +257,10 @@ void rfc1305print(char *data, struct ntptime *arrival)
 
 		if (!nvram_match("router_disable", "1"))
 		{
+			fprintf(stderr, "[ntpclient] send SIGUSR1 to watchdog\n");
 			nvram_set("rc_service", "restart_upnp");
-			kill(1, SIGUSR1);
+//			kill(1, SIGUSR1);
+			doSystem("killall -%d watchdog", SIGUSR1);
 		}
 
 		fprintf(stderr, "[ntpclient] set time to %lu.%.6lu\n", tv_set.tv_sec, tv_set.tv_usec);
@@ -392,14 +394,16 @@ int primary_loop(int usd, int num_probes, int cycle_time)
 		}
 		if (probes_sent >= num_probes && num_probes != 0) break;
 	}
-
+/*
 	nvram_set("ntp_ready", "2");
 	if (!nvram_match("router_disable", "1") && nvram_match("upnp_started", "0"))
 	{
+		fprintf(stderr, "[ntpclient] send SIGUSR1 to watchdog...\n");
 		nvram_set("rc_service", "restart_upnp");
-		kill(1, SIGUSR1);
+//		kill(1, SIGUSR1);
+		doSystem("killall -%d watchdog", SIGUSR1);
 	}
-
+*/
 	return -1;
 }
 

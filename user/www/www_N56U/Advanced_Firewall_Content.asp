@@ -282,7 +282,7 @@ function change_wizard(o, id){
 </td>
 </form>
 
-          <td id="help_td" style="width:15px;" valign="top">
+          <td id="help_td" valign="top"">
 <form name="hint_form"></form>
             <div id="helpicon" onClick="openHint(0,0);" title="<#Help_button_default_hint#>"><img src="images/help.gif" /></div>
             <div id="hintofPM" style="display:none;">
@@ -294,7 +294,7 @@ function change_wizard(o, id){
 				</thead>
                 <tr>				
                   <td valign="top" >
-					<div class="hint_body2" id="hint_body" style="width:110px"></div>
+					<div class="hint_body2" id="hint_body" style="width:120px;"></div>
 					<iframe id="statusframe" name="statusframe" class="statusframe" src="" frameborder="0"></iframe>
 				  </td>
                 </tr>

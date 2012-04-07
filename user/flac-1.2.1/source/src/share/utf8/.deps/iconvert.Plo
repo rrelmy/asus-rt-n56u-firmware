@@ -1,110 +1,110 @@
 iconvert.lo iconvert.o: iconvert.c ../../../config.h \
-  /root/RT-N56U/source/lib/include/assert.h \
-  /root/RT-N56U/source/lib/include/features.h \
-  /root/RT-N56U/source/lib/include/bits/uClibc_config.h \
-  /root/RT-N56U/source/lib/include/sys/cdefs.h \
-  /root/RT-N56U/source/lib/include/errno.h \
-  /root/RT-N56U/source/lib/include/bits/errno.h \
-  /root/RT-N56U/source/lib/include/bits/errno_values.h \
-  /root/RT-N56U/source/lib/include/iconv.h \
+  /home/defjovi/projects/RT-N56U/source/lib/include/assert.h \
+  /home/defjovi/projects/RT-N56U/source/lib/include/features.h \
+  /home/defjovi/projects/RT-N56U/source/lib/include/bits/uClibc_config.h \
+  /home/defjovi/projects/RT-N56U/source/lib/include/sys/cdefs.h \
+  /home/defjovi/projects/RT-N56U/source/lib/include/errno.h \
+  /home/defjovi/projects/RT-N56U/source/lib/include/bits/errno.h \
+  /home/defjovi/projects/RT-N56U/source/lib/include/bits/errno_values.h \
+  /home/defjovi/projects/RT-N56U/source/lib/include/iconv.h \
   /opt/buildroot-gcc342/bin/../lib/gcc/mipsel-linux-uclibc/3.4.2/include/stddef.h \
-  /root/RT-N56U/source/lib/include/stdlib.h \
-  /root/RT-N56U/source/lib/include/sys/types.h \
-  /root/RT-N56U/source/lib/include/bits/types.h \
-  /root/RT-N56U/source/lib/include/bits/kernel_types.h \
-  /root/RT-N56U/source/lib/include/bits/wordsize.h \
-  /root/RT-N56U/source/lib/include/bits/pthreadtypes.h \
-  /root/RT-N56U/source/lib/include/bits/sched.h \
-  /root/RT-N56U/source/lib/include/time.h \
-  /root/RT-N56U/source/lib/include/endian.h \
-  /root/RT-N56U/source/lib/include/bits/endian.h \
-  /root/RT-N56U/source/lib/include/sys/select.h \
-  /root/RT-N56U/source/lib/include/bits/select.h \
-  /root/RT-N56U/source/lib/include/bits/sigset.h \
-  /root/RT-N56U/source/lib/include/bits/time.h \
-  /root/RT-N56U/source/lib/include/sys/sysmacros.h \
-  /root/RT-N56U/source/lib/include/alloca.h \
-  /root/RT-N56U/source/lib/include/string.h iconvert.h \
+  /home/defjovi/projects/RT-N56U/source/lib/include/stdlib.h \
+  /home/defjovi/projects/RT-N56U/source/lib/include/sys/types.h \
+  /home/defjovi/projects/RT-N56U/source/lib/include/bits/types.h \
+  /home/defjovi/projects/RT-N56U/source/lib/include/bits/kernel_types.h \
+  /home/defjovi/projects/RT-N56U/source/lib/include/bits/wordsize.h \
+  /home/defjovi/projects/RT-N56U/source/lib/include/bits/pthreadtypes.h \
+  /home/defjovi/projects/RT-N56U/source/lib/include/bits/sched.h \
+  /home/defjovi/projects/RT-N56U/source/lib/include/time.h \
+  /home/defjovi/projects/RT-N56U/source/lib/include/endian.h \
+  /home/defjovi/projects/RT-N56U/source/lib/include/bits/endian.h \
+  /home/defjovi/projects/RT-N56U/source/lib/include/sys/select.h \
+  /home/defjovi/projects/RT-N56U/source/lib/include/bits/select.h \
+  /home/defjovi/projects/RT-N56U/source/lib/include/bits/sigset.h \
+  /home/defjovi/projects/RT-N56U/source/lib/include/bits/time.h \
+  /home/defjovi/projects/RT-N56U/source/lib/include/sys/sysmacros.h \
+  /home/defjovi/projects/RT-N56U/source/lib/include/alloca.h \
+  /home/defjovi/projects/RT-N56U/source/lib/include/string.h iconvert.h \
   ../../../include/share/alloc.h \
-  /root/RT-N56U/source/lib/include/limits.h \
+  /home/defjovi/projects/RT-N56U/source/lib/include/limits.h \
   /opt/buildroot-gcc342/bin/../lib/gcc/mipsel-linux-uclibc/3.4.2/include/limits.h \
-  /root/RT-N56U/source/lib/include/bits/posix1_lim.h \
-  /root/RT-N56U/source/lib/include/bits/local_lim.h \
-  /root/RT-N56U/source/lib/include/linux/limits.h \
-  /root/RT-N56U/source/lib/include/bits/posix2_lim.h \
-  /root/RT-N56U/source/lib/include/stdint.h \
-  /root/RT-N56U/source/lib/include/bits/wchar.h
+  /home/defjovi/projects/RT-N56U/source/lib/include/bits/posix1_lim.h \
+  /home/defjovi/projects/RT-N56U/source/lib/include/bits/local_lim.h \
+  /home/defjovi/projects/RT-N56U/source/lib/include/linux/limits.h \
+  /home/defjovi/projects/RT-N56U/source/lib/include/bits/posix2_lim.h \
+  /home/defjovi/projects/RT-N56U/source/lib/include/stdint.h \
+  /home/defjovi/projects/RT-N56U/source/lib/include/bits/wchar.h
 
 ../../../config.h:
 
-/root/RT-N56U/source/lib/include/assert.h:
+/home/defjovi/projects/RT-N56U/source/lib/include/assert.h:
 
-/root/RT-N56U/source/lib/include/features.h:
+/home/defjovi/projects/RT-N56U/source/lib/include/features.h:
 
-/root/RT-N56U/source/lib/include/bits/uClibc_config.h:
+/home/defjovi/projects/RT-N56U/source/lib/include/bits/uClibc_config.h:
 
-/root/RT-N56U/source/lib/include/sys/cdefs.h:
+/home/defjovi/projects/RT-N56U/source/lib/include/sys/cdefs.h:
 
-/root/RT-N56U/source/lib/include/errno.h:
+/home/defjovi/projects/RT-N56U/source/lib/include/errno.h:
 
-/root/RT-N56U/source/lib/include/bits/errno.h:
+/home/defjovi/projects/RT-N56U/source/lib/include/bits/errno.h:
 
-/root/RT-N56U/source/lib/include/bits/errno_values.h:
+/home/defjovi/projects/RT-N56U/source/lib/include/bits/errno_values.h:
 
-/root/RT-N56U/source/lib/include/iconv.h:
+/home/defjovi/projects/RT-N56U/source/lib/include/iconv.h:
 
 /opt/buildroot-gcc342/bin/../lib/gcc/mipsel-linux-uclibc/3.4.2/include/stddef.h:
 
-/root/RT-N56U/source/lib/include/stdlib.h:
+/home/defjovi/projects/RT-N56U/source/lib/include/stdlib.h:
 
-/root/RT-N56U/source/lib/include/sys/types.h:
+/home/defjovi/projects/RT-N56U/source/lib/include/sys/types.h:
 
-/root/RT-N56U/source/lib/include/bits/types.h:
+/home/defjovi/projects/RT-N56U/source/lib/include/bits/types.h:
 
-/root/RT-N56U/source/lib/include/bits/kernel_types.h:
+/home/defjovi/projects/RT-N56U/source/lib/include/bits/kernel_types.h:
 
-/root/RT-N56U/source/lib/include/bits/wordsize.h:
+/home/defjovi/projects/RT-N56U/source/lib/include/bits/wordsize.h:
 
-/root/RT-N56U/source/lib/include/bits/pthreadtypes.h:
+/home/defjovi/projects/RT-N56U/source/lib/include/bits/pthreadtypes.h:
 
-/root/RT-N56U/source/lib/include/bits/sched.h:
+/home/defjovi/projects/RT-N56U/source/lib/include/bits/sched.h:
 
-/root/RT-N56U/source/lib/include/time.h:
+/home/defjovi/projects/RT-N56U/source/lib/include/time.h:
 
-/root/RT-N56U/source/lib/include/endian.h:
+/home/defjovi/projects/RT-N56U/source/lib/include/endian.h:
 
-/root/RT-N56U/source/lib/include/bits/endian.h:
+/home/defjovi/projects/RT-N56U/source/lib/include/bits/endian.h:
 
-/root/RT-N56U/source/lib/include/sys/select.h:
+/home/defjovi/projects/RT-N56U/source/lib/include/sys/select.h:
 
-/root/RT-N56U/source/lib/include/bits/select.h:
+/home/defjovi/projects/RT-N56U/source/lib/include/bits/select.h:
 
-/root/RT-N56U/source/lib/include/bits/sigset.h:
+/home/defjovi/projects/RT-N56U/source/lib/include/bits/sigset.h:
 
-/root/RT-N56U/source/lib/include/bits/time.h:
+/home/defjovi/projects/RT-N56U/source/lib/include/bits/time.h:
 
-/root/RT-N56U/source/lib/include/sys/sysmacros.h:
+/home/defjovi/projects/RT-N56U/source/lib/include/sys/sysmacros.h:
 
-/root/RT-N56U/source/lib/include/alloca.h:
+/home/defjovi/projects/RT-N56U/source/lib/include/alloca.h:
 
-/root/RT-N56U/source/lib/include/string.h:
+/home/defjovi/projects/RT-N56U/source/lib/include/string.h:
 
 iconvert.h:
 
 ../../../include/share/alloc.h:
 
-/root/RT-N56U/source/lib/include/limits.h:
+/home/defjovi/projects/RT-N56U/source/lib/include/limits.h:
 
 /opt/buildroot-gcc342/bin/../lib/gcc/mipsel-linux-uclibc/3.4.2/include/limits.h:
 
-/root/RT-N56U/source/lib/include/bits/posix1_lim.h:
+/home/defjovi/projects/RT-N56U/source/lib/include/bits/posix1_lim.h:
 
-/root/RT-N56U/source/lib/include/bits/local_lim.h:
+/home/defjovi/projects/RT-N56U/source/lib/include/bits/local_lim.h:
 
-/root/RT-N56U/source/lib/include/linux/limits.h:
+/home/defjovi/projects/RT-N56U/source/lib/include/linux/limits.h:
 
-/root/RT-N56U/source/lib/include/bits/posix2_lim.h:
+/home/defjovi/projects/RT-N56U/source/lib/include/bits/posix2_lim.h:
 
-/root/RT-N56U/source/lib/include/stdint.h:
+/home/defjovi/projects/RT-N56U/source/lib/include/stdint.h:
 
-/root/RT-N56U/source/lib/include/bits/wchar.h:
+/home/defjovi/projects/RT-N56U/source/lib/include/bits/wchar.h:

@@ -8,7 +8,6 @@
 <link rel="icon" href="images/favicon.png">
 <title>AiDisk Wizard</title>
 <link rel="stylesheet" type="text/css" href="aidisk.css">
-
 <script type="text/javascript" src="/state.js"></script>
 <script>
 var next_page = "";

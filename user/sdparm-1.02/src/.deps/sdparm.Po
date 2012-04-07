@@ -1,0 +1,169 @@
+sdparm.o sdparm.o: sdparm.c \
+  /home/defjovi/projects/RT-N56U/source/lib/include/unistd.h \
+  /home/defjovi/projects/RT-N56U/source/lib/include/features.h \
+  /home/defjovi/projects/RT-N56U/source/lib/include/bits/uClibc_config.h \
+  /home/defjovi/projects/RT-N56U/source/lib/include/sys/cdefs.h \
+  /home/defjovi/projects/RT-N56U/source/lib/include/bits/posix_opt.h \
+  /home/defjovi/projects/RT-N56U/source/lib/include/bits/types.h \
+  /opt/buildroot-gcc342/bin/../lib/gcc/mipsel-linux-uclibc/3.4.2/include/stddef.h \
+  /home/defjovi/projects/RT-N56U/source/lib/include/bits/kernel_types.h \
+  /home/defjovi/projects/RT-N56U/source/lib/include/bits/wordsize.h \
+  /home/defjovi/projects/RT-N56U/source/lib/include/bits/pthreadtypes.h \
+  /home/defjovi/projects/RT-N56U/source/lib/include/bits/sched.h \
+  /home/defjovi/projects/RT-N56U/source/lib/include/bits/confname.h \
+  /home/defjovi/projects/RT-N56U/source/lib/include/bits/getopt.h \
+  /home/defjovi/projects/RT-N56U/source/lib/include/fcntl.h \
+  /home/defjovi/projects/RT-N56U/source/lib/include/bits/fcntl.h \
+  /home/defjovi/projects/RT-N56U/source/lib/include/sys/types.h \
+  /home/defjovi/projects/RT-N56U/source/lib/include/time.h \
+  /home/defjovi/projects/RT-N56U/source/lib/include/endian.h \
+  /home/defjovi/projects/RT-N56U/source/lib/include/bits/endian.h \
+  /home/defjovi/projects/RT-N56U/source/lib/include/sys/select.h \
+  /home/defjovi/projects/RT-N56U/source/lib/include/bits/select.h \
+  /home/defjovi/projects/RT-N56U/source/lib/include/bits/sigset.h \
+  /home/defjovi/projects/RT-N56U/source/lib/include/bits/time.h \
+  /home/defjovi/projects/RT-N56U/source/lib/include/sys/sysmacros.h \
+  /home/defjovi/projects/RT-N56U/source/lib/include/stdio.h \
+  /home/defjovi/projects/RT-N56U/source/lib/include/bits/uClibc_stdio.h \
+  /home/defjovi/projects/RT-N56U/source/lib/include/wchar.h \
+  /home/defjovi/projects/RT-N56U/source/lib/include/bits/wchar.h \
+  /opt/buildroot-gcc342/bin/../lib/gcc/mipsel-linux-uclibc/3.4.2/include/stdarg.h \
+  /home/defjovi/projects/RT-N56U/source/lib/include/bits/stdio_lim.h \
+  /home/defjovi/projects/RT-N56U/source/lib/include/stdlib.h \
+  /home/defjovi/projects/RT-N56U/source/lib/include/alloca.h \
+  /home/defjovi/projects/RT-N56U/source/lib/include/string.h \
+  /home/defjovi/projects/RT-N56U/source/lib/include/ctype.h \
+  /home/defjovi/projects/RT-N56U/source/lib/include/bits/uClibc_touplow.h \
+  /home/defjovi/projects/RT-N56U/source/lib/include/inttypes.h \
+  /home/defjovi/projects/RT-N56U/source/lib/include/stdint.h ../config.h \
+  /home/defjovi/projects/RT-N56U/source/lib/include/getopt.h \
+  /home/defjovi/projects/RT-N56U/source/lib/include/errno.h \
+  /home/defjovi/projects/RT-N56U/source/lib/include/bits/errno.h \
+  /home/defjovi/projects/RT-N56U/source/lib/include/bits/errno_values.h \
+  /home/defjovi/projects/RT-N56U/source/lib/include/sys/ioctl.h \
+  /home/defjovi/projects/RT-N56U/source/lib/include/bits/ioctls.h \
+  /home/defjovi/projects/RT-N56U/source/lib/include/asm/ioctls.h \
+  /home/defjovi/projects/RT-N56U/source/lib/include/asm/ioctl.h \
+  /home/defjovi/projects/RT-N56U/source/lib/include/bits/ioctl-types.h \
+  /home/defjovi/projects/RT-N56U/source/lib/include/sys/ttydefaults.h \
+  /home/defjovi/projects/RT-N56U/source/lib/include/sys/stat.h \
+  /home/defjovi/projects/RT-N56U/source/lib/include/bits/stat.h \
+  /home/defjovi/projects/RT-N56U/source/lib/include/sys/utsname.h \
+  /home/defjovi/projects/RT-N56U/source/lib/include/bits/utsname.h \
+  /home/defjovi/projects/RT-N56U/source/lib/include/scsi/scsi.h \
+  /home/defjovi/projects/RT-N56U/source/lib/include/scsi/sg.h sdparm.h \
+  ../include/sg_lib.h ../include/sg_cmds_basic.h
+
+/home/defjovi/projects/RT-N56U/source/lib/include/unistd.h:
+
+/home/defjovi/projects/RT-N56U/source/lib/include/features.h:
+
+/home/defjovi/projects/RT-N56U/source/lib/include/bits/uClibc_config.h:
+
+/home/defjovi/projects/RT-N56U/source/lib/include/sys/cdefs.h:
+
+/home/defjovi/projects/RT-N56U/source/lib/include/bits/posix_opt.h:
+
+/home/defjovi/projects/RT-N56U/source/lib/include/bits/types.h:
+
+/opt/buildroot-gcc342/bin/../lib/gcc/mipsel-linux-uclibc/3.4.2/include/stddef.h:
+
+/home/defjovi/projects/RT-N56U/source/lib/include/bits/kernel_types.h:
+
+/home/defjovi/projects/RT-N56U/source/lib/include/bits/wordsize.h:
+
+/home/defjovi/projects/RT-N56U/source/lib/include/bits/pthreadtypes.h:
+
+/home/defjovi/projects/RT-N56U/source/lib/include/bits/sched.h:
+
+/home/defjovi/projects/RT-N56U/source/lib/include/bits/confname.h:
+
+/home/defjovi/projects/RT-N56U/source/lib/include/bits/getopt.h:
+
+/home/defjovi/projects/RT-N56U/source/lib/include/fcntl.h:
+
+/home/defjovi/projects/RT-N56U/source/lib/include/bits/fcntl.h:
+
+/home/defjovi/projects/RT-N56U/source/lib/include/sys/types.h:
+
+/home/defjovi/projects/RT-N56U/source/lib/include/time.h:
+
+/home/defjovi/projects/RT-N56U/source/lib/include/endian.h:
+
+/home/defjovi/projects/RT-N56U/source/lib/include/bits/endian.h:
+
+/home/defjovi/projects/RT-N56U/source/lib/include/sys/select.h:
+
+/home/defjovi/projects/RT-N56U/source/lib/include/bits/select.h:
+
+/home/defjovi/projects/RT-N56U/source/lib/include/bits/sigset.h:
+
+/home/defjovi/projects/RT-N56U/source/lib/include/bits/time.h:
+
+/home/defjovi/projects/RT-N56U/source/lib/include/sys/sysmacros.h:
+
+/home/defjovi/projects/RT-N56U/source/lib/include/stdio.h:
+
+/home/defjovi/projects/RT-N56U/source/lib/include/bits/uClibc_stdio.h:
+
+/home/defjovi/projects/RT-N56U/source/lib/include/wchar.h:
+
+/home/defjovi/projects/RT-N56U/source/lib/include/bits/wchar.h:
+
+/opt/buildroot-gcc342/bin/../lib/gcc/mipsel-linux-uclibc/3.4.2/include/stdarg.h:
+
+/home/defjovi/projects/RT-N56U/source/lib/include/bits/stdio_lim.h:
+
+/home/defjovi/projects/RT-N56U/source/lib/include/stdlib.h:
+
+/home/defjovi/projects/RT-N56U/source/lib/include/alloca.h:
+
+/home/defjovi/projects/RT-N56U/source/lib/include/string.h:
+
+/home/defjovi/projects/RT-N56U/source/lib/include/ctype.h:
+
+/home/defjovi/projects/RT-N56U/source/lib/include/bits/uClibc_touplow.h:
+
+/home/defjovi/projects/RT-N56U/source/lib/include/inttypes.h:
+
+/home/defjovi/projects/RT-N56U/source/lib/include/stdint.h:
+
+../config.h:
+
+/home/defjovi/projects/RT-N56U/source/lib/include/getopt.h:
+
+/home/defjovi/projects/RT-N56U/source/lib/include/errno.h:
+
+/home/defjovi/projects/RT-N56U/source/lib/include/bits/errno.h:
+
+/home/defjovi/projects/RT-N56U/source/lib/include/bits/errno_values.h:
+
+/home/defjovi/projects/RT-N56U/source/lib/include/sys/ioctl.h:
+
+/home/defjovi/projects/RT-N56U/source/lib/include/bits/ioctls.h:
+
+/home/defjovi/projects/RT-N56U/source/lib/include/asm/ioctls.h:
+
+/home/defjovi/projects/RT-N56U/source/lib/include/asm/ioctl.h:
+
+/home/defjovi/projects/RT-N56U/source/lib/include/bits/ioctl-types.h:
+
+/home/defjovi/projects/RT-N56U/source/lib/include/sys/ttydefaults.h:
+
+/home/defjovi/projects/RT-N56U/source/lib/include/sys/stat.h:
+
+/home/defjovi/projects/RT-N56U/source/lib/include/bits/stat.h:
+
+/home/defjovi/projects/RT-N56U/source/lib/include/sys/utsname.h:
+
+/home/defjovi/projects/RT-N56U/source/lib/include/bits/utsname.h:
+
+/home/defjovi/projects/RT-N56U/source/lib/include/scsi/scsi.h:
+
+/home/defjovi/projects/RT-N56U/source/lib/include/scsi/sg.h:
+
+sdparm.h:
+
+../include/sg_lib.h:
+
+../include/sg_cmds_basic.h:

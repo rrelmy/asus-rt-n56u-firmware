@@ -351,8 +351,8 @@ start_igmpproxy(char *wan_ifname)
 	char *altnet_mask;
 
 	if (atoi(nvram_safe_get("udpxy_enable_x")))
-		eval("/usr/sbin/udpxy", "-a", nvram_get("lan_ifname") ? : "br0",
-			"-m", wan_ifname, "-p", nvram_get("udpxy_enable_x"));
+		eval("/usr/sbin/udpxy", "-a", nvram_safe_get("lan_ifname") ? : "br0",
+			"-m", wan_ifname, "-p", nvram_safe_get("udpxy_enable_x"));
 
 	if (!nvram_match("mr_enable_x", "1"))
 		return;
@@ -373,8 +373,8 @@ start_igmpproxy(char *wan_ifname)
 		"quickleave\n\n"
 		"phyint %s upstream  ratelimit 0  threshold 1\n"
 		"\taltnet %s\n\n"
-		"phyint %s downstream  ratelimit 0  threshold 1\n\n"
-		"phyint ppp0 disabled\n\n",
+		"phyint %s downstream  ratelimit 0  threshold 1\n\n",
+//		"phyint ppp0 disabled\n\n",
 		wan_ifname, 
 		altnet_mask, 
 		nvram_safe_get("lan_ifname") ? : "br0");
@@ -401,15 +401,6 @@ int
 is_ap_mode()
 {
 	if ((nvram_match("wan_nat_x", "0")) && (nvram_match("wan_route_x", "IP_Bridged")))
-		return 1;
-	else
-		return 0;
-}
-
-int 
-is_3g_mode()
-{
-	if ((nvram_match("wan_proto", "3g")))	
 		return 1;
 	else
 		return 0;
@@ -465,7 +456,6 @@ vconfig()
 	doSystem("ifconfig eth2 hw ether %s", nvram_safe_get("lan_hwaddr"));
 	ifconfig("eth2", IFUP, NULL, NULL);
 
-//	if ((!is_ap_mode()) && (!is_3g_mode())) {
 		if (!nvram_match("wan_hwaddr", ""))
 			doSystem("ifconfig eth3 hw ether %s", nvram_safe_get("wan_hwaddr"));
 		else
@@ -531,14 +521,18 @@ vconfig()
 	system("brctl setfd br0 0.1");
 	system("brctl sethello br0 0.1");
 #if (!defined(W7_LOGO) && !defined(WIFI_LOGO))
-	if (nvram_match("lan_stp", "0") || is_ap_mode() || is_3g_mode())
+	if (nvram_match("lan_stp", "0") || is_ap_mode())
 		system("brctl stp br0 0");
 	else
 		system("brctl stp br0 1");
 #else
 	system("brctl stp br0 1");
 #endif
-	if ((!is_ap_mode()) && (!is_3g_mode()))
+	if (!is_ap_mode()
+#ifdef USB_MODEM
+			&& !get_usb_modem_state()
+#endif
+			)
 	{
 		stbport = atoi(nvram_safe_get("wan_stb_x"));
 
@@ -997,6 +991,7 @@ del_wan_routes(char *wan_ifname)
 	return del_routes(prefix, "route", wan_ifname);
 }
 
+#ifndef USB_MODEM
 int
 start_3g_process()
 {
@@ -1033,7 +1028,7 @@ stop_3g()
 	track_set("203");
 
 	nvram_set("usb_dev_state", "off");
-	nvram_set("usb_mnt_first_path", "");
+//	nvram_set("usb_mnt_first_path", "");
 	nvram_set("usb_path1", "");
 	nvram_set("wan0_ipaddr", "");
 	nvram_set("usb3g", "");
@@ -1048,15 +1043,22 @@ stop_3g()
 
 	return 0;
 }
+#endif
 
-int enable_qos()
+static int enable_qos()
 {
 #if defined (W7_LOGO) || defined (WIFI_LOGO)
 	return 0;
 #endif
+	char qos_ubw_real[128];
+	memset(qos_ubw_real, 0x0, 128);
+	if (nvram_invmatch("qos_manual_ubw","") && nvram_invmatch("qos_manual_ubw","0") && (atoi(nvram_safe_get("qos_manual_ubw")) > 0))
+		strcpy(qos_ubw_real, nvram_safe_get("qos_manual_ubw"));
+	else
+		strcpy(qos_ubw_real, nvram_safe_get("qos_ubw"));
+
 	int qos_userspec_app_en = 0;
 	int rulenum = atoi(nvram_safe_get("qos_rulenum_x")), idx_class = 0;
-
 	/* Add class for User specify, 10:20(high), 10:40(middle), 10:60(low)*/
 	if (rulenum) {
 		for (idx_class=0; idx_class < rulenum; idx_class++)
@@ -1077,10 +1079,9 @@ int enable_qos()
 	if (	(nvram_match("qos_tos_prio", "1") ||
 		 nvram_match("qos_pshack_prio", "1") ||
 		 nvram_match("qos_service_enable", "1") ||
-		 nvram_match("qos_shortpkt_prio", "1")	) ||
-		(!nvram_match("qos_manual_ubw","0") && !nvram_match("qos_manual_ubw","")) ||
-		(rulenum && qos_userspec_app_en)
-	)
+		 nvram_match("qos_shortpkt_prio", "1") ||
+		 (rulenum && qos_userspec_app_en)) &&
+		(atoi(qos_ubw_real) > 0)	)
 	{
 		dbg("found QoS rulues\n");
 		return 1;
@@ -1144,8 +1145,10 @@ start_wan(void)
 		!enable_qos() &&
 		!is_hwnat_loaded()
 	)
-		system("insmod -q hw_nat.ko");
-
+	{
+		if (nvram_match("hwnat", "1"))
+			system("insmod -q hw_nat.ko");
+	}
 #ifdef ASUS_EXT
 	update_wan_status(0);
 	/* start connection independent firewall */
@@ -1154,7 +1157,6 @@ start_wan(void)
 	/* start connection independent firewall */
 	start_firewall();
 #endif
-
 	/* Create links */
 	mkdir("/tmp/ppp", 0777);
 	mkdir("/tmp/ppp/peers", 0777);
@@ -1274,7 +1276,6 @@ start_wan(void)
 		{		
 			FILE *fp;
 
-//			setup_ethernet(nvram_safe_get("wan_ifname"));	// do nothing
 			start_pppoe_relay(nvram_safe_get("wan_ifname"));
 
 			/* Enable Forwarding */
@@ -1299,6 +1300,28 @@ start_wan(void)
 #endif
 ))
 */
+#ifdef USB_MODEM
+		if(get_usb_modem_state()){
+			/* Bring up  WAN interface */
+			ifconfig(wan_ifname, IFUP, NULL, NULL);
+			
+			/* do not use safe_get here, values are optional */
+			/* start firewall */
+			start_firewall_ex("ppp0", "0.0.0.0", "br0", nvram_safe_get("lan_ipaddr"));
+			
+			/* setup static wan routes via physical device */
+			add_routes("wan_", "route", wan_ifname);
+			
+			/* start multicast router */
+			start_igmpproxy(wan_ifname);
+			
+			/* launch pppoe client daemon */
+			system("pppd call 3g");
+			
+			nvram_set("wan_ifname_t", "ppp0");
+		}
+		else
+#endif
 		if (strcmp(wan_proto, "pppoe") == 0 || strcmp(wan_proto, "pptp") == 0 ||
 		    strcmp(wan_proto, "l2tp") == 0) 	// oleg patch
 		{
@@ -1408,12 +1431,12 @@ start_wan(void)
 //|| (strcmp(wan_proto,"pptp")==0 && nvram_match(strcat_r(prefix, "pppoe_gateway", tmp), ""))
 //#endif
 		) {
-//			char *wan_hostname = nvram_get(strcat_r(prefix, "hostname", tmp));
+//			char *wan_hostname = nvram_safe_get(strcat_r(prefix, "hostname", tmp));
 			char *wan_hostname;
 			if (!nvram_match("computer_name", ""))
-				wan_hostname = nvram_get("computer_name");
+				wan_hostname = nvram_safe_get("computer_name");
 			else
-				wan_hostname = nvram_get("productid");
+				wan_hostname = nvram_safe_get("productid");
 
 			char *dhcp_argv[] = { "udhcpc",
 					      "-i", wan_ifname,
@@ -1596,11 +1619,13 @@ stop_wan2(void)
 {
 	char name[80], *next;
 
+#ifndef USB_MODEM
 	if (nvram_match("wan0_proto", "3g"))
 	{
 		stop_3g();
 		return;
 	}
+#endif
 
 	if (pids("stats"))
 		system("killall stats");
@@ -1786,7 +1811,11 @@ wan_up(char *wan_ifname)	// oleg patch, replace
 
 	start_firewall_ex(wan_ifname, nvram_safe_get(strcat_r(prefix, "ipaddr", tmp)),
 		"br0", nvram_safe_get("lan_ipaddr"));
-
+/*
+        if (!strcmp(wan_proto, "pppoe") &&
+            !strcmp(wan_proto, "pptp") &&
+            !strcmp(wan_proto, "l2tp"))
+*/
 // 2011.02 James. {
 	{
 		printf("rc: Send SIGUSR1 to wanduck.\n");
@@ -1811,20 +1840,31 @@ wan_up(char *wan_ifname)	// oleg patch, replace
 
 	/* start multicast router */
 	if (strcmp(wan_proto, "dhcp") == 0 ||
-		//strcmp(wan_proto, "bigpond") == 0 ||
+//		strcmp(wan_proto, "bigpond") == 0 ||
 		strcmp(wan_proto, "static") == 0)
 	{
 		start_igmpproxy(wan_ifname);
 	}
 #if (!defined(W7_LOGO) && !defined(WIFI_LOGO))
+	int try_count_max;
 	int try_count = 0;
+	if (nvram_match("wan0_proto", "static"))
+		try_count_max = 1;
+	else
+		try_count_max = 2;
 	nvram_set("qos_ubw", "0");
-//	if (!(!nvram_match("qos_manual_ubw","0") && !nvram_match("qos_manual_ubw","")))
-	while ((nvram_match("qos_ubw", "0") || nvram_match("qos_ubw", "0kbit")) && (try_count++ < 2))
+//	if (!(!nvram_match("qos_manual_ubw","") && !nvram_match("qos_manual_ubw","0")))
+	while ((nvram_match("qos_ubw", "") || nvram_match("qos_ubw", "0")) && (try_count++ < try_count_max))
 		qos_get_wan_rate();
 #endif
 //2008.10 magic{
 #ifdef QOS
+        
+	if (nvram_invmatch("qos_manual_ubw","") && nvram_invmatch("qos_manual_ubw","0") && (atoi(nvram_safe_get("qos_manual_ubw")) > 0))
+		nvram_set("qos_ubw_real", nvram_safe_get("qos_manual_ubw"));
+	else
+		nvram_set("qos_ubw_real", nvram_safe_get("qos_ubw"));
+
 	int qos_userspec_app_en = 0;
 	int rulenum = atoi(nvram_safe_get("qos_rulenum_x")), idx_class = 0;
 	/* Add class for User specify, 10:20(high), 10:40(middle), 10:60(low)*/
@@ -1845,17 +1885,13 @@ wan_up(char *wan_ifname)	// oleg patch, replace
 	}
 
 //	if (nvram_match("qos_global_enable", "1") || nvram_match("qos_userdef_enable", "1"))
-	if (	(nvram_match("qos_tos_prio", "1") ||
-		 nvram_match("qos_pshack_prio", "1") ||
-		 nvram_match("qos_service_enable", "1") ||
-		 nvram_match("qos_shortpkt_prio", "1")	) ||
-		 (!nvram_match("qos_manual_ubw","0") && !nvram_match("qos_manual_ubw","")) ||
-		 (rulenum && qos_userspec_app_en)
-		 /* || nvram_match("qos_dfragment_enable", "1")*/)
+	if (	nvram_match("qos_tos_prio", "1") ||
+		nvram_match("qos_pshack_prio", "1") ||
+		nvram_match("qos_service_enable", "1") ||
+		nvram_match("qos_shortpkt_prio", "1") ||
+		(rulenum && qos_userspec_app_en)	)
 	{
-		if (	(nvram_match("qos_manual_ubw","0") || nvram_match("qos_manual_ubw","")) &&
-			(nvram_match("qos_ubw","0") || nvram_match("qos_ubw",""))
-		)
+		if (atoi(nvram_safe_get("qos_ubw_real")) <= 0)
 		{
 			dbg("wan_up: no wan rate! skip qos setting!\n");
 			goto Speedtest_Init_failed_wan_up;
@@ -1914,7 +1950,10 @@ Speedtest_Init_failed_wan_up:
 			//!nvram_match("wan0_proto", "l2tp") &&
 			!is_hwnat_loaded()
 		)
-			system("insmod -q hw_nat.ko");
+		{
+			if (nvram_match("hwnat", "1"))
+				system("insmod -q hw_nat.ko");
+		}
 	}
 #endif
 //2008.10 magic}
@@ -1933,9 +1972,6 @@ Speedtest_Init_failed_wan_up:
 #if (!defined(W7_LOGO) && !defined(WIFI_LOGO))
 	if (nvram_match("wan0_proto", "dhcp"))	// 0712 ASUS
 	{
-//		if (pids("detectWan"))
-//			system("killall detectWan");
-
 		if (!pids("detectWan"))
 		{
 			printf("start detectWan\n");	// tmp test
@@ -1980,6 +2016,13 @@ wan_down(char *wan_ifname)
 	update_wan_status(0);
 
 	if (strcmp(wan_proto, "bigpond")==0) stop_bpalogin();
+
+        {
+                printf("rc: Send SIGUSR1 to wanduck.\n");
+                kill_pidfile_s("/var/run/wanduck.pid", SIGUSR1);
+                printf("rc: Send SIGUSR2 to wanduck.\n");
+                kill_pidfile_s("/var/run/wanduck.pid", SIGUSR2);
+        }
 #endif
 
 #ifdef CDMA
@@ -2379,7 +2422,11 @@ start_mac_clone()
 
 	while (!got_wan_ip() && !had_try)
 	{
+#ifndef USB_MODEM
 		if (is_phyconnected() == 0)
+#else
+		if(is_phyconnected()&0x1 != 1) // NO wan port but maybe have a usb modem.
+#endif
 		{
 			sleep(5);
 			continue;
@@ -2476,6 +2523,7 @@ void print_num_of_connections()
 
 	fp = fopen("/proc/net/stat/nf_conntrack", "r");
 	if (!fp) {
+		fprintf(stderr, "\nconnection count: ?!\n");
 		dbg("\nconnection count: ?!\n");
 		return;
 	}
@@ -2488,11 +2536,13 @@ void print_num_of_connections()
 	sscanf(buf, "%s %s", entries, others);
 	num_of_entries = strtoul(entries, NULL, 16);
 
+	fprintf(stderr, "\nconnection count: %ld\n", num_of_entries);
 	dbg("\nconnection count: %ld\n", num_of_entries);
 
         fp = fopen("/proc/sys/net/nf_conntrack_max", "r");
         if (!fp) {
-                dbg("connection max: ?!\n");
+                fprintf(stderr, "connection max: ?!\n");
+		dbg("connection max: ?!\n");
                 return;
         }
 
@@ -2503,7 +2553,8 @@ void print_num_of_connections()
         sscanf(buf, "%s", entries);
         num_of_entries = strtoul(entries, NULL, 10);
 
-        dbg("connection max: %ld\n", num_of_entries);
+        fprintf(stderr, "connection max: %ld\n", num_of_entries);
+	dbg("connection max: %ld\n", num_of_entries);
 }
 
 void
@@ -2534,7 +2585,8 @@ print_uptime(void)
 
         FILE *fp = fopen("/proc/uptime", "r");
         if (!fp) {
-                dbg("fopen error!\n");
+                fprintf(stderr, "fopen error!\n");
+		dbg("fopen error!\n");
                 return;
         }
 
@@ -2543,7 +2595,8 @@ print_uptime(void)
 
         secs = atof(buf);
         reltime((unsigned long) secs, buf);
-        dbg("uptime: %s\n\n", buf);
+        fprintf(stderr, "uptime: %s\n\n", buf);
+	dbg("uptime: %s\n\n", buf);
 }
 
 int

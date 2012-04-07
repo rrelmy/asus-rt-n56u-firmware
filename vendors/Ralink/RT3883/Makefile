@@ -73,12 +73,12 @@ romfs.post::
 
 	rm -rf $(ROMFSDIR)/root
 	rm -rf $(ROMFSDIR)/bin/g++-uc
-	mkdir -p $(ROMFSDIR)/lib/modules/2.6.21/kernel/drivers/net/wireless/rt2860v2_ap
-	mkdir -p $(ROMFSDIR)/lib/modules/2.6.21/kernel/drivers/net/wireless/RT3090_ap
-	cp -f $(ROOTDIR)/user/wl/rt2860v2_ap.ko $(ROMFSDIR)/lib/modules/2.6.21/kernel/drivers/net/wireless/rt2860v2_ap
-	cp -f $(ROOTDIR)/user/wl/RT3090_ap.ko $(ROMFSDIR)/lib/modules/2.6.21/kernel/drivers/net/wireless/RT3090_ap
-	cp -f $(ROOTDIR)/user/wl/RT3090_ap_net.ko $(ROMFSDIR)/lib/modules/2.6.21/kernel/drivers/net/wireless/RT3090_ap
-	cp -f $(ROOTDIR)/user/wl/RT3090_ap_util.ko $(ROMFSDIR)/lib/modules/2.6.21/kernel/drivers/net/wireless/RT3090_ap
+#	mkdir -p $(ROMFSDIR)/lib/modules/2.6.21/kernel/drivers/net/wireless/rt2860v2_ap
+#	mkdir -p $(ROMFSDIR)/lib/modules/2.6.21/kernel/drivers/net/wireless/RT3090_ap
+#	cp -f $(ROOTDIR)/user/wl/rt2860v2_ap.ko $(ROMFSDIR)/lib/modules/2.6.21/kernel/drivers/net/wireless/rt2860v2_ap
+#	cp -f $(ROOTDIR)/user/wl/RT3090_ap.ko $(ROMFSDIR)/lib/modules/2.6.21/kernel/drivers/net/wireless/RT3090_ap
+#	cp -f $(ROOTDIR)/user/wl/RT3090_ap_net.ko $(ROMFSDIR)/lib/modules/2.6.21/kernel/drivers/net/wireless/RT3090_ap
+#	cp -f $(ROOTDIR)/user/wl/RT3090_ap_util.ko $(ROMFSDIR)/lib/modules/2.6.21/kernel/drivers/net/wireless/RT3090_ap
 	
 	#Squash File System
 	rm -f $(RAMDISK)  

@@ -29,14 +29,14 @@ install: all
 	$(INSTALL) -d -m 755 $(LIBDIR)
 	$(INSTALL) -s -c -m 4550 pptp.so $(LIBDIR)
 
-clean:
-	rm -f *.o *.so *.a
-
 pptp.o: pptp.c
-	$(CC) $(CFLAGS) -I../../.. -c -o $@ -fPIC pptp.c
+	$(CC) $(CFLAGS) -I../../.. -c -o $@ -fPIC $^
 
 libplugin.a: dirutil.o orckit_quirks.o pptp_callmgr.o pptp_ctrl.o pptp_quirks.o util.o vector.o
 	$(AR) -rc $@ $^
+
+clean:
+	rm -f *.o *.so *.a
 
 %.o: %.c
 	$(CC) $(CFLAGS) -c -o $@ -fPIC $^

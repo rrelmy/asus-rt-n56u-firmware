@@ -136,16 +136,16 @@ typedef struct
 #define HNAT_USE_HEADROOM
 //#define HNAT_USE_TAILROOM
 //#define HNAT_USE_SKB_CB
+
 #if defined (HNAT_USE_HEADROOM)
 #define IS_SPACE_AVAILABLED(skb)    (skb_headroom(skb) >= FOE_INFO_LEN) ? 1 : 0
 #define FOE_INFO_START_ADDR(skb)    (skb->head)
 #define FOE_MAGIC_TAG(skb)	    ((PdmaRxDescInfo4 *)((skb)->head))->MAGIC_TAG
 #define FOE_ENTRY_NUM(skb)	    ((PdmaRxDescInfo4 *)((skb)->head))->FOE_Entry
 #define FOE_FVLD(skb)		    ((PdmaRxDescInfo4 *)((skb)->head))->FVLD
-				    //RxHandler: RxIf(WLAN/PCI), TxHandler:ALG Interested?
 #define FOE_ALG(skb)		    ((PdmaRxDescInfo4 *)((skb)->head))->ALG
 #define FOE_AI(skb)		    ((PdmaRxDescInfo4 *)((skb)->head))->AI
-#define FOE_SP(skb)		    ((PdmaRxDescInfo4 *)((skb)->head))->SP //src_port or up
+#define FOE_SP(skb)		    ((PdmaRxDescInfo4 *)((skb)->head))->SP //src_port or user priority
 #define FOE_AIS(skb)		    ((PdmaRxDescInfo4 *)((skb)->head))->AIS
 #elif defined (HNAT_USE_TAILROOM)
 #define IS_SPACE_AVAILABLED(skb)    (skb_tailroom(skb) >= FOE_INFO_LEN) ? 1 : 0
@@ -170,11 +170,12 @@ typedef struct
 #define FOE_AIS(skb)		    ((PdmaRxDescInfo4 *)(&(skb)->cb[40]))->AIS
 #endif
 
-#define FOE_ALG_RXIF(skb)	    FOE_ALG(skb)	// ASUS EXT
+#define FOE_ALG_RXIF(skb)           FOE_ALG(skb)        // ASUS EXT
 
 #define IS_MAGIC_TAG_VALID(skb)	    ((FOE_MAGIC_TAG(skb) == FOE_MAGIC_PCI) || \
 				    (FOE_MAGIC_TAG(skb) == FOE_MAGIC_GE)   || \
 				    (FOE_MAGIC_TAG(skb) == FOE_MAGIC_WLAN))
+
 
 /* 
  * HW_NAT module will modify mss field in tcp option header 

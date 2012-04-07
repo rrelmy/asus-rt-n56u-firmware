@@ -44,6 +44,7 @@
 
 #include <nvram/bcmnvram.h>
 #include <dirent.h>	// 2008.01 James.
+#include "rc.h"	// for USB_MODEM
 
 //#define RTL8366S_GETPORTLINKSTATUS		 0xf1
 
@@ -67,6 +68,7 @@ int get_ppp_pid(char *conntype)
 	return pid;
 }
 
+#ifndef USB_MODEM
 /* Find process name by pid from /proc directory */
 char *find_name_by_proc(int pid)
 {
@@ -90,6 +92,7 @@ char *find_name_by_proc(int pid)
 												 
 	return "";
 }
+#endif
 
 int check_ppp_exist(){
 	DIR *dir;
@@ -111,8 +114,8 @@ int check_ppp_exist(){
 				read(fd, cmdline, 64);
 				close(fd);
 				
-				if(strstr(cmdline, "pppoecd")
-						|| strstr(cmdline, "pppd")
+				if(strstr(cmdline, "pppd")
+						|| strstr(cmdline, "l2tpd")
 						){
 					closedir(dir);
 					return 0;
@@ -157,6 +160,7 @@ int osl_ifflags(const char *ifname)
 #define	SIOCGETCPHYRD	0x89FE
 #endif															  
 
+#ifndef USB_MODEM
 //#define EVBOARD		1	// tmp add for ev-board
 /* RT-N14: phy0,1,2,3,4 = LLLLW */	/* EV board: WLLLL */
 int is_phyconnected()
@@ -174,6 +178,20 @@ int is_phyconnected()
 	else
 		return 0;
 }
+#else
+// return value: first bit is WAN port, second bit is USB Modem.
+int is_phyconnected(){
+	int ret = 0;
+
+	if(is_usb_modem_ready())
+		ret += 1<<1;
+
+	if(nvram_match("link_wan", "1"))
+		ret += 1;
+
+	return ret;
+}
+#endif
 
 #if 0
 int check_subnet(){
@@ -254,9 +272,13 @@ int check_wan_link(int num)
 	int got_ppp_link;
 
 	//Check WAN Cable connect
+#ifndef USB_MODEM
 	if ( is_phyconnected(nvram_safe_get("wan_ifname"))==0 ) {
 	//if ( 	strcmp( nvram_safe_get("wan_status_t"), "Disconnected")==0 
 	//	&& strcmp( nvram_safe_get("wan_reason_t"), "Cable is not attached")==0 ) {
+#else
+	if(!is_phyconnected()){
+#endif
 		wan_link=0;
  		nvram_set("qos_ubw_status", "fail");
 		nvram_set("qos_ubw_reason", "Cable is not attached");

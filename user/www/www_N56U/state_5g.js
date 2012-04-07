@@ -358,29 +358,28 @@ function showHelpofDrSurf(hint_array_id, hint_show_id){
 	disableCheckChangedStatus();
 	clearHintTimeout();
 	
-	/*if(typeof(hint_show_id) == "number" && hint_show_id > 0){
-		if(hint_array_id == "23"){
-			var ssid_len = helpcontent[hint_array_id][hint_show_id].length;
-			if(ssid_len > 14)
-				clicked_help_string = "<span>"+helptitle[hint_array_id][hint_show_id][0]+"</span><br />"+"<p><div>"+helpcontent[hint_array_id][hint_show_id].substring(0,14)+"<br />"+helpcontent[hint_array_id][hint_show_id].substring(14,ssid_len)+"</div></p>";
-			else
-				clicked_help_string = "<span>"+helptitle[hint_array_id][hint_show_id][0]+"</span><br />"+"<p><div align='center'>"+helpcontent[hint_array_id][hint_show_id]+"</div></p>";
-		}
-		else
-			clicked_help_string = "<span>"+helptitle[hint_array_id][hint_show_id][0]+"</span><br />"+helpcontent[hint_array_id][hint_show_id];
-	}*/
 	if(typeof(hint_show_id) == "number" && hint_show_id > 0){
 		if(hint_array_id == "23"){
 			var ssid_len = helpcontent[hint_array_id][hint_show_id].length;
-			if(ssid_len > 14)
-				clicked_help_string = "<span>"+helptitle[hint_array_id][hint_show_id][0]+"</span><br />"+"<p><div>"+decodeURIComponent(helpcontent[hint_array_id][hint_show_id]).substring(0,14)+"<br />"+decodeURIComponent(helpcontent[hint_array_id][hint_show_id]).substring(14,ssid_len)+"</div></p>";
-			else
-				clicked_help_string = "<span>"+helptitle[hint_array_id][hint_show_id][0]+"</span><br />"+"<p><div align='center'>"+decodeURIComponent(helpcontent[hint_array_id][hint_show_id])+"</div></p>";
+			var drsurf_wide = 11;
+			
+			clicked_help_string = "<span>"+helptitle[hint_array_id][hint_show_id][0] + "</span><br />";
+			if(ssid_len < drsurf_wide+1)
+				clicked_help_string += "<p><div align='center'>"+decodeURIComponent(helpcontent[hint_array_id][hint_show_id]);
+			else{
+				var p = 0;
+				while(ssid_len > drsurf_wide){
+					clicked_help_string += "<p><div align='center'>"+decodeURIComponent(helpcontent[hint_array_id][hint_show_id]).substring(drsurf_wide*p,drsurf_wide*(p+1))+"<br />";
+					ssid_len = ssid_len - drsurf_wide;
+					p++;
+				}
+				clicked_help_string += "<p><div>"+ decodeURIComponent(helpcontent[hint_array_id][hint_show_id]).substring(drsurf_wide*p, drsurf_wide*p+ssid_len);
+			}
+			clicked_help_string += "</div></p>";
 		}
 		else
 			clicked_help_string = "<span>"+helptitle[hint_array_id][hint_show_id][0]+"</span><br />"+helpcontent[hint_array_id][hint_show_id];
 	}
-	
 	$("eventDescription").innerHTML = clicked_help_string;
 	
 	set_Dr_work("help");
@@ -664,8 +663,8 @@ function show_menu(L1, L2, L3){
 			tabtitle[0].splice(1,7);
 
 		}else if(sw_mode == "3"){
-			tabtitle[0].splice(2,2);//WPS & WMode
-			tablink[0].splice(2,2);//WPS & WMode
+			tabtitle[0].splice(2,1);//WPS
+			tablink[0].splice(2,1);//WPS
 		}
 
 		tabtitle[1].splice(2,2);//LAN
@@ -771,7 +770,6 @@ function show_footer(){
 var ssid2 = "";
 var ssid2_2g = "";
 
-// for basic style
 /*function show_top_status(){
 	// show SSID in the top-middle block		
 	ssid2 = "<% nvram_char_to_ascii("WLANConfig11b", "wl_ssid"); %>"

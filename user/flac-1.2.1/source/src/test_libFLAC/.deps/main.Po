@@ -1,13 +1,13 @@
 main.o main.o: main.c ../../config.h bitwriter.h \
   ../../include/FLAC/ordinals.h \
-  /root/RT-N56U/source/lib/include/inttypes.h \
-  /root/RT-N56U/source/lib/include/features.h \
-  /root/RT-N56U/source/lib/include/bits/uClibc_config.h \
-  /root/RT-N56U/source/lib/include/sys/cdefs.h \
-  /root/RT-N56U/source/lib/include/stdint.h \
-  /root/RT-N56U/source/lib/include/bits/wchar.h \
-  /root/RT-N56U/source/lib/include/bits/wordsize.h decoders.h encoders.h \
-  format.h metadata.h
+  /home/defjovi/projects/RT-N56U/source/lib/include/inttypes.h \
+  /home/defjovi/projects/RT-N56U/source/lib/include/features.h \
+  /home/defjovi/projects/RT-N56U/source/lib/include/bits/uClibc_config.h \
+  /home/defjovi/projects/RT-N56U/source/lib/include/sys/cdefs.h \
+  /home/defjovi/projects/RT-N56U/source/lib/include/stdint.h \
+  /home/defjovi/projects/RT-N56U/source/lib/include/bits/wchar.h \
+  /home/defjovi/projects/RT-N56U/source/lib/include/bits/wordsize.h \
+  decoders.h encoders.h format.h metadata.h
 
 ../../config.h:
 
@@ -15,19 +15,19 @@ bitwriter.h:
 
 ../../include/FLAC/ordinals.h:
 
-/root/RT-N56U/source/lib/include/inttypes.h:
+/home/defjovi/projects/RT-N56U/source/lib/include/inttypes.h:
 
-/root/RT-N56U/source/lib/include/features.h:
+/home/defjovi/projects/RT-N56U/source/lib/include/features.h:
 
-/root/RT-N56U/source/lib/include/bits/uClibc_config.h:
+/home/defjovi/projects/RT-N56U/source/lib/include/bits/uClibc_config.h:
 
-/root/RT-N56U/source/lib/include/sys/cdefs.h:
+/home/defjovi/projects/RT-N56U/source/lib/include/sys/cdefs.h:
 
-/root/RT-N56U/source/lib/include/stdint.h:
+/home/defjovi/projects/RT-N56U/source/lib/include/stdint.h:
 
-/root/RT-N56U/source/lib/include/bits/wchar.h:
+/home/defjovi/projects/RT-N56U/source/lib/include/bits/wchar.h:
 
-/root/RT-N56U/source/lib/include/bits/wordsize.h:
+/home/defjovi/projects/RT-N56U/source/lib/include/bits/wordsize.h:
 
 decoders.h:
 

@@ -108,20 +108,20 @@ DIST_SOURCES = $(libogg_la_SOURCES) $(test_bitwise_SOURCES) \
 ETAGS = etags
 CTAGS = ctags
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
-ACLOCAL = ${SHELL} /root/RT-N56U/source/user/libogg-1.2.2/source/missing --run aclocal-1.11
-AMTAR = ${SHELL} /root/RT-N56U/source/user/libogg-1.2.2/source/missing --run tar
+ACLOCAL = ${SHELL} /home/defjovi/projects/RT-N56U/source/user/libogg-1.2.2/source/missing --run aclocal-1.11
+AMTAR = ${SHELL} /home/defjovi/projects/RT-N56U/source/user/libogg-1.2.2/source/missing --run tar
 AR = /opt/buildroot-gcc342/bin/mipsel-linux-uclibc-ar
-AUTOCONF = ${SHELL} /root/RT-N56U/source/user/libogg-1.2.2/source/missing --run autoconf
-AUTOHEADER = ${SHELL} /root/RT-N56U/source/user/libogg-1.2.2/source/missing --run autoheader
-AUTOMAKE = ${SHELL} /root/RT-N56U/source/user/libogg-1.2.2/source/missing --run automake-1.11
+AUTOCONF = ${SHELL} /home/defjovi/projects/RT-N56U/source/user/libogg-1.2.2/source/missing --run autoconf
+AUTOHEADER = ${SHELL} /home/defjovi/projects/RT-N56U/source/user/libogg-1.2.2/source/missing --run autoheader
+AUTOMAKE = ${SHELL} /home/defjovi/projects/RT-N56U/source/user/libogg-1.2.2/source/missing --run automake-1.11
 AWK = gawk
 CC = /opt/buildroot-gcc342/bin/mipsel-linux-uclibc-gcc 
 CCDEPMODE = depmode=gcc3
-CFLAGS = -O20 -Wall -ffast-math -fsigned-char -O2 -fomit-frame-pointer -pipe  -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source 
+CFLAGS = -O20 -Wall -ffast-math -fsigned-char -O2 -fomit-frame-pointer -pipe  -Dlinux -D__linux__ -Dunix -DEMBED -I/home/defjovi/projects/RT-N56U/source/lib/include -I/home/defjovi/projects/RT-N56U/source/uClibc++/include -I/home/defjovi/projects/RT-N56U/source 
 CPP = /opt/buildroot-gcc342/bin/mipsel-linux-uclibc-gcc  -E
 CPPFLAGS = 
 CYGPATH_W = echo
-DEBUG = -g -Wall -fsigned-char -O2 -fomit-frame-pointer -pipe  -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source 
+DEBUG = -g -Wall -fsigned-char -O2 -fomit-frame-pointer -pipe  -Dlinux -D__linux__ -Dunix -DEMBED -I/home/defjovi/projects/RT-N56U/source/lib/include -I/home/defjovi/projects/RT-N56U/source/uClibc++/include -I/home/defjovi/projects/RT-N56U/source 
 DEFS = -DHAVE_CONFIG_H
 DEPDIR = .deps
 DSYMUTIL = 
@@ -142,7 +142,7 @@ INSTALL_PROGRAM = ${INSTALL}
 INSTALL_SCRIPT = ${INSTALL}
 INSTALL_STRIP_PROGRAM = $(install_sh) -c -s
 LD = /opt/buildroot-gcc342/bin/mipsel-linux-uclibc-ld
-LDFLAGS = -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src
+LDFLAGS = -Wl,--fatal-warnings -L/home/defjovi/projects/RT-N56U/source/lib/lib -L/home/defjovi/projects/RT-N56U/source/uClibc++/src -Wl,--fatal-warnings -L/home/defjovi/projects/RT-N56U/source/lib/lib -L/home/defjovi/projects/RT-N56U/source/uClibc++/src
 LIBOBJS =  ${LIBOBJDIR}memcmp$U.o
 LIBS = 
 LIBTOOL = $(SHELL) $(top_builddir)/libtool
@@ -154,7 +154,7 @@ LIPO =
 LN_S = ln -s
 LTLIBOBJS =  ${LIBOBJDIR}memcmp$U.lo
 MAINT = #
-MAKEINFO = ${SHELL} /root/RT-N56U/source/user/libogg-1.2.2/source/missing --run makeinfo
+MAKEINFO = ${SHELL} /home/defjovi/projects/RT-N56U/source/user/libogg-1.2.2/source/missing --run makeinfo
 MKDIR_P = /bin/mkdir -p
 NM = /opt/buildroot-gdb/bin/mipsel-linux-nm -B
 NMEDIT = 
@@ -171,7 +171,7 @@ PACKAGE_TARNAME =
 PACKAGE_URL = 
 PACKAGE_VERSION = 
 PATH_SEPARATOR = :
-PROFILE = -Wall -W -pg -g -O20 -ffast-math -fsigned-char -O2 -fomit-frame-pointer -pipe  -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source 
+PROFILE = -Wall -W -pg -g -O20 -ffast-math -fsigned-char -O2 -fomit-frame-pointer -pipe  -Dlinux -D__linux__ -Dunix -DEMBED -I/home/defjovi/projects/RT-N56U/source/lib/include -I/home/defjovi/projects/RT-N56U/source/uClibc++/include -I/home/defjovi/projects/RT-N56U/source 
 RANLIB = /opt/buildroot-gcc342/bin/mipsel-linux-uclibc-ranlib
 SED = /bin/sed
 SET_MAKE = 
@@ -183,10 +183,10 @@ STRIP = /opt/buildroot-gcc342/bin/mipsel-linux-uclibc-strip
 USIZE16 = unsigned short
 USIZE32 = unsigned int
 VERSION = 1.2.2
-abs_builddir = /root/RT-N56U/source/user/libogg-1.2.2/source/src
-abs_srcdir = /root/RT-N56U/source/user/libogg-1.2.2/source/src
-abs_top_builddir = /root/RT-N56U/source/user/libogg-1.2.2/source
-abs_top_srcdir = /root/RT-N56U/source/user/libogg-1.2.2/source
+abs_builddir = /home/defjovi/projects/RT-N56U/source/user/libogg-1.2.2/source/src
+abs_srcdir = /home/defjovi/projects/RT-N56U/source/user/libogg-1.2.2/source/src
+abs_top_builddir = /home/defjovi/projects/RT-N56U/source/user/libogg-1.2.2/source
+abs_top_srcdir = /home/defjovi/projects/RT-N56U/source/user/libogg-1.2.2/source
 ac_ct_CC = 
 ac_ct_DUMPBIN = 
 am__include = include
@@ -214,7 +214,7 @@ host_vendor = unknown
 htmldir = ${docdir}
 includedir = ${prefix}/include
 infodir = ${datarootdir}/info
-install_sh = ${SHELL} /root/RT-N56U/source/user/libogg-1.2.2/source/install-sh
+install_sh = ${SHELL} /home/defjovi/projects/RT-N56U/source/user/libogg-1.2.2/source/install-sh
 libdir = ${exec_prefix}/lib
 libexecdir = ${exec_prefix}/libexec
 localedir = ${datarootdir}/locale
@@ -224,7 +224,7 @@ mandir = ${datarootdir}/man
 mkdir_p = /bin/mkdir -p
 oldincludedir = /usr/include
 pdfdir = ${docdir}
-prefix = /root/RT-N56U/source/user/libogg-1.2.2/source/../install
+prefix = /home/defjovi/projects/RT-N56U/source/user/libogg-1.2.2/source/../install
 program_transform_name = s,x,x,
 psdir = ${docdir}
 sbindir = ${exec_prefix}/sbin
@@ -599,10 +599,10 @@ check: $(noinst_PROGRAMS)
 	./test_framing$(EXEEXT)
 
 debug:
-	$(MAKE) all CFLAGS="-g -Wall -fsigned-char -O2 -fomit-frame-pointer -pipe  -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source "
+	$(MAKE) all CFLAGS="-g -Wall -fsigned-char -O2 -fomit-frame-pointer -pipe  -Dlinux -D__linux__ -Dunix -DEMBED -I/home/defjovi/projects/RT-N56U/source/lib/include -I/home/defjovi/projects/RT-N56U/source/uClibc++/include -I/home/defjovi/projects/RT-N56U/source "
 
 profile:
-	$(MAKE) all CFLAGS="-Wall -W -pg -g -O20 -ffast-math -fsigned-char -O2 -fomit-frame-pointer -pipe  -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source "
+	$(MAKE) all CFLAGS="-Wall -W -pg -g -O20 -ffast-math -fsigned-char -O2 -fomit-frame-pointer -pipe  -Dlinux -D__linux__ -Dunix -DEMBED -I/home/defjovi/projects/RT-N56U/source/lib/include -I/home/defjovi/projects/RT-N56U/source/uClibc++/include -I/home/defjovi/projects/RT-N56U/source "
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.

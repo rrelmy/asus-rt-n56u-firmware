@@ -28,7 +28,6 @@
 */
 
 #include <linux/init.h>
-#include <linux/config.h>
 #include <linux/module.h>
 #include <linux/kernel.h>   
 #include <linux/fs.h>       
@@ -54,8 +53,13 @@ static	devfs_handle_t devfs_handle;
 int	hw_nat_major =  HW_NAT_MAJOR;
 extern int DebugLevel;
 
+#if LINUX_VERSION_CODE > KERNEL_VERSION(2,6,35)
+long HwNatIoctl(struct file *file, unsigned int cmd,
+	                unsigned long arg)
+#else
 int HwNatIoctl (struct inode *inode, struct file *filp,
                   unsigned int cmd, unsigned long arg)
+#endif
 {
     struct hwnat_args *opt=(struct hwnat_args *)arg;
     struct hwnat_tuple *opt2=(struct hwnat_tuple *)arg;
@@ -153,7 +157,11 @@ int HwNatIoctl (struct inode *inode, struct file *filp,
 }
 
 struct file_operations hw_nat_fops = {
-    ioctl:      HwNatIoctl,
+#if LINUX_VERSION_CODE > KERNEL_VERSION(2,6,35)
+    unlocked_ioctl:      HwNatIoctl,
+#else
+    ioctl:		 HwNatIoctl,
+#endif
 };
 
 

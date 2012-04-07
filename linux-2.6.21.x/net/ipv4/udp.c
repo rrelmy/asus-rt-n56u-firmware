@@ -102,9 +102,7 @@
 #include <net/route.h>
 #include <net/checksum.h>
 #include <net/xfrm.h>
-#if 0	/* l2tp-encap */
 #include <net/xfrmudp.h>
-#endif
 #include "udp_impl.h"
 
 /*

@@ -239,10 +239,8 @@ auth_check( char* dirname, char* authorization ,char* url)
     if ( !authorization || strncmp( authorization, "Basic ", 6 ) != 0) 
     {
 	send_authenticate( dirname );
-		if (login_ip != 0)	// 2008.08 magic
-			http_logout(login_ip_tmp);
-	
-		last_login_ip = 0;	// 2008.08 magic
+	http_logout(login_ip_tmp);
+	last_login_ip = 0;	// 2008.08 magic
 	return 0;
     }
 
@@ -838,10 +836,16 @@ handle_request(void)
 			if (	nvram_match("wan_route_x", "IP_Routed") &&
 				nvram_match("no_internet_detect", "0") &&
 //				nvram_match("x_Setting", "1") &&
-				is_phyconnected() &&
+//				is_phyconnected() &&
 				(strstr(file, "result_of_get_changed_status.asp") || strstr(file, "result_of_get_changed_status_QIS.asp") || strstr(file, "detectWAN2.asp") /*|| strstr(file, "ajax_status.asp")*/)
 			)
 			{
+				if (!is_phyconnected())
+				{
+					nvram_set("link_internet", "0");
+					goto no_detect_internet;
+				}
+
 				detect_timestamp_old = detect_timestamp;
 				detect_timestamp = uptime();
 				memset(detect_timestampstr, 0, 32);
@@ -871,6 +875,7 @@ handle_request(void)
 					if (nvram_match("di_debug", "1")) fprintf(stderr, "no need to refresh: %d\n", (detect_timestamp - signal_timestamp));
 				}
 			}
+no_detect_internet:
 #endif
 			send_headers( 200, "Ok", handler->extra_header, handler->mime_type );
 			if (handler->output) {
@@ -943,8 +948,7 @@ void http_login(unsigned int ip, char *url) {
 // 0: can not login, 1: can login, 2: loginer, 3: not loginer.
 int http_login_check(void) {
 	if (http_port != SERVER_PORT || login_ip_tmp == 0x100007f)
-		//return 1;
-		return 0;	// 2008.01 James.
+		return 1;
 	
 	//http_login_timeout(login_ip_tmp);	// 2008.07 James.
 	
@@ -959,7 +963,10 @@ int http_login_check(void) {
 void http_login_timeout(unsigned int ip)
 {
 	time_t now;
-	
+
+	if (http_port != SERVER_PORT || ip == 0x100007f)
+		return;
+
 //	time(&now);
 	now = uptime();
 	
@@ -1211,12 +1218,28 @@ load_dictionary (char *lang, pkw_t pkw)
 	pkw->buf = q = malloc (dict_size);
 
 	fseek (dfp, 0L, SEEK_SET);
+/*
 	while (!feof (dfp))     {
 		// if pkw->idx is not enough, add 32 item to pkw->idx
 		REALLOC_VECTOR (pkw->idx, pkw->len, pkw->tlen, sizeof (unsigned char*));
 
 		fscanf (dfp, "%[^\n]%*c", q);
 		if ((p = strchr (q, '=')) != NULL)      {
+			pkw->idx[pkw->len] = q;
+			pkw->len++;
+			q = p + strlen (p);
+			*q = '\0';
+			q++;
+		}
+	}
+*/
+	while ((fscanf(dfp, "%[^\n]", q)) != EOF) {
+		fgetc(dfp);
+
+		// if pkw->idx is not enough, add 32 item to pkw->idx
+		REALLOC_VECTOR (pkw->idx, pkw->len, pkw->tlen, sizeof (unsigned char*));
+
+		if ((p = strchr (q, '=')) != NULL) {
 			pkw->idx[pkw->len] = q;
 			pkw->len++;
 			q = p + strlen (p);
@@ -1280,12 +1303,11 @@ void reapchild()	// 0527 add
 	wait(NULL);
 }
 
-int conn_fd;
 int main(int argc, char **argv)
 {
 	usockaddr usa;
 	int listen_fd;
-	//int conn_fd;
+	int conn_fd;
 	socklen_t sz = sizeof(usa);
 	char pidfile[32];
 
@@ -1358,7 +1380,6 @@ int main(int argc, char **argv)
 		handle_request();
 		fflush(conn_fp);
 		fclose(conn_fp);
-		close(conn_fd);
 	}
 
 	shutdown(listen_fd, 2);

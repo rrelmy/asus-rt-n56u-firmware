@@ -26,7 +26,7 @@ INSTALLDIR = $(ROOTDIR)/romfs
 CONF_H  = $(ROOTDIR)/$(LINUXDIR)/include/linux/autoconf.h
 UCONF_H = $(ROOTDIR)/config/autoconf.h
 
-CFLAGS += -s -DASUS_NVRAM -DRPPPPOE -DBTN_SETUP -DWL500GP -DDHCP_PPTP -DQOS -DASUS_EXT -DGPQOS -DASUS_DDNS -DWSC -DGUEST_ACCOUNT -DWEB_REDIRECT -DWEBSTRFILTER -DUSB_SUPPORT -DU2EC -DDLM -DPRINTER_SUPPORT -DCONTENTFILTER# -DUSBTPT
+CFLAGS += -s -DASUS_NVRAM -DRPPPPOE -DBTN_SETUP -DWL500GP -DDHCP_PPTP -DQOS -DASUS_EXT -DGPQOS -DASUS_DDNS -DWSC -DGUEST_ACCOUNT -DWEB_REDIRECT -DWEBSTRFILTER -DUSB_SUPPORT -DU2EC -DDLM -DPRINTER_SUPPORT -DCONTENTFILTER -DHTTPD_CHECK# -DUSBTPT
 #CFLAGS += -I. -I$(SHDIR)/include -I$(ROOTDIR)/linux-2.6.21.x/include -I$(ROOTDIR)/linux-2.6.21.x/drivers/flash -I$(HTTPDIR)/ -I$(ROOTDIR)/linux-2.6.21.x/drivers/char -I$(ROOTDIR)/linux-2.6.21.x/drivers/net/raeth -I$(ROOTDIR)/linux-2.6.21.x/include/linux -I$(MTDDIR)
 CFLAGS += -I. -I$(SHDIR)/include -I$(ROOTDIR)/linux-2.6.21.x/include -I$(ROOTDIR)/linux-2.6.21.x/drivers/flash -I$(HTTPDIR)/ -I$(ROOTDIR)/linux-2.6.21.x/drivers/char -I$(ROOTDIR)/linux-2.6.21.x/drivers/net/raeth -I$(MTDDIR) -I$(ROOTDIR)/user/busybox/include -I$(SHDIR)
 
@@ -43,6 +43,8 @@ EXEC = rc
 #2008.10 magic add wanduck_main.o
 #OBJS = rc.o init.o mtd.o services.o watchdog.o network_ex.o manu_ex.o firewall_ex.o common_ex.o network.o services_ex.o bigpond.o ppp.o qosutils.o qos.o speedtest.o ntp.o udhcpc.o udhcpc_ex.o ralink.o rtl8366s.o btnsetup.o pspfix.o wanduck_main.o ../wireless_tools/iwlib.o monitor.o
 OBJS = rc.o init.o mtd.o services.o watchdog.o network_ex.o firewall_ex.o common_ex.o network.o services_ex.o bigpond.o ppp.o qosutils.o qos.o speedtest.o uploadspeed.o ntp.o udhcpc.o udhcpc_ex.o ralink.o rtl8367m.o btnsetup.o pspfix.o ../wireless_tools/iwlib.o linkstatus.o detect_internet.o xstart.o arpping.o usbled.o# usdsvr.o monitor.o ping.o manu_ex.o
+
+OBJS += usb_devices.o wanduck.o
 
 all:	$(OBJS) $(CONF_H) $(UCONF_H) Makefile
 	echo $(LINUXDIR)
@@ -135,16 +137,21 @@ romfs:
 	cd $(INSTALLDIR)/sbin && ln -sf rc stop_dms
 	cd $(INSTALLDIR)/sbin && ln -sf rc umount2
 	cd $(INSTALLDIR)/sbin && ln -sf rc ejusb
+	cd $(INSTALLDIR)/sbin && ln -sf rc ejusb1
+	cd $(INSTALLDIR)/sbin && ln -sf rc ejusb2
 	cd $(INSTALLDIR)/sbin && ln -sf rc usbtpt
 	cd $(INSTALLDIR)/sbin && ln -sf rc start_telnetd
+	cd $(INSTALLDIR)/sbin && ln -sf rc start_wanduck
+	cd $(INSTALLDIR)/sbin && ln -sf rc stop_wanduck
+	cd $(INSTALLDIR)/sbin && ln -sf rc restart_wanduck
 	cd $(INSTALLDIR)/sbin && ln -sf rc start_ots
 	cd $(INSTALLDIR)/sbin && ln -sf rc start_ntp
 	cd $(INSTALLDIR)/sbin && ln -sf rc get_sw
 	cd $(INSTALLDIR)/sbin && ln -sf rc tracktest
 	cd $(INSTALLDIR)/sbin && ln -sf rc ledon
 	cd $(INSTALLDIR)/sbin && ln -sf rc ledoff
-	cd $(INSTALLDIR)/sbin && ln -sf rc start3g
-	cd $(INSTALLDIR)/sbin && ln -sf rc stop3g
+#	cd $(INSTALLDIR)/sbin && ln -sf rc start3g
+#	cd $(INSTALLDIR)/sbin && ln -sf rc stop3g
 # Jiahao
 	cd $(INSTALLDIR)/sbin && ln -sf rc 8367m
 #	cd $(INSTALLDIR)/sbin && ln -sf rc ar8316
@@ -201,3 +208,8 @@ romfs:
 	cd $(INSTALLDIR)/sbin && ln -sf rc run_telnetd
 	cd $(INSTALLDIR)/sbin && ln -sf rc umount_dev_all
 
+	cd $(INSTALLDIR)/sbin && ln -sf rc asus_lp
+	cd $(INSTALLDIR)/sbin && ln -sf rc asus_sr
+	cd $(INSTALLDIR)/sbin && ln -sf rc asus_tty
+	cd $(INSTALLDIR)/sbin && ln -sf rc asus_usb_interface
+	cd $(INSTALLDIR)/sbin && ln -sf rc wanduck

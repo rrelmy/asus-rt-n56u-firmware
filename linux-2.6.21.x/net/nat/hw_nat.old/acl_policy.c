@@ -750,6 +750,7 @@ uint32_t AclInsSDmac(AclPlcyNode *node)
 	//Insert SDMAC Entry 
 	AclSetMacEntry(node, SDMAC, ENTRY_END_FP);
 
+	return ACL_SUCCESS;
 }
 
 uint32_t AclInsSmacDipDp(AclPlcyNode *node)

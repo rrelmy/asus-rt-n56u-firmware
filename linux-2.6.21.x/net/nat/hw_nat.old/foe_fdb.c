@@ -44,6 +44,35 @@
 extern struct FoeEntry *PpeFoeBase; 
 extern dma_addr_t phy_foe_base;
 
+/* 
+ * Mac address is not continuous in foe table
+ *
+ * 3      2	  0
+ * +------+-------+
+ * |VLAN  |DMac_hi|
+ * +------+-------+
+ * |  Dmac_lo     |
+ * +--------------+
+ *
+ * 3      2	  0
+ * +------+-------+
+ * |PPPoE |SMac_hi|
+ * +------+-------+
+ * |  Smac_lo     |
+ * +--------------+
+ *
+ * Ex: 
+ *
+ * Mac=01:80:C2:01:23:45
+ *
+ * 3      2	  0
+ * +------+-------+
+ * |PPPoE | 01:80 |
+ * +------+-------+
+ * | C2:01:23:45  |
+ * +--------------+
+ *
+ */
 void FoeSetMacInfo(uint8_t *Dst, uint8_t *Src)
 {
     Dst[1] = Src[0];
@@ -144,14 +173,14 @@ int FoeAddEntry(struct hwnat_tuple *opt)
 
 		opt->hash_index=hash_index;
 		entry=&PpeFoeBase[hash_index];
-		entry->bfib1.sta=0; 
-		entry->bfib1.t_u=opt->is_udp;
+		entry->bfib1.sta=0; /* static entry=>dynamic to fix TCP last ACK issue */
+		entry->bfib1.t_u=opt->is_udp; /* tcp/udp */
 		entry->bfib1.state=BIND; 
-		entry->bfib1.ka=1; 
-		entry->bfib1.ttl=0;
-		entry->bfib1.pppoe=opt->pppoe_act; 
+		entry->bfib1.ka=1; /* keepalive */
+		entry->bfib1.ttl=0; /* TTL-1 */
+		entry->bfib1.pppoe=opt->pppoe_act; /* insert / remove */
 		entry->bfib1.snap=0;
-		entry->bfib1.v1=opt->vlan1_act; 
+		entry->bfib1.v1=opt->vlan1_act; /* insert / remove */
 		entry->bfib1.v2=opt->vlan2_act;
 		entry->bfib1.time_stamp=RegRead(FOE_TS_T)&0xFFFF;
 
@@ -248,6 +277,7 @@ int FoeBindEntry(struct hwnat_args *opt)
 
     entry = &PpeFoeBase[opt->entry_num];
 
+    //restore right information block1
     entry->tmp_buf.time_stamp=RegRead(FOE_TS_T)&0xFFFF;
     entry->tmp_buf.state = BIND;
     memcpy(&entry->bfib1, &entry->tmp_buf, sizeof(entry->tmp_buf));

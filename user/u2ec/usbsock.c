@@ -3465,7 +3465,7 @@ static void update_device()
  * alarm handle.
  * Only there is a busy connection, the alarm runs.
  */
-static void mulit_client()
+static void multi_client(int sig)
 {
 	struct u2ec_list_head	*pos;
 	u2ec_list_for_each(pos, &conn_info_list)
@@ -3489,7 +3489,7 @@ static void mulit_client()
 }
 
 /*
- * Handle fifo used by hotplug_usb and mulit_client.
+ * Handle fifo used by hotplug_usb and multi_client.
  * modify fd_set master_fds if necessary.
  */
 static int handle_fifo(int *fd, fd_set *pfds, int *pfdm, int conn_fd)
@@ -3553,7 +3553,7 @@ static int handle_fifo(int *fd, fd_set *pfds, int *pfdm, int conn_fd)
 		*pfdm = 0;
 		rtvl = 1;
 	}
-	/* Handle mulit client. */
+	/* Handle multi client. */
 	else if (c == 'c') {	// connect reset.
 		switch(MFP_state(MFP_GET_STATE)) {
 		case MFP_IN_LPRNG:
@@ -3780,7 +3780,7 @@ int main(int argc, char *argv[])
 	hotplug_debug("u2ec self updating...\n");
 	update_device();
 
-	signal(SIGALRM, mulit_client);
+	signal(SIGALRM, multi_client);
 
 	/* Handle get ip, get config and get name. */
 	pthread_create(&find_thread, NULL, (void *)add_remote_device, NULL);

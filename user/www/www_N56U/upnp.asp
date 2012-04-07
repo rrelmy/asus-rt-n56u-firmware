@@ -118,7 +118,7 @@ function update_UPnP(){
 			<table width="500" border="0" align="center" cellpadding="0" cellspacing="0">
   			<tr>
 					<td class="upnp" width="300">
-	  					<img src="images/bullet.gif" width="20" height="20" align="absmiddle"/><#UPnPMediaServer#> : <span id="UPnPstatus"></span>
+	  					<img src="images/bullet.gif" width="20" height="20" align="absmiddle"/><#menu2#> : <span id="UPnPstatus"></span>
 					</td>
 					
 					<td height="100" align="left" class="upnp">

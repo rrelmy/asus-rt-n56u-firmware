@@ -162,37 +162,9 @@
 { "wl_macnum_x", "0", 0 },
 { "wl_wdslist_x", "", 0 },
 { "wl_maclist_x", "", 0 },
-//{ "wl_gmode_protection_x", "1", 0 },		// 2008.08 magic
 { "wl_wpa_mode", "0", 0 },
 
 #ifdef DLM
-/*
-{ "usb_webenable_x", "1", 0 },
-{ "usb_webmode_x", "1", 0 },
-{ "usb_webdriver_x", "0", 0 },
-{ "usb_webimage_x", "1", 0 },
-{ "usb_websense_x", "1", 0 },
-{ "usb_webrectime_x", "0", 0 },
-{ "usb_webfresh_x", "1", 0 },
-{ "usb_webcaption_x", "Web Camera Live Demo!!!", 0 },
-{ "usb_webhttpport_x", "7776", 0 },
-{ "usb_webhttpcheck_x", "0", 0 },
-{ "usb_webactivex_x", "7777", 0 },
-{ "usb_websecurity_x", "0", 0 },
-{ "usb_websecurity_date_x", "1111111", 0 },
-{ "usb_websecurity_time_x", "00002359", 0 },
-{ "usb_websendto_x", "", 0 },
-{ "usb_webmserver_x", "", 0 },
-{ "usb_websubject_x", "Motion detection alert!!!", 0 },
-{ "usb_webattach_x", "1", 0 },
-{ "usb_webremote_x", "LAN Only", 0 },
-{ "usb_webremote1_x", "", 0 },
-{ "usb_webremote2_x", "", 0 },
-{ "usb_webremote3_x", "", 0 },
-{ "usb_webremote4_x", "", 0 },
-{ "usb_webremote5_x", "", 0 },
-{ "usb_webremote6_x", "", 0 },
-*/
 { "usb_ftpenable_x", "1", 0 },
 { "usb_ftpanonymous_x", "1", 0 },
 { "usb_ftpsuper_x", "0", 0 },
@@ -248,9 +220,10 @@
 { "st_samba_workgroupb", "WORKGROUP", 0 },	// 2008.03 James.
 
 { "apps_dl", "1", 0 },
-{ "apps_dl_share", "0", 0 },
+{ "apps_dl_share", "1", 0 },
 { "apps_dl_seed", "24", 0 },
 { "apps_dms", "1", 0 },
+{ "apps_itunes", "1", 0},
 //{ "dms_comp_mode", "0", 0 },
 { "apps_caps", "0", 0 },
 { "apps_comp", "0", 0 },
@@ -259,12 +232,9 @@
 { "apps_ver", "", 0 },
 { "apps_seed", "0", 0 },
 { "apps_upload_max", "0", 0 },
-{ "machine_name", "RT-N13U.B1", 0 },
-
-{ "apps_dms_usb_port", "1", 0 },
-{ "apps_running", "0", 0 },
-{ "apps_dl_share_port_from", "6880", 0 },
-{ "apps_dl_share_port_to", "6999", 0 },
+{ "machine_name", "RT-N56U", 0 },
+{ "apps_dl_share_port_from", "10001", 0 },
+{ "apps_dl_share_port_to", "10050", 0 },
 
 { "apps_installed", "0", 0 },
 #if defined (W7_LOGO) || defined (WIFI_LOGO)
@@ -280,6 +250,7 @@
 
 { "temp_lang", "", 0 },
 { "httpd_die_reboot", "", 0 },
+{ "preferred_lang", "", 0 },
 
 //{ "qos_", "", 0 },				// 2007.12 James.
 //{ "qos_enable","0", 0 },
@@ -304,15 +275,12 @@
 #endif
 { "wps_mode", "1", 0 },				/* AP WSC PIN method */
 { "wsc_config_state", "0", 0 },			/* config state unconfiged */
-//{ "wsc_mode", "1", 0 },			/* STA WSC PIN method */
-//{ "wcn_enable", "1", 0 },
 { "wps_band", "1", 0},				/* "0": 5G, "1": 2.4G */
 
 { "x_Setting", "0", 0 },			// 2007.10 James
 { "w_Setting", "0", 0 },
 
 { "asus_mfg", "", 0 },				// 2008.03 James.
-//{ "asus_mfg_webcam", "", 0 },			// 2008.03 James.
 { "asus_mfg_flash", "", 0 },			// 2008.03 James.
 { "btn_rst", "", 0 },				// 2008.03 James.
 { "btn_ez", "", 0 },				// 2008.03 James.
@@ -338,15 +306,17 @@
 #endif
 
 { "record_lanaddr", "", 0 },
-//{ "telnetd", "0", 0 },
 
-{ "Dev3G", "AUTO", 0 },
-{ "hsdpa_apn", "Internet", 0 },
-{ "hsdpa_country", "", 0 },
-{ "hsdpa_isp", "", 0 },
-{ "hsdpa_dialnum", "*99#", 0 },
-{ "hsdpa_user", "", 0 },
-{ "hsdpa_pass", "", 0 },
+{ "modem_enable", "0", 0},
+{ "EVDO_on", "0", 0},
+{ "Dev3G", "AUTO", 0},
+{ "modem_apn", "internet", 0},
+{ "modem_country", "", 0},
+{ "modem_isp", "", 0},
+{ "modem_dialnum", "*99***1#", 0},
+{ "modem_user", "", 0},
+{ "modem_pass", "", 0},
+{ "wan_3g_pin", "", 0},
 
 { "udpxy_enable_x", "0", 0},
 
@@ -383,5 +353,5 @@
 {"telnetd", "1", 0 },
 #endif
 
-{"usb_vid_allow", "0", 0 },
-{"port_ftp", "21", 0 },
+//{"usb_vid_allow", "0", 0 },
+{"port_ftp", "2021", 0 },

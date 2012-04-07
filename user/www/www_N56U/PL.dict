@@ -1,11 +1,10 @@
-[Language type]
+﻿[Language type]
 CHAR_set=UTF-8
 PASS_LANG=Język:
 LANG_select=Wybierz język:
 LANG_EN=English
 LANG_TW=繁體中文
 LANG_CN=简体中文
-LANG_KR=한국어
 LANG_CZ=Česky
 LANG_PL=Polski
 LANG_RU=Pусский
@@ -13,7 +12,14 @@ LANG_DE=Deutsch
 LANG_FR=Français
 LANG_TR=Türkçe
 LANG_TH=ไทย
-LANG_MS=Malaysia
+LANG_MS=Malay
+LANG_NO=Norsk
+LANG_FI=Finsk
+LANG_DA=Dansk
+LANG_SV=Svensk
+LANG_BR=Brazil
+[iTunes]
+iTunesMediaServer=iTunes Media Server
 [untranslate]
 IPConnection_VSList_ftpport=FTP Server Port:
 Adm_System_telnetd=Enable Telnet Server?
@@ -43,7 +49,7 @@ PrinterStatus_x_Monopoly_itemdesc=Jeśli drukarka nie zezwala na obsługę udost
 Switch_band=Częstotliwość przełączania
 Current_band=Aktualna częstotliwość
 LANHostConfig_DomainName_itemdesc2=może składać się jedynie ze znaków alfanumerycznych i myślnika.
-qis_ssid_desc=Skopiuj ustawienia 2,4GHz do 5GHz
+qis_ssid_desc=Skopiuj ustawienia 2.4GHz do 5GHz
 RouterConfig_IPTV_itemname=Transmisja grupowa IPTV UDP do portu proxy HTTP
 RHELP_desc9=Wprowadź 0 (zero), aby wyłączyć tę funkcję.
 WLANConfig11b_TxPower_itemname=Regulacja mocy Tx
@@ -113,9 +119,9 @@ LAN_IP_changed_suggedtion2=.Jeżeli nie możesz mógł się połączyć, odświe
 BasicConfig_HWNAT_suggestion=Wystąpił konflikt sprzętowej funkcji NAT z bieżącymi ustawieniami routera. Jesteś pewien, że chcesz wyłączyć HW NAT?
 WLANConfig11b_x_Mode11g_5_itemdesc=Ten element umożliwia wybór jednej z podanych opcji dla trybu bezprzewodowego interfejsu 802.11n. <p>[Auto] (Automatyczny): Umożliwia połączenie klientów 802.11n, 802.11a z RT-N56U.</p><p>[n Only] (Wyłącznie n): Maksymalizacja wydajności, ale klienci 802.11a nie mogą łączyć się z urządzeniem.</p>
 WLANConfig11b_x_WPSband_itemname=Current Band
-WLANConfig11b_x_WPSband_itemdesc=Przed użyciem funkcji WPS (Wi-Fi Protected Setup [Zabezpieczone ustawienia Wi-Fi]), wybierz pasmo działania (2,4GHz lub 5GHz).
+WLANConfig11b_x_WPSband_itemdesc=Przed użyciem funkcji WPS (Wi-Fi Protected Setup [Zabezpieczone ustawienia Wi-Fi]), wybierz pasmo działania (2.4GHz lub 5GHz).
 QKSet_Internet_Setup_fail_reason7=Jeśli nadal nie można połączyć się z  Internetem, sprawdź w routerze ustawienia ISP (Internet Service Provider [Dostawca usługi połączenia z Internetem]) lub skontaktuj się z  ISP.
-QKSet_Wireless_ssid_warning=To ustawienie będzie miało zastosowanie do ustawienia WLAN 2,4GHz i 5GHz.
+QKSet_Wireless_ssid_warning=To ustawienie będzie miało zastosowanie do ustawienia WLAN 2.4GHz i 5GHz.
 LANConfig_ChangedLANIP=Zmieniony został adres IP routera. Użyj programu narzędziowego Device Discovery do wyszukania nowego adresu IP routera.
 BasicConfig_HWNAT_alert=Wystąpił konflikt sprzętowej funkcji NAT z bieżącymi ustawieniami routera. Wyłącz sprzętową funkcję NAT z Advanced Setting (Ustawienia zaawansowane) > WAN > Internet connection (Sambungan Internet) w menu nawigacji.
 [RT-N1X new item]
@@ -363,10 +369,10 @@ HowToSharebyFTP3=Włącz DDNS aby umożliwić dostęp przez FTP bądź kliknij w
 HowToSharebyFTP4=[Dostępne wyłącznie w sieci LAN]
 [LeftMenu]
 menu1=Mapa sieci
-menu2=UPnP Media Server
+menu2=Media Server
 menu3=AiDisk
 menu4=EzQoS<br/> Management<br/> Przepustowości
-menu5=Ustawienia Zaawansowane
+menu5=<div style=\"padding-top:3px;\">Ustawienia<br/>Zaawansowane</div>
 menu5_title=Ustawienia Zaawansowane
 menu5_1=Wireless
 menu5_2=LAN
@@ -606,7 +612,7 @@ DiskStatus_refresh1=Podłączyłeś dysk USB.
 DiskStatus_refresh2=wznów
 DiskStatus_refresh3=status systemu
 EZQoS=Management przepustowości EzQoS
-footer_copyright_desc=2010 ASUSTek Computer Inc. Wszystkie prawa zastrzeżone.
+footer_copyright_desc=2011 ASUSTek Computer Inc. Wszystkie prawa zastrzeżone.
 Help_button_default_hint=Kliknij by otworzyć Pomoc
 Help_init_word1=Pomoc poprowadzi Cię przez podręcznik i informację na temat używania funkcji routera. Kliknij
 Help_init_word2=Odnośniki do słów z żółtym i niebieskim podkreśleniem
@@ -660,7 +666,7 @@ QKSet_detect_sanglass=auto detekcja
 QKSet_detect_desc1=Detekcja typu połączenia
 QKSet_detect_desc2=Detekcja statusu połączenia
 QKSet_detect_wanconnfault=Sprawdź poprawność połączenia kabla ethernetowego do portu WAN
-QKSet_detect_APdesc=Tryb pracy RT-N56U to AP. Rozpocznij konfigurację ustawień…
+QKSet_detect_APdesc=Tryb pracy RT-N56U to 'AP'. Rozpocznij konfigurację ustawień…
 QKSet_detect_skipbtn=Przejdź do ustawień manualnych
 QKSet_detect_freshbtn=Wykryj ponownie
 QKSet_detect_waitdesc=Rozpocznij detekcję rodzaju połączenia

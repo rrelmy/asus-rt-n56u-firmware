@@ -123,7 +123,7 @@
 #define HN_DEFAULT_PORT "80"
 #define HN_REQUEST "/vanity/update"
 
-#define ZONEEDIT_DEFAULT_SERVER "www.zoneedit.com"
+#define ZONEEDIT_DEFAULT_SERVER "dynamic.zoneedit.com"
 #define ZONEEDIT_DEFAULT_PORT "80"
 #define ZONEEDIT_REQUEST "/auth/dynamic.html"
 

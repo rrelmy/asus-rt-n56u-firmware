@@ -16,15 +16,6 @@
 #include <net/ip.h>
 #include <net/xfrm.h>
 
-#if 0	/* l2tp-encap */
-int xfrm4_rcv(struct sk_buff *skb)
-{
-	return xfrm4_rcv_encap(skb, 0);
-}
-
-EXPORT_SYMBOL(xfrm4_rcv);
-#endif
-
 static int xfrm4_parse_spi(struct sk_buff *skb, u8 nexthdr, __be32 *spi, __be32 *seq)
 {
 	switch (nexthdr) {
@@ -55,11 +46,7 @@ drop:
 }
 #endif
 
-#if 0
-int xfrm4_rcv_encap(struct sk_buff *skb, __u16 encap_type)
-#else	/* l2tp-encap */
 static int xfrm4_rcv_encap(struct sk_buff *skb, __u16 encap_type)
-#endif
 {
 	int err;
 	__be32 spi, seq;
@@ -175,7 +162,6 @@ drop:
 	return 0;
 }
 
-#if 1	/* l2tp-encap */
 /* If it's a keepalive packet, then just eat it.
  * If it's an encapsulated packet, then pass it to the
  * IPsec xfrm input.
@@ -183,7 +169,7 @@ drop:
  * Returns >0 if skb should be passed to UDP.
  * Returns <0 if skb should be resubmitted (-ret is protocol)
  */
-int xfrm_udp_encap_rcv(struct sock * sk, struct sk_buff *skb)
+int xfrm4_udp_encap_rcv(struct sock * sk, struct sk_buff *skb)
 {
 	struct udp_sock *up = udp_sk(sk);
 	struct udphdr *uh;
@@ -279,4 +265,4 @@ int xfrm4_rcv(struct sk_buff *skb)
 }
 
 EXPORT_SYMBOL(xfrm4_rcv);
-#endif
+

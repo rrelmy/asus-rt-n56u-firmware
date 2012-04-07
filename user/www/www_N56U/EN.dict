@@ -1,11 +1,10 @@
-[Language type]
+﻿[Language type]
 CHAR_set=UTF-8
 PASS_LANG=Language:
 LANG_select=Select Language
 LANG_EN=English
 LANG_TW=繁體中文
 LANG_CN=简体中文
-LANG_KR=한국어
 LANG_CZ=Česky
 LANG_PL=Polski
 LANG_RU=Pусский
@@ -13,7 +12,14 @@ LANG_DE=Deutsch
 LANG_FR=Français
 LANG_TR=Türkçe
 LANG_TH=ไทย
-LANG_MS=Malaysia
+LANG_MS=Malay
+LANG_NO=Norsk
+LANG_FI=Finsk
+LANG_DA=Dansk
+LANG_SV=Svensk
+LANG_BR=Brazil
+[iTunes]
+iTunesMediaServer=iTunes Media Server
 [untranslate]
 IPConnection_VSList_ftpport=FTP Server Port:
 Adm_System_telnetd=Enable Telnet Server?
@@ -362,10 +368,10 @@ HowToSharebyFTP3=Enable the DDNS service to allow access via the ftp, or click t
 HowToSharebyFTP4=(Only accessible in LAN.)
 [LeftMenu]		
 menu1=Network Map
-menu2=UPnP Media Server
+menu2=Media Server
 menu3=AiDisk
 menu4=EzQoS<br/> Bandwidth<br/> Management
-menu5=<br/> Advanced Setting
+menu5=<div style=\"padding-top:10px;\">Advanced Setting</div>
 menu5_title=Advanced Setting
 menu5_1=Wireless
 menu5_2=LAN
@@ -605,7 +611,7 @@ DiskStatus_refresh1=I have plugged USB disk,
 DiskStatus_refresh2=renew
 DiskStatus_refresh3= the system status.
 EZQoS=EZQoS Bandwidth Management
-footer_copyright_desc=2010 ASUSTek Computer Inc. All rights reserved.
+footer_copyright_desc=2011 ASUSTek Computer Inc. All rights reserved.
 Help_button_default_hint=Click to open Help.
 Help_init_word1=Help provides you with guidelines and information about using the router's functions.  Click the
 Help_init_word2=hyperlinked words with yellow and blue underline.
@@ -659,7 +665,7 @@ QKSet_detect_sanglass=auto detecting
 QKSet_detect_desc1=Detecting your connection type
 QKSet_detect_desc2=Redetecting your connection status
 QKSet_detect_wanconnfault=Please check ethernet cable is connected properly to the WAN port.
-QKSet_detect_APdesc=The operation mode of RT-N56U is \"AP\". Start to configure the settings... 
+QKSet_detect_APdesc=The operation mode of RT-N56U is 'AP'. Start to configure the settings... 
 QKSet_detect_skipbtn=Skip to manual setting
 QKSet_detect_freshbtn=Detect again
 QKSet_detect_waitdesc=Start to detect your connection type...

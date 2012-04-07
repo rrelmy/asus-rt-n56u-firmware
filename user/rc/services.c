@@ -80,10 +80,10 @@ start_dhcpd(void)
 	fprintf(fp, "option lease %d\n", dhcp_lease_time);
 	snprintf(name, sizeof(name), "%s_wins", nvram_safe_get("dhcp_wins"));
 	if (nvram_invmatch(name, ""))
-		fprintf(fp, "option wins %s\n", nvram_get(name));
+		fprintf(fp, "option wins %s\n", nvram_safe_get(name));
 	snprintf(name, sizeof(name), "%s_domain", nvram_safe_get("dhcp_domain"));
 	if (nvram_invmatch(name, ""))
-		fprintf(fp, "option domain %s\n", nvram_get(name));
+		fprintf(fp, "option domain %s\n", nvram_safe_get(name));
 	fclose(fp);
 
 	char *dhcpd_argv[] = {"udhcpd", "/tmp/udhcpd.conf", NULL};
@@ -208,7 +208,12 @@ start_httpd(void)
 	chdir("/www");
 
 	if (nvram_match("wan_route_x", "IP_Routed"))
-	{	
+	{
+#ifdef USB_MODEM
+		if(get_usb_modem_state())
+			ret = system("httpd ppp0 &");
+		else
+#endif
 		if (nvram_match("wan0_proto", "dhcp") || nvram_match("wan0_proto", "static"))
 			ret = system("httpd eth3 &");
 		else
@@ -219,7 +224,7 @@ start_httpd(void)
 
 	chdir("/");
 
-	logmessage(LOGNAME, "start httpd");
+//	logmessage(LOGNAME, "start httpd");
 
 	return ret;
 }
@@ -281,7 +286,7 @@ start_upnp()
 	return 0;
 #endif
 
-	if (nvram_match("upnp_enable_ex", "0") || nvram_match("router_disable", "1"))
+	if (nvram_match("upnp_enable", "0") || nvram_match("router_disable", "1"))
 		return 0;
 
 	system("route add -net 239.0.0.0 netmask 255.0.0.0 dev br0");
@@ -290,6 +295,11 @@ start_upnp()
 	system(cmdbuf);
 
 	wan_proto = nvram_safe_get("wan_proto");
+#ifdef USB_MODEM
+	if(get_usb_modem_state())
+		system("upnpd -f ppp0 br0 &");
+	else
+#endif
 	if (strcmp(wan_proto, "pppoe") == 0 || 
 	    strcmp(wan_proto, "pptp") == 0 || 
 	    strcmp(wan_proto, "l2tp") == 0)
@@ -300,6 +310,8 @@ start_upnp()
 	{
 		system("upnpd -f eth3 br0 &");
 	}
+
+	nvram_set("upnp_started", "1");
 
 	return 0;
 }
@@ -390,6 +402,10 @@ void init_spinlock()
 {
 //	spinlock_init(SPINLOCK_SiteSurvey);
 	spinlock_init(SPINLOCK_NVRAMCommit);
+	spinlock_init(SPINLOCK_DHCPRenew);
+	spinlock_lock(SPINLOCK_DHCPRenew);
+	nvram_set("dhcp_renew", "0");
+	spinlock_unlock(SPINLOCK_DHCPRenew);
 }
 
 void nvram_commit_safe()
@@ -412,8 +428,7 @@ start_services(void)
 	else
 		doSystem("hostname %s", nvram_safe_get("productid"));
 
-	init_spinlock();
-	start_usb();
+//	start_usb();
 	start_dns();
 	start_8021x();
 	start_8021x_rt();
@@ -437,8 +452,8 @@ start_services(void)
 //		qos_get_wan_rate();
 
 	start_infosvr();
-	start_u2ec();
-	start_lpd();
+//	start_u2ec();
+//	start_lpd();
         
 	start_networkmap();
 
@@ -460,6 +475,19 @@ start_services(void)
 		system("brctl setfd br0 15");
 		system("brctl sethello br0 2");
 	}
+
+#if (!defined(W7_LOGO) && !defined(WIFI_LOGO))
+#ifdef WEB_REDIRECT
+	if (    nvram_match("wan_route_x", "IP_Routed") &&
+		nvram_match("wan_nat_x", "1") &&
+		nvram_match("wan_pppoe_relay_x", "0")   )
+	{
+		printf("--- START: Wait to start wanduck ---\n");
+		redirect_setting();
+		start_wanduck();
+	}
+#endif
+#endif
 
 #ifdef WSC
 	if (nvram_match("wps_band", "0"))
@@ -541,8 +569,8 @@ stop_services(void)
 #endif
 #endif	// #if 0
 	stop_dhcpd();
-	stop_dns();
-	stop_httpd();
+//	stop_dns();
+//	stop_httpd();
 
 	stop_lpd();
 	stop_u2ec();
@@ -591,7 +619,7 @@ int start_wanduck(void)
 	else if	(nvram_match("wan_pppoe_relay_x", "1"))
 		return -1;
 	
-	char *argv[] = {"/usr/sbin/wanduck", NULL};
+	char *argv[] = {"/sbin/wanduck", NULL};
 	int ret = 0;
 	pid_t pid;
 	FILE *fp = fopen("/var/run/wanduck.pid", "r");
@@ -605,10 +633,16 @@ int start_wanduck(void)
 
 	if (wan_proto_type && (strcmp(wan_proto_type, "pptp") || strcmp(wan_proto_type, "l2tp"))) // delay run
 	{
-		printf("\nDelay run wanduck 3 seconds\n");	// tmp test
+		printf("\nDelay run wanduck 3 seconds\n");
 		sleep(3);
 		ret = _eval(argv, NULL, 0, &pid);
 	}
+	else
+        {
+                printf("\nDelay run wanduck 5 seconds\n");
+                sleep(5);
+                ret = _eval(argv, NULL, 0, &pid);
+        }
 
 	return ret;
 }

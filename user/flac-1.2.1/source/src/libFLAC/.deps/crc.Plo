@@ -1,12 +1,12 @@
 crc.lo crc.o: crc.c ../../config.h ./include/private/crc.h \
   ../../include/FLAC/ordinals.h \
-  /root/RT-N56U/source/lib/include/inttypes.h \
-  /root/RT-N56U/source/lib/include/features.h \
-  /root/RT-N56U/source/lib/include/bits/uClibc_config.h \
-  /root/RT-N56U/source/lib/include/sys/cdefs.h \
-  /root/RT-N56U/source/lib/include/stdint.h \
-  /root/RT-N56U/source/lib/include/bits/wchar.h \
-  /root/RT-N56U/source/lib/include/bits/wordsize.h
+  /home/defjovi/projects/RT-N56U/source/lib/include/inttypes.h \
+  /home/defjovi/projects/RT-N56U/source/lib/include/features.h \
+  /home/defjovi/projects/RT-N56U/source/lib/include/bits/uClibc_config.h \
+  /home/defjovi/projects/RT-N56U/source/lib/include/sys/cdefs.h \
+  /home/defjovi/projects/RT-N56U/source/lib/include/stdint.h \
+  /home/defjovi/projects/RT-N56U/source/lib/include/bits/wchar.h \
+  /home/defjovi/projects/RT-N56U/source/lib/include/bits/wordsize.h
 
 ../../config.h:
 
@@ -14,16 +14,16 @@ crc.lo crc.o: crc.c ../../config.h ./include/private/crc.h \
 
 ../../include/FLAC/ordinals.h:
 
-/root/RT-N56U/source/lib/include/inttypes.h:
+/home/defjovi/projects/RT-N56U/source/lib/include/inttypes.h:
 
-/root/RT-N56U/source/lib/include/features.h:
+/home/defjovi/projects/RT-N56U/source/lib/include/features.h:
 
-/root/RT-N56U/source/lib/include/bits/uClibc_config.h:
+/home/defjovi/projects/RT-N56U/source/lib/include/bits/uClibc_config.h:
 
-/root/RT-N56U/source/lib/include/sys/cdefs.h:
+/home/defjovi/projects/RT-N56U/source/lib/include/sys/cdefs.h:
 
-/root/RT-N56U/source/lib/include/stdint.h:
+/home/defjovi/projects/RT-N56U/source/lib/include/stdint.h:
 
-/root/RT-N56U/source/lib/include/bits/wchar.h:
+/home/defjovi/projects/RT-N56U/source/lib/include/bits/wchar.h:
 
-/root/RT-N56U/source/lib/include/bits/wordsize.h:
+/home/defjovi/projects/RT-N56U/source/lib/include/bits/wordsize.h:

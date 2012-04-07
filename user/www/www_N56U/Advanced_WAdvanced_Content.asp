@@ -35,7 +35,7 @@ function initial(){
 		disableAdvFn(17);
 	}
 	else if(sw_mode == "3")
-		show_menu(5,1,4);
+		show_menu(5,1,5);
 	else
 		show_menu(5,1,6);
 		
@@ -50,6 +50,15 @@ function initial(){
 		$("HT_OpMode").value = "0";
 		$("HT_OpMode").disabled = true;
 	}
+	
+	if(document.form.wl_gmode.value == "2" || document.form.wl_gmode.value == "1"){
+		$("wl_wme").value = "1";
+		$("wl_wme").disabled = true;
+	}
+	else
+		$("wl_wme").disabled = false;
+	
+	
 	/*if(document.form.wl_mrate.value != "0" && hwnat == "1" && sw_mode == "1")
 		alert("<#BasicConfig_HWNAT_alert#>");*/
 }
@@ -315,7 +324,7 @@ function disableAdvFn(row){
 			<tr>
 			  <th><a class="hintstyle" href="javascript:void(0);" onClick="openHint(3, 14);"><#WLANConfig11b_x_WMM_itemname#></a></th>
 			  <td>
-				<select name="wl_wme" class="input" onChange="return change_common(this, 'WLANConfig11b', 'wl_wme')">
+				<select name="wl_wme" id="wl_wme" class="input" onChange="return change_common(this, 'WLANConfig11b', 'wl_wme')">
 			  	  <option value="0" <% nvram_match_x("WLANConfig11b", "wl_wme", "0", "selected"); %>><#WLANConfig11b_WirelessCtrl_buttonname#></option>
 			  	  <option value="1" <% nvram_match_x("WLANConfig11b", "wl_wme", "1", "selected"); %>><#WLANConfig11b_WirelessCtrl_button1name#></option>
 				</select>
@@ -324,7 +333,7 @@ function disableAdvFn(row){
 			<tr>
 			  <th><a class="hintstyle" href="javascript:void(0);" onClick="openHint(3,15);"><#WLANConfig11b_x_NOACK_itemname#></a></th>
 			  <td>
-				<select name="wl_wme_no_ack"class="input" onChange="return change_common(this, 'WLANConfig11b', 'wl_wme_no_ack')">
+				<select name="wl_wme_no_ack" id="wl_wme_no_ack" class="input" onChange="return change_common(this, 'WLANConfig11b', 'wl_wme_no_ack')">
 			  	  <option value="off" <% nvram_match_x("WLANConfig11b","wl_wme_no_ack", "off","selected"); %>><#WLANConfig11b_WirelessCtrl_buttonname#></option>
 			  	  <option value="on" <% nvram_match_x("WLANConfig11b","wl_wme_no_ack", "on","selected"); %>><#WLANConfig11b_WirelessCtrl_button1name#></option>
 				</select>

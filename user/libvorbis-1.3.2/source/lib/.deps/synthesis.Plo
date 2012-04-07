@@ -1,70 +1,72 @@
 synthesis.lo synthesis.o: synthesis.c \
-  /root/RT-N56U/source/lib/include/stdio.h \
-  /root/RT-N56U/source/lib/include/features.h \
-  /root/RT-N56U/source/lib/include/bits/uClibc_config.h \
-  /root/RT-N56U/source/lib/include/sys/cdefs.h \
+  /home/defjovi/projects/RT-N56U/source/lib/include/stdio.h \
+  /home/defjovi/projects/RT-N56U/source/lib/include/features.h \
+  /home/defjovi/projects/RT-N56U/source/lib/include/bits/uClibc_config.h \
+  /home/defjovi/projects/RT-N56U/source/lib/include/sys/cdefs.h \
   /opt/buildroot-gcc342/bin/../lib/gcc/mipsel-linux-uclibc/3.4.2/include/stddef.h \
-  /root/RT-N56U/source/lib/include/bits/types.h \
-  /root/RT-N56U/source/lib/include/bits/kernel_types.h \
-  /root/RT-N56U/source/lib/include/bits/wordsize.h \
-  /root/RT-N56U/source/lib/include/bits/pthreadtypes.h \
-  /root/RT-N56U/source/lib/include/bits/sched.h \
-  /root/RT-N56U/source/lib/include/bits/uClibc_stdio.h \
-  /root/RT-N56U/source/lib/include/wchar.h \
-  /root/RT-N56U/source/lib/include/bits/wchar.h \
+  /home/defjovi/projects/RT-N56U/source/lib/include/bits/types.h \
+  /home/defjovi/projects/RT-N56U/source/lib/include/bits/kernel_types.h \
+  /home/defjovi/projects/RT-N56U/source/lib/include/bits/wordsize.h \
+  /home/defjovi/projects/RT-N56U/source/lib/include/bits/pthreadtypes.h \
+  /home/defjovi/projects/RT-N56U/source/lib/include/bits/sched.h \
+  /home/defjovi/projects/RT-N56U/source/lib/include/bits/uClibc_stdio.h \
+  /home/defjovi/projects/RT-N56U/source/lib/include/wchar.h \
+  /home/defjovi/projects/RT-N56U/source/lib/include/bits/wchar.h \
   /opt/buildroot-gcc342/bin/../lib/gcc/mipsel-linux-uclibc/3.4.2/include/stdarg.h \
-  /root/RT-N56U/source/lib/include/bits/stdio_lim.h ../include/ogg/ogg.h \
-  ../include/ogg/os_types.h ../include/ogg/config_types.h \
-  /root/RT-N56U/source/lib/include/inttypes.h \
-  /root/RT-N56U/source/lib/include/stdint.h \
-  /root/RT-N56U/source/lib/include/sys/types.h \
-  /root/RT-N56U/source/lib/include/time.h \
-  /root/RT-N56U/source/lib/include/endian.h \
-  /root/RT-N56U/source/lib/include/bits/endian.h \
-  /root/RT-N56U/source/lib/include/sys/select.h \
-  /root/RT-N56U/source/lib/include/bits/select.h \
-  /root/RT-N56U/source/lib/include/bits/sigset.h \
-  /root/RT-N56U/source/lib/include/bits/time.h \
-  /root/RT-N56U/source/lib/include/sys/sysmacros.h \
+  /home/defjovi/projects/RT-N56U/source/lib/include/bits/stdio_lim.h \
+  ../include/ogg/ogg.h ../include/ogg/os_types.h \
+  ../include/ogg/config_types.h \
+  /home/defjovi/projects/RT-N56U/source/lib/include/inttypes.h \
+  /home/defjovi/projects/RT-N56U/source/lib/include/stdint.h \
+  /home/defjovi/projects/RT-N56U/source/lib/include/sys/types.h \
+  /home/defjovi/projects/RT-N56U/source/lib/include/time.h \
+  /home/defjovi/projects/RT-N56U/source/lib/include/endian.h \
+  /home/defjovi/projects/RT-N56U/source/lib/include/bits/endian.h \
+  /home/defjovi/projects/RT-N56U/source/lib/include/sys/select.h \
+  /home/defjovi/projects/RT-N56U/source/lib/include/bits/select.h \
+  /home/defjovi/projects/RT-N56U/source/lib/include/bits/sigset.h \
+  /home/defjovi/projects/RT-N56U/source/lib/include/bits/time.h \
+  /home/defjovi/projects/RT-N56U/source/lib/include/sys/sysmacros.h \
   ../include/vorbis/codec.h codec_internal.h envelope.h mdct.h codebook.h \
   psy.h smallft.h backends.h bitrate.h os.h ../config.h \
-  /root/RT-N56U/source/lib/include/math.h \
-  /root/RT-N56U/source/lib/include/bits/huge_val.h \
-  /root/RT-N56U/source/lib/include/bits/mathdef.h \
-  /root/RT-N56U/source/lib/include/bits/mathcalls.h misc.h \
-  /root/RT-N56U/source/lib/include/alloca.h \
-  /root/RT-N56U/source/lib/include/memory.h \
-  /root/RT-N56U/source/lib/include/string.h highlevel.h registry.h
+  /home/defjovi/projects/RT-N56U/source/lib/include/math.h \
+  /home/defjovi/projects/RT-N56U/source/lib/include/bits/huge_val.h \
+  /home/defjovi/projects/RT-N56U/source/lib/include/bits/mathdef.h \
+  /home/defjovi/projects/RT-N56U/source/lib/include/bits/mathcalls.h \
+  misc.h /home/defjovi/projects/RT-N56U/source/lib/include/alloca.h \
+  /home/defjovi/projects/RT-N56U/source/lib/include/memory.h \
+  /home/defjovi/projects/RT-N56U/source/lib/include/string.h highlevel.h \
+  registry.h
 
-/root/RT-N56U/source/lib/include/stdio.h:
+/home/defjovi/projects/RT-N56U/source/lib/include/stdio.h:
 
-/root/RT-N56U/source/lib/include/features.h:
+/home/defjovi/projects/RT-N56U/source/lib/include/features.h:
 
-/root/RT-N56U/source/lib/include/bits/uClibc_config.h:
+/home/defjovi/projects/RT-N56U/source/lib/include/bits/uClibc_config.h:
 
-/root/RT-N56U/source/lib/include/sys/cdefs.h:
+/home/defjovi/projects/RT-N56U/source/lib/include/sys/cdefs.h:
 
 /opt/buildroot-gcc342/bin/../lib/gcc/mipsel-linux-uclibc/3.4.2/include/stddef.h:
 
-/root/RT-N56U/source/lib/include/bits/types.h:
+/home/defjovi/projects/RT-N56U/source/lib/include/bits/types.h:
 
-/root/RT-N56U/source/lib/include/bits/kernel_types.h:
+/home/defjovi/projects/RT-N56U/source/lib/include/bits/kernel_types.h:
 
-/root/RT-N56U/source/lib/include/bits/wordsize.h:
+/home/defjovi/projects/RT-N56U/source/lib/include/bits/wordsize.h:
 
-/root/RT-N56U/source/lib/include/bits/pthreadtypes.h:
+/home/defjovi/projects/RT-N56U/source/lib/include/bits/pthreadtypes.h:
 
-/root/RT-N56U/source/lib/include/bits/sched.h:
+/home/defjovi/projects/RT-N56U/source/lib/include/bits/sched.h:
 
-/root/RT-N56U/source/lib/include/bits/uClibc_stdio.h:
+/home/defjovi/projects/RT-N56U/source/lib/include/bits/uClibc_stdio.h:
 
-/root/RT-N56U/source/lib/include/wchar.h:
+/home/defjovi/projects/RT-N56U/source/lib/include/wchar.h:
 
-/root/RT-N56U/source/lib/include/bits/wchar.h:
+/home/defjovi/projects/RT-N56U/source/lib/include/bits/wchar.h:
 
 /opt/buildroot-gcc342/bin/../lib/gcc/mipsel-linux-uclibc/3.4.2/include/stdarg.h:
 
-/root/RT-N56U/source/lib/include/bits/stdio_lim.h:
+/home/defjovi/projects/RT-N56U/source/lib/include/bits/stdio_lim.h:
 
 ../include/ogg/ogg.h:
 
@@ -72,27 +74,27 @@ synthesis.lo synthesis.o: synthesis.c \
 
 ../include/ogg/config_types.h:
 
-/root/RT-N56U/source/lib/include/inttypes.h:
+/home/defjovi/projects/RT-N56U/source/lib/include/inttypes.h:
 
-/root/RT-N56U/source/lib/include/stdint.h:
+/home/defjovi/projects/RT-N56U/source/lib/include/stdint.h:
 
-/root/RT-N56U/source/lib/include/sys/types.h:
+/home/defjovi/projects/RT-N56U/source/lib/include/sys/types.h:
 
-/root/RT-N56U/source/lib/include/time.h:
+/home/defjovi/projects/RT-N56U/source/lib/include/time.h:
 
-/root/RT-N56U/source/lib/include/endian.h:
+/home/defjovi/projects/RT-N56U/source/lib/include/endian.h:
 
-/root/RT-N56U/source/lib/include/bits/endian.h:
+/home/defjovi/projects/RT-N56U/source/lib/include/bits/endian.h:
 
-/root/RT-N56U/source/lib/include/sys/select.h:
+/home/defjovi/projects/RT-N56U/source/lib/include/sys/select.h:
 
-/root/RT-N56U/source/lib/include/bits/select.h:
+/home/defjovi/projects/RT-N56U/source/lib/include/bits/select.h:
 
-/root/RT-N56U/source/lib/include/bits/sigset.h:
+/home/defjovi/projects/RT-N56U/source/lib/include/bits/sigset.h:
 
-/root/RT-N56U/source/lib/include/bits/time.h:
+/home/defjovi/projects/RT-N56U/source/lib/include/bits/time.h:
 
-/root/RT-N56U/source/lib/include/sys/sysmacros.h:
+/home/defjovi/projects/RT-N56U/source/lib/include/sys/sysmacros.h:
 
 ../include/vorbis/codec.h:
 
@@ -116,21 +118,21 @@ os.h:
 
 ../config.h:
 
-/root/RT-N56U/source/lib/include/math.h:
+/home/defjovi/projects/RT-N56U/source/lib/include/math.h:
 
-/root/RT-N56U/source/lib/include/bits/huge_val.h:
+/home/defjovi/projects/RT-N56U/source/lib/include/bits/huge_val.h:
 
-/root/RT-N56U/source/lib/include/bits/mathdef.h:
+/home/defjovi/projects/RT-N56U/source/lib/include/bits/mathdef.h:
 
-/root/RT-N56U/source/lib/include/bits/mathcalls.h:
+/home/defjovi/projects/RT-N56U/source/lib/include/bits/mathcalls.h:
 
 misc.h:
 
-/root/RT-N56U/source/lib/include/alloca.h:
+/home/defjovi/projects/RT-N56U/source/lib/include/alloca.h:
 
-/root/RT-N56U/source/lib/include/memory.h:
+/home/defjovi/projects/RT-N56U/source/lib/include/memory.h:
 
-/root/RT-N56U/source/lib/include/string.h:
+/home/defjovi/projects/RT-N56U/source/lib/include/string.h:
 
 highlevel.h:
 

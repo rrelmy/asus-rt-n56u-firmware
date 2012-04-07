@@ -286,6 +286,15 @@ function corrected_timezone(){
           <a href="javascript:openLink('x_NTPServer1')" class="content_input_link" name="x_NTPServer1_link">
 		  <#LANHostConfig_x_NTPServer1_linkname#></td>
         </tr>
+
+	<tr>
+	  <th><#Adm_System_telnetd#></th>
+	  <td>
+	    <input type="radio" name="telnetd" class="input" value="1" <% nvram_match_x("LANHostConfig", "telnetd", "1", "checked"); %>><#checkbox_Yes#>
+	    <input type="radio" name="telnetd" class="input" value="0" <% nvram_match_x("LANHostConfig", "telnetd", "0", "checked"); %>><#checkbox_No#>
+	  </td>
+	</tr>
+
           <tr>
             <td colspan="2" align="right"><input name="button" type="button" class="button" onclick="applyRule();" value="<#CTL_apply#>"/></td>
           </tr>		

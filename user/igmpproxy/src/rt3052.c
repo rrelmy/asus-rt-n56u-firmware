@@ -837,6 +837,8 @@ static int portLookUpByMac(char *mac)
 				return 3;
 			case 0x10:
 				return 4;
+			case 0x40:      /* CPU Only */
+				break;
 			default:
 				log(LOG_WARNING, 0, "No/Multi ports found");
 				return -1;

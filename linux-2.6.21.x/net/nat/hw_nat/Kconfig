@@ -13,11 +13,11 @@ config  RA_HW_NAT_AUTO_BIND
 	help
 	Let HNAT module judge which flow should be accelerated by hardware.
 
-config  RA_HW_NAT_SEMIAUTO_BIND
-        bool "Semi-Auto"
-	depends on RA_HW_NAT
-	help
-	you have to judge which flow need to be accelerated by hardware.
+#config  RA_HW_NAT_SEMIAUTO_BIND
+#        bool "Semi-Auto (TestOnly)"
+#	depends on RA_HW_NAT
+#	help
+#	you have to judge which flow need to be accelerated by hardware.
 
 config  RA_HW_NAT_MANUAL_BIND
         bool "Manual"
@@ -27,6 +27,42 @@ config  RA_HW_NAT_MANUAL_BIND
 
 endchoice
 
+choice
+        prompt "Direction"
+	depends on RA_HW_NAT && !RA_HW_NAT_MANUAL_BIND
+	default RA_HW_NAT_SPEEDUP_BIDIRECTION
+
+config  RA_HW_NAT_SPEEDUP_UPSTREAM
+        bool "Upstream Only"
+	help
+	only speed up upstream flow
+
+config  RA_HW_NAT_SPEEDUP_DOWNSTREAM
+        bool "Downstream Only"
+	help
+	only speed up downstream flow
+
+config  RA_HW_NAT_SPEEDUP_BIDIRECTION
+        bool "Bi-direction"
+	help
+	Speed up bi-direction
+
+endchoice
+
+
+config  RA_HW_NAT_LAN_VLANID
+        int "VLAN ID of LAN Ports"
+	depends on RA_HW_NAT && !RA_HW_NAT_MANUAL_BIND
+	default 1
+	help
+	please choose any one of your LAN side VLAN IDs if you use different VLAN ID for each LAN port
+
+config  RA_HW_NAT_WAN_VLANID
+        int "VLAN ID of WAN Ports"
+	depends on RA_HW_NAT && !RA_HW_NAT_MANUAL_BIND
+	default 2
+	help
+	please choose any one of your WAN side VLAN IDs if you use different VLAN ID for each WAN port
 
 config  RA_HW_NAT_BINDING_THRESHOLD
         int "Binding Threshold (Unit:Packet Per Second)"

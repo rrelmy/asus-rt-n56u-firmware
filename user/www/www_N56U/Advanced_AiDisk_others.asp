@@ -254,39 +254,23 @@ function done_validating(action){
 
                                 <tr>
                                         <th>
-                                                <a class="hintstyle" href="javascript:openHint(17, 9);"><#BasicConfig_USBStorageWhiteist_itemname#></a>
+                                                <#iTunesMediaServer#>
                                         </th>
                                         <td>
-                                                <input type="text" name="usb_vid_allow" class="input" onClick="openHint(17, 9);" maxlength="4" size="4" value="<% nvram_get_x("Storage", "usb_vid_allow"); %>">
+                                                <input type="radio" name="apps_itunes" value="1" <% nvram_match_x("Storage", "apps_itunes", "1", "checked"); %>>Yes
+                                                <input type="radio" name="apps_itunes" value="0" <% nvram_match_x("Storage", "apps_itunes", "0", "checked"); %>>No
                                         </td>
                                 </tr>
                                 
                                 <!--tr>
                                         <th>
-                                                <a class="hintstyle" href="javascript:openHint(17, 5);"><#BasicConfig_EnableDownloadShare_itemname#></a>
+                                                <a class="hintstyle" href="javascript:openHint(17, 9);"><#BasicConfig_USBStorageWhiteist_itemname#></a>
                                         </th>
                                         <td>
-                                                <input type="radio" name="apps_dl_share" value="1" <% nvram_match_x("Storage", "apps_dl_share", "1", "checked"); %>>Yes
-                                                <input type="radio" name="apps_dl_share" value="0" <% nvram_match_x("Storage", "apps_dl_share", "0", "checked"); %>>No
+                                                <input type="text" name="usb_vid_allow" class="input" onClick="openHint(17, 9);" maxlength="4" size="4" value="<% nvram_get_x("Storage", "usb_vid_allow"); %>">
                                         </td>
                                 </tr-->
-                                <!--
-                                <tr>
-                                        <th>Seeding</th>
-                                        <td>
-                                                <select name="apps_seed" class="input">
-                                                  <option value="1" <% nvram_match_x("Storage","apps_seed", "1","selected"); %>><#WLANConfig11b_WirelessCtrl_buttonname#></option>
-                                                  <option value="0" <% nvram_match_x("Storage","apps_seed", "0","selected"); %>><#WLANConfig11b_WirelessCtrl_button1name#></option>
-                                                </select>
-                                        </td>
-                                </tr>
-                                <tr>
-                                        <th>Maximum Upload Rate</th>
-                                        <td>
-            <input type="text" name="apps_upload_max" class="input" maxlength="3" size="3" value="<% nvram_get_x("Storage", "apps_upload_max"); %>" /> Kb/s
-                                        </td>
-                                </tr>
-                                -->
+
                                 <tr align="right">
                                         <td colspan="2">
                                                 <input type="button" class="button" value="<#CTL_apply#>" onclick="applyRule();">

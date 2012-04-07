@@ -62,9 +62,9 @@
 
 #define FOE_TS_T	    FE_GLO_BASE+0x1C
 #define GDMA1_BASE          FE_GLO_BASE+0x20
-#define GDMA1_SCH_CFG       GDMA1_BASE+0x04
+#define FE_GDMA1_SCH_CFG    GDMA1_BASE+0x04
 #define GDMA2_BASE          FE_GLO_BASE+0x60
-#define GDMA2_SCH_CFG       GDMA2_BASE+0x04
+#define FE_GDMA2_SCH_CFG    GDMA2_BASE+0x04
 
 
 #define PPE_GLO_CFG	    PPE_BASE + 0x00
@@ -109,8 +109,8 @@
 #define UP4_7_MAP_ODSCP	    PPE_BASE + 0x9C
 #define UP_MAP_AC	    PPE_BASE + 0xA0
 
-#define GDMA1_FWD_CFG	    FE_BASE + 0x20 
-#define GDMA2_FWD_CFG	    FE_BASE + 0x60
+#define FE_GDMA1_FWD_CFG    FE_BASE + 0x20 
+#define FE_GDMA2_FWD_CFG    FE_BASE + 0x60
 #define FE_COS_MAP	    FE_BASE + 0xC8
 #define IS_EXT_SW_EN(x)     (x & 1<<30)
 

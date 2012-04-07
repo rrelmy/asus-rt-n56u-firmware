@@ -1000,7 +1000,8 @@ static int storage_probe(struct usb_interface *intf,
 	if (result)
 		goto BadDevice;
 
-	if (us->pusb_dev->actconfig->desc.bNumInterfaces > 1)	// patch for U2EC
+// USB_MODEM marked.
+	/*if (us->pusb_dev->actconfig->desc.bNumInterfaces > 1)	// patch for U2EC
 	{
 		if (	(us->pusb_dev->descriptor.idVendor != 0x0bc2) &&	// Seagate VID
 			(us->pusb_dev->descriptor.idVendor != 0x1058) &&	// WD VID
@@ -1011,7 +1012,32 @@ static int storage_probe(struct usb_interface *intf,
 			result = -ENOMEM;
 			goto BadDevice;
 		}
+	}//*/
+// 2011.03 James. {
+	struct usb_host_config *config;
+	struct usb_interface *interface;
+	struct usb_interface_descriptor *desc;
+	int i, isPrinter = 0;
+
+	dev = interface_to_usbdev(intf);
+	config = dev->actconfig;
+
+	for(i = 0; i < config->desc.bNumInterfaces; ++i){
+		interface = config->interface[i];
+		desc = &interface->cur_altsetting->desc;
+
+		if(desc->bInterfaceClass == 7){
+			isPrinter = 1;
+			break;
+		}
 	}
+
+	if(isPrinter == 1){
+		printk("We don't support the storage-interface of the printer device!\n");
+		result = -ENOMEM;
+		goto BadDevice;
+	}
+// 2011.03 James. }
 
 	/*
 	 * Get the unusual_devs entries and the descriptors
@@ -1071,14 +1097,16 @@ static int storage_probe(struct usb_interface *intf,
 
 		printk("[K] usb storage devpath: %s\n", dev->devpath);
 		nvram_set("usb_path", dev->devpath);
-//		sprintf(usb_path_nvram, "usb_path%s", dev->devpath);
-//		nvram_set(usb_path_nvram, "storage");
+		sprintf(usb_path_nvram, "usb_path%s", dev->devpath);
 
 		printk("[K] usb storage device. Vendor=%x ProdID=%x Manufacturer=%s Product=%s Serial=%s\n",
 			dev->descriptor.idVendor, dev->descriptor.idProduct,
 			dev->manufacturer ? dev->manufacturer : "",
 			dev->product ? dev->product : "",
 			dev->serial ? dev->serial : "");
+
+	if(!strcmp(nvram_get(usb_path_nvram), "")){
+		nvram_set(usb_path_nvram, "storage");
 
 		memset(nvram_name, 0x0, 32);
 		memset(nvram_value, 0x0, 256);
@@ -1111,6 +1139,7 @@ static int storage_probe(struct usb_interface *intf,
 		nvram_set(nvram_name, nvram_value);
 
                 kill_proc(1, SIGTTIN, 1);
+	}
         }
 
 	return 0;
@@ -1135,6 +1164,7 @@ static void storage_disconnect(struct usb_interface *intf)
 	printk("[K] storage devpath: %s\n", dev->devpath);
 	nvram_set("usb_path", "");
 	sprintf(usb_path_nvram, "usb_path%s", dev->devpath);
+if(!strcmp(nvram_get(usb_path_nvram), "storage")){
 	nvram_set(usb_path_nvram, "");
 
 	memset(nvram_name, 0x0, 32);
@@ -1156,20 +1186,17 @@ static void storage_disconnect(struct usb_interface *intf)
 	memset(nvram_name, 0x0, 32);
 	sprintf(nvram_name, "usb_path%s_serial", dev->devpath);
 	nvram_set(nvram_name, "");
-
         if(g3_flag == 0)
         {
                 usb_plug_flag = PLUG_OFF;
-        }
-	US_DEBUGP("storage_disconnect() called\n");
-	quiesce_and_remove_host(us);
-	release_everything(us);
-
-	if(g3_flag == 0)
-	{
                 printk("[K] sd disconn\n");  // tmp test
 		kill_proc(1, SIGTTIN, 1);
 	}
+}
+
+	US_DEBUGP("storage_disconnect() called\n");
+	quiesce_and_remove_host(us);
+	release_everything(us);
 }
 
 /***********************************************************************

@@ -115,7 +115,7 @@ char *proto_conv(char *proto_name, int idx)
 	char itemname_arr[32];
 	
 	sprintf(itemname_arr,"%s%d", proto_name, idx);
-	proto=nvram_get(itemname_arr);
+	proto=nvram_safe_get(itemname_arr);
 		
 	if (!strncasecmp(proto, "Both", 3)) strcpy(g_buf, "both");
 	else if (!strncasecmp(proto, "TCP", 3)) strcpy(g_buf, "tcp");
@@ -131,7 +131,7 @@ char *protoflag_conv(char *proto_name, int idx, int isFlag)
 	char itemname_arr[32];
 	
 	sprintf(itemname_arr,"%s%d", proto_name, idx);
-	proto=nvram_get(itemname_arr);
+	proto=nvram_safe_get(itemname_arr);
 
 	strcpy(g_buf, "");
 	
@@ -157,7 +157,7 @@ char *portrange_ex_conv(char *port_name, int idx)
 	char itemname_arr[32];
 	
 	sprintf(itemname_arr,"%s%d", port_name, idx);
-	port=nvram_get(itemname_arr);
+	port=nvram_safe_get(itemname_arr);
 
 	strcpy(g_buf, "");
 	
@@ -197,7 +197,7 @@ char *portrange_ex2_conv(char *port_name, int idx, int *start, int *end)
 	char itemname_arr[32];
 	
 	sprintf(itemname_arr,"%s%d", port_name, idx);
-	port=nvram_get(itemname_arr);
+	port=nvram_safe_get(itemname_arr);
 
 	strcpy(g_buf, "");
 	
@@ -250,7 +250,7 @@ char *portrange_ex2_conv_new(char *port_name, int idx, int *start, int *end)
 	char itemname_arr[32];
 	
 	sprintf(itemname_arr,"%s%d", port_name, idx);
-	port=nvram_get(itemname_arr);
+	port=nvram_safe_get(itemname_arr);
 
 	strcpy(g_buf, "");
 	
@@ -776,6 +776,7 @@ write_upnp_forward(FILE *fp, char *wan_if, char *wan_ip, char *lan_if, char *lan
 		}
 	}
 }
+
 /*
 char *ipoffset(char *ip, int offset, char *tmp)
 {
@@ -788,6 +789,9 @@ char *ipoffset(char *ip, int offset, char *tmp)
 	return (tmp);
 }
 */
+
+int apps_running_when_start_firewall = -1;
+
 //nat_setting(char *wan_if, char *wan_ip, char *lan_if, char *lan_ip, char *logaccept, char *logdrop)
 void nat_setting(char *wan_if, char *wan_ip, char *lan_if, char *lan_ip, char *logaccept, char *logdrop)	// oleg patch
 {
@@ -823,7 +827,7 @@ void nat_setting(char *wan_if, char *wan_ip, char *lan_if, char *lan_ip, char *l
 		fprintf(fp, "-A PREROUTING -d %s -j VSERVER\n", wan_ip);
 
 	if (!nvram_match("wan0_ifname", wan_if) && inet_addr_(nvram_safe_get("wanx_ipaddr")))
-		fprintf(fp, "-A PREROUTING -d %s -j VSERVER\n", nvram_get("wanx_ipaddr"));
+		fprintf(fp, "-A PREROUTING -d %s -j VSERVER\n", nvram_safe_get("wanx_ipaddr"));
 // ~ oleg patch
 	if (nvram_match("misc_http_x", "1"))
 	{
@@ -834,7 +838,7 @@ void nat_setting(char *wan_if, char *wan_ip, char *lan_if, char *lan_ip, char *l
 		fprintf(fp, "-A VSERVER -p tcp -m tcp --dport %d -j DNAT --to-destination %s:%s\n",
 			wan_port, lan_ip, nvram_safe_get("http_lanport"));	// oleg patch
 	}
-	
+#if 0	
 	if (nvram_match("apps_dl_share", "1"))
 	{
 		//fprintf(fp, "-A PREROUTING -p tcp -m tcp -d %s --dport %s:%s -j DNAT --to %s\n", wan_ip, nvram_safe_get("apps_dl_share_port_from"), nvram_safe_get("apps_dl_share_port_to"), lan_ip);
@@ -842,8 +846,14 @@ void nat_setting(char *wan_if, char *wan_ip, char *lan_if, char *lan_ip, char *l
 		fprintf(fp, "-A VSERVER -p tcp -m tcp --dport %s:%s -j DNAT --to %s\n", nvram_safe_get("apps_dl_share_port_from"), nvram_safe_get("apps_dl_share_port_to"), lan_ip);	// oleg patch
 		fprintf(fp, "-A VSERVER -p udp -m udp --dport %s:%s -j DNAT --to %s\n", nvram_safe_get("apps_dl_share_port_from"), nvram_safe_get("apps_dl_share_port_to"), lan_ip);	// oleg patch
 	}
-
-	if (nvram_match("wan_nat_x", "1") && !nvram_match("upnp_enable_ex", "0"))
+#else
+	if (apps_running_when_start_firewall)
+	{
+		fprintf(fp, "-A VSERVER -p tcp -m tcp --dport %s:%s -j DNAT --to %s\n", "10001", "10050", lan_ip);	// oleg patch
+		fprintf(fp, "-A VSERVER -p udp -m udp --dport %s:%s -j DNAT --to %s\n", "10001", "10050", lan_ip);	// oleg patch
+	}
+#endif
+	if (nvram_match("wan_nat_x", "1") && !nvram_match("upnp_enable", "0"))
 	{
 		// upnp port forward
 		//write_upnp_forward(fp, fp1, wan_if, wan_ip, lan_if, lan_ip, lan_class, logaccept, logdrop);
@@ -974,7 +984,7 @@ void nat_setting(char *wan_if, char *wan_ip, char *lan_if, char *lan_ip, char *l
 		/* masquerade physical WAN port connection */
 		if (!nvram_match("wan0_ifname", wan_if) && inet_addr_(nvram_safe_get("wanx_ipaddr")))
 			fprintf(fp, "-A POSTROUTING -o %s ! -s %s -j MASQUERADE\n", 
-				nvram_get("wan0_ifname"), nvram_get("wanx_ipaddr"));
+				nvram_safe_get("wan0_ifname"), nvram_safe_get("wanx_ipaddr"));
 		// ~ oleg patch
 
 		// masquerade lan to lan
@@ -993,7 +1003,9 @@ void nat_setting(char *wan_if, char *wan_ip, char *lan_if, char *lan_ip, char *l
 	//kill_pidfile_s("/var/run/wanduck.pid", SIGUSR1);	// 2008.03 James.
 
 #ifdef WEB_REDIRECT
+#ifndef USB_MODEM
 	redirect_setting();
+#endif
 	nvram_set("wan_ready", "1");	// 2008.03 James.
 #endif
 }
@@ -1001,7 +1013,9 @@ void nat_setting(char *wan_if, char *wan_ip, char *lan_if, char *lan_ip, char *l
 #ifdef WEB_REDIRECT
 void redirect_setting()
 {
+#ifndef USB_MODEM
 	FILE *nat_fp = fopen("/tmp/nat_rules", "r");
+#endif
 	FILE *redirect_fp = fopen("/tmp/redirect_rules", "w+");
 	FILE *fake_nat_fp = fopen("/tmp/fake_nat_rules", "w+");
 	char tmp_buf[1024];
@@ -1020,6 +1034,7 @@ void redirect_setting()
 		return;
 	}
 
+#ifndef USB_MODEM
 	if (nat_fp != NULL) {
 		memset(tmp_buf, 0, sizeof(tmp_buf));
 		while ((fgets(tmp_buf, sizeof(tmp_buf), nat_fp)) != NULL
@@ -1031,11 +1046,14 @@ void redirect_setting()
 		fclose(nat_fp);
 	}
 	else{
+#endif
 		fprintf(redirect_fp, "*nat\n");
 		fprintf(redirect_fp, ":PREROUTING ACCEPT [0:0]\n");
-		fprintf(fake_nat_fp, "*nat\n");
-		fprintf(fake_nat_fp, ":PREROUTING ACCEPT [0:0]\n");
+#ifndef USB_MODEM
 	}
+#endif
+	fprintf(fake_nat_fp, "*nat\n");
+	fprintf(fake_nat_fp, ":PREROUTING ACCEPT [0:0]\n");
 
 	memset(http_rule, 0, sizeof(http_rule));
 	memset(dns_rule, 0, sizeof(dns_rule));
@@ -1116,7 +1134,7 @@ int makeTimestr(char *tf)
 	if (!nvram_match("url_enable_x", "1"))
 		return -1;
 
-	if ((!url_date) || strlen(url_date) != 7 || !strcmp(url_date, "0000000"))
+	if ((!url_date) || strlen(url_date) != 7 || !strcmp(url_date, "0000000") || !url_time)
 	{
 		printf("url filter get time fail\n");
 		return -1;
@@ -1153,7 +1171,7 @@ int makeTimestr2(char *tf)
 	if (!nvram_match("url_enable_x_1", "1"))
 		return -1;
 
-	if ((!url_date) || strlen(url_date) != 7 || !strcmp(url_date, "0000000"))
+	if ((!url_date) || strlen(url_date) != 7 || !strcmp(url_date, "0000000") || !url_time)
 	{
 		printf("url filter get time fail\n");
 		return -1;
@@ -1263,7 +1281,7 @@ int makeTimestr_content(char *tf)
 #endif
 		return -1;
 
-	if ((!keyword_date) || strlen(keyword_date) != 7 || !strcmp(keyword_date, "0000000"))
+	if ((!keyword_date) || strlen(keyword_date) != 7 || !strcmp(keyword_date, "0000000") || !keyword_time)
 	{
 		printf("content filter get time fail\n");
 		return -1;
@@ -1308,7 +1326,7 @@ int makeTimestr2_content(char *tf)
 #endif		
 		return -1;
 
-	if ((!keyword_date) || strlen(keyword_date) != 7 || !strcmp(keyword_date, "0000000"))
+	if ((!keyword_date) || strlen(keyword_date) != 7 || !strcmp(keyword_date, "0000000") || !keyword_time)
 	{
 		printf("content filter get time fail\n");
 		return -1;
@@ -1669,6 +1687,7 @@ filter_setting(char *wan_if, char *wan_ip, char *lan_if, char *lan_ip, char *log
 	}
 
 /* apps_dm DHT patch */
+#if 0
 	if (nvram_match("apps_dl_share", "1"))
 	{
 		fprintf(fp, "-I INPUT -p udp --dport 6881 -j ACCEPT\n");	// DHT port
@@ -1676,6 +1695,15 @@ filter_setting(char *wan_if, char *wan_ip, char *lan_if, char *lan_ip, char *log
 		fprintf(fp, "-I INPUT -p udp --dport %s:%s -j ACCEPT\n", nvram_safe_get("apps_dl_share_port_from"), nvram_safe_get("apps_dl_share_port_to"));
 		fprintf(fp, "-I INPUT -p tcp --dport %s:%s -j ACCEPT\n", nvram_safe_get("apps_dl_share_port_from"), nvram_safe_get("apps_dl_share_port_to"));
 	}
+#else
+	if (apps_running_when_start_firewall)
+	{
+		fprintf(fp, "-I INPUT -p udp --dport 10000 -j ACCEPT\n");	// DHT port
+		// port range
+		fprintf(fp, "-I INPUT -p udp --dport %s:%s -j ACCEPT\n", "10001", "10050");
+		fprintf(fp, "-I INPUT -p tcp --dport %s:%s -j ACCEPT\n", "10001", "10050");
+	}
+#endif
 
 // oleg patch ~
 	/* Pass multicast */
@@ -1687,11 +1715,15 @@ filter_setting(char *wan_if, char *wan_ip, char *lan_if, char *lan_ip, char *log
 	}
 
 	/* Clamp TCP MSS to PMTU of WAN interface before accepting RELATED packets */
-	if (nvram_match("wan_proto", "pptp") || nvram_match("wan_proto", "pppoe") || nvram_match("wan_proto", "l2tp"))
-	{
-		fprintf(fp, "-A FORWARD -p tcp --syn -j TCPMSS --clamp-mss-to-pmtu\n");
+	if (nvram_match("wan_proto", "pptp") || nvram_match("wan_proto", "pppoe") || nvram_match("wan_proto", "l2tp") ||
+	    nvram_match("wan_proto", "3g")
+#ifdef CDMA
+	 || nvram_match("wan_proto", "cdma")
+#endif
+	) {
+		fprintf(fp, "-A FORWARD -p tcp --tcp-flags SYN,RST SYN -j TCPMSS --clamp-mss-to-pmtu\n");
 		if (strlen(macaccept)>0)
-			fprintf(fp, "-A MACS -p tcp --syn -j TCPMSS --clamp-mss-to-pmtu\n");
+			fprintf(fp, "-A MACS -p tcp --tcp-flags SYN,RST SYN -j TCPMSS --clamp-mss-to-pmtu\n");
 	}
 // ~ oleg patch
 	fprintf(fp, "-A FORWARD -m state --state ESTABLISHED,RELATED -j %s\n", logaccept);
@@ -1701,7 +1733,7 @@ filter_setting(char *wan_if, char *wan_ip, char *lan_if, char *lan_ip, char *log
 	/* Filter out invalid WAN->WAN connections */
 	fprintf(fp, "-A FORWARD -o %s ! -i %s -j %s\n", wan_if, lan_if, logdrop); 
 		 if (!nvram_match("wan0_ifname", wan_if))
-		fprintf(fp, "-A FORWARD -o %s ! -i %s -j %s\n", nvram_get("wan0_ifname"), lan_if, logdrop);
+		fprintf(fp, "-A FORWARD -o %s ! -i %s -j %s\n", nvram_safe_get("wan0_ifname"), lan_if, logdrop);
 // oleg patch ~
 	/* Drop the wrong state, INVALID, packets */
 	fprintf(fp, "-A FORWARD -m state --state INVALID -j %s\n", logdrop);
@@ -2224,7 +2256,7 @@ start_firewall_ex(char *wan_if, char *wan_ip, char *lan_if, char *lan_ip)
 	//char logaccept[32], logdrop[32];
 	//oleg patch ~
 	char logaccept[32], logdrop[32];
-	char *mcast_ifname = nvram_get("wan0_ifname");
+	char *mcast_ifname = nvram_safe_get("wan0_ifname");
 
 	if (is_ap_mode())
 		return -1;
@@ -2262,7 +2294,9 @@ start_firewall_ex(char *wan_if, char *wan_ip, char *lan_if, char *lan_ip)
 	if (nvram_match("fw_log_x", "drop") || nvram_match("fw_log_x", "both"))
 		strcpy(logdrop, "logdrop");
 	else strcpy(logdrop, "DROP");
-		
+
+	apps_running_when_start_firewall = is_apps_running();
+
 	/* nat setting */
 	nat_setting(wan_if, wan_ip, lan_if, lan_ip, logaccept, logdrop);
 
@@ -2275,7 +2309,7 @@ start_firewall_ex(char *wan_if, char *wan_ip, char *lan_if, char *lan_ip)
 #if (!defined(W7_LOGO) && !defined(WIFI_LOGO))
 	if ((fp=fopen("/proc/sys/net/nf_conntrack_max", "w+")))
 	{
-		if (is_apps_running())
+		if (apps_running_when_start_firewall)
 			fputs("8192", fp);
 		else
 		{

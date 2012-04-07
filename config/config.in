@@ -401,7 +401,6 @@ bool 'vsftpd'				CONFIG_VSFTPD
 bool 'Samba'				CONFIG_ASUS_SAMBA
 bool 'LPRng'                    	CONFIG_ASUS_LPRNG
 bool 'USB to Ethernet Converter'	CONFIG_ASUS_U2EC
-bool 'WanDuck'				CONFIG_ASUS_WANDUCK
 bool 'NetworkMap'			CONFIG_ASUS_NETWORK_MAP
 bool 'ntfs-3g'				CONFIG_ASUS_NTFS3G
 bool 'Usb Test'				CONFIG_USB_TEST

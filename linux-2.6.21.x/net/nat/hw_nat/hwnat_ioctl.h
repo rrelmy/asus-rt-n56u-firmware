@@ -107,7 +107,7 @@ struct hwnat_tuple {
 };
 
 struct hwnat_args {
-    unsigned int    	debug:1;
+    unsigned int    	debug:3;
     unsigned int    	entry_state:2; /* invalid=0, unbind=1, bind=2, fin=3 */
     enum hwnat_status	result;
     unsigned int    	entry_num:16;

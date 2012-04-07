@@ -1,6 +1,6 @@
 # ogg pkg-config file
 
-prefix=/root/RT-N56U/source/user/libogg-1.2.2/source/../install
+prefix=/home/defjovi/projects/RT-N56U/source/user/libogg-1.2.2/source/../install
 exec_prefix=${prefix}
 libdir=${exec_prefix}/lib
 includedir=${prefix}/include

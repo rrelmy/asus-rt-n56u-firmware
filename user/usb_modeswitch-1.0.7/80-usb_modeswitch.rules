@@ -1,0 +1,269 @@
+# This is part of USB_ModeSwitch version 1.0.7
+ACTION!="add", GOTO="modeswitch_rules_end"
+SUBSYSTEM!="usb", GOTO="modeswitch_rules_end"
+
+# only storage class devices are handled; negative
+# filtering here would exclude some quirky devices
+SYSFS{bDeviceClass}=="08", GOTO="modeswitch_rules_begin"
+SYSFS{bInterfaceClass}=="08", GOTO="modeswitch_rules_begin"
+GOTO="modeswitch_rules_end"
+
+
+LABEL="modeswitch_rules_begin"
+
+# Nokia CS-15
+SYSFS{idVendor}=="0421", SYSFS{idProduct}=="0610", RUN+="/usr/sbin/usb_modeswitch.sh '%b/%k'"
+
+# Vodafone MD950 (Wisue Technology)
+SYSFS{idVendor}=="0471", SYSFS{idProduct}=="1210", RUN+="/usr/sbin/usb_modeswitch.sh '%b/%k'"
+
+# Philips TalkTalk (NXP Semiconductors "Dragonfly")
+SYSFS{idVendor}=="0471", SYSFS{idProduct}=="1237", RUN+="/usr/sbin/usb_modeswitch.sh '%b/%k'"
+
+# Samsung U209
+SYSFS{idVendor}=="04e8", SYSFS{idProduct}=="f000", RUN+="/usr/sbin/usb_modeswitch.sh '%b/%k'"
+
+# Samsung SGH-Z810, Vertex Wireless 100 Series, AnyDATA ADU-500A, ADU-510A, ADU-510L, ADU-520A, Older Option devices
+SYSFS{idVendor}=="05c6", SYSFS{idProduct}=="1000", RUN+="/usr/sbin/usb_modeswitch.sh '%b/%k'"
+
+# D-Link DWM-162-U5 
+SYSFS{idVendor}=="05c6", SYSFS{idProduct}=="2001", RUN+="/usr/sbin/usb_modeswitch.sh '%b/%k'"
+
+# Siptune LM-75 ("LinuxModem")
+SYSFS{idVendor}=="05c6", SYSFS{idProduct}=="f000", RUN+="/usr/sbin/usb_modeswitch.sh '%b/%k'"
+
+# Toshiba G450
+SYSFS{idVendor}=="0930", SYSFS{idProduct}=="0d46", RUN+="/usr/sbin/usb_modeswitch.sh '%b/%k'"
+
+# Zydas ZD1211RW WLAN USB, Sphairon HomeLink 1202 (Variant 1)
+SYSFS{idVendor}=="0ace", SYSFS{idProduct}=="2011", RUN+="/usr/sbin/usb_modeswitch.sh '%b/%k'"
+
+# Zydas ZD1211RW WLAN USB, Sphairon HomeLink 1202 (Variant 2)
+SYSFS{idVendor}=="0ace", SYSFS{idProduct}=="20ff", RUN+="/usr/sbin/usb_modeswitch.sh '%b/%k'"
+
+# Option HSO device
+SYSFS{idVendor}=="0af0", SYSFS{idProduct}=="6711", RUN+="/usr/sbin/usb_modeswitch.sh '%b/%k'"
+
+# Option HSO device
+SYSFS{idVendor}=="0af0", SYSFS{idProduct}=="6731", RUN+="/usr/sbin/usb_modeswitch.sh '%b/%k'"
+
+# Option HSO device
+SYSFS{idVendor}=="0af0", SYSFS{idProduct}=="6751", RUN+="/usr/sbin/usb_modeswitch.sh '%b/%k'"
+
+# Option HSO device
+SYSFS{idVendor}=="0af0", SYSFS{idProduct}=="6771", RUN+="/usr/sbin/usb_modeswitch.sh '%b/%k'"
+
+# Option HSO device
+SYSFS{idVendor}=="0af0", SYSFS{idProduct}=="6791", RUN+="/usr/sbin/usb_modeswitch.sh '%b/%k'"
+
+# Option HSO device
+SYSFS{idVendor}=="0af0", SYSFS{idProduct}=="6811", RUN+="/usr/sbin/usb_modeswitch.sh '%b/%k'"
+
+# Option HSO device
+SYSFS{idVendor}=="0af0", SYSFS{idProduct}=="6911", RUN+="/usr/sbin/usb_modeswitch.sh '%b/%k'"
+
+# Option HSO device
+SYSFS{idVendor}=="0af0", SYSFS{idProduct}=="6951", RUN+="/usr/sbin/usb_modeswitch.sh '%b/%k'"
+
+# Option HSO device
+SYSFS{idVendor}=="0af0", SYSFS{idProduct}=="6971", RUN+="/usr/sbin/usb_modeswitch.sh '%b/%k'"
+
+# Option HSO device
+SYSFS{idVendor}=="0af0", SYSFS{idProduct}=="7011", RUN+="/usr/sbin/usb_modeswitch.sh '%b/%k'"
+
+# Option HSO device
+SYSFS{idVendor}=="0af0", SYSFS{idProduct}=="7031", RUN+="/usr/sbin/usb_modeswitch.sh '%b/%k'"
+
+# Option HSO device
+SYSFS{idVendor}=="0af0", SYSFS{idProduct}=="7051", RUN+="/usr/sbin/usb_modeswitch.sh '%b/%k'"
+
+# Option HSO device
+SYSFS{idVendor}=="0af0", SYSFS{idProduct}=="7071", RUN+="/usr/sbin/usb_modeswitch.sh '%b/%k'"
+
+# Option HSO device
+SYSFS{idVendor}=="0af0", SYSFS{idProduct}=="7111", RUN+="/usr/sbin/usb_modeswitch.sh '%b/%k'"
+
+# Option HSO device
+SYSFS{idVendor}=="0af0", SYSFS{idProduct}=="7211", RUN+="/usr/sbin/usb_modeswitch.sh '%b/%k'"
+
+# Option HSO device
+SYSFS{idVendor}=="0af0", SYSFS{idProduct}=="7251", RUN+="/usr/sbin/usb_modeswitch.sh '%b/%k'"
+
+# Option HSO device
+SYSFS{idVendor}=="0af0", SYSFS{idProduct}=="7271", RUN+="/usr/sbin/usb_modeswitch.sh '%b/%k'"
+
+# Option HSO device
+SYSFS{idVendor}=="0af0", SYSFS{idProduct}=="7301", RUN+="/usr/sbin/usb_modeswitch.sh '%b/%k'"
+
+# Option HSO device
+SYSFS{idVendor}=="0af0", SYSFS{idProduct}=="7311", RUN+="/usr/sbin/usb_modeswitch.sh '%b/%k'"
+
+# Option HSO device
+SYSFS{idVendor}=="0af0", SYSFS{idProduct}=="7361", RUN+="/usr/sbin/usb_modeswitch.sh '%b/%k'"
+
+# Option HSO device
+SYSFS{idVendor}=="0af0", SYSFS{idProduct}=="7381", RUN+="/usr/sbin/usb_modeswitch.sh '%b/%k'"
+
+# Option HSO device
+SYSFS{idVendor}=="0af0", SYSFS{idProduct}=="7401", RUN+="/usr/sbin/usb_modeswitch.sh '%b/%k'"
+
+# Option HSO device
+SYSFS{idVendor}=="0af0", SYSFS{idProduct}=="7501", RUN+="/usr/sbin/usb_modeswitch.sh '%b/%k'"
+
+# Option HSO device
+SYSFS{idVendor}=="0af0", SYSFS{idProduct}=="7601", RUN+="/usr/sbin/usb_modeswitch.sh '%b/%k'"
+
+# Option HSO device
+SYSFS{idVendor}=="0af0", SYSFS{idProduct}=="7701", RUN+="/usr/sbin/usb_modeswitch.sh '%b/%k'"
+
+# Option HSO device
+SYSFS{idVendor}=="0af0", SYSFS{idProduct}=="7801", RUN+="/usr/sbin/usb_modeswitch.sh '%b/%k'"
+
+# Option HSO device
+SYSFS{idVendor}=="0af0", SYSFS{idProduct}=="7901", RUN+="/usr/sbin/usb_modeswitch.sh '%b/%k'"
+
+# Option HSO device
+SYSFS{idVendor}=="0af0", SYSFS{idProduct}=="8200", RUN+="/usr/sbin/usb_modeswitch.sh '%b/%k'"
+
+# Option HSO device
+SYSFS{idVendor}=="0af0", SYSFS{idProduct}=="8201", RUN+="/usr/sbin/usb_modeswitch.sh '%b/%k'"
+
+# Option HSO device
+SYSFS{idVendor}=="0af0", SYSFS{idProduct}=="c031", RUN+="/usr/sbin/usb_modeswitch.sh '%b/%k'"
+
+# Option HSO device
+SYSFS{idVendor}=="0af0", SYSFS{idProduct}=="d013", RUN+="/usr/sbin/usb_modeswitch.sh '%b/%k'"
+
+# Option HSO device
+SYSFS{idVendor}=="0af0", SYSFS{idProduct}=="d031", RUN+="/usr/sbin/usb_modeswitch.sh '%b/%k'"
+
+# Option HSO device
+SYSFS{idVendor}=="0af0", SYSFS{idProduct}=="d033", RUN+="/usr/sbin/usb_modeswitch.sh '%b/%k'"
+
+# Option HSO device
+SYSFS{idVendor}=="0af0", SYSFS{idProduct}=="d035", RUN+="/usr/sbin/usb_modeswitch.sh '%b/%k'"
+
+# Option HSO device
+SYSFS{idVendor}=="0af0", SYSFS{idProduct}=="d055", RUN+="/usr/sbin/usb_modeswitch.sh '%b/%k'"
+
+# Option HSO device
+SYSFS{idVendor}=="0af0", SYSFS{idProduct}=="d057", RUN+="/usr/sbin/usb_modeswitch.sh '%b/%k'"
+
+# Option HSO device
+SYSFS{idVendor}=="0af0", SYSFS{idProduct}=="d155", RUN+="/usr/sbin/usb_modeswitch.sh '%b/%k'"
+
+# Option HSO device
+SYSFS{idVendor}=="0af0", SYSFS{idProduct}=="d157", RUN+="/usr/sbin/usb_modeswitch.sh '%b/%k'"
+
+# Option HSO device
+SYSFS{idVendor}=="0af0", SYSFS{idProduct}=="d255", RUN+="/usr/sbin/usb_modeswitch.sh '%b/%k'"
+
+# Option HSO device
+SYSFS{idVendor}=="0af0", SYSFS{idProduct}=="d257", RUN+="/usr/sbin/usb_modeswitch.sh '%b/%k'"
+
+# Option HSO device
+SYSFS{idVendor}=="0af0", SYSFS{idProduct}=="d357", RUN+="/usr/sbin/usb_modeswitch.sh '%b/%k'"
+
+# Sony Ericsson MD400
+SYSFS{idVendor}=="0fce", SYSFS{idProduct}=="d0e1", RUN+="/usr/sbin/usb_modeswitch.sh '%b/%k'"
+
+# LG LDU-1900D EV-DO (Rev. A)
+SYSFS{idVendor}=="1004", SYSFS{idProduct}=="1000", RUN+="/usr/sbin/usb_modeswitch.sh '%b/%k'"
+
+# Huawei E630
+SYSFS{idVendor}=="1033", SYSFS{idProduct}=="0035", RUN+="/usr/sbin/usb_modeswitch.sh '%b/%k'"
+
+# UTStarcom UM175 (distributor "Alltel")
+SYSFS{idVendor}=="106c", SYSFS{idProduct}=="3b03", RUN+="/usr/sbin/usb_modeswitch.sh '%b/%k'"
+
+# Sagem F@ST 9520-35-GLR
+SYSFS{idVendor}=="1076", SYSFS{idProduct}=="7f40", RUN+="/usr/sbin/usb_modeswitch.sh '%b/%k'"
+
+# Sierra devices (specific driver)
+SYSFS{idVendor}=="1199", SYSFS{idProduct}=="0fff", RUN+="/usr/sbin/usb_modeswitch.sh '%b/%k'"
+
+# Huawei E169
+SYSFS{idVendor}=="12d1", SYSFS{idProduct}=="1001", RUN+="/usr/sbin/usb_modeswitch.sh '%b/%k'"
+
+# Huawei E220, E230, E270, E870
+SYSFS{idVendor}=="12d1", SYSFS{idProduct}=="1003", RUN+="/usr/sbin/usb_modeswitch.sh '%b/%k'"
+
+# Huawei E180
+SYSFS{idVendor}=="12d1", SYSFS{idProduct}=="1414", RUN+="/usr/sbin/usb_modeswitch.sh '%b/%k'"
+
+# Huawei E270+  (HSPA+ modem)
+SYSFS{idVendor}=="12d1", SYSFS{idProduct}=="1446", RUN+="/usr/sbin/usb_modeswitch.sh '%b/%k'"
+
+# Huawei K3765
+SYSFS{idVendor}=="12d1", SYSFS{idProduct}=="1520", RUN+="/usr/sbin/usb_modeswitch.sh '%b/%k'"
+
+# Huawei K4505
+SYSFS{idVendor}=="12d1", SYSFS{idProduct}=="1521", RUN+="/usr/sbin/usb_modeswitch.sh '%b/%k'"
+
+# Novatel Wireless devices
+SYSFS{idVendor}=="1410", SYSFS{idProduct}=="5010", RUN+="/usr/sbin/usb_modeswitch.sh '%b/%k'"
+
+# Novatel MC990D
+SYSFS{idVendor}=="1410", SYSFS{idProduct}=="5020", RUN+="/usr/sbin/usb_modeswitch.sh '%b/%k'"
+
+# Novatel U760
+SYSFS{idVendor}=="1410", SYSFS{idProduct}=="5030", RUN+="/usr/sbin/usb_modeswitch.sh '%b/%k'"
+
+# Novatel MC760 3G
+SYSFS{idVendor}=="1410", SYSFS{idProduct}=="5031", RUN+="/usr/sbin/usb_modeswitch.sh '%b/%k'"
+
+# Motorola 802.11 bg WLAN (TER/GUSB3-E)
+SYSFS{idVendor}=="148f", SYSFS{idProduct}=="2578", RUN+="/usr/sbin/usb_modeswitch.sh '%b/%k'"
+
+# C-motech D-50 (aka "CDU-680")
+SYSFS{idVendor}=="16d8", SYSFS{idProduct}=="6803", RUN+="/usr/sbin/usb_modeswitch.sh '%b/%k'"
+
+# C-motech CHU-629S
+SYSFS{idVendor}=="16d8", SYSFS{idProduct}=="700a", RUN+="/usr/sbin/usb_modeswitch.sh '%b/%k'"
+
+# C-motech CGU-628 (aka "Franklin Wireless CGU-628A" aka "4G Systems XS Stick W12")
+SYSFS{idVendor}=="16d8", SYSFS{idProduct}=="f000", RUN+="/usr/sbin/usb_modeswitch.sh '%b/%k'"
+
+# ZTE MF110
+SYSFS{idVendor}=="19d2", SYSFS{idProduct}=="0053", RUN+="/usr/sbin/usb_modeswitch.sh '%b/%k'"
+
+# ZTE MF622 and probably others (WE NEED MORE ID INFO), ZTE MF626 and others (WE NEED MORE ID INFO!), ZTE Devices
+SYSFS{idVendor}=="19d2", SYSFS{idProduct}=="2000", RUN+="/usr/sbin/usb_modeswitch.sh '%b/%k'"
+
+# ZTE "fff" devices 1
+SYSFS{idVendor}=="19d2", SYSFS{idProduct}=="fff5", RUN+="/usr/sbin/usb_modeswitch.sh '%b/%k'"
+
+# ZTE "fff" devices 2
+SYSFS{idVendor}=="19d2", SYSFS{idProduct}=="fff6", RUN+="/usr/sbin/usb_modeswitch.sh '%b/%k'"
+
+# BandLuxe C120
+SYSFS{idVendor}=="1a8d", SYSFS{idProduct}=="1000", RUN+="/usr/sbin/usb_modeswitch.sh '%b/%k'"
+
+# Hummer DTM5731 
+SYSFS{idVendor}=="1ab7", SYSFS{idProduct}=="5700", RUN+="/usr/sbin/usb_modeswitch.sh '%b/%k'"
+
+# EpiValley SEC-7089 (featured by Alegro and Starcomms / iZAP)
+SYSFS{idVendor}=="1b7d", SYSFS{idProduct}=="0700", RUN+="/usr/sbin/usb_modeswitch.sh '%b/%k'"
+
+# Alcatel X200/X060S
+SYSFS{idVendor}=="1bbb", SYSFS{idProduct}=="f000", RUN+="/usr/sbin/usb_modeswitch.sh '%b/%k'"
+
+# Alcatel One Touch X020
+SYSFS{idVendor}=="1c9e", SYSFS{idProduct}=="1001", RUN+="/usr/sbin/usb_modeswitch.sh '%b/%k'"
+
+# MyWave SW006 Sport Phone/Modem Combination
+SYSFS{idVendor}=="1c9e", SYSFS{idProduct}=="9200", RUN+="/usr/sbin/usb_modeswitch.sh '%b/%k'"
+
+# MobiData MBD-200HU 
+SYSFS{idVendor}=="1c9e", SYSFS{idProduct}=="f000", RUN+="/usr/sbin/usb_modeswitch.sh '%b/%k'"
+
+# Solomon S3Gm-660
+SYSFS{idVendor}=="1dd6", SYSFS{idProduct}=="1000", RUN+="/usr/sbin/usb_modeswitch.sh '%b/%k'"
+
+# Option iCON 210, PROLiNK PHS100, Hyundai MB-810, A-Link 3GU
+SYSFS{idVendor}=="1e0e", SYSFS{idProduct}=="f000", RUN+="/usr/sbin/usb_modeswitch.sh '%b/%k'"
+
+# Cricket A600
+SYSFS{idVendor}=="1f28", SYSFS{idProduct}=="0021", RUN+="/usr/sbin/usb_modeswitch.sh '%b/%k'"
+
+LABEL="modeswitch_rules_end"

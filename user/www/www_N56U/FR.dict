@@ -1,11 +1,10 @@
-[Language type]		
+﻿[Language type]		
 CHAR_set=UTF-8
 PASS_LANG=Langue:
 LANG_select=Sélectionnez la langue
 LANG_EN=English
 LANG_TW=繁體中文
 LANG_CN=简体中文
-LANG_KR=한국어
 LANG_CZ=Česky
 LANG_PL=Polski
 LANG_RU=Pусский
@@ -13,7 +12,14 @@ LANG_DE=Deutsch
 LANG_FR=Français
 LANG_TR=Türkçe
 LANG_TH=ไทย
-LANG_MS=Malaysia
+LANG_MS=Malay
+LANG_NO=Norsk
+LANG_FI=Finsk
+LANG_DA=Dansk
+LANG_SV=Svensk
+LANG_BR=Brazil
+[iTunes]
+iTunesMediaServer=Serveur de média iTunes
 [untranslate]
 IPConnection_VSList_ftpport=FTP Server Port:
 Adm_System_telnetd=Enable Telnet Server?
@@ -363,10 +369,10 @@ HowToSharebyFTP3=Activez le service DDNS pour permettre l’accès via le serveu
 HowToSharebyFTP4=(accessible uniquement depuis le réseau local).
 [LeftMenu]
 menu1=Carte du réseau
-menu2=UPnP
+menu2=Media Server
 menu3=AiDisk
 menu4=EzQoS<br/> Bande passante<br/> Gestion
-menu5=<br/> Paramètres avancés
+menu5=<div style=\"padding-top:10px;\">Paramètres avancés</div>
 menu5_title=Paramètres avancés
 menu5_1=Sans fil
 menu5_2=Réseau local
@@ -606,7 +612,7 @@ DiskStatus_refresh1=J’ai connecté un disque USB,
 DiskStatus_refresh2=Renouveler
 DiskStatus_refresh3=Etat du système
 EZQoS=Gestion de la bande passante EZQoS
-footer_copyright_desc=2010 ASUSTek Computer Inc. Tous droits réservés.
+footer_copyright_desc=2011 ASUSTek Computer Inc. Tous droits réservés.
 Help_button_default_hint=Cliquez ici pour ouvrir le fichier d’Aide.
 Help_init_word1=Le fichier d’Aide vous fournit des directives et des informations concernant les différentes fonctions du routeur. 
 Help_init_word2=Les liens hypertexte soulignés en jaune et bleu.
@@ -660,7 +666,7 @@ QKSet_detect_sanglass=Détection automatique
 QKSet_detect_desc1=Détection de votre type de connexion en cours
 QKSet_detect_desc2=Redétection de l’état de votre connexion en cours
 QKSet_detect_wanconnfault=Assurez-vous que le câble Ethernet soit bien connecté au port WAN.
-QKSet_detect_APdesc=Le mode de fonctionnement du RT-N56U est  \"AP\". Commencer à configurer les paramètres…
+QKSet_detect_APdesc=Le mode de fonctionnement du RT-N56U est  'AP'. Commencer à configurer les paramètres…
 QKSet_detect_skipbtn=Passer en mode de réglage manuel
 QKSet_detect_freshbtn=Détecter à nouveau
 QKSet_detect_waitdesc=Démarrage de la détection du type de connexion

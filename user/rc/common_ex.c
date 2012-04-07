@@ -361,7 +361,6 @@ void wan_netmask_check(void)
 
 void init_switch_mode()
 {
-//	ra_gpio_init();						// init for switch mode retrieval
 //	sw_mode_check();					// save switch mode into nvram name sw_mode
 //	nvram_set("sw_mode_ex", nvram_safe_get("sw_mode"));	// save working switch mode into nvram name sw_mode_ex
 
@@ -417,7 +416,8 @@ void convert_asus_values(int skipflag)
 	char servers[64];
 	char ifnames[36];
 	char sbuf[64];
-	int i, num;
+	char nvram_name[32];
+	int i, j, num;
 	char *ptr;
 	FILE *fp;
 // 2008.09 magic  {
@@ -693,6 +693,11 @@ void convert_asus_values(int skipflag)
 //2008.09 magic }
 
 	if (!skipflag) {
+#ifdef USB_MODEM
+		nvram_unset("system_ready");	// for notifying wanduck.
+		set_usb_modem_state(0);
+#endif
+
 	/* Direct copy value */
 	/* LAN Section */
 	if (nvram_match("dhcp_enable_x", "1"))
@@ -740,8 +745,6 @@ void convert_asus_values(int skipflag)
 		nvram_set("wan_gateway_t", "");
 		nvram_set("wan_dns_t", "");
 		nvram_set("wan_status_t", "Disconnected");
-//		nvram_unset("qos_ubw"); // 2009.03 James.
-//		nvram_unset("qos_ubw_status");  // 2009.03 James.
 		nvram_set("wan_subnet_t", ""); // 2010.09 James.
 		nvram_set("lan_subnet_t", ""); // 2010.09 James.
 	}
@@ -782,8 +785,8 @@ void convert_asus_values(int skipflag)
 		nvram_set("wan0_pppoe_netmask", 	// oleg patch ~
 			inet_addr_(nvram_safe_get("wan_ipaddr")) && 
 			inet_addr_(nvram_safe_get("wan_netmask")) ? 
-				nvram_get("wan_netmask") : NULL);
-		nvram_set("wan0_pppoe_gateway", nvram_get("wan_gateway"));
+				nvram_safe_get("wan_netmask") : NULL);
+		nvram_set("wan0_pppoe_gateway", nvram_safe_get("wan_gateway"));
 		
 		/* current interface address (dhcp + firewall) */
 		nvram_set("wanx_ipaddr", nvram_safe_get("wan_ipaddr"));
@@ -878,56 +881,50 @@ void convert_asus_values(int skipflag)
 	// clean some temp variables
 	if (!skipflag)
 	{
-//	nvram_set("swap_on", "0");
-//	nvram_set("usb_device", "");
-//	nvram_set("usb_ftp_device", ""); 	// marked by Jiahao for WL500gP
-//	nvram_set("usb_storage_device", "");
-//	nvram_set("usb_web_device", "");	// following lines are added by Jiahao for WL500gP
-//	nvram_set("usb_audio_device", "");
-//	nvram_set("usb_webdriver_x", "");
-//	nvram_set("usb_web_flag", "");
-	nvram_set("usb_disc0_path0", "");
-/*	
+/*
+	nvram_set("usb_device", "");
+	nvram_set("usb_ftp_device", ""); 	// marked by Jiahao for WL500gP
+	nvram_set("usb_storage_device", "");
+	nvram_set("usb_web_device", "");	// following lines are added by Jiahao for WL500gP
+	nvram_set("usb_audio_device", "");
+	nvram_set("usb_webdriver_x", "");
+	nvram_set("usb_web_flag", "");
+	nvram_set("usb_disc0_path0", "");	
 	nvram_set("usb_disc0_path1", "");
 	nvram_set("usb_disc0_path2", "");
 	nvram_set("usb_disc0_path3", "");
 	nvram_set("usb_disc0_path4", "");
 	nvram_set("usb_disc0_path5", "");
 	nvram_set("usb_disc0_path6", "");
-*/
 	nvram_set("usb_disc1_path0", "");
-/*
 	nvram_set("usb_disc1_path1", "");
 	nvram_set("usb_disc1_path2", "");
 	nvram_set("usb_disc1_path3", "");
 	nvram_set("usb_disc1_path4", "");
 	nvram_set("usb_disc1_path5", "");
 	nvram_set("usb_disc1_path6", "");
-*/
 	nvram_set("usb_disc0_fs_path0", "");
-/*
 	nvram_set("usb_disc0_fs_path1", "");
 	nvram_set("usb_disc0_fs_path2", "");
 	nvram_set("usb_disc0_fs_path3", "");
 	nvram_set("usb_disc0_fs_path4", "");
 	nvram_set("usb_disc0_fs_path5", "");
 	nvram_set("usb_disc0_fs_path6", "");
-*/
 	nvram_set("usb_disc1_fs_path0", "");
-/*
 	nvram_set("usb_disc1_fs_path1", "");
 	nvram_set("usb_disc1_fs_path2", "");
 	nvram_set("usb_disc1_fs_path3", "");
 	nvram_set("usb_disc1_fs_path4", "");
 	nvram_set("usb_disc1_fs_path5", "");
 	nvram_set("usb_disc1_fs_path6", "");
-*/
+
 	nvram_set("usb_disc0_index", "0");
 	nvram_set("usb_disc1_index", "0");
-//	nvram_set("usb_disc0_port", "0");
-//	nvram_set("usb_disc1_port", "0");
-//	nvram_set("usb_disc0_dev", "");
-//	nvram_set("usb_disc1_dev", "");
+	nvram_set("usb_disc0_port", "0");
+	nvram_set("usb_disc1_port", "0");
+	nvram_set("usb_disc0_dev", "");
+	nvram_set("usb_disc1_dev", "");
+*/
 	nvram_set("usb_dev_state", "none");
 	nvram_set("usb_mnt_first_path", "");
 	nvram_set("usb_mnt_first_path_port", "0");
@@ -940,39 +937,51 @@ void convert_asus_values(int skipflag)
 	nvram_set("usb_path", "");
 	nvram_set("usb_path1", "");
 	nvram_set("usb_path2", "");
-
+	for (i = 1; i < 3 ; i++)
+	{
+		for (j = 0; j < 16 ; j++)
+		{
+			sprintf(nvram_name, "usb_path%d_fs_path%d", i, j);
+			nvram_unset(nvram_name);
+		}
+	}
 	nvram_set("usb_path1_index", "0");
 	nvram_set("usb_path1_sddev", "");
+	nvram_set("usb_path1_add", "0");
 	nvram_set("usb_path1_vid", "");
 	nvram_set("usb_path1_pid", "");
 	nvram_set("usb_path1_manufacturer", "");
 	nvram_set("usb_path1_product", "");
 	nvram_set("usb_path2_index", "0");
 	nvram_set("usb_path2_sddev", "");
+	nvram_set("usb_path2_add", "0");
         nvram_set("usb_path2_vid", "");
         nvram_set("usb_path2_pid", "");
         nvram_set("usb_path2_manufacturer", "");
         nvram_set("usb_path2_product", "");
 
-	nvram_set("dm_block", "0");
-	
-#ifdef DLM
-	nvram_set("apps_running", "0");
-//	nvram_set("eject_from_web", "0");
-//	nvram_set("st_ftp_modex", nvram_get("st_ftp_mode"));
-//	nvram_set("st_samba_modex", nvram_get("st_samba_mode"));
-	nvram_set("st_samba_mode_x", "-1");
-	nvram_set("apps_dlx", nvram_get("apps_dl"));
-	nvram_set("apps_dl_x", "-1");
-	nvram_set("apps_dmsx", nvram_get("apps_dms"));
-	nvram_set("apps_dms_usb_port_x", "-1");
-	nvram_set("apps_dms_usb_port_x2", "-1");
-//	nvram_set("apps_status_checked", "1");	// it means need to check
-	nvram_set("usb_storage_busy", "0");
-//	nvram_set("usb_storage_busy2", "0");
-	nvram_set("swapoff_failed", "0");
+#ifdef USB_MODEM
+	nvram_set("usb_path1_act", "");
+	nvram_set("usb_path2_act", "");
 #endif
-//	nvram_set("networkmap_fullscan", "");	// 2008.07 James.
+#ifdef DLM
+//	nvram_set("st_ftp_modex", nvram_safe_get("st_ftp_mode"));
+//	nvram_set("st_samba_modex", nvram_safe_get("st_samba_mode"));
+	nvram_set("st_samba_mode_x", "-1");
+//	nvram_set("apps_dl_ex", "-1");
+	nvram_set("apps_dms_ex", "0");
+	nvram_set("apps_itunes_ex", "0");
+	nvram_set("apps_smb_ex", "0");
+	nvram_set("apps_u2ec_ex", "0");
+	nvram_set("apps_status_checked", "1");	// it means need to check
+	nvram_set("apps_comp", "0");
+	nvram_set("apps_disk_free", "0");
+	nvram_set("dm_block", "0");
+	nvram_set("no_usb_led", "0");
+	if (!nvram_get("usb_vid_allow"))
+		nvram_set("usb_vid_allow", "0");
+#endif
+	nvram_set("networkmap_fullscan", "0");	// 2008.07 James.
 	}
 #endif
 
@@ -981,21 +990,6 @@ void convert_asus_values(int skipflag)
 	{
 		system("insmod ip_nat_starcraft.o");
 		system("insmod ipt_NETMAP.o");
-	}
-
-	//2005/09/22 insmod FTP module
-	if (nvram_match("usb_ftpenable_x", "1") && atoi(nvram_get("usb_ftpport_x"))!=21)
-	{
-		char ports[32];
-
-		sprintf(ports, "ports=21,%d", atoi(nvram_get("usb_ftpport_x")));
-		doSystem("insmod /lib/modules/2.4.30/kernel/net/ipv4/netfilter/ip_conntrack_ftp.o %s", ports);	
-		doSystem("insmod /lib/modules/2.4.30/kernel/net/ipv4/netfilter/ip_nat_ftp.o %s", ports);
-	}
-	else
-	{
-		system("insmod /lib/modules/2.4.30/kernel/net/ipv4/netfilter/ip_conntrack_ftp.o");
-		system("insmod /lib/modules/2.4.30/kernel/net/ipv4/netfilter/ip_nat_ftp.o");
 	}
 #endif
 
@@ -1029,15 +1023,15 @@ void convert_asus_values(int skipflag)
 	if (nvram_invmatch("wsc_config_state", "0") || nvram_invmatch("rt_wsc_config_state", "0"))
 		nvram_set("x_Setting", "1");      
 
+	nvram_set("networkmap_fullscan", "0");	// 2008.07 James.
 	nvram_set("update_resolv", "free");
-
 	nvram_set("mac_clone_en", "0");
 #if (!defined(W7_LOGO) && !defined(WIFI_LOGO))
 	nvram_set("link_internet", "2");
 #else
 	nvram_set("link_internet", "1");
 #endif
-	nvram_set("detect_timestamp", "0"); // 2010.10 James.
+	nvram_set("detect_timestamp", "0");	// 2010.10 James.
 	nvram_set("fullscan_timestamp", "0");
 	nvram_set("renew_timestamp", "0");
 	nvram_set("no_internet_detect", "0");
@@ -1045,24 +1039,19 @@ void convert_asus_values(int skipflag)
 	nvram_unset("wan_ipaddr_tmp");
 	nvram_unset("wan_netmask_tmp");
 
-	nvram_set("done_auto_mac", "0"); // 2010.09 James.
-	nvram_set("no_usb_led", "0");
+	nvram_set("done_auto_mac", "0");	// 2010.09 James.
 	nvram_set("upnp_started", "0");
 	nvram_set("ntp_ready", "0");
 	nvram_set("ntp_restart_upnp", "0");
 	nvram_set("bak_ddns_enable_x", nvram_safe_get("ddns_enable_x"));
 	nvram_set("bak_ddns_wildcard_x", nvram_safe_get("ddns_wildcard_x"));
-	nvram_set("dhcp_renew", "0");
-	nvram_set("apps_dms_ex", "0");
-	nvram_set("apps_itunes_ex", "0");
-	nvram_set("apps_smb_ex", "0");
-	nvram_set("apps_u2ec_ex", "0");
-
-	if (!nvram_get("usb_vid_allow"))
-		nvram_set("usb_vid_allow", "0");
 
 	nvram_set("reload_svc_wl", "0");
 	nvram_set("reload_svc_rt", "0");
+
+	if (!nvram_get("hwnat"))
+		nvram_set("hwnat", "1");
+
 	}
 }
 
@@ -1350,7 +1339,7 @@ void char_to_ascii(char *output, char *input)/* Transfer Char to ASCII */
 		   || input[i] == '!' || input[i] == '*'
 		   || input[i] == '(' || input[i] == ')'
 		   || input[i] == '_' || input[i] == '-'
-		   || input[i] == "'" || input[i] == '.')
+		   || input[i] == '\'' || input[i] == '.')
 		{
 			*ptr = input[i];
 			ptr ++;

@@ -325,7 +325,7 @@ link_all_deplibs=unknown
 sys_lib_search_path_spec=" /opt/buildroot-gcc342/bin/../lib/gcc/mipsel-linux-uclibc/3.4.2/ /opt/buildroot-gcc342/bin/../lib/gcc/ /home/winfred/RT288x_SDK/toolchain/buildroot-gdb/lib/gcc/mipsel-linux-uclibc/3.4.2/ /usr/lib/gcc/mipsel-linux-uclibc/3.4.2/ /opt/buildroot-gcc342/bin/../lib/gcc/mipsel-linux-uclibc/3.4.2/../../../../mipsel-linux-uclibc/lib/mipsel-linux-uclibc/3.4.2/ /opt/buildroot-gcc342/bin/../lib/gcc/mipsel-linux-uclibc/3.4.2/../../../../mipsel-linux-uclibc/lib/ /home/winfred/RT288x_SDK/toolchain/buildroot-gdb/mipsel-linux-uclibc/lib/mipsel-linux-uclibc/3.4.2/ /home/winfred/RT288x_SDK/toolchain/buildroot-gdb/mipsel-linux-uclibc/lib/"
 
 # Run-time system search path for libraries
-sys_lib_dlsearch_path_spec="/lib /usr/lib hwcap 0 nosegneg hwcap 0 nosegneg /usr/lib/qt-3.3/lib /usr/lib/root /usr/lib/vmware-tools/lib32/libvmGuestLib.so /usr/lib/vmware-tools/lib64/libvmGuestLib.so /usr/lib/vmware-tools/lib32/libvmGuestLibJava.so /usr/lib/vmware-tools/lib64/libvmGuestLibJava.so /usr/lib/vmware-tools/lib32/libDeployPkg.so /usr/lib/vmware-tools/lib64/libDeployPkg.so /usr/lib/xulrunner-1.9.2 "
+sys_lib_dlsearch_path_spec="/lib /usr/lib hwcap 0 nosegneg /usr/lib/qt-3.3/lib /usr/lib/vmware-tools/lib32/libvmGuestLib.so /usr/lib/vmware-tools/lib64/libvmGuestLib.so /usr/lib/vmware-tools/lib32/libvmGuestLibJava.so /usr/lib/vmware-tools/lib64/libvmGuestLibJava.so /usr/lib/vmware-tools/lib32/libDeployPkg.so /usr/lib/vmware-tools/lib64/libDeployPkg.so "
 
 # Fix the shell variable $srcfile for the compiler.
 fix_srcfile_path=""
@@ -7123,7 +7123,7 @@ link_all_deplibs=unknown
 sys_lib_search_path_spec=" /opt/buildroot-gcc342/bin/../lib/gcc/mipsel-linux-uclibc/3.4.2/ /opt/buildroot-gcc342/bin/../lib/gcc/ /home/winfred/RT288x_SDK/toolchain/buildroot-gdb/lib/gcc/mipsel-linux-uclibc/3.4.2/ /usr/lib/gcc/mipsel-linux-uclibc/3.4.2/ /opt/buildroot-gcc342/bin/../lib/gcc/mipsel-linux-uclibc/3.4.2/../../../../mipsel-linux-uclibc/lib/mipsel-linux-uclibc/3.4.2/ /opt/buildroot-gcc342/bin/../lib/gcc/mipsel-linux-uclibc/3.4.2/../../../../mipsel-linux-uclibc/lib/ /home/winfred/RT288x_SDK/toolchain/buildroot-gdb/mipsel-linux-uclibc/lib/mipsel-linux-uclibc/3.4.2/ /home/winfred/RT288x_SDK/toolchain/buildroot-gdb/mipsel-linux-uclibc/lib/"
 
 # Run-time system search path for libraries
-sys_lib_dlsearch_path_spec="/lib /usr/lib hwcap 0 nosegneg hwcap 0 nosegneg /usr/lib/qt-3.3/lib /usr/lib/root /usr/lib/vmware-tools/lib32/libvmGuestLib.so /usr/lib/vmware-tools/lib64/libvmGuestLib.so /usr/lib/vmware-tools/lib32/libvmGuestLibJava.so /usr/lib/vmware-tools/lib64/libvmGuestLibJava.so /usr/lib/vmware-tools/lib32/libDeployPkg.so /usr/lib/vmware-tools/lib64/libDeployPkg.so /usr/lib/xulrunner-1.9.2 "
+sys_lib_dlsearch_path_spec="/lib /usr/lib hwcap 0 nosegneg /usr/lib/qt-3.3/lib /usr/lib/vmware-tools/lib32/libvmGuestLib.so /usr/lib/vmware-tools/lib64/libvmGuestLib.so /usr/lib/vmware-tools/lib32/libvmGuestLibJava.so /usr/lib/vmware-tools/lib64/libvmGuestLibJava.so /usr/lib/vmware-tools/lib32/libDeployPkg.so /usr/lib/vmware-tools/lib64/libDeployPkg.so "
 
 # Fix the shell variable $srcfile for the compiler.
 fix_srcfile_path=""
@@ -7188,7 +7188,7 @@ AR_FLAGS="cru"
 LTCC="/opt/buildroot-gcc342/bin/mipsel-linux-uclibc-gcc "
 
 # A language-specific compiler.
-CC="g77"
+CC="f95"
 
 # Is the compiler the GNU C compiler?
 with_gcc=yes
@@ -7425,10 +7425,10 @@ variables_saved_for_relink="PATH LD_LIBRARY_PATH LD_RUN_PATH GCC_EXEC_PREFIX COM
 link_all_deplibs=unknown
 
 # Compile-time system search path for libraries
-sys_lib_search_path_spec=" /usr/lib/gcc/i686-redhat-linux/3.4.6/ /usr/lib/gcc/i686-redhat-linux/3.4.6/ /usr/lib/gcc/i686-redhat-linux/3.4.6/../../../../i686-redhat-linux/lib/i686-redhat-linux/3.4.6/ /usr/lib/gcc/i686-redhat-linux/3.4.6/../../../../i686-redhat-linux/lib/ /usr/lib/gcc/i686-redhat-linux/3.4.6/../../../i686-redhat-linux/3.4.6/ /usr/lib/gcc/i686-redhat-linux/3.4.6/../../../ /lib/i686-redhat-linux/3.4.6/ /lib/ /usr/lib/i686-redhat-linux/3.4.6/ /usr/lib/"
+sys_lib_search_path_spec=" /usr/lib/gcc/i686-redhat-linux/4.4.5/ /usr/lib/gcc/i686-redhat-linux/4.4.5/ /usr/lib/gcc/i686-redhat-linux/4.4.5/../../../../i686-redhat-linux/lib/i686-redhat-linux/4.4.5/ /usr/lib/gcc/i686-redhat-linux/4.4.5/../../../../i686-redhat-linux/lib/ /usr/lib/gcc/i686-redhat-linux/4.4.5/../../../i686-redhat-linux/4.4.5/ /usr/lib/gcc/i686-redhat-linux/4.4.5/../../../ /lib/i686-redhat-linux/4.4.5/ /lib/ /usr/lib/i686-redhat-linux/4.4.5/ /usr/lib/"
 
 # Run-time system search path for libraries
-sys_lib_dlsearch_path_spec="/lib /usr/lib hwcap 0 nosegneg hwcap 0 nosegneg /usr/lib/qt-3.3/lib /usr/lib/root /usr/lib/vmware-tools/lib32/libvmGuestLib.so /usr/lib/vmware-tools/lib64/libvmGuestLib.so /usr/lib/vmware-tools/lib32/libvmGuestLibJava.so /usr/lib/vmware-tools/lib64/libvmGuestLibJava.so /usr/lib/vmware-tools/lib32/libDeployPkg.so /usr/lib/vmware-tools/lib64/libDeployPkg.so /usr/lib/xulrunner-1.9.2 "
+sys_lib_dlsearch_path_spec="/lib /usr/lib hwcap 0 nosegneg /usr/lib/qt-3.3/lib /usr/lib/vmware-tools/lib32/libvmGuestLib.so /usr/lib/vmware-tools/lib64/libvmGuestLib.so /usr/lib/vmware-tools/lib32/libvmGuestLibJava.so /usr/lib/vmware-tools/lib64/libvmGuestLibJava.so /usr/lib/vmware-tools/lib32/libDeployPkg.so /usr/lib/vmware-tools/lib64/libDeployPkg.so "
 
 # Fix the shell variable $srcfile for the compiler.
 fix_srcfile_path=""

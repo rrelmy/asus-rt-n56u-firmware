@@ -53,28 +53,28 @@ NORMAL_UNINSTALL = :
 PRE_UNINSTALL = :
 POST_UNINSTALL = :
 host_triplet = mipsel-unknown-linux-gnu
-ACLOCAL = ${SHELL} /root/RT-N56U/source/user/flac-1.2.1/source/missing --run aclocal-1.7
+ACLOCAL = ${SHELL} /home/defjovi/projects/RT-N56U/source/user/flac-1.2.1/source/missing --run aclocal-1.7
 ACLOCAL_AMFLAGS = -I m4
 AMDEP_FALSE = #
 AMDEP_TRUE = 
-AMTAR = ${SHELL} /root/RT-N56U/source/user/flac-1.2.1/source/missing --run tar
+AMTAR = ${SHELL} /home/defjovi/projects/RT-N56U/source/user/flac-1.2.1/source/missing --run tar
 AR = /opt/buildroot-gcc342/bin/mipsel-linux-uclibc-ar
 AS = gas
-AUTOCONF = ${SHELL} /root/RT-N56U/source/user/flac-1.2.1/source/missing --run autoconf
-AUTOHEADER = ${SHELL} /root/RT-N56U/source/user/flac-1.2.1/source/missing --run autoheader
-AUTOMAKE = ${SHELL} /root/RT-N56U/source/user/flac-1.2.1/source/missing --run automake-1.7
+AUTOCONF = ${SHELL} /home/defjovi/projects/RT-N56U/source/user/flac-1.2.1/source/missing --run autoconf
+AUTOHEADER = ${SHELL} /home/defjovi/projects/RT-N56U/source/user/flac-1.2.1/source/missing --run autoheader
+AUTOMAKE = ${SHELL} /home/defjovi/projects/RT-N56U/source/user/flac-1.2.1/source/missing --run automake-1.7
 AWK = gawk
 CC = /opt/buildroot-gcc342/bin/mipsel-linux-uclibc-gcc 
 CCAS = $(CC)
 CCASFLAGS = $(CFLAGS)
 CCDEPMODE = depmode=gcc3
-CFLAGS = -O3 -funroll-loops -finline-functions -Wall -W -Winline -O2 -fomit-frame-pointer -pipe  -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source 
+CFLAGS = -O3 -funroll-loops -finline-functions -Wall -W -Winline -O2 -fomit-frame-pointer -pipe  -Dlinux -D__linux__ -Dunix -DEMBED -I/home/defjovi/projects/RT-N56U/source/lib/include -I/home/defjovi/projects/RT-N56U/source/uClibc++/include -I/home/defjovi/projects/RT-N56U/source 
 CPP = /opt/buildroot-gcc342/bin/mipsel-linux-uclibc-gcc  -E
 CPPFLAGS = -DFLaC__INLINE=__inline__ -DNDEBUG -I$(top_builddir) -I$(srcdir)/include -I$(top_srcdir)/include 
 CXX = /opt/buildroot-gcc342/bin/mipsel-linux-uclibc-g++ 
 CXXCPP = /opt/buildroot-gcc342/bin/mipsel-linux-uclibc-g++  -E
 CXXDEPMODE = depmode=gcc3
-CXXFLAGS = -O2 -fomit-frame-pointer -pipe  -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source  
+CXXFLAGS = -O2 -fomit-frame-pointer -pipe  -Dlinux -D__linux__ -Dunix -DEMBED -I/home/defjovi/projects/RT-N56U/source/lib/include -I/home/defjovi/projects/RT-N56U/source/uClibc++/include -I/home/defjovi/projects/RT-N56U/source  
 CYGPATH_W = echo
 DEBUG_FALSE = 
 DEBUG_TRUE = #
@@ -88,7 +88,7 @@ ECHO_N = -n
 ECHO_T = 
 EGREP = grep -E
 EXEEXT = 
-F77 = g77
+F77 = f95
 FFLAGS = -g -O2
 FLAC__TEST_LEVEL = 1
 FLAC__TEST_WITH_VALGRIND = no
@@ -137,7 +137,7 @@ INSTALL_DATA = ${INSTALL} -m 644
 INSTALL_PROGRAM = ${INSTALL}
 INSTALL_SCRIPT = ${INSTALL}
 INSTALL_STRIP_PROGRAM = ${SHELL} $(install_sh) -c -s
-LDFLAGS = -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src
+LDFLAGS = -Wl,--fatal-warnings -L/home/defjovi/projects/RT-N56U/source/lib/lib -L/home/defjovi/projects/RT-N56U/source/uClibc++/src -Wl,--fatal-warnings -L/home/defjovi/projects/RT-N56U/source/lib/lib -L/home/defjovi/projects/RT-N56U/source/uClibc++/src
 LIBICONV = 
 LIBOBJS = 
 LIBS = 
@@ -148,13 +148,13 @@ LTLIBOBJS =
 MAINT = #
 MAINTAINER_MODE_FALSE = 
 MAINTAINER_MODE_TRUE = #
-MAKEINFO = ${SHELL} /root/RT-N56U/source/user/flac-1.2.1/source/missing --run makeinfo
+MAKEINFO = ${SHELL} /home/defjovi/projects/RT-N56U/source/user/flac-1.2.1/source/missing --run makeinfo
 MINGW_WINSOCK_LIBS = 
 NASM = 
 OBJEXT = o
 OBJ_FORMAT = elf
-OGG_CFLAGS = -I/root/RT-N56U/source/user/flac-1.2.1/source/../install/include
-OGG_LIBS = -L/root/RT-N56U/source/user/flac-1.2.1/source/../../libogg-1.2.2/install/lib -logg
+OGG_CFLAGS = -I/home/defjovi/projects/RT-N56U/source/user/flac-1.2.1/source/../install/include
+OGG_LIBS = -L/home/defjovi/projects/RT-N56U/source/user/flac-1.2.1/source/../../libogg-1.2.2/install/lib -logg
 PACKAGE = flac
 PACKAGE_BUGREPORT = 
 PACKAGE_NAME = 
@@ -181,7 +181,7 @@ XMMS_VISUALIZATION_PLUGIN_DIR =
 ac_ct_AR = 
 ac_ct_CC = 
 ac_ct_CXX = 
-ac_ct_F77 = g77
+ac_ct_F77 = f95
 ac_ct_RANLIB = 
 ac_ct_STRIP = 
 am__fastdepCC_FALSE = #
@@ -206,13 +206,13 @@ host_os = linux-gnu
 host_vendor = unknown
 includedir = ${prefix}/include
 infodir = ${prefix}/info
-install_sh = /root/RT-N56U/source/user/flac-1.2.1/source/install-sh
+install_sh = /home/defjovi/projects/RT-N56U/source/user/flac-1.2.1/source/install-sh
 libdir = ${exec_prefix}/lib
 libexecdir = ${exec_prefix}/libexec
 localstatedir = ${prefix}/var
 mandir = ${prefix}/man
 oldincludedir = /usr/include
-prefix = /root/RT-N56U/source/user/flac-1.2.1/source/../install
+prefix = /home/defjovi/projects/RT-N56U/source/user/flac-1.2.1/source/../install
 program_transform_name = s,x,x,
 sbindir = ${exec_prefix}/sbin
 sharedstatedir = ${prefix}/com
@@ -233,7 +233,7 @@ test_cuesheet_LDADD = \
 	$(top_builddir)/src/share/grabbag/libgrabbag.la \
 	$(top_builddir)/src/share/replaygain_analysis/libreplaygain_analysis.la \
 	$(top_builddir)/src/libFLAC/libFLAC.la \
-	-L/root/RT-N56U/source/user/flac-1.2.1/source/../../libogg-1.2.2/install/lib -logg \
+	-L/home/defjovi/projects/RT-N56U/source/user/flac-1.2.1/source/../../libogg-1.2.2/install/lib -logg \
 	-lm
 
 subdir = src/test_grabbag/cuesheet

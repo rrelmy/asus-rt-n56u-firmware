@@ -21,13 +21,19 @@ COMBINED_BINARY=1
 CC = $(CROSS_COMPILE)gcc
 LD = $(CROSS_COMPILE)gcc
 
+ifeq ($(ROOTDIR),)	# Broadcom Platform
+CFLAGS += -I$(TOP)/shared -I$(SRCBASE)/include
+#LDFLAGS += -L$(TOP)/netconf -L$(PLATFORMDIR)/install/netconf/usr/lib -lnetconf
+#LDFLAGS = -L$(TOP)/shared -lshared
+else			# Ralink Platform
 SHDIR = $(ROOTDIR)/user/shared
 CFLAGS += -DASUS_NVRAM -I$(SHDIR)/include -I$(ROOTDIR)/linux-2.6.21.x/include
-LDFLAGS += -lshared -L$(SHDIR)
+#LDFLAGS += -lshared -L$(SHDIR)
+endif
 
 INSTALL = install
 
-VER := 0.9.8
+VER := 0.9.8-asus
 
 
 OBJS_SHARED = options.o socket.o packet.o pidfile.o uptime.o

@@ -1,0 +1,97 @@
+sg_lib.o sg_lib.o: ../lib/sg_lib.c \
+  /home/defjovi/projects/RT-N56U/source/lib/include/stdio.h \
+  /home/defjovi/projects/RT-N56U/source/lib/include/features.h \
+  /home/defjovi/projects/RT-N56U/source/lib/include/bits/uClibc_config.h \
+  /home/defjovi/projects/RT-N56U/source/lib/include/sys/cdefs.h \
+  /opt/buildroot-gcc342/bin/../lib/gcc/mipsel-linux-uclibc/3.4.2/include/stddef.h \
+  /home/defjovi/projects/RT-N56U/source/lib/include/bits/types.h \
+  /home/defjovi/projects/RT-N56U/source/lib/include/bits/kernel_types.h \
+  /home/defjovi/projects/RT-N56U/source/lib/include/bits/wordsize.h \
+  /home/defjovi/projects/RT-N56U/source/lib/include/bits/pthreadtypes.h \
+  /home/defjovi/projects/RT-N56U/source/lib/include/bits/sched.h \
+  /home/defjovi/projects/RT-N56U/source/lib/include/bits/uClibc_stdio.h \
+  /home/defjovi/projects/RT-N56U/source/lib/include/wchar.h \
+  /home/defjovi/projects/RT-N56U/source/lib/include/bits/wchar.h \
+  /opt/buildroot-gcc342/bin/../lib/gcc/mipsel-linux-uclibc/3.4.2/include/stdarg.h \
+  /home/defjovi/projects/RT-N56U/source/lib/include/bits/stdio_lim.h \
+  /home/defjovi/projects/RT-N56U/source/lib/include/stdlib.h \
+  /home/defjovi/projects/RT-N56U/source/lib/include/sys/types.h \
+  /home/defjovi/projects/RT-N56U/source/lib/include/time.h \
+  /home/defjovi/projects/RT-N56U/source/lib/include/endian.h \
+  /home/defjovi/projects/RT-N56U/source/lib/include/bits/endian.h \
+  /home/defjovi/projects/RT-N56U/source/lib/include/sys/select.h \
+  /home/defjovi/projects/RT-N56U/source/lib/include/bits/select.h \
+  /home/defjovi/projects/RT-N56U/source/lib/include/bits/sigset.h \
+  /home/defjovi/projects/RT-N56U/source/lib/include/bits/time.h \
+  /home/defjovi/projects/RT-N56U/source/lib/include/sys/sysmacros.h \
+  /home/defjovi/projects/RT-N56U/source/lib/include/alloca.h \
+  /home/defjovi/projects/RT-N56U/source/lib/include/string.h \
+  /home/defjovi/projects/RT-N56U/source/lib/include/ctype.h \
+  /home/defjovi/projects/RT-N56U/source/lib/include/bits/uClibc_touplow.h \
+  /home/defjovi/projects/RT-N56U/source/lib/include/inttypes.h \
+  /home/defjovi/projects/RT-N56U/source/lib/include/stdint.h \
+  ../include/sg_lib.h
+
+/home/defjovi/projects/RT-N56U/source/lib/include/stdio.h:
+
+/home/defjovi/projects/RT-N56U/source/lib/include/features.h:
+
+/home/defjovi/projects/RT-N56U/source/lib/include/bits/uClibc_config.h:
+
+/home/defjovi/projects/RT-N56U/source/lib/include/sys/cdefs.h:
+
+/opt/buildroot-gcc342/bin/../lib/gcc/mipsel-linux-uclibc/3.4.2/include/stddef.h:
+
+/home/defjovi/projects/RT-N56U/source/lib/include/bits/types.h:
+
+/home/defjovi/projects/RT-N56U/source/lib/include/bits/kernel_types.h:
+
+/home/defjovi/projects/RT-N56U/source/lib/include/bits/wordsize.h:
+
+/home/defjovi/projects/RT-N56U/source/lib/include/bits/pthreadtypes.h:
+
+/home/defjovi/projects/RT-N56U/source/lib/include/bits/sched.h:
+
+/home/defjovi/projects/RT-N56U/source/lib/include/bits/uClibc_stdio.h:
+
+/home/defjovi/projects/RT-N56U/source/lib/include/wchar.h:
+
+/home/defjovi/projects/RT-N56U/source/lib/include/bits/wchar.h:
+
+/opt/buildroot-gcc342/bin/../lib/gcc/mipsel-linux-uclibc/3.4.2/include/stdarg.h:
+
+/home/defjovi/projects/RT-N56U/source/lib/include/bits/stdio_lim.h:
+
+/home/defjovi/projects/RT-N56U/source/lib/include/stdlib.h:
+
+/home/defjovi/projects/RT-N56U/source/lib/include/sys/types.h:
+
+/home/defjovi/projects/RT-N56U/source/lib/include/time.h:
+
+/home/defjovi/projects/RT-N56U/source/lib/include/endian.h:
+
+/home/defjovi/projects/RT-N56U/source/lib/include/bits/endian.h:
+
+/home/defjovi/projects/RT-N56U/source/lib/include/sys/select.h:
+
+/home/defjovi/projects/RT-N56U/source/lib/include/bits/select.h:
+
+/home/defjovi/projects/RT-N56U/source/lib/include/bits/sigset.h:
+
+/home/defjovi/projects/RT-N56U/source/lib/include/bits/time.h:
+
+/home/defjovi/projects/RT-N56U/source/lib/include/sys/sysmacros.h:
+
+/home/defjovi/projects/RT-N56U/source/lib/include/alloca.h:
+
+/home/defjovi/projects/RT-N56U/source/lib/include/string.h:
+
+/home/defjovi/projects/RT-N56U/source/lib/include/ctype.h:
+
+/home/defjovi/projects/RT-N56U/source/lib/include/bits/uClibc_touplow.h:
+
+/home/defjovi/projects/RT-N56U/source/lib/include/inttypes.h:
+
+/home/defjovi/projects/RT-N56U/source/lib/include/stdint.h:
+
+../include/sg_lib.h:

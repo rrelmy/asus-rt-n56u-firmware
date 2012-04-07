@@ -12,6 +12,13 @@ ETCDIR = $(INSTROOT)/tmp/ppp
 # uid 0 = root
 INSTALL= install
 
+all:
+	cd chat; $(MAKE) $(MFLAGS) all
+	cd pppd/plugins; $(MAKE) $(MFLAGS) all
+	cd pppd; $(MAKE) $(MFLAGS) all
+	cd pppstats; $(MAKE) $(MFLAGS) all
+	cd pppdump; $(MAKE) $(MFLAGS) all
+
 romfs:
 	cd pppd; $(MAKE) $(MFLAGS) all
 	cd pppd/plugins; $(MAKE) $(MFLAGS) all
@@ -21,13 +28,6 @@ romfs:
 	$(ROMFSINST) -d pppd/plugins/pppol2tp/pppol2tp.so /usr/lib/pppd/pppol2tp.so
 	$(ROMFSINST) -d pppd/plugins/pptp/pptp.so /usr/lib/pppd/pptp.so
 	$(STRIP) $(INSTROOT)/usr/lib/pppd/*.so
-
-all:
-	cd chat; $(MAKE) $(MFLAGS) all
-	cd pppd/plugins; $(MAKE) $(MFLAGS) all
-	cd pppd; $(MAKE) $(MFLAGS) all
-	cd pppstats; $(MAKE) $(MFLAGS) all
-	cd pppdump; $(MAKE) $(MFLAGS) all
 
 install: $(BINDIR) $(MANDIR)/man8 install-progs install-devel
 

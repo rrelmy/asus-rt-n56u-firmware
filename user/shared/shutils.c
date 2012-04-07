@@ -2008,7 +2008,8 @@ int doSystem(char *fmt, ...)
 	return rc;
 }
 
-int
+//int
+unsigned long
 swap_check()
 {
 	struct sysinfo info;
@@ -2016,7 +2017,8 @@ swap_check()
 	sysinfo(&info);
 	if (info.totalswap > 0)
 	{
-		return 1;
+//		return 1;
+		return info.totalswap;
 	}
 	else
 	{

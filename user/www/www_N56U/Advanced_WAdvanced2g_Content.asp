@@ -35,7 +35,7 @@ function initial(){
 		disableAdvFn(17);
 	}
 	else if(sw_mode == "3")
-		show_menu(5,1,4);
+		show_menu(5,1,5);
 	else
 		show_menu(5,1,6);
 		

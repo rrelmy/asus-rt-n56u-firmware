@@ -19,7 +19,7 @@ INSTALL	= install
 PLUGINVERSION=0.8.5
 
 COPTS=-O2 -g
-CFLAGS= $(COPTS) -I. -I../.. -I../../../include -fPIC '-DPLUGINVERSION="$(PLUGINVERSION)"'
+CFLAGS= $(COPTS) -I. -I../.. -I../../../include '-DPLUGINVERSION="$(PLUGINVERSION)"'
 all: pptp.so
 
 pptp.so: libplugin.a pptp.o

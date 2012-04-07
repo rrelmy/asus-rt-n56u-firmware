@@ -278,13 +278,6 @@ start_sdhcpd(void)
 	pid_t pid;
 
 	if (nvram_match("lan_proto", "dhcp")) return 0;
-	//ifconfig(nvram_safe_get("lan_ifname"), IFUP,
-	//	 nvram_safe_get("lan_ipaddr"), "255.255.255.0");
-	//dprintf("%s %s %s %s\n",
-	//	nvram_safe_get("lan_ifname"),
-	//	nvram_safe_get("dhcp_start"),
-	//	nvram_safe_get("dhcp_end"),
-	//	nvram_safe_get("lan_lease"));
 
 	if (!(fp = fopen("/tmp/udhcpd-br0.leases", "a"))) {
 		perror("/tmp/udhcpd-br0.leases");

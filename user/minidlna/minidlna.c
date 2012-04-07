@@ -758,6 +758,7 @@ init(int argc, char * * argv)
 	set_startup_time();
 
 	/* presentation url */
+#if 0
 	if(presurl)
 	{
 		strncpy(presentationurl, presurl, PRESENTATIONURL_MAX_LEN);
@@ -773,6 +774,9 @@ init(int argc, char * * argv)
 		         "http://%s:%d/", lan_addr[0].str, runtime_vars.port);
 #endif
 	}
+#else
+	presentationurl[0] = '\0';	// ASUS EXT
+#endif
 
 	/* set signal handler */
 	signal(SIGCLD, SIG_IGN);

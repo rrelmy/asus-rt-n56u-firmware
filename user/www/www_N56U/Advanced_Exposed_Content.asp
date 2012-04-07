@@ -104,10 +104,13 @@ function done_validating(action){
               <input type="text" maxlength="15" class="input" size="15" name="dmz_ip" value="<% nvram_get_x("IPConnection","dmz_ip"); %>" onkeypress="return is_ipaddr(this)" onkeyup="change_ipaddr(this)" />
             </td>
           </tr>
+          <tr>
+            <td colspan="2"  align="right"><input name="button" type="button" class="button" onclick="applyRule()" value="<#CTL_apply#>"/></td>
+          </tr>
         </table></td>
 	</tr>
 	</tbody>
-	<tr>
+	<!--tr>
 	  <td bgcolor="#FFFFFF">		
 		<table width="100%" border="1" align="center" cellpadding="4" cellspacing="0" bordercolor="#6b8fa3"  class="FormTable">
 		  <thead>
@@ -130,7 +133,7 @@ function done_validating(action){
             <td colspan="2"  align="right"><input name="button" type="button" class="button" onclick="applyRule()" value="<#CTL_apply#>"/></td>
           </tr>
         </table>		</td>
-	</tr>
+	</tr-->
 </table>
 </td>
 </form>

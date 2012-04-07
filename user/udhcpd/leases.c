@@ -32,8 +32,6 @@
 #include "leases.h"
 #include "arpping.h"
 
-#include <nvram/bcmnvram.h>
-
 unsigned char blank_chaddr[] = {[0 ... 15] = 0};
 struct dhcpOfferedAddr *static_lease;
 

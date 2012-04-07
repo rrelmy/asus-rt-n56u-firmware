@@ -18,13 +18,13 @@
 #	 -I/usr/include/ffmpeg/libavutil -I/usr/include/ffmpeg/libavcodec -I/usr/include/ffmpeg/libavformat
 CFLAGS = -Wall -g -O3 -D_GNU_SOURCE -D_FILE_OFFSET_BITS=64 \
 	 -I../../lib/include \
-	 -I../sqlite-autoconf-3070400/source \
+	 -I../sqlite-autoconf-3070500/source \
 	 -I../libexif-0.6.20/source \
-	 -I../jpeg-8b/source \
-	 -I../ffmpeg-0.6.1/source \
-	 -I../ffmpeg-0.6.1/install/include/libavcodec \
-	 -I../ffmpeg-0.6.1/install/include/libavformat \
-	 -I../ffmpeg-0.6.1/install/include/libavutil \
+	 -I../jpeg-6b/source \
+	 -I../ffmpeg-0.6.2/source \
+	 -I../ffmpeg-0.6.2/install/include/libavcodec \
+	 -I../ffmpeg-0.6.2/install/include/libavformat \
+	 -I../ffmpeg-0.6.2/install/include/libavutil \
 	 -I../../lib/libid3tag-0.15.1b \
 	 -I../libogg-1.2.2/source/include \
 	 -I../libvorbis-1.3.2/source/include \
@@ -52,10 +52,10 @@ BASEOBJS = minidlna.o upnphttp.o upnpdescgen.o upnpsoap.o \
 ALLOBJS = $(BASEOBJS) $(LNXOBJS)
 
 #LIBS += -L../extra_bin
-LIBS += -L../sqlite-autoconf-3070400/install/lib
+LIBS += -L../sqlite-autoconf-3070500/install/lib
 LIBS += -L../libexif-0.6.20/install/lib
-LIBS += -L../jpeg-8b/install/lib
-LIBS += -L../ffmpeg-0.6.1/install/lib
+LIBS += -L../jpeg-6b/install/lib
+LIBS += -L../ffmpeg-0.6.2/install/lib
 LIBS += -L../libogg-1.2.2/install/lib
 LIBS += -L../libvorbis-1.3.2/install/lib
 LIBS += -L../flac-1.2.1/install/lib

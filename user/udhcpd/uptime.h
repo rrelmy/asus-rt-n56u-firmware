@@ -25,4 +25,3 @@ long uptime(void);
 #endif
 
 #endif
-

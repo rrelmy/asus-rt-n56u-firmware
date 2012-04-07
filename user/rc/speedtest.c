@@ -212,11 +212,11 @@ int qos_get_wan_rate()
 	char * gw_ip=NULL;
 	struct timeval deltaval;
 	double delta_us = 0;
-	int count=3;
+	int count = 3;
 	char *ip = nvram_safe_get("wan_dns_t");
 	int max_request_time;
 	double sp, sp_avg, sp_valid, tmp_add;
-	char ubw_buf[10];
+	char ubw_buf[128];
 	int i = 0;
 
 	printf("\nQos get wan rate\n");	// tmp test
@@ -224,6 +224,9 @@ int qos_get_wan_rate()
 	while (!check_wan_link(0))
 	{
 		printf("check wan link fail\n");	// tmp test
+
+		if (nvram_match("wan0_proto", "static"))
+			count = 4;
 
 		if (i++ < count)
 			sleep(1);
@@ -261,7 +264,7 @@ int qos_get_wan_rate()
 */
 		nvram_set("qos_ubw_status", "fail");
 		nvram_set("qos_ubw_reason", "DNS server fail");
-		nvram_set("qos_ubw", "0kbit");
+		nvram_set("qos_ubw", "0");
 		return WAN_LINK_FAIL;
 	}
 	else 
@@ -318,7 +321,7 @@ extern int detect_upload_speed(double *upload_speed_p);
 int qos_get_wan_rate()
 {
 	int count = 3, i = 0;
-	char ubw_buf[10];
+	char ubw_buf[128];
 	double upload_speed;
 
 	printf("\nQos get wan rate\n");	// tmp test
@@ -450,12 +453,10 @@ int Speedtest_Init(void) {
 	fclose(fp);
 	system("iptables-restore /tmp/mangle_rules");
 
-	if (nvram_invmatch("qos_manual_ubw","0") && nvram_invmatch("qos_manual_ubw",""))
-	{
+	if (nvram_invmatch("qos_manual_ubw","") && nvram_invmatch("qos_manual_ubw","0") && (atoi(nvram_safe_get("qos_manual_ubw")) > 0))
 		nvram_set("qos_ubw_real", nvram_safe_get("qos_manual_ubw"));
-	}
 	else 
-		nvram_set("qos_ubw_real", nvram_get("qos_ubw"));
+		nvram_set("qos_ubw_real", nvram_safe_get("qos_ubw"));
 
 	int qos_userspec_app_en = 0;
 	int rulenum = atoi(nvram_safe_get("qos_rulenum_x")), idx_class = 0;
@@ -481,26 +482,22 @@ int Speedtest_Init(void) {
 	if (	(nvram_match("qos_tos_prio", "1") ||
 		 nvram_match("qos_pshack_prio", "1") ||
 		 nvram_match("qos_service_enable", "1") ||
-		 nvram_match("qos_shortpkt_prio", "1")	) ||
-		 (nvram_invmatch("qos_manual_ubw","0") && nvram_invmatch("qos_manual_ubw","")) ||
-		 (rulenum && qos_userspec_app_en)
-		 /* || nvram_match("qos_dfragment_enable", "1")*/)
+		 nvram_match("qos_shortpkt_prio", "1") ||
+		 (rulenum && qos_userspec_app_en)) &&
+		(atoi(nvram_safe_get("qos_ubw_real")) > 0)	)
 	{
 		nvram_set("qos_enable", "1");
 		track_set("1");
+		flag = 1;
 
-		if (nvram_invmatch("qos_ubw", "0"))
-		{
-			flag = 1;
-			ipaddr = atoid(nvram_safe_get("wan_ipaddr_t"));
-			start_qos();
-		}
+		ipaddr = atoid(nvram_safe_get("wan_ipaddr_t"));
+
+		start_qos();
 	}
 	else
 	{
 		nvram_set("qos_enable", "0");
 		track_set("0");
-
 		flag = 0;
 	}
 

@@ -1,39 +1,39 @@
 fixed.lo fixed.o: fixed.c ../../config.h \
-  /root/RT-N56U/source/lib/include/math.h \
-  /root/RT-N56U/source/lib/include/features.h \
-  /root/RT-N56U/source/lib/include/bits/uClibc_config.h \
-  /root/RT-N56U/source/lib/include/sys/cdefs.h \
-  /root/RT-N56U/source/lib/include/bits/huge_val.h \
-  /root/RT-N56U/source/lib/include/bits/mathdef.h \
-  /root/RT-N56U/source/lib/include/bits/mathcalls.h \
-  /root/RT-N56U/source/lib/include/string.h \
+  /home/defjovi/projects/RT-N56U/source/lib/include/math.h \
+  /home/defjovi/projects/RT-N56U/source/lib/include/features.h \
+  /home/defjovi/projects/RT-N56U/source/lib/include/bits/uClibc_config.h \
+  /home/defjovi/projects/RT-N56U/source/lib/include/sys/cdefs.h \
+  /home/defjovi/projects/RT-N56U/source/lib/include/bits/huge_val.h \
+  /home/defjovi/projects/RT-N56U/source/lib/include/bits/mathdef.h \
+  /home/defjovi/projects/RT-N56U/source/lib/include/bits/mathcalls.h \
+  /home/defjovi/projects/RT-N56U/source/lib/include/string.h \
   /opt/buildroot-gcc342/bin/../lib/gcc/mipsel-linux-uclibc/3.4.2/include/stddef.h \
   ./include/private/bitmath.h ../../include/FLAC/ordinals.h \
-  /root/RT-N56U/source/lib/include/inttypes.h \
-  /root/RT-N56U/source/lib/include/stdint.h \
-  /root/RT-N56U/source/lib/include/bits/wchar.h \
-  /root/RT-N56U/source/lib/include/bits/wordsize.h \
+  /home/defjovi/projects/RT-N56U/source/lib/include/inttypes.h \
+  /home/defjovi/projects/RT-N56U/source/lib/include/stdint.h \
+  /home/defjovi/projects/RT-N56U/source/lib/include/bits/wchar.h \
+  /home/defjovi/projects/RT-N56U/source/lib/include/bits/wordsize.h \
   ./include/private/fixed.h ./include/private/float.h \
   ../../include/FLAC/format.h ../../include/FLAC/export.h \
   ../../include/FLAC/ordinals.h ../../include/FLAC/assert.h
 
 ../../config.h:
 
-/root/RT-N56U/source/lib/include/math.h:
+/home/defjovi/projects/RT-N56U/source/lib/include/math.h:
 
-/root/RT-N56U/source/lib/include/features.h:
+/home/defjovi/projects/RT-N56U/source/lib/include/features.h:
 
-/root/RT-N56U/source/lib/include/bits/uClibc_config.h:
+/home/defjovi/projects/RT-N56U/source/lib/include/bits/uClibc_config.h:
 
-/root/RT-N56U/source/lib/include/sys/cdefs.h:
+/home/defjovi/projects/RT-N56U/source/lib/include/sys/cdefs.h:
 
-/root/RT-N56U/source/lib/include/bits/huge_val.h:
+/home/defjovi/projects/RT-N56U/source/lib/include/bits/huge_val.h:
 
-/root/RT-N56U/source/lib/include/bits/mathdef.h:
+/home/defjovi/projects/RT-N56U/source/lib/include/bits/mathdef.h:
 
-/root/RT-N56U/source/lib/include/bits/mathcalls.h:
+/home/defjovi/projects/RT-N56U/source/lib/include/bits/mathcalls.h:
 
-/root/RT-N56U/source/lib/include/string.h:
+/home/defjovi/projects/RT-N56U/source/lib/include/string.h:
 
 /opt/buildroot-gcc342/bin/../lib/gcc/mipsel-linux-uclibc/3.4.2/include/stddef.h:
 
@@ -41,13 +41,13 @@ fixed.lo fixed.o: fixed.c ../../config.h \
 
 ../../include/FLAC/ordinals.h:
 
-/root/RT-N56U/source/lib/include/inttypes.h:
+/home/defjovi/projects/RT-N56U/source/lib/include/inttypes.h:
 
-/root/RT-N56U/source/lib/include/stdint.h:
+/home/defjovi/projects/RT-N56U/source/lib/include/stdint.h:
 
-/root/RT-N56U/source/lib/include/bits/wchar.h:
+/home/defjovi/projects/RT-N56U/source/lib/include/bits/wchar.h:
 
-/root/RT-N56U/source/lib/include/bits/wordsize.h:
+/home/defjovi/projects/RT-N56U/source/lib/include/bits/wordsize.h:
 
 ./include/private/fixed.h:
 

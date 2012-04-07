@@ -124,6 +124,7 @@ CORES := core.* core
 release:
 	@echo -e "\nMaking a [release] version (use 'debug' target as an alternative)\n"
 	@$(MAKE) all "COPT=${PROD_OPT}"
+	@$(STRIP) $(EXEC)
 
 debug:
 	@echo -e "\nMaking a [debug] version (use 'release' target as an alternative)\n"
@@ -153,7 +154,7 @@ all:	$(DEPFILE) $(EXEC)
 # include $(UPXC) (if needed) in all target to build
 
 $(MKDEP_TOOL): $(MKDEP_SRC)
-	$(CC) -o $@ $(MKDEP_SRC)
+	$(HOSTCC) -o $@ $(MKDEP_SRC)
 	@ls -l $@
 
 $(DEPFILE): $(MKDEP_TOOL) $(SRC)
@@ -192,20 +193,19 @@ distro:
 	@rm -fr $(DISTRO_DIR)
 
 romfs:	release
-	$(STRIP) $(EXEC)
 	$(ROMFSINST) /usr/sbin/udpxy
 
-install:
-	@test -d $(INSTALLROOT)/bin || mkdir -p -m 755 $(INSTALLROOT)/bin
-	@cp $(EXEC) $(INSTALLROOT)/bin
+install: release
+	@test -d $(INSTALLROOT)/sbin || mkdir -p -m 755 $(INSTALLROOT)/sbin
+	@cp $(EXEC) $(INSTALLROOT)/sbin
 ifdef UDPXREC
-	@ln -s $(INSTALLROOT)/bin/$(EXEC) $(INSTALLROOT)/bin/$(UDPXREC)
-	@ls -l $(INSTALLROOT)/bin/$(EXEC) $(INSTALLROOT)/bin/$(UDPXREC)
+	@ln -s $(INSTALLROOT)/sbin/$(EXEC) $(INSTALLROOT)/sbin/$(UDPXREC)
+	@ls -l $(INSTALLROOT)/sbin/$(EXEC) $(INSTALLROOT)/sbin/$(UDPXREC)
 endif
 	@echo "Installation of udpxy is complete"
 
 uninstall:
-	@rm -f $(INSTALLROOT)/bin/$(EXEC) $(INSTALLROOT)/bin/$(UDPXREC)
+	@rm -f $(INSTALLROOT)/sbin/$(EXEC) $(INSTALLROOT)/sbin/$(UDPXREC)
 	@echo "udpxy successfully uninstalled"
 
 ifneq ($(MAKECMDGOALS), clean)

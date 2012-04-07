@@ -78,6 +78,8 @@ typedef unsigned char   bool;
 #include "wireless.h"    /* --Alicia, 08.09.23 */
 //#include <detectWAN.h>	//for detectWAN
 
+#define USB_MODEM // 2011.03 James.
+
 //#ifdef DLM
 #include <disk_io_tools.h>
 #include <disk_initial.h>
@@ -297,12 +299,20 @@ fail:
 int sys_restart()
 {
 	printf("[httpd] restart\n");	// tmp test
+#ifndef USB_MODEM
 	//if (nvram_match("wan0_proto", "3g") && strlen(nvram_safe_get("usb_path1")) > 0)
 	if (strlen(nvram_safe_get("usb_path1")) > 0)
+#else
+	if(strlen(nvram_safe_get("usb_path1")) > 0 || strlen(nvram_safe_get("usb_path2")) > 0)
+#endif
 	{
 		printf("do ejusb\n");   // tmp test
 		system("ejusb");
+#ifndef USB_MODEM
 		if (nvram_match("wan0_proto", "3g"))
+#else
+		if(nvram_match("modem_enable", "1") && (nvram_match("usb_path1", "modem") || nvram_match("usb_path2", "modem")))
+#endif
 		{
 			printf("wait 10s...\n");
 			sleep(10);
@@ -320,12 +330,20 @@ int sys_restart()
 int sys_reboot()
 {
 	printf("[httpd] reboot\n");	// tmp test
+#ifndef USB_MODEM
 	//if (nvram_match("wan0_proto", "3g") && strlen(nvram_safe_get("usb_path1")) > 0)
 	if (strlen(nvram_safe_get("usb_path1")) > 0)
+#else
+	if(strlen(nvram_safe_get("usb_path1")) > 0 || strlen(nvram_safe_get("usb_path2")) > 0)
+#endif
 	{
 		printf("do ejusb\n");   // tmp test
 		system("ejusb");
+#ifndef USB_MODEM
 		if (nvram_match("wan0_proto", "3g"))
+#else
+		if(nvram_match("modem_enable", "1") && (nvram_match("usb_path1", "modem") || nvram_match("usb_path2", "modem")))
+#endif
 		{
 			printf("wait 10s...\n");
 			sleep(10);
@@ -542,7 +560,9 @@ void sys_script(char *name)
 	nvram_set("ddns_timeout", "0");
 	nvram_set("rc_service", "ddns_hostname_check");
 
-	kill(1, SIGUSR1);
+//	kill(1, SIGUSR1);
+	fprintf(stderr, "[httpd] send SIGUSR1 to watchdog for rc_service: %s\n", nvram_safe_get("rc_service"));
+	doSystem("killall -%d watchdog", SIGUSR1);
 	sleep(1);
 
 	while (1)
@@ -1481,7 +1501,10 @@ static int validate_asp_apply(webs_t wp, int sid, int groupFlag) {
 				
 // 2008.03 James. {
 				if (!strcmp(GetServiceId(sid), "General") && !strcmp(v->name, "http_passwd"))
+				{
 					change_passwd = 1;
+					eval("/sbin/start_telnetd");
+				}
 // 2008.03 James. }
 				
 // 2007.11 James {
@@ -1972,6 +1995,10 @@ csprintf("*** add ITVL_RESTART_UPNP(%d).\n", ITVL_RESTART_UPNP);
 csprintf("*** add ITVL_RESTART_DMS(%d).\n", ITVL_RESTART_DMS);
                                 restart_tatal_time += ITVL_RESTART_DMS;
                         }
+                        if ((restart_needed_bits & RESTART_ITUNES) != 0) {
+csprintf("*** add ITVL_RESTART_ITUNES(%d).\n", ITVL_RESTART_ITUNES);
+                                restart_tatal_time += ITVL_RESTART_ITUNES;
+			}
 			if ((restart_needed_bits & RESTART_QOS) != 0) {
 csprintf("*** add ITVL_RESTART_QOS(%d).\n", ITVL_RESTART_QOS);
 				restart_tatal_time += ITVL_RESTART_QOS;
@@ -2118,6 +2145,11 @@ static int ej_notify_services(int eid, webs_t wp, int argc, char_t **argv) {
                                 csprintf("*** run notify_rc restart_dms! \n");
                                 notify_rc("restart_dms");
                                 restart_needed_bits &= ~(u32)RESTART_DMS;
+                        }
+                        if ((restart_needed_bits & RESTART_ITUNES) != 0) {
+                                csprintf("*** run notify_rc restart_itunes! \n");
+                                notify_rc("restart_itunes");
+                                restart_needed_bits &= ~(u32)RESTART_ITUNES;
                         }
 			if ((restart_needed_bits & RESTART_QOS) != 0) {
 				csprintf("*** run notify_rc restart_qos! \n");
@@ -2281,6 +2313,26 @@ static int check_hwnat(int eid, webs_t wp, int argc, char_t **argv) {
 		websWrite(wp, "0");
 	else
 		websWrite(wp, "1");
+}
+
+static int is_dm_running()
+{
+        if (    pids("rtorrent") ||
+                pids("dmathined") ||
+                pids("giftd") ||
+                pids("snarf")   )
+        {
+                return 1;
+        }
+        else
+                return 0;
+}
+
+static int dm_running(int eid, webs_t wp, int argc, char_t **argv) {
+	if (is_dm_running())
+		websWrite(wp, "1");
+	else
+		websWrite(wp, "0");
 }
 
 /*static int detect_wan_connection(int eid, webs_t wp, int argc, char_t **argv) {
@@ -2459,7 +2511,11 @@ static int detect_dhcp_pppoe(int eid, webs_t wp, int argc, char_t **argv) {
 			websWrite(wp, "%s", nvram_safe_get("wan_proto"));
 	}*/
 	// jerry5 edited for n56u
+#ifndef USB_MODEM
 	if (nvram_match("wan_proto","3g") && nvram_match("sw_mode","1"))
+#else
+	if(nvram_match("modem_enable", "1") && (nvram_match("usb_path1", "modem") || nvram_match("usb_path2", "modem")))
+#endif
 		websWrite(wp, "3.5G HSDPA");
 	else {
 		eprintf("discover all\n");			// tmp test
@@ -2662,6 +2718,7 @@ static int wanlink_hook(int eid, webs_t wp, int argc, char_t **argv) {
 		unit = 0;
 	wan_prefix(unit, prefix);
 	
+#ifndef USB_MODEM
 	if (nvram_match("wan_proto", "3g"))
 	{
 		ppp_addr = nvram_safe_get("wan0_ipaddr");
@@ -2686,7 +2743,48 @@ static int wanlink_hook(int eid, webs_t wp, int argc, char_t **argv) {
 
 		}
 	}
-	else if (!is_phyconnected()) {
+	else
+#else
+	if(nvram_match("modem_enable", "1") && (nvram_match("usb_path1", "modem") || nvram_match("usb_path2", "modem"))){
+		DIR *ppp_dir;
+		int got_ppp_link;
+		struct dirent *entry;
+
+		if ((ppp_dir = opendir("/tmp/ppp")) == NULL) {
+			status = 0;
+			strcpy(statusstr, "Disconnected");
+		}
+		else {
+			got_ppp_link = 0;
+			while((entry = readdir(ppp_dir)) != NULL) {
+				if (!strcmp(entry->d_name, ".") || !strcmp(entry->d_name, ".."))
+					continue;
+				
+				if (strstr(entry->d_name, "link") != NULL) {
+					got_ppp_link = 1;
+					
+					break;
+				}
+			}
+			closedir(ppp_dir);
+			
+			if (got_ppp_link == 0) {
+				status = 0;
+				strcpy(statusstr, "Disconnected");
+			}
+			else if (check_ppp_exist() == -1) {
+				status = 0;
+				strcpy(statusstr, "Disconnected");
+			}
+			else {
+				status = 1;
+				strcpy(statusstr, "Connected");
+			}
+		}
+	}
+	else
+#endif
+	if (!is_phyconnected()) {
 		status = 0;
 		strcpy(statusstr, "Cable is not attached");
 	}
@@ -2873,6 +2971,11 @@ static int wanlink_hook(int eid, webs_t wp, int argc, char_t **argv) {
 	}
 	
 	//printf("[httpd] wan status str is %s\n", statusstr);	// tmp test
+#ifdef USB_MODEM
+	if(nvram_match("modem_enable", "1") && (nvram_match("usb_path1", "modem") || nvram_match("usb_path2", "modem")))
+		strcpy(type, "HSDPA");
+	else
+#endif
 	if (nvram_match(strcat_r(prefix, "proto", tmp), "pppoe"))
 	{
 		strcpy(type, "PPPOE");
@@ -2894,10 +2997,12 @@ static int wanlink_hook(int eid, webs_t wp, int argc, char_t **argv) {
 	{
 		strcpy(type, "Static IP");
 	}
+#ifndef USB_MODEM
 	else if (nvram_match(strcat_r(prefix, "proto", tmp), "3g"))
 	{
 		strcpy(type, "HSDPA");
 	}
+#endif
 	else // dhcp
 	{
 		strcpy(type, "Automatic IP");
@@ -2960,7 +3065,9 @@ static int wan_action_hook(int eid, webs_t wp, int argc, char_t **argv) {
 		nvram_set("rc_service", "wan_connect");
 		needed_seconds = 5;	// WL500-series
 csprintf("kill -USR1 1.\n");
-		kill(1, SIGUSR1);
+//		kill(1, SIGUSR1);
+		fprintf(stderr, "[httpd] send SIGUSR1 to watchdog for rc_service: %s\n", nvram_safe_get("rc_service"));
+		doSystem("killall -%d watchdog", SIGUSR1);
 csprintf("sleep 1 second.\n");
 		sleep(1);
 	}
@@ -2970,7 +3077,9 @@ csprintf("sleep 1 second.\n");
 		nvram_set("rc_service", "wan_disconnect");
 		needed_seconds = 5;	// WL500-series
 csprintf("kill -USR1 1.\n");
-		kill(1, SIGUSR1);
+//		kill(1, SIGUSR1);
+		fprintf(stderr, "[httpd] send SIGUSR1 to watchdog for rc_service: %s\n", nvram_safe_get("rc_service"));
+		doSystem("killall -%d watchdog", SIGUSR1);
 csprintf("sleep 1 second.\n");
 		sleep(1);
 	}
@@ -4903,8 +5012,6 @@ do_upgrade_cgi(char *url, FILE *stream)
 	  
 }
 
-extern int conn_fd;
-
 static void
 do_upload_post(char *url, FILE *stream, int len, char *boundary)
 {
@@ -4960,7 +5067,7 @@ do_upload_post(char *url, FILE *stream, int len, char *boundary)
 	cmpHeader = 0;
 
 	while (len > 0 && filelen > 0) {
-		if (waitfor (conn_fd, 10) <= 0) {
+		if (waitfor (fileno(stream), 10) <= 0) {
 			break;
 		}
 
@@ -5024,7 +5131,7 @@ err:
 	while (len-- > 0)
 		ch = fgetc(stream);
 
-	fcntl(conn_fd, F_SETOWN, -ret);
+	fcntl(fileno(stream), F_SETOWN, -ret);
 }
 
 static void
@@ -5426,7 +5533,7 @@ int stop_usbled()
 }
 
 static int ej_safely_remove_disk(int eid, webs_t wp, int argc, char_t **argv) {
-	int result;
+	int result = -1;
         char *disk_port = websGetVar(wp, "disk", "");
 //	disk_info_t *disks_info = NULL, *follow_disk = NULL;
 //	int disk_num = 0;
@@ -5435,9 +5542,16 @@ static int ej_safely_remove_disk(int eid, webs_t wp, int argc, char_t **argv) {
 	csprintf("disk_port = %s\n", disk_port);
 
 	start_usbled();
-
+#if 0
 	result = eval("/sbin/ejusb", disk_port);
-
+#else
+	if (!disk_port)
+		;
+	else if (atoi(disk_port) == 1)
+		result = eval("/sbin/ejusb1");
+	else if (atoi(disk_port) == 2)
+		result = eval("/sbin/ejusb2");
+#endif
 	if (result != 0) {
 		show_error_msg("Action9");
 
@@ -5448,19 +5562,10 @@ static int ej_safely_remove_disk(int eid, webs_t wp, int argc, char_t **argv) {
 		stop_usbled();
 		return -1;
 	}
-
 /*
-	disks_info = read_disk_data();
-	for(follow_disk = disks_info; follow_disk != NULL; follow_disk = follow_disk->next, ++disk_num)
-		;
-	free_disk_data(&disks_info);
-	csprintf("disk_num = %d\n", disk_num);
-*/
-
 	part_num = count_sddev_mountpoint();
 	csprintf("part_num = %d\n", part_num);
 
-//	if (disk_num > 1)
 	if (part_num > 0)
 	{
 		result = eval("/sbin/check_proc_mounts_parts");
@@ -5472,7 +5577,7 @@ static int ej_safely_remove_disk(int eid, webs_t wp, int argc, char_t **argv) {
 		result = eval("/sbin/stop_ftpsamba");
 		result = eval("/sbin/stop_dms");
 	}
-
+*/
 	websWrite(wp, "<script>\n");
 	websWrite(wp, "safely_remove_disk_success(\'%s\');\n", error_msg);
 	websWrite(wp, "</script>\n");
@@ -5999,6 +6104,7 @@ int ej_get_share_tree(int eid, webs_t wp, int argc, char **argv) {
 	return 0;
 }
 
+#ifndef USB_MODEM
 int ej_start3g(int eid, webs_t wp, int argc, char **argv) {
 
 	printf("[httpd start 3g process\n]");	// tmp test
@@ -6014,6 +6120,7 @@ int ej_stop3g(int eid, webs_t wp, int argc, char **argv) {
 	system("stop3g");
 	return 0;
 }
+#endif
 
 void not_ej_initial_folder_var_file()						// J++
 {
@@ -7342,7 +7449,8 @@ struct ej_handler ej_handlers[] = {
 	{ "get_wan_status_log", get_wan_status_log},
 	{ "wanlink", wanlink_hook},
 	{ "wan_action", wan_action_hook},
-	{ "check_hwnat", check_hwnat}, 
+	{ "check_hwnat", check_hwnat},
+	{ "dm_running", dm_running},
 	{ "get_parameter", ej_get_parameter},
 	{ "login_state_hook", login_state_hook},
 	{ "dumpleases", ej_dumpleases},
@@ -7373,8 +7481,10 @@ struct ej_handler ej_handlers[] = {
 	{ "delete_sharedfolder", ej_delete_sharedfolder},	/*y*/
 	{ "modify_sharedfolder", ej_modify_sharedfolder},	/* no ccc*/
 	{ "set_share_mode", ej_set_share_mode},
+#ifndef USB_MODEM
 	{ "start3g", ej_start3g},
 	{ "stop3g", ej_stop3g},
+#endif
 	{ "initial_folder_var_file", ej_initial_folder_var_file},	/* J++ */
 //2008.08 magic}
 // 2010.09 James. {
@@ -7431,7 +7541,6 @@ kill_pidfile_s(char *pidfile, int sig)
 {
 	FILE *fp = fopen(pidfile, "r");
 	char buf[256];
-	extern errno;
 
 	if (fp && fgets(buf, sizeof(buf), fp)) {
 		pid_t pid = strtoul(buf, NULL, 0);

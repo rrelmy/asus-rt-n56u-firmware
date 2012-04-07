@@ -321,6 +321,7 @@ int nvram_restore_new(char *file, char *buf)
 	}
 
 	nvram_set("x_Setting", "1");
+	nvram_set("w_Setting", "1");
 	return 0;
 }
 

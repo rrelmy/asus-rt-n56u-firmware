@@ -44,6 +44,7 @@
 #include <netconf.h>
 #include <shutils.h>
 #include <rc.h>
+#include <semaphore_mfp.h>
 
 #include <signal.h>
 
@@ -137,9 +138,9 @@ bound(void)
 		nvram_safe_get(strcat_r(prefix, "ipaddr_t", tmp)),
 		nvram_safe_get(strcat_r(prefix, "netmask_t", tmp)));
 
-//	if (nvram_match("dhcp_renew", "1"))	// for detectWAN
-//		kill_pidfile_s("/var/run/detectWan.pid", SIGUSR1);
+	spinlock_lock(SPINLOCK_DHCPRenew);
 	nvram_set("dhcp_renew", "0");
+	spinlock_unlock(SPINLOCK_DHCPRenew);
 
 	lan_up_ex(lan_ifname);
 

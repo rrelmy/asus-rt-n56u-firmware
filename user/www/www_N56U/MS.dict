@@ -1,11 +1,10 @@
-[Language type]
+﻿[Language type]
 CHAR_set=UTF-8
 PASS_LANG=Bahasa
 LANG_select=Pilih bahasa
 LANG_EN=English
-LANG_TW=繁体中文
+LANG_TW=繁體中文
 LANG_CN=简体中文
-LANG_KR=한국어
 LANG_CZ=Česky
 LANG_PL=Polski
 LANG_RU=Pусский
@@ -13,7 +12,14 @@ LANG_DE=Deutsch
 LANG_FR=Français
 LANG_TR=Türkçe
 LANG_TH=ไทย
-LANG_MS=Malaysia
+LANG_MS=Malay
+LANG_NO=Norsk
+LANG_FI=Finsk
+LANG_DA=Dansk
+LANG_SV=Svensk
+LANG_BR=Brazil
+[iTunes]
+iTunesMediaServer=Pelayan Media iTunes
 [untranslate]
 IPConnection_VSList_ftpport=FTP Server Port:
 Adm_System_telnetd=Enable Telnet Server?
@@ -362,10 +368,10 @@ HowToSharebyFTP3=Dayakan perkhidmatan DDNS untuk membenarkan akses melalui ftp a
 HowToSharebyFTP4=(Hanya boleh diakses dalam LAN.)
 [LeftMenu]
 menu1=Peta Rangkaian
-menu2=Pelayan Media UPnP
+menu2=Pelayan Media
 menu3=AiDisk
 menu4=EzQoS<br/> Lebar Jalur<br/> Pengurusan
-menu5=<br/> Seting Lanjutan
+menu5=<div style=\"padding-top:10px;\">Seting Lanjutan</div>
 menu5_title=Seting Lanjutan
 menu5_1=Wayarles
 menu5_2=LAN
@@ -605,7 +611,7 @@ DiskStatus_refresh1=Saya telah memasang cakera USB,
 DiskStatus_refresh2=perbaharui semula 
 DiskStatus_refresh3= status sistem.
 EZQoS=Pengurusan Lebar Jalur EZQoS
-footer_copyright_desc=2010 ASUSTek Computer Inc. Semua hak cipta terpelihara.
+footer_copyright_desc=2011 ASUSTek Computer Inc. Semua hak cipta terpelihara.
 Help_button_default_hint=Klik untuk membuka Bantuan.
 Help_init_word1=Bantuan memberikan anda panduan dan maklumat mengenai menggunakan fungsi penghala.  Klik
 Help_init_word2=perkataan yang dihiperpautkan dengan garisan bawah berwarna kuning dan biru.
@@ -659,7 +665,7 @@ QKSet_detect_sanglass=pengesanan auto
 QKSet_detect_desc1=Mengesan jenis sambungan anda
 QKSet_detect_desc2=Mengesan semula status sambungan anda
 QKSet_detect_wanconnfault=Sila periksa kabel ethernet disambungkan dengan betul kepada port WAN.
-QKSet_detect_APdesc=Mod operasi bagi RT-N56U adalah \"AP\". Mula mengkonfigurasi seting... 
+QKSet_detect_APdesc=Mod operasi bagi RT-N56U adalah 'AP'. Mula mengkonfigurasi seting... 
 QKSet_detect_skipbtn=Langkau ke seting manual
 QKSet_detect_freshbtn=Kesan semula
 QKSet_detect_waitdesc=Mula mengesan jenis sambungan anda...

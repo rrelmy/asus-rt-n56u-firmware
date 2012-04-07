@@ -84,7 +84,8 @@ enum RalinkChipId {
     RT2883=2,
     RT3883=3,
     RT3350=4,
-    RT3352=5
+    RT3352=5,
+    RT6855=6
 };
 
 struct mtr_args {

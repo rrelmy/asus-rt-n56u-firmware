@@ -1,6 +1,6 @@
 # libvorbisenc pkg-config source file
 
-prefix=/root/RT-N56U/source/user/libvorbis-1.3.2/source/../install
+prefix=/home/defjovi/projects/RT-N56U/source/user/libvorbis-1.3.2/source/../install
 exec_prefix=${prefix}
 libdir=${exec_prefix}/lib
 includedir=${prefix}/include

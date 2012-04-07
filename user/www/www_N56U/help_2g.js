@@ -133,7 +133,7 @@ helptitle[13] = [["", ""],
 				["<#WLANConfig11b_x_DevicePIN_itemname#>", ""]];
 //UPnP
 helptitle[14] = [["", ""],
-				["<#UPnPMediaServer#>", ""]];
+				["<#menu2#>", ""]];
 //AiDisk Wizard
 helptitle[15] = [["", ""],
 				["<a href='../Advanced_AiDisk_ftp.asp' target='_parent' hidefocus='true'><#t1USB#></a>", ""],

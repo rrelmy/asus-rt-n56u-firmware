@@ -20,7 +20,7 @@ srcdir = .
 top_srcdir = ..
 
 
-prefix = /root/RT-N56U/source/user/libexif-0.6.20/source/../install
+prefix = /home/defjovi/projects/RT-N56U/source/user/libexif-0.6.20/source/../install
 exec_prefix = ${prefix}
 datadir = ${prefix}/share
 localedir = $(datadir)/locale

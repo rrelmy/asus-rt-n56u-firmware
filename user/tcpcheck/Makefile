@@ -13,4 +13,4 @@ romfs:
 #	cp tcpcheck httpdcheck
 	$(ROMFSINST) /usr/sbin/tcpcheck
 #	$(ROMFSINST) /usr/sbin/httpdcheck
-	cd $(INSTALLDIR)/usr/sbin && ln -sf tcpcheck httpdcheck
+#	cd $(INSTALLDIR)/usr/sbin && ln -sf tcpcheck httpdcheck
