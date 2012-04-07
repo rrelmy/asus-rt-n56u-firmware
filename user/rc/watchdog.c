@@ -204,7 +204,15 @@ httpd_check_v2()
 	if (nvram_match("v2_debug", "1"))
 		dbg("uptime: %d\n", now);
 
-	if (nvram_get("login_timestamp") && ((unsigned long)(now - strtoul(nvram_safe_get("login_timestamp"), NULL, 10)) < 60))
+	if (nvram_match("wanduck_redirect", "1"))
+	{
+		if (nvram_match("v2_debug", "1"))
+			dbg("wanduck redirect rules existed!\n");
+
+		httpd_error_count = 0;
+		return 1;
+	}
+	else if (nvram_get("login_timestamp") && ((unsigned long)(now - strtoul(nvram_safe_get("login_timestamp"), NULL, 10)) < 60))
 	{
 		if (nvram_match("v2_debug", "1"))
 			dbg("user login within 1 minutu: %d\n", (unsigned long)(now - strtoul(nvram_safe_get("login_timestamp"), NULL, 10)));
@@ -1025,24 +1033,7 @@ void media_processcheck(void)
 }
 
 int samba_error_count = 0;
-#if 0
-void samba_processcheck(void)
-{
-	if (!nvram_match("enable_samba", "1") || nvram_match("apps_smb_ex", "0"))
-		return;
 
-	if (pids("smbd") && !pids("nmbd"))
-		samba_error_count++;
-
-        if (samba_error_count > 3)
-        {
-//		dbg("nmbd is so dead!!!\n");
-                samba_error_count = 0;
-
-		eval("/sbin/nmbd", "-D", "-s", "/etc/smb.conf");
-        }
-}
-#endif
 void nm_processcheck(void)
 {
 	nm_timer = (nm_timer + 1) % 12;

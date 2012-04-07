@@ -40,6 +40,7 @@ static void safe_leave(int signo){
 			setup_misc_timeout(TRUE);
 			setup_udp_timeout(TRUE);
 			_eval(del_command, NULL, 0, NULL);
+			nvram_set("wanduck_redirect", "0");
 		}
 		
 		change_redirect_rules(2, 0);
@@ -50,7 +51,7 @@ static void safe_leave(int signo){
 	
 	_eval(rm_pid, NULL, 0, NULL);
 // 2007.11 James }
-	
+
 csprintf("\n# return(exit wanduck)\n");
 	exit(0);
 }
@@ -61,6 +62,7 @@ static void rebuild_rule(int signo){
 csprintf("\n# Rebuild rules by SIGUSR2\n");
 		setup_udp_timeout(FALSE);
 		_eval(add_command, NULL, 0, NULL);
+		nvram_set("wanduck_redirect", "1");
 		
 		change_redirect_rules(1, 0);
 	}
@@ -530,7 +532,9 @@ int wanduck_main(int argc, char **argv){
 		csprintf("\n*** Fail to build socket! ***\n");
 		exit(0);
 	}
-	
+
+	nvram_set("wanduck_redirect", "0");
+
 	FILE *fp = fopen("/var/run/wanduck.pid", "w");
 	
 	if(fp != NULL){
@@ -583,6 +587,7 @@ csprintf("\n# Enable direct rule\n");
 
 			setup_udp_timeout(FALSE);
 			_eval(add_command, NULL, 0, NULL);
+			nvram_set("wanduck_redirect", "1");
 			
 			change_redirect_rules(2, 0);
 		}
@@ -594,6 +599,7 @@ csprintf("\n#CONNED : Enable direct rule\n");
 
 			setup_udp_timeout(FALSE);
 			_eval(add_command, NULL, 0, NULL);
+			nvram_set("wanduck_redirect", "1");
 			
 			change_redirect_rules(2, 0);
 		}
@@ -620,6 +626,8 @@ csprintf("\n#CONNED : Enable direct rule\n");
 csprintf("\n# Rebuild rules\n");
 				setup_udp_timeout(FALSE);
 				_eval(add_command, NULL, 0, NULL);
+				nvram_set("wanduck_redirect", "1");
+
 				change_redirect_rules(1, 0);
 			}
 		}
@@ -677,6 +685,7 @@ csprintf("\n# Enable direct rule(C2D)\n");
 
 					setup_udp_timeout(FALSE);
 					_eval(add_command, NULL, 0, NULL);
+					nvram_set("wanduck_redirect", "1");
 					
 					change_redirect_rules(2, 1);
 					update_wan(0);
@@ -702,6 +711,7 @@ csprintf("\n#w Disable direct rule(D2C)\n");
 						setup_misc_timeout(TRUE);
 						setup_udp_timeout(TRUE);
 						_eval(del_command, NULL, 0, NULL);
+						nvram_set("wanduck_redirect", "0");
 					}
 					change_redirect_rules(2, 0);
 					update_wan(1);
@@ -738,6 +748,7 @@ csprintf("\n#AP Disable direct rule(D2C)\n");
 					setup_misc_timeout(TRUE);
 					setup_udp_timeout(TRUE);
 					_eval(del_command, NULL, 0, NULL);
+					nvram_set("wanduck_redirect", "0");
 				}
 
 				change_redirect_rules(2, 0);

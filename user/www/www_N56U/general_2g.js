@@ -1626,9 +1626,6 @@ rt_auth_mode_change_guest(1);
 		//document.form.rt_wme.options[1].selected = 1;		
 
 		if(sw_mode != "2"){
-			if(document.form.rt_gmode.value == "4")
-				inputCtrl(document.form.rt_wme, 0);
-			
 			change_common(document.form.rt_wme, "WLANConfig11b", "rt_wme");
 			
 			if (document.form.rt_gmode.value!="3" && document.form.rt_gmode.value!="4"){ 
@@ -2301,20 +2298,18 @@ else if (v=="ddns_server_x")
 {change_ddns_setting(o.value);
 }
 else if (v == "rt_wme"){
-	if(o.value == "0"){
-		document.form.rt_wme_no_ack.options.selectedIndex=0;
+	if(o.value == "0"){		
 		inputCtrl(document.form.rt_wme_no_ack, 0);
 		inputCtrl(document.form.rt_APSDCapable, 0);
 		inputCtrl(document.form.rt_DLSCapable, 0);
 	}
 	else{
-		if(document.form.rt_gmode.value == "1"){
-			inputCtrl(document.form.rt_wme_no_ack, 1);
-		}	
-		else{
+		if(document.form.rt_gmode.value == "2" || document.form.rt_gmode.value == "3"){	//auto ,n only
 			document.form.rt_wme_no_ack.options.selectedIndex=0;
 			inputCtrl(document.form.rt_wme_no_ack, 0);
-		}
+		}else{
+			inputCtrl(document.form.rt_wme_no_ack, 1);
+		}	
 		inputCtrl(document.form.rt_APSDCapable, 1);
 		inputCtrl(document.form.rt_DLSCapable, 1);
 	}

@@ -46,22 +46,20 @@ function initial(){
 	load_body();
 	$("rt_rate").style.display = "none";
 	
-	if(document.form.rt_gmode.value == "3")
-		$("rt_HT_OpMode").disabled = false;
-	else{
-		$("rt_HT_OpMode").value = "0";
-		$("rt_HT_OpMode").disabled = true;
-	}
-
-	if(document.form.rt_gmode.value == "3" || document.form.rt_gmode.value == "2"){
-		$("rt_wme").value = "1";
-		$("rt_wme").disabled = true;
-	}
-	else
-		$("rt_wme").disabled = false;
+	if(document.form.rt_gmode.value == "3"){	//n only
+		inputCtrl(document.form.rt_HT_OpMode, 1);
+		$("rt_wme_tr").style.display = "none";
 		
-	/*if(document.form.rt_mrate.value != "0" && hwnat == "1" && sw_mode == "1")
-		alert("<#BasicConfig_HWNAT_alert#>");*/
+	}else if(document.form.rt_gmode.value == "2"){	//Auto
+		$("rt_HT_OpMode").value = "0";
+		inputCtrl(document.form.rt_HT_OpMode, 0);
+		$("rt_wme_tr").style.display = "none";
+			
+	}else{
+		$("rt_HT_OpMode").value = "0";
+		inputCtrl(document.form.rt_HT_OpMode, 0);
+		$("rt_wme_tr").style.display = "";
+	}
 }
 
 function applyRule(){
@@ -354,7 +352,7 @@ function disableAdvFn(row){
 				</td>
 			</tr>
 			<!--Greenfield by Lock Add in 2008.10.01 -->
-			<tr>
+			<tr id="rt_wme_tr">
 			  <th><a class="hintstyle"  href="javascript:void(0);" onClick="openHint(3, 14);"><#WLANConfig11b_x_WMM_itemname#></a></th>
 			  <td>
 				<select name="rt_wme" id="rt_wme" class="input" onChange="return change_common(this, 'WLANConfig11b', 'rt_wme')">

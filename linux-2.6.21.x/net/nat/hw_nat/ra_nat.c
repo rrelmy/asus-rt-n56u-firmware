@@ -1009,9 +1009,9 @@ int32_t PpeTxHandler(struct sk_buff *skb, int gmac_no)
 			    return 1;
 #endif
 			}
-
 /* RT2880, RT3883 */
 #elif defined (CONFIG_RALINK_RT2880) || defined (CONFIG_RALINK_RT3883)
+#ifdef ASUS_REMOVE
 			if((entry.vlan1 & VLAN_VID_MASK)==LAN_PORT_VLAN_ID) {
 #if defined (CONFIG_RA_HW_NAT_SPEEDUP_DOWNSTREAM) || defined (CONFIG_RA_HW_NAT_SPEEDUP_BIDIRECTION)
 			    entry.iblk2.dp=1; 
@@ -1025,9 +1025,10 @@ int32_t PpeTxHandler(struct sk_buff *skb, int gmac_no)
 			    return 1;	
 #endif
 			}
+#endif
 /*  RT3052, RT335x */
 #else
-
+#ifdef ASUS_REMOVE
 			if((entry.vlan1 & VLAN_VID_MASK)==LAN_PORT_VLAN_ID) {
 #if defined (CONFIG_RA_HW_NAT_SPEEDUP_DOWNSTREAM) || defined (CONFIG_RA_HW_NAT_SPEEDUP_BIDIRECTION)
 			    entry.iblk2.dp=1; /* LAN traffic use VirtualPort1 in GMAC1*/
@@ -1044,6 +1045,7 @@ int32_t PpeTxHandler(struct sk_buff *skb, int gmac_no)
 			    /* for one arm NAT test -> no vlan tag */
 			    entry.iblk2.dp=1; 
 			}
+#endif
 #endif
 		}
 

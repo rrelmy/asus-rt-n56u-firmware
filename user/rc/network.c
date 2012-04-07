@@ -578,6 +578,12 @@ vconfig()
 			sprintf(tmp, "8367m 29 %d", voip_port);	
 			system(tmp);	
 
+			/* 
+			   Initialize VLAN: system("8367m 38 $ports")         $ports: bitmap of ports used in VLANs. ex:P0 and P1 are in the VLANs  => $ports=3 (0x3)
+			   Set VLAN VID:    system("8367m 36 $Vlan_VID")
+			   Set VLAN PRIO:   system("8367m 37 $Vlan_PRIO") 
+			   Create VLAN:	    system("8367m 39 $portInfo")      $portInfo: bit0-bit15: member mask   bit16-bit31: untag mask
+			*/
 			if(!strncmp(nvram_safe_get("vlan_isp"), "unifi", 5))/* Added for Unifi. Cherry Cho modified in 2011/6/28.*/
 			{
 				if(strstr(nvram_safe_get("vlan_isp"), "home"))
@@ -629,6 +635,19 @@ vconfig()
 				system("8367m 36 20");
 				system("8367m 37 4");
 				system("8367m 39 65553");	
+			}
+			else if(!strcmp(nvram_safe_get("vlan_isp"), "m1_fiber"))//VoIP: P1 tag. Cherry Cho added in 2012/1/13.
+			{
+				system("8367m 40 1");
+				system("8367m 38 2");/* VoIP: P1  2 = 0x10 */
+				/* Internet */
+				system("8367m 36 1103");
+				system("8367m 37 1");
+				system("8367m 39 51184413");
+				/* VoIP */
+				system("8367m 36 1107");
+				system("8367m 37 1");				
+				system("8367m 39 18");//VoIP Port: P1 tag
 			}
 			else/* Cherry Cho added in 2011/7/11. */
 			{

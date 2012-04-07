@@ -3896,7 +3896,7 @@ stop_service_main(int type)
 		stop_upnp();
 //		stop_dns_dhcpd();
 		stop_ots();
-		stop_networkmap();
+//		stop_networkmap();
 //		stop_telnetd();
 		if (pids("igmpproxy"))
 			system("killall igmpproxy");

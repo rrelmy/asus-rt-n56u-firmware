@@ -2444,7 +2444,12 @@ else if (v=="ddns_server_x")
 			inputCtrl(document.form.DLSCapable, 0);
 		}
 		else{
-			inputCtrl(document.form.wl_wme_no_ack, 1);
+			if(document.form.wl_gmode.value == "2" || document.form.wl_gmode.value == "1"){	//auto, n only
+					document.form.wl_wme_no_ack.options.selectedIndex=0;
+					inputCtrl(document.form.wl_wme_no_ack, 0);
+			}else{
+					inputCtrl(document.form.wl_wme_no_ack, 1);
+			}
 			inputCtrl(document.form.APSDCapable, 1);
 			inputCtrl(document.form.DLSCapable, 1);
 		}

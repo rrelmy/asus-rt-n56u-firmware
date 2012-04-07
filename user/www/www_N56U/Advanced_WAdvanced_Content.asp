@@ -44,23 +44,20 @@ function initial(){
 	enable_auto_hint(3, 20);
 
 	load_body();
-	if(document.form.wl_gmode.value == "1")
-		$("HT_OpMode").disabled = false;
-	else{
+	if(document.form.wl_gmode.value == "1"){	//n only
+		inputCtrl(document.form.HT_OpMode, 1);
+		$("wl_wme_tr").style.display = "none";
+		
+	}else if(document.form.wl_gmode.value == "2"){	//Auto
 		$("HT_OpMode").value = "0";
-		$("HT_OpMode").disabled = true;
+		inputCtrl(document.form.HT_OpMode, 0);
+		$("wl_wme_tr").style.display = "none";
+			
+	}else{
+		$("HT_OpMode").value = "0";
+		inputCtrl(document.form.HT_OpMode, 0);
+		$("wl_wme_tr").style.display = "";
 	}
-	
-	if(document.form.wl_gmode.value == "2" || document.form.wl_gmode.value == "1"){
-		$("wl_wme").value = "1";
-		$("wl_wme").disabled = true;
-	}
-	else
-		$("wl_wme").disabled = false;
-	
-	
-	/*if(document.form.wl_mrate.value != "0" && hwnat == "1" && sw_mode == "1")
-		alert("<#BasicConfig_HWNAT_alert#>");*/
 }
 
 function applyRule(){
@@ -357,7 +354,7 @@ function disableAdvFn(row){
 				</td>
 			</tr>
 			<!--Greenfield by Lock Add in 2008.10.01 -->
-			<tr>
+			<tr id="wl_wme_tr">
 			  <th><a class="hintstyle" href="javascript:void(0);" onClick="openHint(3, 14);"><#WLANConfig11b_x_WMM_itemname#></a></th>
 			  <td>
 				<select name="wl_wme" id="wl_wme" class="input" onChange="return change_common(this, 'WLANConfig11b', 'wl_wme')">

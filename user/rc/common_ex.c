@@ -1095,6 +1095,7 @@ void convert_asus_values(int skipflag)
 	nvram_set("qos_ubw", "");
 	nvram_set("qos_ubw_status", "");
 	nvram_set("qos_ubw_reason", "");
+	nvram_set("wanduck_redirect", "0");
 
 	}
 }
