@@ -111,9 +111,10 @@ stop_dhcpd(void)
 * a no-IP gap in between.
 */
 	if (pids("udhcpd"))
+	{
 		doSystem("killall -%d udhcpd", SIGUSR1);
-	if (pids("udhcpd"))
-		system("killall -%d udhcpd", SIGTERM);
+		doSystem("killall -%d udhcpd", SIGTERM);
+	}
 
 	dprintf("done\n");
 }
@@ -169,13 +170,13 @@ start_telnetd()
 {
 	char *telnetd_argv[] = {"telnetd", NULL};
 
+	if (!nvram_match("telnetd", "1"))
+		return 0;
+
 	if (pids("telnetd"))
 		system("killall telnetd");
 
 	chpass(nvram_safe_get("http_username"), nvram_safe_get("http_passwd"));	// vsftpd also needs
-
-//	if (!nvram_match("telnetd", "1"))
-//		return 0;
 
 	return system("telnetd");
 }
@@ -187,12 +188,23 @@ stop_telnetd()
 		system("killall telnetd");
 }
 
+int 
+run_telnetd()
+{
+	char *telnetd_argv[] = {"telnetd", NULL};
+
+	if (pids("telnetd"))
+		system("killall telnetd");
+
+	chpass(nvram_safe_get("http_username"), nvram_safe_get("http_passwd"));	// vsftpd also needs
+
+	return system("telnetd");
+}
+
 int
 start_httpd(void)
 {
 	int ret;
-	pid_t pid;
-	char *httpd_argv[] = {"httpd", "eth3", NULL};
 
 	chdir("/www");
 
@@ -231,11 +243,32 @@ stop_rstats(void)
 void
 start_rstats(int new)
 {
-        if (nvram_match("rstats_enable", "1")) {
+        if (nvram_match("wan_route_x", "IP_Routed") && nvram_match("rstats_enable", "1")) {
                 stop_rstats();
                 if (new) xstart("rstats", "--new");
                 else xstart("rstats");
         }
+}
+
+void
+restart_rstats()
+{
+	if (nvram_match("rstats_bak", "1"))
+	{
+		nvram_set("rstats_path", "*nvram");
+		if (nvram_match("rstats_new", "1"))
+		{
+			start_rstats(1);
+			nvram_set("rstats_new", "0");
+		}
+		else
+			start_rstats(0);
+	}
+	else 
+	{
+		nvram_set("rstats_path", "");
+		start_rstats(0);
+	}
 }
 ////////^^^^^^^^^^^^^^^^^^^jerry5 2009.07
 #endif
@@ -244,13 +277,12 @@ start_upnp()
 {
 	char cmdbuf[64];
 	char *wan_proto;
-	pid_t pid;
 
 #ifdef WIFI_LOGO
 	return 0;
 #endif
 
-	if (!nvram_invmatch("upnp_enable_ex", "0") || nvram_match("router_disable", "1"))
+	if (nvram_match("upnp_enable_ex", "0") || nvram_match("router_disable", "1"))
 		return 0;
 
 	system("route add -net 239.0.0.0 netmask 255.0.0.0 dev br0");
@@ -263,11 +295,11 @@ start_upnp()
 	    strcmp(wan_proto, "pptp") == 0 || 
 	    strcmp(wan_proto, "l2tp") == 0)
 	{
-		system("upnpd ppp0 br0 &");
+		system("upnpd -f ppp0 br0 &");
 	}
 	else
 	{
-		system("upnpd eth3 br0 &");
+		system("upnpd -f eth3 br0 &");
 	}
 
 	return 0;
@@ -278,8 +310,8 @@ stop_upnp(void)
 {
 	if (pids("upnpd"))
 	{
-		system("killall -SIGUSR1 upnpd");
-		system("killall -SIGTERM upnpd");
+		kill_pidfile_s("/var/run/upnpd.pid", SIGTERM);
+		sleep(2);
 	}
 }
 
@@ -311,7 +343,7 @@ stop_ntpc(void)
 //		return 0;
 #ifdef ASUS_EXT
 	if (pids("ntp"))
-		system("killall ntp");
+		system("killall -SIGTERM ntp");
 	if (pids("ntpclient"))
 		system("killall ntpclient");
 #else
@@ -412,39 +444,23 @@ start_services(void)
 	start_networkmap();
 
 #if (!defined(W7_LOGO) && !defined(WIFI_LOGO))
-////////vvvvvvvvvvvvvvvvvvvvv    jerry5 2009.08
-        if (nvram_match("rstats_bak", "1")) {
-                nvram_set("rstats_path", "*nvram");
-                if (nvram_match("rstats_new", "1")) {
-                        start_rstats(1);
-                        nvram_set("rstats_new", "0");
-                }
-                else
-                        start_rstats(0);
-        }
-        else {
-                nvram_set("rstats_path", "");
-                start_rstats(0);
-        }
-/////////^^^^^^^^^^^^^^^^^^^   jerry5
-#endif
-#if (!defined(W7_LOGO) && !defined(WIFI_LOGO))
 	start_detect_internet();
+	restart_rstats();
 #endif
 	start_httpd();
 
 	start_watchdog();
-        
+
+#ifndef WIFI_LOGO
+	start_lltd();
+#endif
+
 	if (nvram_match("lan_stp", "1") && !is_ap_mode())
 	{
 		fprintf(stderr, "resume stp forwarding delay and hello time\n");
 		system("brctl setfd br0 15");
 		system("brctl sethello br0 2");
 	}
-
-#ifndef WIFI_LOGO
-	start_lltd();
-#endif
 
 #ifdef WSC
 	if (nvram_match("wps_band", "0"))
@@ -568,7 +584,11 @@ int start_wanduck(void)
 	return 0;
 #endif
 
-	if (nvram_match("wanduck_down", "1") || nvram_match("wan_route_x", "IP_Bridged") || nvram_match("wan_pppoe_relay_x", "1"))
+	if (nvram_match("wan_route_x", "IP_Bridged"))
+		return -1;
+	else if (nvram_match("wanduck_down", "1"))
+		return -1;
+	else if	(nvram_match("wan_pppoe_relay_x", "1"))
 		return -1;
 	
 	char *argv[] = {"/usr/sbin/wanduck", NULL};

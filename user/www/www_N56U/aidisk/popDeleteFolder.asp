@@ -15,7 +15,7 @@ var selectedPool = parent.getSelectedPool();
 var selectedFolder = parent.getSelectedFolder();
 
 function initial(){
-	showtext($("selected_Folder"), selectedFolder);
+	showtext($("selected_Folder"), showhtmlspace(showhtmland(selectedFolder)));
 	document.deleteFolderForm.Cancel.focus();
 	clickevent();
 }

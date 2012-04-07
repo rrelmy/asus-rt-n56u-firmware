@@ -26,6 +26,8 @@ romfs:
 	rm -Rf $(ROMFS_DIR)/www
 #	cp -R www_N13 $(ROMFS_DIR)/www
 	cp -R www_N56U $(ROMFS_DIR)/www
+	rm -f $(ROMFS_DIR)/www/httpd_check.htm
+	echo "ASUSTeK" > $(ROMFS_DIR)/www/httpd_check.htm
 	touch $(ROMFS_DIR)/tmp/settings
 	cd $(ROMFS_DIR)/www && ln -sf ../tmp/settings Settings.CFG && cd ../..
 	cd $(ROMFS_DIR)/www && ln -sf ../tmp/settings Settings_RT-N56U.CFG && cd ../..

@@ -44,6 +44,10 @@
 #define STARTING_ENTRY_ID_DEFAULT 0
 #define STARTING_ENTRY_ID_XBOX360 100000
 
+#define NO_ACTION 0
+#define REFRESH_ACTION 1
+#define TERMINATE_ACTION 2
+
 #define UPNP_DESCRIPTION \
 "<?xml version=\"1.0\" encoding=\"utf-8\"?>" \
 "<root xmlns=\"urn:schemas-upnp-org:device-1-0\">" \
@@ -115,9 +119,12 @@ struct ushare_t {
   bool verbose;
   bool daemon;
   bool override_iconv_err;
+  bool refresh;
   char *cfg_file;
-  pthread_mutex_t termination_mutex;
-  pthread_cond_t termination_cond;
+  pthread_mutex_t action_mutex;
+  pthread_cond_t action_cond;
+
+  int action;
 };
 
 struct action_event_t {

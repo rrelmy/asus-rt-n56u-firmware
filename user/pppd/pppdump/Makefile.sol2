@@ -1,6 +1,6 @@
 #
 # pppdump Makefile for SVR4 systems
-# $Id: Makefile.sol2,v 1.1.1.1 2007/02/15 12:14:18 jiahao Exp $
+# $Id: Makefile.sol2,v 1.4 2002/09/07 05:15:25 carlsonj Exp $
 #
 
 include ../Makedefs.com

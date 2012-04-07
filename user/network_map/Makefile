@@ -10,7 +10,7 @@ LDFLAGS += -L$(SHDIR) -L$(USERDIR)/netconf -lshared -lnetconf
 
 #CFLAGS	+= -DDEBUG -DDEBUG_MORE
 
-all: $(EXEC)# arpstorm
+all: $(EXEC) #arpstorm
 
 $(EXEC): $(OBJS)
 	$(CC) -o $@ $^ $(LDFLAGS) $(CFLAGS)

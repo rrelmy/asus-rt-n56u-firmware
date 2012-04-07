@@ -41,7 +41,7 @@ function initial(){
 		
 	show_footer();
 	
-	enable_auto_hint(3, 16);
+	enable_auto_hint(3, 20);
 
 	load_body();
 	$("rt_rate").style.display = "none";
@@ -239,9 +239,9 @@ function disableAdvFn(row){
 			<tr>
 				<th><a class="hintstyle" href="javascript:void(0);" onClick="openHint(3, 7);"><#WLANConfig11b_MultiRateAll_itemname#></a></th>
 				<td>
-					<select name="rt_mrate" class="input" onChange="return change_common(this, 'WLANConfig11b', 'rt_mrate')">
+					<select name="rt_mrate" class="input" onClick="openHint(3, 7);" onChange="return change_common(this, 'WLANConfig11b', 'rt_mrate')">
 						<option value="0" <% nvram_match_x("WLANConfig11b", "rt_mrate", "0", "selected"); %>>Disable</option>
-						<option value="1" <% nvram_match_x("WLANConfig11b", "rt_mrate", "1", "selected"); %>>1</option>
+						<!--option value="1" <% nvram_match_x("WLANConfig11b", "rt_mrate", "1", "selected"); %>>1</option>
 						<option value="2" <% nvram_match_x("WLANConfig11b", "rt_mrate", "2", "selected"); %>>2</option>
 						<option value="3" <% nvram_match_x("WLANConfig11b", "rt_mrate", "3", "selected"); %>>5.5</option>
 						<option value="4" <% nvram_match_x("WLANConfig11b", "rt_mrate", "4", "selected"); %>>6</option>
@@ -252,7 +252,7 @@ function disableAdvFn(row){
 						<option value="9" <% nvram_match_x("WLANConfig11b", "rt_mrate", "9", "selected"); %>>24</option>
 						<option value="10" <% nvram_match_x("WLANConfig11b", "rt_mrate", "10", "selected"); %>>36</option>
 						<option value="11" <% nvram_match_x("WLANConfig11b", "rt_mrate", "11", "selected"); %>>48</option>
-						<option value="12" <% nvram_match_x("WLANConfig11b", "rt_mrate", "12", "selected"); %>>54</option>
+						<option value="12" <% nvram_match_x("WLANConfig11b", "rt_mrate", "12", "selected"); %>>54</option-->
 						<option value="13" <% nvram_match_x("WLANConfig11b", "rt_mrate", "13", "selected"); %>>Auto</option>
 					</select>
 				</td>

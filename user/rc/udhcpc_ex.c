@@ -114,93 +114,42 @@ bound(void)
 
 	snprintf(prefix, sizeof(prefix), "lan_");
 
-	if (nvram_match("ui_triggered", "0") || nvram_invmatch("sw_mode_ex", "2"))
-	{
-		if ((value = getenv("ip")))
-			nvram_set(strcat_r(prefix, "ipaddr_t", tmp), value);
-		if ((value = getenv("subnet")))
-			nvram_set(strcat_r(prefix, "netmask_t", tmp), value);
-		if ((value = getenv("router")))
-			nvram_set(strcat_r(prefix, "gateway_t", tmp), value);
-		if ((value = getenv("dns")))
-			nvram_set(strcat_r(prefix, "dns_t", tmp), value);
-		if ((value = getenv("wins")))
-			nvram_set(strcat_r(prefix, "wins_t", tmp), value);
-		//if ((value = getenv("hostname")))	// oleg patch del
-		//	sethostname(value, strlen(value) + 1);
-		if ((value = getenv("domain")))
-			nvram_set(strcat_r(prefix, "domain_t", tmp), value);
-		if ((value = getenv("lease"))) {
-			nvram_set(strcat_r(prefix, "lease_t", tmp), value);
-			expires(lan_ifname, atoi(value));
-		}
+	if ((value = getenv("ip")))
+		nvram_set(strcat_r(prefix, "ipaddr_t", tmp), value);
+	if ((value = getenv("subnet")))
+		nvram_set(strcat_r(prefix, "netmask_t", tmp), value);
+	if ((value = getenv("router")))
+		nvram_set(strcat_r(prefix, "gateway_t", tmp), value);
+	if ((value = getenv("dns")))
+		nvram_set(strcat_r(prefix, "dns_t", tmp), value);
+	if ((value = getenv("wins")))
+		nvram_set(strcat_r(prefix, "wins_t", tmp), value);
+	//if ((value = getenv("hostname")))	// oleg patch del
+	//	sethostname(value, strlen(value) + 1);
+	if ((value = getenv("domain")))
+		nvram_set(strcat_r(prefix, "domain_t", tmp), value);
+	if ((value = getenv("lease"))) {
+		nvram_set(strcat_r(prefix, "lease_t", tmp), value);
+		expires(lan_ifname, atoi(value));
 	}
-	else	// step 1 of 2-step dhcp lease application for RT-N13 repeater mode UI
-	{
-		if ((value = getenv("ip")))
-			nvram_set(strcat_r(prefix, "ipaddr_new", tmp), trim_r(value));
-		if ((value = getenv("subnet")))
-			nvram_set(strcat_r(prefix, "netmask_new", tmp), trim_r(value));
-		if ((value = getenv("router")))
-			nvram_set(strcat_r(prefix, "gateway_new", tmp), trim_r(value));
-		if ((value = getenv("dns")))
-			nvram_set(strcat_r(prefix, "dns_new", tmp), trim_r(value));
-		else
-			nvram_set(strcat_r(prefix, "dns_new", tmp), "");
-		if ((value = getenv("wins")))
-			nvram_set(strcat_r(prefix, "wins_new", tmp), trim_r(value));
-		else
-			nvram_set(strcat_r(prefix, "wins_new", tmp), "");
-		if ((value = getenv("domain")))
-			nvram_set(strcat_r(prefix, "domain_new", tmp), trim_r(value));
-		else
-			nvram_set(strcat_r(prefix, "domain_new", tmp), "");
-		if ((value = getenv("lease")))
-		{
-			nvram_set(strcat_r(prefix, "lease_new", tmp), trim_r(value));
-			expires(lan_ifname, atoi(value));
-		}
-		else
-			nvram_set(strcat_r(prefix, "lease_new", tmp), "");
-		nvram_set("lan_ifname_new", lan_ifname);
-		nvram_set("lan_udhcpstate_new", udhcpstate);
+		
+	ifconfig(lan_ifname, IFUP,
+		nvram_safe_get(strcat_r(prefix, "ipaddr_t", tmp)),
+		nvram_safe_get(strcat_r(prefix, "netmask_t", tmp)));
 
-		fprintf(stderr, "Get lease %s/%s from %s\n",
-			nvram_safe_get("lan_ipaddr_new"),
-			nvram_safe_get("lan_netmask_new"),
-			nvram_safe_get("lan_gateway_new"));
-	}
-/*
-	if (nvram_match("sw_mode_ex", "2"))
-	{
-		if (!kill_pidfile_s("/var/run/udhcpd.pid", SIGUSR1))
-			kill_pidfile_s("/var/run/udhcpd.pid", SIGTERM);
-	}
+//	if (nvram_match("dhcp_renew", "1"))	// for detectWAN
+//		kill_pidfile_s("/var/run/detectWan.pid", SIGUSR1);
+	nvram_set("dhcp_renew", "0");
 
-	if (nvram_match("sw_mode_ex", "2") && nvram_match("ui_triggered", "1"))
-	{	// apply dhcp lease in case RT-N13 repeater mode UI does not
-		char *dhcpc_argv[] = {"dhcpc_apply_delayed", NULL};
-		pid_t pid;
+	lan_up_ex(lan_ifname);
 
-		_eval(dhcpc_argv, NULL, 0, &pid);
-	}
-	else
-*/
-	{
-		ifconfig(lan_ifname, IFUP,
-			 nvram_safe_get(strcat_r(prefix, "ipaddr_t", tmp)),
-			 nvram_safe_get(strcat_r(prefix, "netmask_t", tmp)));
+	logmessage("dhcp client", "%s IP: %s from %s", 
+		udhcpstate, 
+		nvram_safe_get(strcat_r(prefix, "ipaddr_t", tmp)), 
+		nvram_safe_get(strcat_r(prefix, "gateway_t", tmp)));
 
-		lan_up_ex(lan_ifname);
-
-		logmessage("dhcp client", "%s IP : %s from %s", 
-			udhcpstate, 
-			nvram_safe_get(strcat_r(prefix, "ipaddr_t", tmp)), 
-			nvram_safe_get(strcat_r(prefix, "gateway_t", tmp)));
-
-		//wanmessage("");
-	}
 	dprintf("done\n");
+
 	return 0;
 }
 
@@ -284,7 +233,7 @@ apply(void)	// step 2 of 2-step dhcp lease application for RT-N13 repeater mode 
 
 	lan_up_ex(lan_ifname);
 
-	logmessage("dhcp client", "%s IP : %s from %s", 
+	logmessage("dhcp client", "%s IP: %s from %s", 
 		udhcpstate_local,
 		nvram_safe_get("lan_ipaddr_t"),
 		nvram_safe_get("lan_netmask_t"));

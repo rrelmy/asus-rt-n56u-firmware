@@ -1667,10 +1667,10 @@ static int update_variables_ex(int eid, webs_t wp, int argc, char_t **argv){
 				}
 			}
 		}
-		
+
 		sid_list = sid_list+strlen(serviceId)+1;
 	}
-	
+
 	if (strlen(script) > 0){
 		printf("There is a script!: %s\n", script);	// tmp test
 #ifdef DLM
@@ -1678,7 +1678,7 @@ static int update_variables_ex(int eid, webs_t wp, int argc, char_t **argv){
 			nvram_set("st_tool_t", "/bin/fscheck");
 			nvram_set("st_toolstatus_t", "USBstarting");
 			nvram_set("st_time_t", "3");
-			
+
 			websRedirect(wp, "Checking.asp");
 			deliver_signal("/var/run/infosvr.pid", SIGUSR1);
 			return 0;
@@ -1696,18 +1696,18 @@ static int update_variables_ex(int eid, webs_t wp, int argc, char_t **argv){
 				nvram_match("wl_auth_mode", "wpa") ||
 				nvram_match("wl_auth_mode", "wpa2") ||
 				nvram_match("wl_auth_mode", "radius") ||
-				(nvram_invmatch("sw_mode_ex", "1") && nvram_invmatch("sw_mode_ex", "4")))
+				!nvram_match("wan_route_x", "IP_Routed"))
 			{
 				goto WPS_refresh;
 			}
-			
+
 			char wps_enable_old[3];
 			strcpy(wps_enable_old, nvram_safe_get("wps_enable"));
 			
 			nvram_set("wps_enable", websGetVar(wp, "wps_enable",""));
 			if (websGetVar(wp, "wps_mode", NULL))
 				nvram_set("wps_mode", websGetVar(wp, "wps_mode", NULL));
-			
+
 			if (nvram_match("wps_enable", "0"))
 			{
 				nvram_set("wps_start_flag", "0");
@@ -1760,7 +1760,7 @@ static int update_variables_ex(int eid, webs_t wp, int argc, char_t **argv){
 				nvram_match("wl_auth_mode", "wpa") ||
 				nvram_match("wl_auth_mode", "wpa2") ||
 				nvram_match("wl_auth_mode", "radius") ||
-				(nvram_invmatch("sw_mode_ex", "1") && nvram_invmatch("sw_mode_ex", "4")))
+				!nvram_match("wan_route_x", "IP_Routed"))
 				return 0;
 
 		//2009.01 magic{
@@ -1779,7 +1779,7 @@ static int update_variables_ex(int eid, webs_t wp, int argc, char_t **argv){
 				nvram_match("wl_auth_mode", "wpa") ||
 				nvram_match("wl_auth_mode", "wpa2") ||
 				nvram_match("wl_auth_mode", "radius") ||
-				(nvram_invmatch("sw_mode_ex", "1") && nvram_invmatch("sw_mode_ex", "4")))
+				!nvram_match("wan_route_x", "IP_Routed"))
 				return 0;
 
 			csprintf("WPS: NM PBC\n");
@@ -1975,7 +1975,8 @@ static int ej_notify_services(int eid, webs_t wp, int argc, char_t **argv){
 		no_run_str = 1;
 		if ((restart_needed_bits & RESTART_REBOOT) != 0){
 			printf("*** Run notify_rc restart_reboot! \n");
-			notify_rc("restart_reboot");
+			nvram_set("reboot", "1");
+//			notify_rc("restart_reboot");
 		}
 		else if ((restart_needed_bits & RESTART_NETWORKING) != 0){
 			csprintf("*** run notify_rc restart_networking! \n");
@@ -2825,6 +2826,7 @@ static int wan_action_hook(int eid, webs_t wp, int argc, char_t **argv){
 	fprintf(stderr, "wan action: %s\n", action);
 	
 	if (!strcmp(action, "Connect")){
+		nvram_set("link_internet", "2");
 		nvram_unset("manually_disconnect_wan");	// 2008.01 James.
 		nvram_set("rc_service", "wan_connect");
 		needed_seconds = 5;	// WL500-series
@@ -2834,6 +2836,7 @@ csprintf("sleep 1 second.\n");
 		sleep(1);
 	}
 	else if (!strcmp(action, "Disconnect")){
+		nvram_set("link_internet", "2");
 		nvram_set("manually_disconnect_wan", "1");	// 2008.01 James.
 		nvram_set("rc_service", "wan_disconnect");
 		needed_seconds = 5;	// WL500-series

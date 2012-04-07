@@ -350,14 +350,14 @@ start_igmpproxy(char *wan_ifname)
 	char *altnet = nvram_safe_get("mr_altnet_x");
 	char *altnet_mask;
 
+	if (atoi(nvram_safe_get("udpxy_enable_x")))
+		eval("/usr/sbin/udpxy", "-a", nvram_get("lan_ifname") ? : "br0",
+			"-m", wan_ifname, "-p", nvram_get("udpxy_enable_x"));
+
 	if (!nvram_match("mr_enable_x", "1"))
 		return;
 
 	printf("start igmpproxy [%s]\n", wan_ifname);   // tmp test
-
-	if (atoi(nvram_safe_get("udpxy_enable_x")))
-		eval("/usr/sbin/udpxy", "-a", nvram_get("lan_ifname") ? : "br0",
-			"-m", wan_ifname, "-p", nvram_get("udpxy_enable_x"));
 
 	if ((fp = fopen(igmpproxy_conf, "w")) == NULL) {
 		perror(igmpproxy_conf);
@@ -457,6 +457,10 @@ void
 vconfig()
 {
 	int stbport;
+	int controlrate_unknown_unicast;
+	int controlrate_unknown_multicast;
+	int controlrate_multicast;
+	int controlrate_broadcast;
 
 	doSystem("ifconfig eth2 hw ether %s", nvram_safe_get("lan_hwaddr"));
 	ifconfig("eth2", IFUP, NULL, NULL);
@@ -517,35 +521,40 @@ vconfig()
 	system("brctl addbr br0");
 	system("brctl setfd br0 0.1");
 	system("brctl sethello br0 0.1");
-
+#if (!defined(W7_LOGO) && !defined(WIFI_LOGO))
 	if (nvram_match("lan_stp", "0") || is_ap_mode() || is_3g_mode())
 		system("brctl stp br0 0");
 	else
 		system("brctl stp br0 1");
-
+#else
+	system("brctl stp br0 1");
+#endif
 	if ((!is_ap_mode()) && (!is_3g_mode()))
 	{
 		stbport = atoi(nvram_safe_get("wan_stb_x"));
 
-		if (stbport < 0 || stbport > 5)
+		if (stbport < 0 || stbport > 6)
 			stbport = 0;
 
 		switch(stbport)
 		{
-			case 1:	// WLLLW
+			case 1:	// LLLWW
 				system("8367m 8 1");
 				break;
-			case 2:	// LWLLW
+			case 2:	// LLWLW
 				system("8367m 8 2");
 				break;
-			case 3:	// LLWLW
+			case 3:	// LWLLW
 				system("8367m 8 3");
 				break;
-			case 4:	// LLLWW
+			case 4:	// WLLLW
 				system("8367m 8 4");
 				break;
-			case 5:	// LLWWW
+			case 5:	// WWLLW
 				system("8367m 8 5");
+				break;
+			case 6: // LLWWW
+				system("8367m 8 6");
 				break;
 			default:// LLLLW
 //				system("8367m 8 0");
@@ -559,6 +568,46 @@ vconfig()
 		system("brctl addif br0 eth2");
 		system("brctl addif br0 eth3");
 	}
+
+	/* unknown unicast storm control */
+	if (!nvram_get("controlrate_unknown_unicast"))
+		controlrate_unknown_unicast = 16;
+	else
+		controlrate_unknown_unicast = atoi(nvram_get("controlrate_unknown_unicast"));
+	if (controlrate_unknown_unicast < 0 || controlrate_unknown_unicast > 1024)
+		controlrate_unknown_unicast = 0;
+	if (controlrate_unknown_unicast)
+		doSystem("8367m 22 %d", controlrate_unknown_unicast);
+
+	/* unknown multicast storm control */
+	if (!nvram_get("controlrate_unknown_multicast"))
+		controlrate_unknown_multicast = 20;
+	else
+		controlrate_unknown_multicast = atoi(nvram_get("controlrate_unknown_multicast"));
+	if (controlrate_unknown_multicast < 0 || controlrate_unknown_multicast > 1024)
+		controlrate_unknown_multicast = 0;
+	if (controlrate_unknown_multicast)
+		doSystem("8367m 23 %d", controlrate_unknown_multicast);
+
+	/* multicast storm control */
+	if (!nvram_get("controlrate_multicast"))
+		controlrate_multicast = 20;
+	else
+		controlrate_multicast = atoi(nvram_get("controlrate_multicast"));
+	if (controlrate_multicast < 0 || controlrate_multicast > 1024)
+		controlrate_multicast = 0;
+	if (controlrate_multicast)
+		doSystem("8367m 24 %d", controlrate_multicast);
+
+	/* broadcast storm control */
+	if (!nvram_get("controlrate_broadcast"))
+		controlrate_broadcast = 16;
+	else
+		controlrate_broadcast = atoi(nvram_get("controlrate_broadcast"));
+	if (controlrate_broadcast < 0 || controlrate_broadcast > 1024)
+		controlrate_broadcast = 0;
+	if (controlrate_broadcast)
+		doSystem("8367m 25 %d", controlrate_broadcast);
 
 	rtl8367m_AllPort_linkUp();
 	kill_pidfile_s("/var/run/linkstatus_monitor.pid", SIGALRM);
@@ -594,10 +643,12 @@ vconfig()
 		system("brctl addif br0 wdsi3");
 	}
 #if (!defined(W7_LOGO) && !defined(WIFI_LOGO))
-	if (nvram_match("IgmpSnEnable", "1"))
+//	if (nvram_match("IgmpSnEnable", "1"))
+	if (atoi(nvram_safe_get("wl_mrate")))
 		doSystem("iwpriv %s set IgmpSnEnable=1", WIF);
 
-	if (nvram_match("rt_IgmpSnEnable", "1"))
+//	if (nvram_match("rt_IgmpSnEnable", "1"))
+	if (atoi(nvram_safe_get("rt_mrate")))
 		doSystem("iwpriv %s set IgmpSnEnable=1", WIF2G);
 #endif
 
@@ -922,7 +973,6 @@ int is_hwnat_loaded()
                 return 0;
 }
 
-
 void
 start_wan(void)
 {
@@ -944,8 +994,8 @@ start_wan(void)
 //		nvram_match("mr_enable_x", "0") &&
 		(nvram_match("wl_radio_x", "0") || nvram_match("wl_mrate", "0")) &&
 		(nvram_match("rt_radio_x", "0") || nvram_match("rt_mrate", "0")) &&
-		!nvram_match("wan0_proto", "pptp") &&
-		!nvram_match("wan0_proto", "l2tp") &&
+		//!nvram_match("wan0_proto", "pptp") &&
+		//!nvram_match("wan0_proto", "l2tp") &&
 		!enable_qos() &&
 		!is_hwnat_loaded()
 	)
@@ -1118,8 +1168,8 @@ start_wan(void)
 				nvram_safe_get(strcat_r(prefix, "pppoe_ipaddr", tmp)),
 				nvram_safe_get(strcat_r(prefix, "pppoe_netmask", tmp)));
 
-			if (strcmp(wan_proto, "pppoe") != 0)	/* pptp, l2tp*/
-			{
+//			if (strcmp(wan_proto, "pppoe") != 0)	/* pptp, l2tp, pppoe too */
+//			{
 				/* launch dhcp client and wait for lease forawhile */
 				if (nvram_match(strcat_r(prefix, "pppoe_ipaddr", tmp), "0.0.0.0")) 
 				{
@@ -1153,7 +1203,7 @@ start_wan(void)
 					/* start multicast router */
 					start_igmpproxy(wan_ifname);
 				}
-			}
+//			}
 // ~ oleg patch
 
 			/* launch pppoe client daemon */
@@ -1259,26 +1309,26 @@ start_wan(void)
 			nvram_set("wan_ifname_t", "eth3");
 #endif
 		}
-#ifdef DHCP_PPTP
- 		if (strcmp(wan_proto,"pptp")==0 && nvram_match(strcat_r(prefix, "pppoe_gateway", tmp), ""))
- 		{
-			char *wan_hostname = nvram_safe_get(strcat_r(prefix, "hostname", tmp));
-			char *dhcp_argv[] = { "udhcpc",
-					      "-i", wan_ifname,
-					      "-p", (sprintf(tmp, "/var/run/udhcpc%d.pid", unit), tmp),
-					      "-s", "/tmp/udhcpc",
-					      wan_hostname && *wan_hostname ? "-H" : NULL,
-					      wan_hostname && *wan_hostname ? wan_hostname : NULL,
-					      NULL
-			};
-			/* Start dhcp daemon */
-			_eval(dhcp_argv, NULL, 0, &pid);
-#ifdef ASUS_EXT
-			wanmessage("Can not get IP from server");
-			nvram_set("wan_ifname_t", wan_ifname);
-#endif
-		}
-#endif
+//#ifdef DHCP_PPTP
+// 		if (strcmp(wan_proto,"pptp")==0 && nvram_match(strcat_r(prefix, "pppoe_gateway", tmp), ""))
+// 		{
+//			char *wan_hostname = nvram_safe_get(strcat_r(prefix, "hostname", tmp));
+//			char *dhcp_argv[] = { "udhcpc",
+//					      "-i", wan_ifname,
+//					      "-p", (sprintf(tmp, "/var/run/udhcpc%d.pid", unit), tmp),
+//					      "-s", "/tmp/udhcpc",
+//					      wan_hostname && *wan_hostname ? "-H" : NULL,
+//					      wan_hostname && *wan_hostname ? wan_hostname : NULL,
+//					      NULL
+//			};
+//			/* Start dhcp daemon */
+//			_eval(dhcp_argv, NULL, 0, &pid);
+//#ifdef ASUS_EXT
+//			wanmessage("Can not get IP from server");
+//			nvram_set("wan_ifname_t", wan_ifname);
+//#endif
+//		}
+//#endif
 
 #ifndef ASUS_EXT
 		/* Start connection dependent firewall */
@@ -1303,8 +1353,8 @@ stop_wan(void)
 	char name[80], *next;
 
 	if (	nvram_match("sw_mode_ex", "1") &&
-		!nvram_match("wan0_proto", "pptp") &&
-		!nvram_match("wan0_proto", "l2tp") &&
+		//!nvram_match("wan0_proto", "pptp") &&
+		//!nvram_match("wan0_proto", "l2tp") &&
 		is_hwnat_loaded()
 	)
 		system("rmmod hw_nat");
@@ -1322,7 +1372,7 @@ stop_wan(void)
 	if (pids("l2tpd"))
 		system("killall l2tpd");	// oleg patch
 	if (pids("pppd"))
-		system("killall -SIGKILL pppd");
+		system("killall pppd");
 	if (pids("pptp"))
 		system("killall pptp");
 	if (pids("udhcpc"))
@@ -1359,8 +1409,10 @@ stop_wan_ppp()
 {
 	printf(" stop wan ppp \n");	// tmp test
 	//system("killall -SIGSTOP pppd");
+	if (pids("l2tpd"))
+		system("killall l2tpd");
 	if (pids("pppd"))
-		system("killall -SIGKILL pppd");
+		system("killall pppd");
 	if (pids("pptp"))
 		system("killall pptp");
 	sleep(3);
@@ -1379,8 +1431,10 @@ restart_wan_ppp()	/* pptp, l2tp */
 
 	if (pids("udhcpc"))
 		system("killall -SIGTERM udhcpc");
+	if (pids("l2tpd"))
+		system("killall l2tpd");
 	if (pids("pppd"))
-		system("killall -SIGKILL pppd");
+		system("killall pppd");
 	if (pids("pppoe-relay"))
 		system("killall pppoe-relay");
 	sleep(3);
@@ -1416,7 +1470,7 @@ stop_wan2(void)
 	if (pids("l2tpd"))
 		system("killall l2tpd");	// oleg patch
 	if (pids("pppd"))
-		system("killall -SIGKILL pppd");
+		system("killall pppd");
 	if (pids("pptp"))
 		system("killall pptp");
 	if (pids("udhcpc"))
@@ -1555,11 +1609,14 @@ wan_up(char *wan_ifname)	// oleg patch, replace
 	char tmp[100], prefix[] = "wanXXXXXXXXXX_";
 	char *wan_proto, *gateway;
 
-//	while (strcmp(nvram_safe_get("hotplug_usb_mem_cric"), "0")!=0)
-//		sleep(1);
-//	nvram_set("wanup_mem_cric", "1");
-
-	nvram_set("wanup_chk", "1");
+// 2010.09 James. {
+	{
+		printf("rc: Send SIGUSR1 to wanduck.\n");
+		kill_pidfile_s("/var/run/wanduck.pid", SIGUSR1);
+		printf("rc: Send SIGUSR2 to wanduck.\n");
+		kill_pidfile_s("/var/run/wanduck.pid", SIGUSR2);
+	}
+// 2010.09 James. }
 
 	/* Figure out nvram variable name prefix for this i/f */
 	if (wan_prefix(wan_ifname, prefix) < 0)
@@ -1686,7 +1743,7 @@ wan_up(char *wan_ifname)	// oleg patch, replace
 	int try_count = 0;
 	nvram_set("qos_ubw", "0");
 //	if (!(!nvram_match("qos_manual_ubw","0") && !nvram_match("qos_manual_ubw","")))
-	while ((nvram_match("qos_ubw", "0") || nvram_match("qos_ubw", "0kbit")) && (try_count++ < 3))
+	while ((nvram_match("qos_ubw", "0") || nvram_match("qos_ubw", "0kbit")) && (try_count++ < 2))
 		qos_get_wan_rate();
 #endif
 //2008.10 magic{
@@ -1731,8 +1788,8 @@ wan_up(char *wan_ifname)	// oleg patch, replace
 		track_set("1");
 
 		if (	nvram_match("sw_mode_ex", "1") &&
-			!nvram_match("wan0_proto", "pptp") &&
-			!nvram_match("wan0_proto", "l2tp") &&
+			//!nvram_match("wan0_proto", "pptp") &&
+			//!nvram_match("wan0_proto", "l2tp") &&
 			is_hwnat_loaded()
 		)
 			system("rmmod hw_nat");
@@ -1776,8 +1833,8 @@ Speedtest_Init_failed_wan_up:
 //			nvram_match("mr_enable_x", "0") &&
 			(nvram_match("wl_radio_x", "0") || nvram_match("wl_mrate", "0")) &&
 			(nvram_match("rt_radio_x", "0") || nvram_match("rt_mrate", "0")) &&
-			!nvram_match("wan0_proto", "pptp") &&
-			!nvram_match("wan0_proto", "l2tp") &&
+			//!nvram_match("wan0_proto", "pptp") &&
+			//!nvram_match("wan0_proto", "l2tp") &&
 			!is_hwnat_loaded()
 		)
 			system("insmod -q hw_nat.ko");
@@ -1785,7 +1842,7 @@ Speedtest_Init_failed_wan_up:
 #endif
 //2008.10 magic}
 
-	if (nvram_match("upnp_started", "1") || nvram_match("ntp_restart_upnp", "1"))
+	if (nvram_match("upnp_started", "1"))
 	{
 		stop_upnp();
 		start_upnp();
@@ -1797,26 +1854,18 @@ Speedtest_Init_failed_wan_up:
 	start_ntpc();
 
 #if (!defined(W7_LOGO) && !defined(WIFI_LOGO))
-//	if (strcasecmp(nvram_safe_get("wl_country_code"), "US"))
-	{
 	if (nvram_match("wan0_proto", "dhcp"))	// 0712 ASUS
 	{
-		if (pids("detectWan"))
-			system("killall detectWan");
-		printf("start detectWan\n");	// tmp test
-		system("detectWan &");
-	}
+//		if (pids("detectWan"))
+//			system("killall detectWan");
+
+		if (!pids("detectWan"))
+		{
+			printf("start detectWan\n");	// tmp test
+			system("detectWan &");
+		}
 	}
 #endif
-
-// 2010.09 James. {
-	if(!strcmp(wan_proto, "dhcp")){
-		printf("rc: Send SIGUSR1 to wanduck.\n");
-		kill_pidfile_s("/var/run/wanduck.pid", SIGUSR1);
-		printf("rc: Send SIGUSR2 to wanduck.\n");
-		kill_pidfile_s("/var/run/wanduck.pid", SIGUSR2);
-	}
-// 2010.09 James. }
 }
 
 void
@@ -1974,9 +2023,17 @@ lan_up_ex(char *lan_ifname)
 	}
 	fclose(fp);
 
+#if (!defined(W7_LOGO) && !defined(WIFI_LOGO))
+	if (!pids("detectWan"))
+	{
+		printf("start detectWan\n");
+		system("detectWan &");
+	}
+#endif
+
 	/* Sync time */
 	stop_ntpc();
-        start_ntpc();
+	start_ntpc();
 	//update_lan_status(1);
 }
 

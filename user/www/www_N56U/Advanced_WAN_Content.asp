@@ -213,7 +213,7 @@ function change_wan_type(wan_type, flag){
 		inputCtrl(document.form.wan_pptp_options_x, 1);
 		// 2008.03 James. patch for Oleg's patch. }
 
-		inputRCtrl1(document.form.wan_pppoe_relay_x, 0);
+		inputRCtrl1(document.form.wan_pppoe_relay_x, 1);
 	}
 	else if(wan_type == "l2tp"){
 		inputCtrl(document.form.wan_dnsenable_x[0], 1);
@@ -233,7 +233,7 @@ function change_wan_type(wan_type, flag){
 		inputCtrl(document.form.wan_pptp_options_x, 0);
 		// 2008.03 James. patch for Oleg's patch. }
 
-		inputRCtrl1(document.form.wan_pppoe_relay_x, 0);
+		inputRCtrl1(document.form.wan_pppoe_relay_x, 1);
 	}
 	else if(wan_type == "static"){
 		inputCtrl(document.form.wan_dnsenable_x[0], 0);
@@ -253,7 +253,7 @@ function change_wan_type(wan_type, flag){
 		inputCtrl(document.form.wan_pptp_options_x, 0);
 		// 2008.03 James. patch for Oleg's patch. }
 
-		inputRCtrl1(document.form.wan_pppoe_relay_x, 0);
+		inputRCtrl1(document.form.wan_pppoe_relay_x, 1);
 	}
 	else{	// Automatic IP
 		inputCtrl(document.form.wan_dnsenable_x[0], 1);
@@ -273,7 +273,7 @@ function change_wan_type(wan_type, flag){
 		inputCtrl(document.form.wan_pptp_options_x, 0);
 		// 2008.03 James. patch for Oleg's patch. }
 
-		inputRCtrl1(document.form.wan_pppoe_relay_x, 0);
+		inputRCtrl1(document.form.wan_pppoe_relay_x, 1);
 	}
 }
 
@@ -520,7 +520,7 @@ function hsdpa_disable(){
 						<table width="100%" border="1" align="center" cellpadding="4" cellspacing="0" bordercolor="#6b8fa3"  class="FormTable">
 							<tr>
 								<th width="30%"><#Layer3Forwarding_x_ConnectionType_itemname#></th>
-								<td  align="left">
+								<td align="left">
 									<select id="wan_proto_menu" class="input" name="wan_proto" onchange="change_wan_type(this.value);fixed_change_wan_type(this.value);">
 										<option value="dhcp" <% nvram_match_x("Layer3Forwarding", "wan_proto", "dhcp", "selected"); %>>Automatic IP</option>
 										<option value="pppoe" <% nvram_match_x("Layer3Forwarding", "wan_proto", "pppoe", "selected"); %>>PPPoE</option>
@@ -540,6 +540,7 @@ function hsdpa_disable(){
 										<option value="2" <% nvram_match_x("Layer3Forwarding", "wan_stb_x", "2", "selected"); %>>LAN2</option>
 										<option value="3" <% nvram_match_x("Layer3Forwarding", "wan_stb_x", "3", "selected"); %>>LAN3</option>
 										<option value="4" <% nvram_match_x("Layer3Forwarding", "wan_stb_x", "4", "selected"); %>>LAN4</option>
+										<option value="6" <% nvram_match_x("Layer3Forwarding", "wan_stb_x", "6", "selected"); %>>LAN1 & LAN2</option>
 										<option value="5" <% nvram_match_x("Layer3Forwarding", "wan_stb_x", "5", "selected"); %>>LAN3 & LAN4</option>
 									</select>
 								</td>
@@ -551,6 +552,14 @@ function hsdpa_disable(){
 									<input type="radio" name="upnp_enable"  class="input" value="0" onclick="return change_common_radio(this, 'LANHostConfig', 'upnp_enable', '0')" <% nvram_match_x("LANHostConfig","upnp_enable", "0", "checked"); %>>No
 								</td>
 							</tr>
+							<tr>
+  	            <th><a class="hintstyle" href="javascript:void(0);" onClick="openHint(7,11);"><#PPPConnection_x_PPPoERelay_itemname#></a></th>
+    	          <td style="font-weight:normal;" align="left">
+      	        	<input type="radio" value="1" name="wan_pppoe_relay_x" class="input" onclick="return change_common_radio(this, 'PPPConnection', 'wan_pppoe_relay_x', '1')" <% nvram_match_x("PPPConnection","wan_pppoe_relay_x", "1", "checked"); %> />Yes
+        	        <input type="radio" value="0" name="wan_pppoe_relay_x" class="input" onclick="return change_common_radio(this, 'PPPConnection', 'wan_pppoe_relay_x', '0')" <% nvram_match_x("PPPConnection","wan_pppoe_relay_x", "0", "checked"); %> />No
+          	    </td>
+            	</tr>
+
 							<!--tr>
 								<th width="30%"><a class="hintstyle" href="javascript:void(0);" onClick="openHint(7,22);"><#BasicConfig_HWNAT_itemname#></th>                 
 								<td style="font-weight:normal;" align="left">
@@ -683,14 +692,6 @@ function hsdpa_disable(){
 								<input type="text" name="wan_pppoe_options_x" value="<% nvram_get_x("PPPConnection", "wan_pppoe_options_x"); %>" class="input" maxlength="255" size="32" onKeyPress="return is_string(this)" onBlur="validate_string(this)"></td>
 						</tr>
 						<!-- 2008.03 James. patch for Oleg's patch. } -->
-
-            <tr>
-              <th><a class="hintstyle" href="javascript:void(0);" onClick="openHint(7,11);"><#PPPConnection_x_PPPoERelay_itemname#></a></th>
-              <td>
-              	<input type="radio" value="1" name="wan_pppoe_relay_x" class="input" onclick="return change_common_radio(this, 'PPPConnection', 'wan_pppoe_relay_x', '1')" <% nvram_match_x("PPPConnection","wan_pppoe_relay_x", "1", "checked"); %> />Yes
-                <input type="radio" value="0" name="wan_pppoe_relay_x" class="input" onclick="return change_common_radio(this, 'PPPConnection', 'wan_pppoe_relay_x', '0')" <% nvram_match_x("PPPConnection","wan_pppoe_relay_x", "0", "checked"); %> />No
-              </td>
-            </tr>
           </table>
         </td>
 	  </tr>

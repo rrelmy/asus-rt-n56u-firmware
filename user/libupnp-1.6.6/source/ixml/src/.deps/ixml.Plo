@@ -1,99 +1,99 @@
 src/ixml.lo src/ixml.o: src/ixml.c ./src/inc/ixmlmembuf.h \
-  /root/temp/source/lib/include/stdlib.h \
-  /root/temp/source/lib/include/features.h \
-  /root/temp/source/lib/include/bits/uClibc_config.h \
-  /root/temp/source/lib/include/sys/cdefs.h \
+  /root/RT-N56U/source/lib/include/stdlib.h \
+  /root/RT-N56U/source/lib/include/features.h \
+  /root/RT-N56U/source/lib/include/bits/uClibc_config.h \
+  /root/RT-N56U/source/lib/include/sys/cdefs.h \
   /opt/buildroot-gcc342/bin/../lib/gcc/mipsel-linux-uclibc/3.4.2/include/stddef.h \
-  /root/temp/source/lib/include/bits/waitflags.h \
-  /root/temp/source/lib/include/bits/waitstatus.h \
-  /root/temp/source/lib/include/endian.h \
-  /root/temp/source/lib/include/bits/endian.h \
-  /root/temp/source/lib/include/sys/types.h \
-  /root/temp/source/lib/include/bits/types.h \
-  /root/temp/source/lib/include/bits/kernel_types.h \
-  /root/temp/source/lib/include/bits/wordsize.h \
-  /root/temp/source/lib/include/bits/pthreadtypes.h \
-  /root/temp/source/lib/include/bits/sched.h \
-  /root/temp/source/lib/include/time.h \
-  /root/temp/source/lib/include/sys/select.h \
-  /root/temp/source/lib/include/bits/select.h \
-  /root/temp/source/lib/include/bits/sigset.h \
-  /root/temp/source/lib/include/bits/time.h \
-  /root/temp/source/lib/include/sys/sysmacros.h \
-  /root/temp/source/lib/include/alloca.h ./inc/ixml.h \
-  /root/temp/source/lib/include/stdio.h \
-  /root/temp/source/lib/include/bits/uClibc_stdio.h \
-  /root/temp/source/lib/include/wchar.h \
-  /root/temp/source/lib/include/bits/wchar.h \
+  /root/RT-N56U/source/lib/include/bits/waitflags.h \
+  /root/RT-N56U/source/lib/include/bits/waitstatus.h \
+  /root/RT-N56U/source/lib/include/endian.h \
+  /root/RT-N56U/source/lib/include/bits/endian.h \
+  /root/RT-N56U/source/lib/include/sys/types.h \
+  /root/RT-N56U/source/lib/include/bits/types.h \
+  /root/RT-N56U/source/lib/include/bits/kernel_types.h \
+  /root/RT-N56U/source/lib/include/bits/wordsize.h \
+  /root/RT-N56U/source/lib/include/bits/pthreadtypes.h \
+  /root/RT-N56U/source/lib/include/bits/sched.h \
+  /root/RT-N56U/source/lib/include/time.h \
+  /root/RT-N56U/source/lib/include/sys/select.h \
+  /root/RT-N56U/source/lib/include/bits/select.h \
+  /root/RT-N56U/source/lib/include/bits/sigset.h \
+  /root/RT-N56U/source/lib/include/bits/time.h \
+  /root/RT-N56U/source/lib/include/sys/sysmacros.h \
+  /root/RT-N56U/source/lib/include/alloca.h ./inc/ixml.h \
+  /root/RT-N56U/source/lib/include/stdio.h \
+  /root/RT-N56U/source/lib/include/bits/uClibc_stdio.h \
+  /root/RT-N56U/source/lib/include/wchar.h \
+  /root/RT-N56U/source/lib/include/bits/wchar.h \
   /opt/buildroot-gcc342/bin/../lib/gcc/mipsel-linux-uclibc/3.4.2/include/stdarg.h \
-  /root/temp/source/lib/include/bits/stdio_lim.h \
-  /root/temp/source/lib/include/string.h \
-  /root/temp/source/lib/include/assert.h ./src/inc/ixmlparser.h \
+  /root/RT-N56U/source/lib/include/bits/stdio_lim.h \
+  /root/RT-N56U/source/lib/include/string.h \
+  /root/RT-N56U/source/lib/include/assert.h ./src/inc/ixmlparser.h \
   ./src/inc/ixmlmembuf.h
 
 ./src/inc/ixmlmembuf.h:
 
-/root/temp/source/lib/include/stdlib.h:
+/root/RT-N56U/source/lib/include/stdlib.h:
 
-/root/temp/source/lib/include/features.h:
+/root/RT-N56U/source/lib/include/features.h:
 
-/root/temp/source/lib/include/bits/uClibc_config.h:
+/root/RT-N56U/source/lib/include/bits/uClibc_config.h:
 
-/root/temp/source/lib/include/sys/cdefs.h:
+/root/RT-N56U/source/lib/include/sys/cdefs.h:
 
 /opt/buildroot-gcc342/bin/../lib/gcc/mipsel-linux-uclibc/3.4.2/include/stddef.h:
 
-/root/temp/source/lib/include/bits/waitflags.h:
+/root/RT-N56U/source/lib/include/bits/waitflags.h:
 
-/root/temp/source/lib/include/bits/waitstatus.h:
+/root/RT-N56U/source/lib/include/bits/waitstatus.h:
 
-/root/temp/source/lib/include/endian.h:
+/root/RT-N56U/source/lib/include/endian.h:
 
-/root/temp/source/lib/include/bits/endian.h:
+/root/RT-N56U/source/lib/include/bits/endian.h:
 
-/root/temp/source/lib/include/sys/types.h:
+/root/RT-N56U/source/lib/include/sys/types.h:
 
-/root/temp/source/lib/include/bits/types.h:
+/root/RT-N56U/source/lib/include/bits/types.h:
 
-/root/temp/source/lib/include/bits/kernel_types.h:
+/root/RT-N56U/source/lib/include/bits/kernel_types.h:
 
-/root/temp/source/lib/include/bits/wordsize.h:
+/root/RT-N56U/source/lib/include/bits/wordsize.h:
 
-/root/temp/source/lib/include/bits/pthreadtypes.h:
+/root/RT-N56U/source/lib/include/bits/pthreadtypes.h:
 
-/root/temp/source/lib/include/bits/sched.h:
+/root/RT-N56U/source/lib/include/bits/sched.h:
 
-/root/temp/source/lib/include/time.h:
+/root/RT-N56U/source/lib/include/time.h:
 
-/root/temp/source/lib/include/sys/select.h:
+/root/RT-N56U/source/lib/include/sys/select.h:
 
-/root/temp/source/lib/include/bits/select.h:
+/root/RT-N56U/source/lib/include/bits/select.h:
 
-/root/temp/source/lib/include/bits/sigset.h:
+/root/RT-N56U/source/lib/include/bits/sigset.h:
 
-/root/temp/source/lib/include/bits/time.h:
+/root/RT-N56U/source/lib/include/bits/time.h:
 
-/root/temp/source/lib/include/sys/sysmacros.h:
+/root/RT-N56U/source/lib/include/sys/sysmacros.h:
 
-/root/temp/source/lib/include/alloca.h:
+/root/RT-N56U/source/lib/include/alloca.h:
 
 ./inc/ixml.h:
 
-/root/temp/source/lib/include/stdio.h:
+/root/RT-N56U/source/lib/include/stdio.h:
 
-/root/temp/source/lib/include/bits/uClibc_stdio.h:
+/root/RT-N56U/source/lib/include/bits/uClibc_stdio.h:
 
-/root/temp/source/lib/include/wchar.h:
+/root/RT-N56U/source/lib/include/wchar.h:
 
-/root/temp/source/lib/include/bits/wchar.h:
+/root/RT-N56U/source/lib/include/bits/wchar.h:
 
 /opt/buildroot-gcc342/bin/../lib/gcc/mipsel-linux-uclibc/3.4.2/include/stdarg.h:
 
-/root/temp/source/lib/include/bits/stdio_lim.h:
+/root/RT-N56U/source/lib/include/bits/stdio_lim.h:
 
-/root/temp/source/lib/include/string.h:
+/root/RT-N56U/source/lib/include/string.h:
 
-/root/temp/source/lib/include/assert.h:
+/root/RT-N56U/source/lib/include/assert.h:
 
 ./src/inc/ixmlparser.h:
 

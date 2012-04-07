@@ -17,7 +17,11 @@ helptitle[0] = [["", ""],
 				["<#WLANConfig11b_ChannelBW_itemname#>", "HT_BW"],
 				["<#WLANConfig11b_EChannel_itemname#>", "HT_EXTCHA"],
 				["<#WLANConfig11b_WLBand_itemname#>", "wl_nband"],
-				["<#WLANConfig11b_TxPower_itemname#>", "TxPower"]];
+				["<#WLANConfig11b_TxPower_itemname#>", "TxPower"],
+				["<#WLANConfig11b_WEPKey_itemname#>", "wl_key1"],
+				["<#WLANConfig11b_WEPKey_itemname#>", "wl_key2"],
+				["<#WLANConfig11b_WEPKey_itemname#>", "wl_key3"],
+				["<#WLANConfig11b_WEPKey_itemname#>", "wl_key4"]];
 helptitle[1] = [["", ""],
 				["<#WLANConfig11b_x_APMode_itemname#>", "wl_mode_x"],
 				["<#WLANConfig11b_Channel_itemname#>", "wl_channel"],
@@ -69,7 +73,11 @@ helptitle[6] = [["", ""],
 				["<#RouterConfig_GWStaticGW_itemname#>", "sr_gateway_x_0"],
 				["<#RouterConfig_GWStaticMT_itemname#>", "sr_matric_x_0"],
 				["<#RouterConfig_GWStaticIF_itemname#>", "sr_if_x_0"],
-				["IPTV UDP Multicast to HTTP Proxy Port"]];
+				["<#RouterConfig_IPTV_itemname#>", "udpxy_enable_x"],
+				["<#RouterConfig_GWMulticast_unknownUni_itemname#>", "controlrate_unknown_unicast"],
+				["<#RouterConfig_GWMulticast_unknownMul_itemname#>", "controlrate_unknown_multicast"],
+				["<#RouterConfig_GWMulticast_Multicast_itemname#>", "controlrate_multicast"],
+				["<#RouterConfig_GWMulticast_Broadcast_itemname#>", "controlrate_broadcast"]];
 // WAN
 helptitle[7] = [["", ""],
 				["<#IPConnection_ExternalIPAddress_itemname#>", "wan_ipaddr"],
@@ -104,8 +112,9 @@ helptitle[8] = [["", ""],
 				["<#FirewallConfig_FirewallEnable_itemname#>", "fw_enable_x"],
 				["<#FirewallConfig_DoSEnable_itemname#>", "fw_dos_x"]];
 helptitle[9] = [["", ""],
-				["<#FirewallConfig_URLActiveDate_itemname#>", "url_date_x_"],
-				["<#FirewallConfig_URLActiveTime_itemname#>", "url_time_x_"]];
+				["<#FirewallConfig_KeywordActiveDate_itemname#>", "url_date_x_"],
+				["<#FirewallConfig_KeywordActiveTime_itemname#>", "url_time_x_"],
+				["<#FirewallConfig_KeywordList_groupitemname#>", "keyword_keyword_x_0"]];
 helptitle[10] = [["", ""],
 				["<#FirewallConfig_LanWanActiveDate_itemname#>", "filter_lw_date_x_"],
 				["<#FirewallConfig_LanWanActiveTime_itemname#>", "filter_lw_time_x_"],
@@ -205,13 +214,17 @@ helpcontent[0] = new Array("",
 						   "<#WLANConfig11b_x_Phrase_itemdesc#>",
 						   "<#WLANConfig11b_WEPType_itemdesc#>",
 						   "<#WLANConfig11b_WEPDefaultKey_itemdesc#>",
-						   "<#WLANConfig11b_x_Rekey_itemdesc#>",
+						   "<#WLANConfig11b_x_Rekey_itemdesc#><#JS_field_wanip_rule3#>",
 						   "<#WLANConfig11b_WEPKey_itemtype1#>",
 						   "<#WLANConfig11b_WEPKey_itemtype2#>",
 						   "<#WLANConfig11b_ChannelBW_itemdesc#><br/><#WLANConfig11b_Wireless_Speed_itemname_3#>",
 						   "<#WLANConfig11b_EChannel_itemdesc#>",
 							 productid+" <#WLANConfig11b_WLband_itemdesc#>",
-							 "<#WLANConfig11b_TxPower_itemdesc#>"
+							 "<#WLANConfig11b_TxPower_itemdesc#>",
+							 "<#WLANConfig11b_WEPKey_itemtype1#><br/><#WLANConfig11b_WEPKey_itemtype2#>",
+							 "<#WLANConfig11b_WEPKey_itemtype1#><br/><#WLANConfig11b_WEPKey_itemtype2#>",
+							 "<#WLANConfig11b_WEPKey_itemtype1#><br/><#WLANConfig11b_WEPKey_itemtype2#>",
+							 "<#WLANConfig11b_WEPKey_itemtype1#><br/><#WLANConfig11b_WEPKey_itemtype2#>"
 							 );
 helpcontent[1] = new Array("",
 						   "<#WLANConfig11b_x_APMode_itemdesc#>",
@@ -223,8 +236,8 @@ helpcontent[2] = new Array("",
 						   "<#WLANAuthentication11a_ExAuthDBPassword_itemdesc#>");
 helpcontent[3] = new Array("",
 						   "<#WLANConfig11b_x_RadioEnable_itemdesc#>",
-						   "<#WLANConfig11b_x_RadioEnableDate_itemdesc#>",
-						   "<#WLANConfig11b_x_RadioEnableTime_itemdesc#>",						   
+						   "<#WLANConfig11b_x_RadioEnableDate_itemdesc#><p><a href='/Main_LogStatus_Content.asp' target='_blank'><#General_x_SystemTime_itemname#> : <#DrSurf_suggestion10#></a></p>",
+						   "<#WLANConfig11b_x_RadioEnableTime_itemdesc#><p><a href='/Main_LogStatus_Content.asp' target='_blank'><#General_x_SystemTime_itemname#> : <#DrSurf_suggestion10#></a></p>",						   
 						   "<#WLANConfig11b_x_AfterBurner_itemdesc#>",
 						   "<#WLANConfig11b_x_IsolateAP_itemdesc#>",
 						   "<#WLANConfig11b_DataRateAll_itemdesc#>",
@@ -250,7 +263,7 @@ helpcontent[4] = new Array("",
 						   "<#LANHostConfig_x_Gateway_itemdesc#>");
 helpcontent[5] = new Array("",
 							 "<#LANHostConfig_DHCPServerConfigurable_itemdesc#>",
-							 "<#LANHostConfig_DomainName_itemdesc#>",
+							 "<#LANHostConfig_DomainName_itemdesc#><#LANHostConfig_x_DDNS_alarm_hostname#> <#LANHostConfig_DomainName_itemdesc2#>",
 							 "<#LANHostConfig_MinAddress_itemdesc#>",
 							 "<#LANHostConfig_MaxAddress_itemdesc#>",
 							 "<#LANHostConfig_LeaseTime_itemdesc#>",
@@ -264,7 +277,11 @@ helpcontent[6] = new Array("",
 						   "<#RHELP_desc6#>",
 						   "<#RHELP_desc7#>",
 						   "<#RHELP_desc8#>",
-						   "Enter 0 (zero) to disable.");
+						   "<#RHELP_desc9#>",
+						   "<#RouterConfig_GWMulticast_Multicast_all_itemdesc#>",
+						   "<#RouterConfig_GWMulticast_Multicast_all_itemdesc#>",
+						   "<#RouterConfig_GWMulticast_Multicast_all_itemdesc#>",
+						   "<#RouterConfig_GWMulticast_Multicast_all_itemdesc#>");
 //WAN
 helpcontent[7] = new Array("",
 							 "<#IPConnection_ExternalIPAddress_itemdesc#>",
@@ -300,7 +317,8 @@ helpcontent[8] = new Array("",
 						   "<#FirewallConfig_DoSEnable_itemdesc#>");
 helpcontent[9] = new Array("",
 						   "<#FirewallConfig_URLActiveDate_itemdesc#>",
-						   "<#FirewallConfig_URLActiveTime_itemdesc#>");
+						   "<#FirewallConfig_URLActiveTime_itemdesc#>",
+						   "<#FirewallConfig_KeywordList_groupitemdesc#>");
 helpcontent[10] = new Array("",
 							"<#FirewallConfig_LanWanActiveDate_itemdesc#>",
 							"<#FirewallConfig_LanWanActiveTime_itemdesc#>",
@@ -337,7 +355,7 @@ helpcontent[15] = new Array("",
 							"<#AiDisk_Step3_help#>");
 //EzQoS
 helpcontent[16] = new Array("",
-							"<#EZQoSDesc1#><p><#EZQoSDesc2#><a href='/Advanced_QOSUserSpec_Content.asp'><#BM_title_User#></a></p>");
+							"<#EZQoSDesc1#><p><#EZQoSDesc2#> <a href='/Advanced_QOSUserSpec_Content.asp'><#BM_title_User#></a></p>");
 //Others in the USB application
 helpcontent[17] = new Array("",
 							"<#JS_storageMLU#>",
@@ -416,7 +434,8 @@ function openHint(hint_array_id, hint_show_id, flag){
 	
 	if(hint_array_id == 14
 			|| hint_array_id == 15
-			|| hint_array_id == 16)
+			|| hint_array_id == 16 
+			|| hint_array_id == 20)
 		return;
 	
 	if(flag != "false")

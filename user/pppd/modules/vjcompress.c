@@ -1,20 +1,4 @@
 /*
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License as
- * published by the Free Software Foundation; either version 2 of
- * the License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston,
- * MA 02111-1307 USA
- */
-/*
  * Routines to compress and uncompess tcp packets (for transmission
  * over low speed serial lines.
  *
@@ -45,7 +29,7 @@
  * This version is used under SunOS 4.x, Digital UNIX, AIX 4.x,
  * and SVR4 systems including Solaris 2.
  *
- * $Id: vjcompress.c,v 1.10 1999/09/15 23:49:06 masputra Exp $
+ * $Id: vjcompress.c,v 1.11 2004/01/17 05:47:55 carlsonj Exp $
  */
 
 #include <sys/types.h>
@@ -70,6 +54,10 @@
 typedef u_long  n_long;
 #else
 #include <netinet/in_systm.h>
+#endif
+
+#ifdef SOL2
+#include <sys/sunddi.h>
 #endif
 
 #include <netinet/ip.h>

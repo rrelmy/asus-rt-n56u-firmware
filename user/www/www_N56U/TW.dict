@@ -14,7 +14,35 @@ LANG_FR=Français
 LANG_TR=Türkçe
 LANG_TH=ไทย
 LANG_MS=Malaysia
-[Untranslated]
+[untranslate]
+LANHostConfig_x_TimeZone_itemhint_2=我們偵測到您所在的時區與路由器系統設定不同，是否需要使用偵測到的時區?
+RouterConfig_GWMulticast_Multicast_all_itemdesc=開啟此功能以控制網路流量，並避免產生廣播風暴。廣播風暴會導致網路速度變慢，甚至網絡癱瘓。此項目的有效值範圍為 1 至 1024。輸入 0（零）可關閉此功能。
+RouterConfig_GWMulticast_unknownUni_itemname=未知單播風暴控制（Mbps）：
+RouterConfig_GWMulticast_unknownMul_itemname=未知多播風暴控制（Mbps）：
+RouterConfig_GWMulticast_Multicast_itemname=多播風暴控制（Mbps）：
+RouterConfig_GWMulticast_Broadcast_itemname=廣播風暴控制（Mbps）：
+[keyword_filter]
+menu5_5_5=關鍵字過濾器
+FirewallConfig_KeywordFilterEnable_sectiondesc=關鍵字過濾器可以為您阻止客戶端瀏灠符合特定關鍵字的網頁。
+FirewallConfig_KeywordFilterEnable_itemname=開啟關鍵字過濾器
+FirewallConfig_KeywordActiveDate_itemname=日期：
+FirewallConfig_KeywordActiveTime_itemname=時間：
+FirewallConfig_KeywordList_groupitemname=關鍵字過濾器列表：
+FirewallConfig_KeywordList_groupitemdesc=關鍵字數限制：20
+[New translated]
+JS_field_wanip_rule3=請輸入1~2592000(秒)之間的值。
+FirewallConfig_Port80_itemdesc=在關閉防火牆時設定HTTP 伺服器, 且設定外網(WAN端)通訊埠為80, 會與RT-N56U的管理介面伺服器使用的通訊埠衝突.
+FirewallConfig_FTPPrompt_itemdesc=當使用RT-N56U內建的FTP伺服器功能時, 設定外網(WAN端)通訊埠為20:21, 會與RT-N56U內建的FTP伺服器使用的通訊埠衝突.
+PrinterStatus_x_Monopoly_itemdesc=當印表機不支援多功分享時, 點選"獨占模式"按鈕可取得印表機使用權, 但請避免於印表機忙碌時進行此操作.
+Switch_band=切換頻率
+Current_band=目前頻率
+LANHostConfig_DomainName_itemdesc2=只能包含英文字母、數字、破折號!
+qis_ssid_desc=與2.4GHz設定相同。
+RouterConfig_IPTV_itemname=網絡電視UDP群播的HTTP代理伺服器埠號
+RHELP_desc9=欲取消此服務，請輸入0。
+WLANConfig11b_TxPower_itemname=調整天線功率
+WLANConfig11b_TxPower_itemdesc=調整天線功率，已獲得最佳的傳輸品質。
+[translated]
 WLANConfig11b_Wireless_Speed_itemname_3=使用 40MHz 頻帶以獲得最大的無線資料傳輸率。選擇此模式後，若您的無線訊號不穩定，請選擇預設模式。
 hwnat_desc=在ISP支援的環境下，啟用硬體NAT加速將提高最大連線速度至900Mbps。請注意: 啟用此功能將會與QoS相關功能衝突。
 [error_page.htm]
@@ -77,8 +105,6 @@ Uplink=上傳
 LAN_IP_changed_suggedtion1=內部網路位址已變更為
 LAN_IP_changed_suggedtion2=。若您無法連上此設定畫面，請更新您電腦的IP位址。
 BasicConfig_HWNAT_suggestion=您目前的設定與HW NAT功能衝突，是否需要關閉HW NAT。
-WLANConfig11b_TxPower_itemname=調整天線功率
-WLANConfig11b_TxPower_itemdesc=調整天線功率，已獲得最佳的傳輸品質。
 WLANConfig11b_x_Mode11g_5_itemdesc=本欄為指出802.11n介面所使用的模式。<p>選擇「Auto」時，可允許802.11n，802.11a連接至您的裝置。</p><p>選擇「n Only」，只能使效能達至最大，但802.11a客戶端卻不得連接至您的裝置。
 WLANConfig11b_x_WPSband_itemname=Current Band
 WLANConfig11b_x_WPSband_itemdesc=您可選擇WPS所要支援的頻段。如欲切換頻段，請先停用WPS功能。
@@ -88,7 +114,7 @@ LANConfig_ChangedLANIP=建議您使用華碩共用程式的 Device Discovery 搜
 BasicConfig_HWNAT_alert=您目前的設定與HW NAT功能衝突，建議您至 '進階設定 - 網際網路設定' 自行手動關閉HW NAT功能。
 [RT-N1X new item]
 BasicConfig_HWNAT_itemname=啟動 HW NAT?
-LANHostConfig_x_Password_itemdesc=密碼不能大於十六個字。
+LANHostConfig_x_Password_itemdesc=密碼不能大於十六個字符。
 CableStatus=纜線狀態
 HowToSharebyFTP5=建議您使用支援UTF-8編碼的FTP用戶端軟體，以獲得正確的語系支援(如正體或簡體中文)。<br/>例如：<a href='http://filezilla-project.org/' target='_blank'>Filezilla</a>，您可在站台管理員/進階設定中進行編碼的修改。
 WLANConfig11n_nmode_limition_hint=[n Only]模式下，原WEP或TKIP加密設定將自動調整為AES加密，以取得正確的連線。
@@ -276,7 +302,7 @@ File_content_alert_desc3=您確定要刪除這個分享資料夾
 File_content_alert_desc4=您確定要重新命名這個分享資料夾
 File_content_alert_desc5=新資料夾名稱超過12字，有些作業系統可能無法相容!\n要繼續操作嗎?
 File_content_alert_desc6=資料夾名稱不能空白!
-File_content_alert_desc7=資料夾名稱只能包含英文字母、破折號、底線，名稱中能有空白!
+File_content_alert_desc7=資料夾名稱只能包含英文字母、數字、破折號、底線，名稱中能有空白!
 File_content_alert_desc8=這個名稱已有資料夾取用。\n請輸入不同的名稱!
 File_content_alert_desc9=您選擇了一顆外部硬碟.\n無法被建立資料夾。
 File_content_alert_desc10=新資料夾名稱超過12字，有些作業系統可能無法相容!\n要繼續操作嗎?
@@ -873,7 +899,7 @@ t2DStatus=DHCP租約
 t2PortStatus=通訊埠轉遞
 t2RouteStatus=路由表
 t2Log=系統記錄
-General_x_SystemTime_itemname=系統時間：
+General_x_SystemTime_itemname=系統時間
 General_x_SystemUpTime_itemname=已開機時間：
 General_x_SystemUpTime_itemdesc=系統開機至目前所耗費時間
 General_x_FirmwareVersion_itemname=韌體版本：
@@ -1227,7 +1253,7 @@ Select_menu_default=請選擇
 IPConnection_VSList_Norule=目前沒有資料
 IPConnection_TriggerList_groupitemdesc=觸發程式通訊埠清單
 FirewallConfig_LWFilterList_groupitemdesc=過濾送自網際網路封包列表
-FirewallConfig_UrlList_groupitemdesc=URL關鍵字清單
+FirewallConfig_UrlList_groupitemdesc=URL過濾清單
 RouterConfig_GWStatic_groupitemdesc=靜態路由清單
 WLANConfig11b_RBRList_groupitemdesc=遠端基地台清單
 IPConnection_TriggerList_widzarddesc=常見的應用：

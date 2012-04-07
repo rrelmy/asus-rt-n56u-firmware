@@ -33,7 +33,7 @@ function initial(){
 </thead> 
   <tr>
     <th align="left" valign="top" background="images/er_bg.gif">
-		<div class="drword">
+		<div class="drword_Nologin">
 	  	  	<p><#login_hint1#> <span id="logined_ip_str"></span></p>
 	  	  	<p><#login_hint2#></p>
 		</div>

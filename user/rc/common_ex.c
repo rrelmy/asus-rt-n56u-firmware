@@ -1038,11 +1038,12 @@ void convert_asus_values(int skipflag)
 	nvram_set("link_internet", "1");
 #endif
 	nvram_set("detect_timestamp", "0"); // 2010.10 James.
+	nvram_set("fullscan_timestamp", "0");
+	nvram_set("renew_timestamp", "0");
 	nvram_set("no_internet_detect", "0");
 	nvram_unset("wan_gateway_tmp");
 	nvram_unset("wan_ipaddr_tmp");
 	nvram_unset("wan_netmask_tmp");
-	nvram_set("wanup_chk", "0");
 
 	nvram_set("done_auto_mac", "0"); // 2010.09 James.
 	nvram_set("no_usb_led", "0");
@@ -1051,6 +1052,11 @@ void convert_asus_values(int skipflag)
 	nvram_set("ntp_restart_upnp", "0");
 	nvram_set("bak_ddns_enable_x", nvram_safe_get("ddns_enable_x"));
 	nvram_set("bak_ddns_wildcard_x", nvram_safe_get("ddns_wildcard_x"));
+	nvram_set("dhcp_renew", "0");
+	nvram_set("apps_ushare_ex", "0");
+	nvram_set("apps_itunes_ex", "0");
+	nvram_set("apps_smb_ex", "0");
+	nvram_set("apps_u2ec_ex", "0");
 
 	}
 }

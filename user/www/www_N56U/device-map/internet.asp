@@ -67,9 +67,9 @@ function getWANStatus(){
 		return 0;
 }
 
-function submitWANAction(){
-	var status = getWANStatus();
-	
+function submitWANAction(status){
+	//var status = getWANStatus();
+
 	switch(status){
 		case 0:
 			parent.showLoading();
@@ -103,12 +103,14 @@ function sbtnOut(o){
 </head>
 
 <body class="statusbody" onload="initial();">
+<form method="post" name="internetForm">
 <table width="95%" border="1" align="center" cellpadding="4" cellspacing="0" bordercolor="#6b8fa3" class="table1px">
   <tr>
     <th width="120"><#ConnectionStatus#>:</th>
     <td width="150">
-	  <span id="connectstatus"></span>
-    <input type="button" id="connectbutton" class="button" value="" onclick="submitWANAction();">
+	  <div style="display:none"><span id="connectstatus"></span></div>
+    <input type="button" id="connectbutton_link" class="button" value="<#Connect#>" onclick="submitWANAction(0);">
+    <input type="button" id="connectbutton_nolink" style="margin-top:3px" class="button" value="<#Disconnect#>" onclick="submitWANAction(1);">
 	</td>
   </tr>
   <tr>
@@ -132,6 +134,7 @@ function sbtnOut(o){
     <td><input type="button" class="sbtn" value="<#btn_go#>" onclick="javascript:goQIS();" onmouseover="sbtnOver(this);" onmouseout="sbtnOut(this);"></td>
 	</tr>
 </table>
+</form>
 <select id="domore" class="domore" onchange="domore_link(this);">
   <option selected="selected"><#MoreConfig#>...</option>
   <option value="../Advanced_WAN_Content.asp"><#menu5_3_1#></option>

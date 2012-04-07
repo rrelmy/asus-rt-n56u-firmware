@@ -38,7 +38,7 @@ function initial(){
 	show_menu(5,1,1);
 	show_footer();
 	
-	enable_auto_hint(0, 16);
+	enable_auto_hint(0, 21);
 	
 	load_body();
 	
@@ -379,7 +379,7 @@ function wl_nband_select(ch){
 			  </tr>
 			  
 			  <tr>
-				<th><a class="hintstyle" href="javascript:void(0);" onClick="openHint(0, 12);"><#WLANConfig11b_WEPDefaultKey_itemname#></a></th>
+				<th><a class="hintstyle" href="javascript:void(0);" onClick="openHint(0, 10);"><#WLANConfig11b_WEPDefaultKey_itemname#></a></th>
 				<td>
 				  <select name="wl_key" class="input"  onChange="return change_common(this, 'WLANConfig11b', 'wl_key');">
 					<option value="1" <% nvram_match_x("WLANConfig11b","wl_key", "1","selected"); %>>1</option>
@@ -391,22 +391,22 @@ function wl_nband_select(ch){
 			  </tr>
 			  
 			  <tr>
-				<th><#WLANConfig11b_WEPKey1_itemname#></th>
+				<th><a class="hintstyle" href="javascript:void(0);" onClick="openHint(0, 18);"><#WLANConfig11b_WEPKey1_itemname#></th>
 				<td><input type="text" name="wl_key1" id="wl_key1" maxlength="32" class="input" size="34" value="" onKeyUp="return change_wlkey(this, 'WLANConfig11b');"></td>
 			  </tr>
 			  
 			  <tr>
-				<th><#WLANConfig11b_WEPKey2_itemname#></th>
+				<th><a class="hintstyle" href="javascript:void(0);" onClick="openHint(0, 18);"><#WLANConfig11b_WEPKey2_itemname#></th>
 				<td><input type="text" name="wl_key2" id="wl_key2" maxlength="32" class="input" size="34" value="" onKeyUp="return change_wlkey(this, 'WLANConfig11b');"></td>
 			  </tr>
 			  
 			  <tr>
-				<th><#WLANConfig11b_WEPKey3_itemname#></th>
+				<th><a class="hintstyle" href="javascript:void(0);" onClick="openHint(0, 18);"><#WLANConfig11b_WEPKey3_itemname#></th>
 				<td><input type="text" name="wl_key3" id="wl_key3" maxlength="32" class="input" size="34" value="" onKeyUp="return change_wlkey(this, 'WLANConfig11b');"></td>
 			  </tr>
 			  
 			  <tr>
-				<th><#WLANConfig11b_WEPKey4_itemname#></th>
+				<th><a class="hintstyle" href="javascript:void(0);" onClick="openHint(0, 18);"><#WLANConfig11b_WEPKey4_itemname#></th>
 				<td><input type="text" name="wl_key4" id="wl_key4" maxlength="32" class="input" size="34" value="" onKeyUp="return change_wlkey(this, 'WLANConfig11b');"></td>
 			  </tr>
 
@@ -461,7 +461,7 @@ function wl_nband_select(ch){
 		  <tbody>
 		  <tr>
 			<td valign="top">
-			  <div id="hint_body" class="hint_body2"></div>
+			  <div id="hint_body" class="hint_body2" style="width:200px"></div>
 			  <iframe id="statusframe" name="statusframe" class="statusframe" src="" frameborder="0"></iframe>
 			</td>
 		  </tr>

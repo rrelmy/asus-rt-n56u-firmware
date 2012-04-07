@@ -74,7 +74,7 @@ body {
 #option4 a:link, #option4 a:visited {height:55px; background: url(images/m-button-04.gif);}
 #option4 a:hover,#option4 a:active {color:#ffffff; background: url(images/m-button-04.gif) 0 -55px no-repeat;}
 
-#option5 a:link, #option5 a:visited {height:42px; background:url(images/m-button-05.gif); line-height:100%;}
+#option5 a:link, #option5 a:visited {height:42px; background:url(images/m-button-05.gif);}
 #option5 a:hover,#option5 a:active {color:#ffffff; background:url(images/m-button-05.gif) 0 -42px;}
 
 .m1_r {width:144px;height: 34px;font-family:Verdana ;font-size : 11px;color: #94ccf2;	padding-left:50px;background:url(images/m-button-01_d.gif) no-repeat; color:#000000;font-weight:bold; padding-top:10px}
@@ -91,7 +91,6 @@ body {
 	background:url(images/m-button-05_d.gif) no-repeat;
 	color:#000000;
 	font-weight:bold;
-	line-height:100%;
 }
 
 .submenu {width:187px; font-family:Verdana; font-size:11px; line-height:20px;}

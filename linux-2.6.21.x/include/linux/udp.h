@@ -62,7 +62,9 @@ struct udp_sock {
 #define UDPLITE_SEND_CC  0x2  		/* set via udplite setsockopt         */
 #define UDPLITE_RECV_CC  0x4		/* set via udplite setsocktopt        */
 	__u8		 pcflag;        /* marks socket as UDP-Lite if > 0    */
-
+#if 1	/* l2tp-encap */
+	__u8		 unused[3];
+#endif
 	/*
 	 * For encapsulation sockets.
 	 */

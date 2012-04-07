@@ -1,0 +1,151 @@
+decoders.o decoders.o: decoders.c ../../config.h \
+  /root/RT-N56U/source/lib/include/errno.h \
+  /root/RT-N56U/source/lib/include/features.h \
+  /root/RT-N56U/source/lib/include/bits/uClibc_config.h \
+  /root/RT-N56U/source/lib/include/sys/cdefs.h \
+  /root/RT-N56U/source/lib/include/bits/errno.h \
+  /root/RT-N56U/source/lib/include/bits/errno_values.h \
+  /root/RT-N56U/source/lib/include/stdio.h \
+  /opt/buildroot-gcc342/bin/../lib/gcc/mipsel-linux-uclibc/3.4.2/include/stddef.h \
+  /root/RT-N56U/source/lib/include/bits/types.h \
+  /root/RT-N56U/source/lib/include/bits/kernel_types.h \
+  /root/RT-N56U/source/lib/include/bits/wordsize.h \
+  /root/RT-N56U/source/lib/include/bits/pthreadtypes.h \
+  /root/RT-N56U/source/lib/include/bits/sched.h \
+  /root/RT-N56U/source/lib/include/bits/uClibc_stdio.h \
+  /root/RT-N56U/source/lib/include/wchar.h \
+  /root/RT-N56U/source/lib/include/bits/wchar.h \
+  /opt/buildroot-gcc342/bin/../lib/gcc/mipsel-linux-uclibc/3.4.2/include/stdarg.h \
+  /root/RT-N56U/source/lib/include/bits/stdio_lim.h \
+  /root/RT-N56U/source/lib/include/stdlib.h \
+  /root/RT-N56U/source/lib/include/sys/types.h \
+  /root/RT-N56U/source/lib/include/time.h \
+  /root/RT-N56U/source/lib/include/endian.h \
+  /root/RT-N56U/source/lib/include/bits/endian.h \
+  /root/RT-N56U/source/lib/include/sys/select.h \
+  /root/RT-N56U/source/lib/include/bits/select.h \
+  /root/RT-N56U/source/lib/include/bits/sigset.h \
+  /root/RT-N56U/source/lib/include/bits/time.h \
+  /root/RT-N56U/source/lib/include/sys/sysmacros.h \
+  /root/RT-N56U/source/lib/include/alloca.h \
+  /root/RT-N56U/source/lib/include/string.h decoders.h \
+  ../../include/FLAC/ordinals.h \
+  /root/RT-N56U/source/lib/include/inttypes.h \
+  /root/RT-N56U/source/lib/include/stdint.h ../../include/FLAC/assert.h \
+  ../../include/FLAC/stream_decoder.h ../../include/FLAC/export.h \
+  ../../include/FLAC/format.h ../../include/FLAC/ordinals.h \
+  ../../include/share/grabbag.h ../../include/share/grabbag/cuesheet.h \
+  ../../include/FLAC/metadata.h ../../include/FLAC/callback.h \
+  ../../include/share/grabbag/file.h ../../include/FLAC/ordinals.h \
+  ../../include/share/grabbag/picture.h \
+  ../../include/share/grabbag/replaygain.h \
+  ../../include/share/grabbag/seektable.h ../../include/FLAC/format.h \
+  ../../include/test_libs_common/file_utils_flac.h \
+  ../../include/FLAC/format.h \
+  ../../include/test_libs_common/metadata_utils.h
+
+../../config.h:
+
+/root/RT-N56U/source/lib/include/errno.h:
+
+/root/RT-N56U/source/lib/include/features.h:
+
+/root/RT-N56U/source/lib/include/bits/uClibc_config.h:
+
+/root/RT-N56U/source/lib/include/sys/cdefs.h:
+
+/root/RT-N56U/source/lib/include/bits/errno.h:
+
+/root/RT-N56U/source/lib/include/bits/errno_values.h:
+
+/root/RT-N56U/source/lib/include/stdio.h:
+
+/opt/buildroot-gcc342/bin/../lib/gcc/mipsel-linux-uclibc/3.4.2/include/stddef.h:
+
+/root/RT-N56U/source/lib/include/bits/types.h:
+
+/root/RT-N56U/source/lib/include/bits/kernel_types.h:
+
+/root/RT-N56U/source/lib/include/bits/wordsize.h:
+
+/root/RT-N56U/source/lib/include/bits/pthreadtypes.h:
+
+/root/RT-N56U/source/lib/include/bits/sched.h:
+
+/root/RT-N56U/source/lib/include/bits/uClibc_stdio.h:
+
+/root/RT-N56U/source/lib/include/wchar.h:
+
+/root/RT-N56U/source/lib/include/bits/wchar.h:
+
+/opt/buildroot-gcc342/bin/../lib/gcc/mipsel-linux-uclibc/3.4.2/include/stdarg.h:
+
+/root/RT-N56U/source/lib/include/bits/stdio_lim.h:
+
+/root/RT-N56U/source/lib/include/stdlib.h:
+
+/root/RT-N56U/source/lib/include/sys/types.h:
+
+/root/RT-N56U/source/lib/include/time.h:
+
+/root/RT-N56U/source/lib/include/endian.h:
+
+/root/RT-N56U/source/lib/include/bits/endian.h:
+
+/root/RT-N56U/source/lib/include/sys/select.h:
+
+/root/RT-N56U/source/lib/include/bits/select.h:
+
+/root/RT-N56U/source/lib/include/bits/sigset.h:
+
+/root/RT-N56U/source/lib/include/bits/time.h:
+
+/root/RT-N56U/source/lib/include/sys/sysmacros.h:
+
+/root/RT-N56U/source/lib/include/alloca.h:
+
+/root/RT-N56U/source/lib/include/string.h:
+
+decoders.h:
+
+../../include/FLAC/ordinals.h:
+
+/root/RT-N56U/source/lib/include/inttypes.h:
+
+/root/RT-N56U/source/lib/include/stdint.h:
+
+../../include/FLAC/assert.h:
+
+../../include/FLAC/stream_decoder.h:
+
+../../include/FLAC/export.h:
+
+../../include/FLAC/format.h:
+
+../../include/FLAC/ordinals.h:
+
+../../include/share/grabbag.h:
+
+../../include/share/grabbag/cuesheet.h:
+
+../../include/FLAC/metadata.h:
+
+../../include/FLAC/callback.h:
+
+../../include/share/grabbag/file.h:
+
+../../include/FLAC/ordinals.h:
+
+../../include/share/grabbag/picture.h:
+
+../../include/share/grabbag/replaygain.h:
+
+../../include/share/grabbag/seektable.h:
+
+../../include/FLAC/format.h:
+
+../../include/test_libs_common/file_utils_flac.h:
+
+../../include/FLAC/format.h:
+
+../../include/test_libs_common/metadata_utils.h:

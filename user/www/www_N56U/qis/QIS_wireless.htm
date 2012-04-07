@@ -22,9 +22,9 @@ function QKWireless_load_body(){
 	document.form.rt_ssid.value = decodeURIComponent(document.form.rt_ssid2.value);
 	document.form.wl_wpa_psk.value = decodeURIComponent(document.form.wl_wpa_psk.value);
 	document.form.rt_wpa_psk.value = decodeURIComponent(document.form.rt_wpa_psk.value);
-
+	
 	show_prev_button();
-	document.form.sync_with_2ghz.checked = true;
+	//document.form.sync_with_2ghz.checked = true;
 }
 
 function submitForm(){
@@ -37,18 +37,21 @@ function submitForm(){
 	
 	if(document.form.wl_wpa_psk.value.length > 0){
 		document.form.wl_auth_mode.value = "psk";
-		document.form.rt_auth_mode.value = "psk";
-		//document.form.rt_wpa_psk.value = document.form.wl_wpa_psk.value; 
 		
 		if(!validate_psk(document.form.wl_wpa_psk))
 			return false;
+	}
+	else
+		document.form.wl_auth_mode.value = "open";
+
+	if(document.form.rt_wpa_psk.value.length > 0){
+		document.form.rt_auth_mode.value = "psk";
+		
 		if(!validate_psk(document.form.rt_wpa_psk))
 			return false;
 	}
-	else{
-		document.form.wl_auth_mode.value = "open";
+	else
 		document.form.rt_auth_mode.value = "open";
-	}
 
 	document.form.wan_nat_x.value = parent.document.QKform.wan_nat_x.value;
 	document.form.wan_route_x.value = parent.document.QKform.wan_route_x.value;
@@ -132,8 +135,8 @@ function Sync_2ghz(band){
 
 <div class="QISmain">
 <div class="description_down"><#QKSet_wireless_webtitle#></div>
-<br/><br/>
-<table class="QISform" width="400" border=0 align="center" cellpadding="5" cellspacing="0">
+<br/>
+<table class="QISform_wireless" width="400" border=0 align="center" cellpadding="5" cellspacing="0">
 
 	<tr>
 	<th width="180">2.4GHz - <#Security#> </th>
@@ -158,7 +161,7 @@ function Sync_2ghz(band){
 	<tr>
 	<th width="180">5GHz - <#Security#> </th>
 	<td class="QISformtd">
-		<input type="checkbox" name="sync_with_2ghz" class="input" onChange="Sync_2ghz(2);" checked>The same with 2.4GHz
+		<input type="checkbox" name="sync_with_2ghz" class="input" onChange="Sync_2ghz(2);"><#qis_ssid_desc#>
 	</td>
 	</tr>
 

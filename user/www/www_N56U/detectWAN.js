@@ -8,19 +8,25 @@ var detect_if_wan = 0;
 var manually_disconnect_wan = 0;
 
 function refresh_waninfo(){	
-	if(link_internet == "1"){
-		$("#connectstatus")[0].innerHTML = "<#Connected#>";
-		$("#connectbutton")[0].value = "<#Disconnect#>";
-		
+	if(link_internet == "0"){
+		//$("#connectstatus")[0].innerHTML = "<#Connected#>";
+		//$("#connectbutton")[0].value = "<#Disconnect#>";
+		document.internetForm.connectbutton_link.disabled = false;
+		document.internetForm.connectbutton_nolink.disabled = true;	
 		//parent.showMapWANStatus(1);
 	}
-	else{
-		$("#connectstatus")[0].innerHTML = "<#Disconnected#>";
-		$("#connectbutton")[0].value = "<#Connect#>";
-		
+	else if(link_internet == "1"){
+		//$("#connectstatus")[0].innerHTML = "<#Disconnected#>";
+		//$("#connectbutton")[0].value = "<#Connect#>";
+		document.internetForm.connectbutton_link.disabled = true;	
+		document.internetForm.connectbutton_nolink.disabled = false;	
 		//parent.showMapWANStatus(0);
 	}
-	$("#connectbutton")[0].style.display = "";
+	else{
+		document.internetForm.connectbutton_link.disabled = true;	
+		document.internetForm.connectbutton_nolink.disabled = true;	
+	}
+	//$("#connectbutton")[0].style.display = "";
 }
 
 function detectWANstatus(){

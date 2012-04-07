@@ -42,7 +42,7 @@ function switch_ddns(){
 		
 		//parent.show_help_iframe(5);
 	}
-	else{
+	else{
 		var ddns_enable_x = '<% nvram_get_x("LANHostConfig", "ddns_enable_x"); %>';
 		parent.setASUSDDNS_enable(ddns_enable_x);
 		document.DDNSForm.ddns_server_x.value = this.ddns_server_x;
@@ -186,7 +186,9 @@ function check_return_code(){
 		show_alert_block("<#LANHostConfig_x_DDNS_alarm_11#>");
 	else if(this.ddns_return_code == 'Time-out')
 		show_alert_block("<#LANHostConfig_x_DDNS_alarm_12#>");
-	
+	else 
+		show_alert_block("<#LANHostConfig_x_DDNS_alarm_2#>");	
+
 	this.ddns_return_code = "";
 }
 

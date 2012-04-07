@@ -1117,7 +1117,7 @@ ether_etoa2(const unsigned char *e, char *a)
 	int i;
 													       
 	for (i = 0; i < ETHER_ADDR_LEN; i++) {
-		c += sprintf(c, "%02X", e[i] & 0xff);
+		c += sprintf(c, "%02x", e[i] & 0xff);
 	}
 	return a;
 }

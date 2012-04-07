@@ -11,7 +11,7 @@
 <title>ASUS Wireless Router <#Web_Title#> - <#menu4_2#> : <#menu4_2_1#></title>
 <link rel="stylesheet" type="text/css" href="index_style.css"> 
 <link rel="stylesheet" type="text/css" href="form_style.css">
-<link rel="stylesheet" type="text/css" href="tomato.css">
+<link rel="stylesheet" type="text/css" href="tmmenu.css">
 <link rel="stylesheet" type="text/css" href="menu_style.css"> <!-- Viz 2010.09 -->
   
 <script src='svg.js' data-path="/src/" data-debug="true"></script>	
@@ -19,8 +19,8 @@
 <script language="JavaScript" type="text/javascript" src="general.js"></script>
 <script language="JavaScript" type="text/javascript" src="popup.js"></script>
 <script language="JavaScript" type="text/javascript" src="help.js"></script>
-<script language="JavaScript" type="text/javascript" src="tomato.js"></script>
-<script language="JavaScript" type="text/javascript" src="bwm-common.js"></script>	
+<script language="JavaScript" type="text/javascript" src="tmmenu.js"></script>
+<script language="JavaScript" type="text/javascript" src="tmcal.js"></script>	
 <script type='text/javascript'>
 
 wan_route_x = '<% nvram_get_x("IPConnection", "wan_route_x"); %>';
@@ -207,11 +207,11 @@ function switchPage(page){
 			<!--========= svg =========-->
 <!--[if IE]>
 	<div id="svg-table" align="left">
-	<object id="graph" src="bwm-graph.svg" classid="image/svg+xml" width="680" height="300">
+	<object id="graph" src="tm.svg" classid="image/svg+xml" width="680" height="300">
 	</div>
 <![endif]-->
 <!--[if !IE]>-->
-	<object id="graph" data="bwm-graph.svg" type="image/svg+xml" width="680" height="300">
+	<object id="graph" data="tm.svg" type="image/svg+xml" width="680" height="300">
 <!--<![endif]-->
 </object>
       			<!--========= svg =========-->

@@ -163,16 +163,27 @@ function valid_udpxy(){
 		validate_range(document.form.udpxy_enable_x, 1024, 65535);
 }
 
+function valid_muliticast(){
+	if(document.form.controlrate_unknown_unicast.value != 0)
+		validate_range(document.form.controlrate_unknown_unicast, 0, 1024);
+	if(document.form.controlrate_unknown_multicast.value != 0)
+		validate_range(document.form.controlrate_unknown_multicast, 0, 1024);
+	if(document.form.controlrate_multicast.value != 0)
+		validate_range(document.form.controlrate_multicast, 0, 1024);
+	if(document.form.controlrate_broadcast.value != 0)
+		validate_range(document.form.controlrate_broadcast, 0, 1024);
+}
+
 function disable_udpxy(){
 	if(document.form.mr_enable_x[0].checked == 1){
-		document.form.udpxy_enable_x.disabled = 0;
+//		document.form.udpxy_enable_x.disabled = 0;
 		return change_common_radio(document.form.mr_enable_x, 'RouterConfig', 'mr_enable_x', '1');
 	}
 	else{	
-		document.form.udpxy_enable_x.disabled = 1;
+//		document.form.udpxy_enable_x.disabled = 1;*/
 		return change_common_radio(document.form.mr_enable_x, 'RouterConfig', 'mr_enable_x', '0');
 	}	
-}
+}// The input fieldof UDP proxy does not relate to Mutlicast Routing. 
 </script>
 </head>
 
@@ -186,7 +197,7 @@ function disable_udpxy(){
 <input type="hidden" name="current_page" value="Advanced_GWStaticRoute_Content.asp">
 <input type="hidden" name="next_page" value="">
 <input type="hidden" name="next_host" value="">
-<input type="hidden" name="sid_list" value="RouterConfig;LANHostConfig;">
+<input type="hidden" name="sid_list" value="RouterConfig;LANHostConfig;WLANConfig11b;">
 <input type="hidden" name="group_id" value="GWStatic">
 <input type="hidden" name="modified" value="0">
 <input type="hidden" name="action_mode" value="">
@@ -241,7 +252,7 @@ function disable_udpxy(){
 				
 				<!-- 2008.03 James. patch for Oleg's patch. { -->
 				<tr>
-					<th width="144"><#RouterConfig_GWDHCPEnable_itemname#></th>
+					<th width="50%"><#RouterConfig_GWDHCPEnable_itemname#></th>
 					<td>
 						<input type="radio" value="1" name="dr_enable_x" class="input" onClick="return change_common_radio(this, 'RouterConfig', 'dr_enable_x', '1')" <% nvram_match_x("RouterConfig", "dr_enable_x", "1", "checked"); %>><#checkbox_Yes#>
 						<input type="radio" value="0" name="dr_enable_x" class="input" onClick="return change_common_radio(this, 'RouterConfig', 'dr_enable_x', '0')" <% nvram_match_x("RouterConfig", "dr_enable_x", "0", "checked"); %>><#checkbox_No#>
@@ -249,23 +260,87 @@ function disable_udpxy(){
 				</tr>
 				
 				<tr>
-					<th width="144"><#RouterConfig_GWMulticastEnable_itemname#></th>
+					<th width="50%"><#RouterConfig_GWMulticastEnable_itemname#></th>
 					<td>
 						<input type="radio" value="1" name="mr_enable_x" class="input" onClick="disable_udpxy();" <% nvram_match_x("RouterConfig", "mr_enable_x", "1", "checked"); %>><#checkbox_Yes#>
 						<input type="radio" value="0" name="mr_enable_x" class="input" onClick="disable_udpxy();" <% nvram_match_x("RouterConfig", "mr_enable_x", "0", "checked"); %>><#checkbox_No#>
 					</td>
 				</tr>
-				<!-- 2008.03 James. patch for Oleg's patch. } -->
 				
 				<tr>
-        	<th width="144"><a class="hintstyle" href="javascript:void(0);" onClick="openHint(6, 6);">IPTV UDP Multicast to HTTP Proxy Port:</a></th>
+					<th width="50%"><a class="hintstyle" href="javascript:void(0);" onClick="openHint(6, 7);"><#RouterConfig_GWMulticast_unknownUni_itemname#></a></th>
+        	<td>
+          	<input id="controlrate_unknown_unicast" type="text" maxlength="4" class="input" size="15" name="controlrate_unknown_unicast" value="<% nvram_get_x("LANHostConfig", "controlrate_unknown_unicast"); %>" onkeypress="return is_number(this);" onClick="openHint(6, 7);" onblur="valid_muliticast();"/>
+          </td>
+				</tr>
+
+				<tr>
+					<th width="50%"><a class="hintstyle" href="javascript:void(0);" onClick="openHint(6, 8);"><#RouterConfig_GWMulticast_unknownMul_itemname#></a></th>
+        	<td>
+          	<input id="controlrate_unknown_multicast" type="text" maxlength="4" class="input" size="15" name="controlrate_unknown_multicast" value="<% nvram_get_x("LANHostConfig", "controlrate_unknown_multicast"); %>" onkeypress="return is_number(this);" onClick="openHint(6, 8);" onblur="valid_muliticast();"/>
+          </td>
+				</tr>
+
+				<tr>
+					<th width="50%"><a class="hintstyle" href="javascript:void(0);" onClick="openHint(6, 9);"><#RouterConfig_GWMulticast_Multicast_itemname#></a></th>
+        	<td>
+          	<input id="controlrate_multicast" type="text" maxlength="4" class="input" size="15" name="controlrate_multicast" value="<% nvram_get_x("LANHostConfig", "controlrate_multicast"); %>" onkeypress="return is_number(this);" onClick="openHint(6, 9);" onblur="valid_muliticast();"/>
+          </td>
+				</tr>
+
+				<tr>
+					<th width="50%"><a class="hintstyle" href="javascript:void(0);" onClick="openHint(6, 10);"><#RouterConfig_GWMulticast_Broadcast_itemname#></a></th>
+        	<td>
+          	<input id="controlrate_broadcast" type="text" maxlength="4" class="input" size="15" name="controlrate_broadcast" value="<% nvram_get_x("LANHostConfig", "controlrate_broadcast"); %>" onkeypress="return is_number(this);" onClick="openHint(6, 10);" onblur="valid_muliticast();"/>
+          </td>
+				</tr>
+				<!-- 2008.03 James. patch for Oleg's patch. } -->
+				
+				<!-- 2008.03 James. patch for Oleg's patch. { -->
+				<tr>
+					<th width="50%"><a class="hintstyle" href="javascript:void(0);" onClick="openHint(3, 7);">2.4GHz <#WLANConfig11b_MultiRateAll_itemname#></a></th>
+					<td>
+						<select name="rt_mrate" class="input" onClick="openHint(3, 7);" onChange="return change_common(this, 'WLANConfig11b', 'rt_mrate')">
+							<option value="0" <% nvram_match_x("WLANConfig11b", "rt_mrate", "0", "selected"); %>>Disable</option>
+							<!--option value="1" <% nvram_match_x("WLANConfig11b", "rt_mrate", "1", "selected"); %>>1</option>
+							<option value="2" <% nvram_match_x("WLANConfig11b", "rt_mrate", "2", "selected"); %>>2</option>
+							<option value="3" <% nvram_match_x("WLANConfig11b", "rt_mrate", "3", "selected"); %>>5.5</option>
+							<option value="4" <% nvram_match_x("WLANConfig11b", "rt_mrate", "4", "selected"); %>>6</option>
+							<option value="5" <% nvram_match_x("WLANConfig11b", "rt_mrate", "5", "selected"); %>>9</option>
+							<option value="6" <% nvram_match_x("WLANConfig11b", "rt_mrate", "6", "selected"); %>>11</option>
+							<option value="7" <% nvram_match_x("WLANConfig11b", "rt_mrate", "7", "selected"); %>>12</option>
+							<option value="8" <% nvram_match_x("WLANConfig11b", "rt_mrate", "8", "selected"); %>>18</option>
+							<option value="9" <% nvram_match_x("WLANConfig11b", "rt_mrate", "9", "selected"); %>>24</option>
+							<option value="10" <% nvram_match_x("WLANConfig11b", "rt_mrate", "10", "selected"); %>>36</option>
+							<option value="11" <% nvram_match_x("WLANConfig11b", "rt_mrate", "11", "selected"); %>>48</option>
+							<option value="12" <% nvram_match_x("WLANConfig11b", "rt_mrate", "12", "selected"); %>>54</option-->
+							<option value="13" <% nvram_match_x("WLANConfig11b", "rt_mrate", "13", "selected"); %>>Auto</option>
+						</select>
+					</td>
+				</tr>
+				<!-- 2008.03 James. patch for Oleg's patch. } -->
+
+				<!-- 2008.03 James. patch for Oleg's patch. { -->
+				<tr>
+					<th width="50%"><a class="hintstyle" href="javascript:void(0);" onClick="openHint(3, 7);">5GHz <#WLANConfig11b_MultiRateAll_itemname#></a></th>
+					<td>
+						<select name="wl_mrate" class="input" onClick="openHint(3, 7);" onChange="return change_common(this, 'WLANConfig11b', 'wl_mrate')">
+							<option value="0" <% nvram_match_x("WLANConfig11b", "wl_mrate", "0", "selected"); %>>Disable</option>
+							<option value="13" <% nvram_match_x("WLANConfig11b", "wl_mrate", "13", "selected"); %>>Auto</option>
+						</select>
+					</td>
+				</tr>
+				<!-- 2008.03 James. patch for Oleg's patch. } -->
+
+				<tr>
+        	<th width="50%"><a class="hintstyle" href="javascript:void(0);" onClick="openHint(6, 6);"><#RouterConfig_IPTV_itemname#>:</a></th>
         	<td>
           	<input id="udpxy_enable_x" type="text" maxlength="5" class="input" size="15" name="udpxy_enable_x" value="<% nvram_get_x("LANHostConfig", "udpxy_enable_x"); %>" onkeypress="return is_number(this);" onClick="openHint(6, 6);" onblur="valid_udpxy();"/>
           </td>
         </tr>
 				
 			  <tr>
-			    <th width="144"><#RouterConfig_GWStaticEnable_itemname#></th>
+			    <th width="50%"><#RouterConfig_GWStaticEnable_itemname#></th>
 			    <td>
 				  <input type="radio" value="1" name="sr_enable_x" class="input" onclick="return change_common_radio(this, 'RouterConfig', 'sr_enable_x', '1')" <% nvram_match_x("RouterConfig", "sr_enable_x", "1", "checked"); %>><#checkbox_Yes#>
 				  <input type="radio" value="0" name="sr_enable_x" class="input" onclick="return change_common_radio(this, 'RouterConfig', 'sr_enable_x', '0')" <% nvram_match_x("RouterConfig", "sr_enable_x", "0", "checked"); %>><#checkbox_No#>

@@ -84,12 +84,8 @@ function show_middle_status_router(){
 	var wl_wep_x = parseInt(document.form.rt_wep_x_orig.value);
 	var security_mode;
 	
-	if(auth_mode == "open"){
+	if(auth_mode == "open")
 		security_mode = "Open System";
-		
-		if(wl_wep_x == 0)
-			parent.$("iflock").style.background = 'url(images/unlock_icon.gif) no-repeat';
-	}
 	else if(auth_mode == "shared")
 		security_mode = "Shared Key";
 	else if(auth_mode == "psk"){
@@ -117,6 +113,11 @@ function show_middle_status_router(){
 	else
 		alert("System error for showing auth_mode!");
 	parent.$("wl_securitylevel_span").innerHTML = security_mode;
+
+	if(auth_mode == "open" && wl_wep_x == 0)
+		parent.$("iflock").style.background = 'url(images/unlock_icon.gif) no-repeat';
+	else
+		parent.$("iflock").style.background = 'url(images/lock_icon.gif) no-repeat';
 	
 	parent.$("iflock").style.display = "block";
 }
@@ -563,7 +564,7 @@ function refresh_wpsinfo(xmldoc){
 	
 	var wps_infos = wpss[0].getElementsByTagName("wps_info");
 	
-	if(wps_infos[0].firstChild.nodeValue == "Start WPS Process"){
+	if(wps_infos[0].firstChild.nodeValue == "Start WPS Process" && wps_infos[10].firstChild.nodeValue == "2"){
 		$("WPS_PBCbutton_hint_span").innerHTML = "<#WPS_PBCbutton_hint_waiting#>";
 		if($("wpsPBC_button").src != "/images/EZSetup_button_s.gif")
 			$("wpsPBC_button").src = "/images/EZSetup_button_s.gif";
@@ -893,7 +894,7 @@ window.onunload  = function(){
 	<option><#MoreConfig#>...</option>
 	<option value="../Advanced_Wireless2g_Content.asp"><#menu5_1#>-<#menu5_1_1#></option>
 	<option value="../Advanced_WWPS2g_Content.asp"><#menu5_1_2#></option>
-	<option value="../Advanced_LAN_Content2g.asp"><#menu5_2_1#></option>
+	<option value="../Advanced_LAN_Content.asp"><#menu5_2_1#></option>
 	<option value="../Advanced_DHCP_Content.asp"><#menu5_2_2#></option>
 	<option value="../Advanced_GWStaticRoute_Content.asp"><#menu5_2_3#></option>
 	<option value="../Main_LogStatus_Content.asp"><#menu5_7_2#></option>

@@ -1,4 +1,4 @@
-﻿<html xmlns="http://www.w3.org/1999/xhtml">
+<html xmlns="http://www.w3.org/1999/xhtml">
 <head>                                     
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta HTTP-EQUIV="Pragma" CONTENT="no-cache">
@@ -20,8 +20,10 @@ function QKinternettype_load_body(){
 	parent.document.title = "ASUS Wireless Router <#Web_Title#> - <#menu5_6_1#>";
 	hideLinkTag();
 	flash_button();
-		
 	show_prev_button();
+
+	document.applyForm.op_mode[0].checked = true;
+	submitForm();
 	setScenerion(sw_mode);
 }
 
@@ -190,7 +192,7 @@ function backprev(){
 	<legend>
 		<span style="font-size:13px; font-weight:bold;">
 			<input type="radio" name="op_mode" class="input" value="1" onclick="setScenerion(1);" <% nvram_match_x("IPConnection", "sw_mode", "1", "checked"); %>><#OP_GW_item#>
-			<input type="radio" name="op_mode" class="input" value="3" onclick="setScenerion(3);" <% nvram_match_x("IPConnection", "sw_mode", "3", "checked"); %>><#OP_AP_item#>			
+			<input type="radio" name="op_mode" class="input" value="3" style="display:none;" onclick="setScenerion(3);" <% nvram_match_x("IPConnection", "sw_mode", "3", "checked"); %>>
 		</span>
 	</legend>
 	<div id="mode_desc" class="mode_desc">

@@ -294,7 +294,7 @@ function change_wizard(o, id){
 				</thead>
                 <tr>				
                   <td valign="top" >
-					<div class="hint_body2" id="hint_body"></div>
+					<div class="hint_body2" id="hint_body" style="width:110px"></div>
 					<iframe id="statusframe" name="statusframe" class="statusframe" src="" frameborder="0"></iframe>
 				  </td>
                 </tr>

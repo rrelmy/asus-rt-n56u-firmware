@@ -11,7 +11,6 @@
 <title>ASUS Wireless Router <#Web_Title#> - <#menu5_7_4#></title>
 <link rel="stylesheet" type="text/css" href="index_style.css"> 
 <link rel="stylesheet" type="text/css" href="form_style.css">
-
 <script language="JavaScript" type="text/javascript" src="/state.js"></script>
 <script language="JavaScript" type="text/javascript" src="/general.js"></script>
 <script language="JavaScript" type="text/javascript" src="/popup.js"></script>
@@ -67,10 +66,10 @@ function initial(){
 	  <div id="tabMenu" class="submenuBlock"></div><br/>
       
       <!--===================================Beginning of Main Content===========================================-->
-      <table width="98%" border="0" align="center" cellpadding="0" cellspacing="0">
+      <table width="90%" border="0" align="center" cellpadding="0" cellspacing="0">
         <tr>
           <td valign="top" >           
-            <table width="500" border="0" align="center" cellpadding="4" cellspacing="0" bordercolor="#6b8fa3" class="FormTitle">
+            <table width="90%" border="0" align="center" cellpadding="4" cellspacing="0" bordercolor="#6b8fa3" class="FormTitle">
               <thead>
                 <tr>
                   <td colspan="2"><#menu5_7#> - <#menu5_7_4#> (2.4GHz)</td>
@@ -79,7 +78,7 @@ function initial(){
               
               <tr>
                 <td colspan="2" align="center">
-                  <textarea  cols="63" rows="10" style="font-family:'Courier New', Courier, mono; font-size:13px;" readonly="readonly" wrap=VIRTUAL><% nvram_dump("wlan11b_2g.log","wlan11b.sh"); %>
+                  <textarea  cols=80" rows="10" style="width=90%; font-family:'Courier New', Courier, mono; font-size:13px;" readonly="readonly" wrap=VIRTUAL><% nvram_dump("wlan11b_2g.log","wlan11b.sh"); %>
                   </textarea><!--==magic 2008.11 del name ,if there are name, when the form was sent, the textarea also will be sent==-->
 								</td>
               </tr>

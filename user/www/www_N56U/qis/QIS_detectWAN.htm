@@ -14,13 +14,13 @@
 	background-color:#C0DAE4;
 }
 </style>
-
 <script type="text/JavaScript" src="/jquery.js"></script>
 <script type="text/javascript">
 var now_flag = '<% get_parameter("flag"); %>';
 
 var MAX_RUN_TIMES = 3, run_times = 0;
 var toInternet = 0;
+var link_internet = 0;
 
 var wantype = '<% nvram_get_x("Layer3Forwarding", "wan_proto"); %>';
 
@@ -28,6 +28,14 @@ var wan_subnet = '<% nvram_get_x("", "wan_subnet_t"); %>';
 var lan_subnet = '<% nvram_get_x("", "lan_subnet_t"); %>';
 
 function initial(){
+	var isIE6 = navigator.userAgent.search("MSIE 6") > -1; 
+	if(isIE6){
+  	$("#img_obj1")[0].src = "/images/checked_qis.gif";
+  	$("#img_obj2")[0].src = "/images/checked_qis.gif";
+  	$("#img_obj3")[0].src = "/images/checked_qis.gif";
+  	$("#img_obj4")[0].src = "/images/checked_qis.gif";
+	}
+
 	if(wan_subnet.length > 0 && wan_subnet == lan_subnet){
 		gotoPage("/error_page.htm", "6", 1);
 		return;
@@ -84,6 +92,7 @@ function ajax_detectWAN(){
 		dataType: 'script',
 		
 		error: function(xhr){
+			--run_times;
 			setTimeout("ajax_detectWAN();", 1000);
 		},
 		success: function(response){
@@ -100,7 +109,8 @@ function check_changed_status(){
 		gotoPage("/error_page.htm", "6", 1);
 		return;
 	}
-	else if(toInternet < 6){ // 6 = Got WAN DNS and Got more DNS.
+	//else if(toInternet < 6){ // 6 = Got WAN DNS and Got more DNS.
+	else if(toInternet < 6 && link_internet != 1){ // 6 = Got WAN DNS and Got more DNS.
 		if(run_times < MAX_RUN_TIMES){
 			setTimeout("ajax_detectWAN();", 1000);
 			return;
@@ -113,8 +123,9 @@ function check_changed_status(){
 function successstatus(){
 	var ssid_2g = '<% nvram_char_to_ascii("WLANConfig11b", "rt_ssid"); %>';
 	var ssid_5g = '<% nvram_char_to_ascii("WLANConfig11b", "wl_ssid"); %>';
-
-	if(toInternet >= 6){
+	
+	//if(toInternet >= 6){
+	if(toInternet >= 6 || link_internet == 1){
 		if(ssid_2g == "ASUS" && ssid_5g == "ASUS_5G")
 			gotoPage('/qis/QIS_wireless.htm', '', 0);
 		else
@@ -124,6 +135,11 @@ function successstatus(){
 		document.redirectForm.prev_page.value = "/qis/QIS_detect.htm";
 		
 		gotoPage('/qis/QIS_internet_ip.htm', now_flag, 0);
+	}
+	else if(now_flag == "auto_way_vpn"){
+		document.redirectForm.prev_page.value = "start_apply.htm";
+		
+		gotoPage('/QIS_wizard.htm', now_flag, 1);
 	}
 	else if(now_flag == "auto_way"){
 		gotoPage('/qis/QIS_internet_ip.htm', now_flag, 0);
@@ -154,7 +170,7 @@ function gotoPage(dst_url, flag, isParent){
 		<table id="tblsetting_1" class="QISform" width="400" border=0 align="center" cellpadding="5" cellspacing="0">
 			<tr id="tr_obj1" style="display:none;">
 				<td align="right">
-					<img id="img_obj1" src="/images/checked_qis.png" width="25" height="25"></span>
+					<img id="img_obj1" src="/images/checked_qis.gif" width="25" height="25"></span>
 				</td>
 				<td class="test_css">
 					<strong><span id="string_obj1"></span></strong>
@@ -162,7 +178,7 @@ function gotoPage(dst_url, flag, isParent){
 			</tr>
 			<tr id="tr_obj2" style="display:none;">
 				<td align="right">
-					<img id="img_obj2" src="/images/checked_qis.png" width="25" height="25"></span>
+					<img id="img_obj2" src="/images/checked_qis.gif" width="25" height="25"></span>
 				</td>
 				<td class="test_css">
 					<strong><span id="string_obj2"></span></strong>
@@ -170,7 +186,7 @@ function gotoPage(dst_url, flag, isParent){
 			</tr>
 			<tr id="tr_obj3" style="display:none;">
 				<td align="right">
-					<img id="img_obj3" src="/images/checked_qis.png" width="25" height="25"></span>
+					<img id="img_obj3" src="/images/checked_qis.gif" width="25" height="25"></span>
 				</td>
 				<td class="test_css">
 					<strong><span id="string_obj3"></span></strong>
@@ -178,7 +194,7 @@ function gotoPage(dst_url, flag, isParent){
 			</tr>
 			<tr id="tr_obj4" style="display:none;">
 				<td align="right">
-					<img id="img_obj4" src="/images/checked_qis.png" width="25" height="25"></span>
+					<img id="img_obj4" src="/images/checked_qis.gif" width="25" height="25"></span>
 				</td>
 				<td class="test_css">
 					<strong><span id="string_obj4"></span></strong>

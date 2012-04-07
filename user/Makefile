@@ -92,7 +92,7 @@ dir_$(CONFIG_ASUS_NETWORK_MAP)			+= network_map
 dir_$(CONFIG_ASUS_LPRNG)			+= LPRng
 dir_$(CONFIG_ASUS_U2EC)				+= u2ec
 #dir_$(CONFIG_ASUS_NTFS3G)			+= ntfs-3g.asus
-dir_$(CONFIG_USB_TEST)				+= usbtest
+#dir_$(CONFIG_USB_TEST)				+= usbtest
 dir_$(CONFIG_VSFTPD)				+= vsftpd
 dir_$(CONFIG_ASUS_SAMBA)			+= attr
 dir_$(CONFIG_ASUS_SAMBA)			+= acl
@@ -171,10 +171,19 @@ dir_y						+= ushare-1.1a
 dir_y						+= udpxy
 dir_y						+= rstats
 dir_y						+= tcpcheck
-dir_y						+= cpubench
+#dir_y						+= cpubench
 dir_y						+= e2fsprogs
 dir_y						+= dosfstools-3.0.10
-dir_y						+= cutter-1.03
+#dir_y						+= cutter-1.03
+#dir_y						+= epi_ttcp
+#dir_y						+= ffmpeg-0.6.1
+#dir_y						+= sqlite-autoconf-3070400
+#dir_y						+= libexif-0.6.20
+#dir_y						+= jpeg-8b
+#dir_y						+= libogg-1.2.2
+#dir_y						+= libvorbis-1.3.2
+#dir_y						+= flac-1.2.1
+#dir_y						+= minidlna
 
 all: config
 #	$(MAKE) -j$(HOST_NCPU) $(sort $(dir_y) $(dir_v) $(dir_p)) || exit $$?

@@ -1,0 +1,84 @@
+mnote-olympus-tag.lo mnote-olympus-tag.o: olympus/mnote-olympus-tag.c \
+  ../config.h olympus/mnote-olympus-tag.h ../libexif/i18n.h \
+  ../libexif/exif-utils.h ../libexif/exif-byte-order.h \
+  ../libexif/exif-format.h ../libexif/_stdint.h \
+  /root/RT-N56U/source/lib/include/stdint.h \
+  /root/RT-N56U/source/lib/include/features.h \
+  /root/RT-N56U/source/lib/include/bits/uClibc_config.h \
+  /root/RT-N56U/source/lib/include/sys/cdefs.h \
+  /root/RT-N56U/source/lib/include/bits/wchar.h \
+  /root/RT-N56U/source/lib/include/bits/wordsize.h \
+  /root/RT-N56U/source/lib/include/stdlib.h \
+  /opt/buildroot-gcc342/bin/../lib/gcc/mipsel-linux-uclibc/3.4.2/include/stddef.h \
+  /root/RT-N56U/source/lib/include/sys/types.h \
+  /root/RT-N56U/source/lib/include/bits/types.h \
+  /root/RT-N56U/source/lib/include/bits/kernel_types.h \
+  /root/RT-N56U/source/lib/include/bits/pthreadtypes.h \
+  /root/RT-N56U/source/lib/include/bits/sched.h \
+  /root/RT-N56U/source/lib/include/time.h \
+  /root/RT-N56U/source/lib/include/endian.h \
+  /root/RT-N56U/source/lib/include/bits/endian.h \
+  /root/RT-N56U/source/lib/include/sys/select.h \
+  /root/RT-N56U/source/lib/include/bits/select.h \
+  /root/RT-N56U/source/lib/include/bits/sigset.h \
+  /root/RT-N56U/source/lib/include/bits/time.h \
+  /root/RT-N56U/source/lib/include/sys/sysmacros.h \
+  /root/RT-N56U/source/lib/include/alloca.h
+
+../config.h:
+
+olympus/mnote-olympus-tag.h:
+
+../libexif/i18n.h:
+
+../libexif/exif-utils.h:
+
+../libexif/exif-byte-order.h:
+
+../libexif/exif-format.h:
+
+../libexif/_stdint.h:
+
+/root/RT-N56U/source/lib/include/stdint.h:
+
+/root/RT-N56U/source/lib/include/features.h:
+
+/root/RT-N56U/source/lib/include/bits/uClibc_config.h:
+
+/root/RT-N56U/source/lib/include/sys/cdefs.h:
+
+/root/RT-N56U/source/lib/include/bits/wchar.h:
+
+/root/RT-N56U/source/lib/include/bits/wordsize.h:
+
+/root/RT-N56U/source/lib/include/stdlib.h:
+
+/opt/buildroot-gcc342/bin/../lib/gcc/mipsel-linux-uclibc/3.4.2/include/stddef.h:
+
+/root/RT-N56U/source/lib/include/sys/types.h:
+
+/root/RT-N56U/source/lib/include/bits/types.h:
+
+/root/RT-N56U/source/lib/include/bits/kernel_types.h:
+
+/root/RT-N56U/source/lib/include/bits/pthreadtypes.h:
+
+/root/RT-N56U/source/lib/include/bits/sched.h:
+
+/root/RT-N56U/source/lib/include/time.h:
+
+/root/RT-N56U/source/lib/include/endian.h:
+
+/root/RT-N56U/source/lib/include/bits/endian.h:
+
+/root/RT-N56U/source/lib/include/sys/select.h:
+
+/root/RT-N56U/source/lib/include/bits/select.h:
+
+/root/RT-N56U/source/lib/include/bits/sigset.h:
+
+/root/RT-N56U/source/lib/include/bits/time.h:
+
+/root/RT-N56U/source/lib/include/sys/sysmacros.h:
+
+/root/RT-N56U/source/lib/include/alloca.h:

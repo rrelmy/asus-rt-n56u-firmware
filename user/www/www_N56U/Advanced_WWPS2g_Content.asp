@@ -409,12 +409,12 @@ function show_wsc_status(wps_infos){
 		  	  </td>
 			</tr>
 			<tr id="wps_band">
-				<th width="30%"><a class="hintstyle" href="javascript:void(0);" onclick="openHint(13,5);"><#WLANConfig11b_x_WPSband_itemname#></th>
+				<th width="30%"><a class="hintstyle" href="javascript:void(0);" onclick="openHint(13,5);"><#Current_band#></th>
 				
 				<td>
 				<div><span class="devicepin" style="color:#000;" id="wps_band_word"></span>&nbsp;&nbsp;
-							<input type="button" class="button2" name="switchWPSbtn2" id="switchWPSbtn2" value="Switch" class="button" onClick="SwitchBand();">
-							<input type="button" class="button5" name="switchWPSbtn5" id="switchWPSbtn5" value="Switch" class="button" onClick="SwitchBand();">
+							<input type="button" class="button2" name="switchWPSbtn2" id="switchWPSbtn2" value="<#Switch_band#>" class="button" onClick="SwitchBand();">
+							<input type="button" class="button5" name="switchWPSbtn5" id="switchWPSbtn5" value="<#Switch_band#>" class="button" onClick="SwitchBand();">
 							<span id="wps_band_hint" style="color:#ff0000;"></span></div>
 		  	</td>
 			</tr>

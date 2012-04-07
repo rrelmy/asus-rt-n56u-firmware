@@ -323,7 +323,6 @@ establish_session(l2tp_session *ses)
     sl->ses = ses;
     sl->es = es;
 
-	printf("establish session\n");	// tmp test
     /* Get pty */
     if (kernel_mode) {
         s_pty = socket(AF_PPPOX, SOCK_DGRAM, PX_PROTO_OL2TP);
@@ -355,17 +354,23 @@ establish_session(l2tp_session *ses)
             return -1;
         }
 	snprintf (fdstr, sizeof(fdstr), "%d", s_pty);
-    } else
+    } else {
     if (pty_get(&m_pty, &s_pty) < 0) {
 	free(sl);
 	return -1;
     }
+	if (fcntl(m_pty, F_SETFD, FD_CLOEXEC) == -1) {
+	    l2tp_set_errmsg("Unable to set FD_CLOEXEC");
+	    close(m_pty);
+	    close(s_pty);
+	    free(sl);
+	    return -1;
+	}
+    }
 
-	printf("start fork\n");	// tmp test
     /* Fork */
     pid = fork();
     if (pid == (pid_t) -1) {
-	printf("failed pid = -1\n");	// tmp test
 	free(sl);
 	return -1;
     }
@@ -373,10 +378,8 @@ establish_session(l2tp_session *ses)
     if (pid) {
 	/* In the parent */
 
-	printf("parent pid is %d\n", pid);	// tmp test
 	sl->pid = pid;
 
-	printf("reg event handlerExit\n");	// tmp test
 	/* Set up handler for when pppd exits */
 	Event_HandleChildExit(es, pid, slave_exited, sl);
 
@@ -386,7 +389,6 @@ establish_session(l2tp_session *ses)
 	sl->fd = m_pty;
 
 	if (!kernel_mode) {
-		printf("not kernel mode\n");	// tmp test
             /* Set slave FD non-blocking */
 	    flags = fcntl(sl->fd, F_GETFL);
 	    if (flags >= 0) fcntl(sl->fd, F_SETFL, (long) flags | O_NONBLOCK);
@@ -395,13 +397,9 @@ establish_session(l2tp_session *ses)
 	    sl->event = Event_AddHandler(es, m_pty, EVENT_FLAG_READABLE,
 			 readable, ses);
 	} 
-	else
-	{
-		printf("is kernel mode\n");	// tmp test
 	    sl->event = NULL;
-	}
+
 	ses->private = sl;
-	printf("parent return\n");	// tmp test
 	return 0;
     }
 

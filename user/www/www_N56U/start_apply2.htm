@@ -52,7 +52,7 @@ function top_delay_redirect(next_url){
 	document.redirectForm.submit();
 }
 
-function showdr_advise(){
+function showdr_advise(setting){
 	if(parent.parent.document.forms[0].current_page.value == "/QIS_wizard.htm"
 			&& parent.parent.document.forms[0].wan_route_x.value == "IP_Bridged"
 			&& parent.parent.document.forms[0].wan_nat_x.value == "0"){
@@ -60,10 +60,19 @@ function showdr_advise(){
 		setTimeout("parent.parent.$('drword').innerHTML = '<#DrSurf_sweet_advise3#><br/><br/>'", 10000);
 		setTimeout("parent.parent.detectLANstatus('"+next_page+"', '"+getflag+"');", restart_time*1000);
 	}
+	else if(setting == "finish"){
+		parent.parent.$('drword').innerHTML = "<#DrSurf_sweet_advise1#><br/><br/>";
+		parent.parent.detectLANstatus(next_page, getflag);
+	}
 	else{
 		parent.parent.$('drword').innerHTML = "<#DrSurf_sweet_advise1#><br/><br/>";
 		setTimeout("parent.parent.detectLANstatus('"+next_page+"', '"+getflag+"');", restart_time*1000);
 	}
+}
+
+function hideLoading(){
+	parent.$("loadingBlock").style.visibility = "hidden";
+  parent.$("Loading").style.width = "10px";
 }
 
 function initial(){
@@ -76,18 +85,29 @@ function initial(){
 		else if(getflag == "finish"){
 			parent.parent.showLoading(restart_time, "waiting");
 			//setTimeout("top_delay_redirect('"+next_page+"');", restart_time*1000);
-			setTimeout("parent.parent.detectLANstatus('"+next_page+"', '"+getflag+"');", restart_time*1000);
+			//setTimeout("parent.parent.detectLANstatus('"+next_page+"', '"+getflag+"');", restart_time*1000);
+			setTimeout("parent.parent.dr_advise();", (restart_time+1)*1000);
+			setTimeout("showdr_advise('finish');", (restart_time+1)*1000);
 		}
 		else if(getflag == "adv_ap_mode"){
 			if("<% nvram_get_x("", "sw_mode"); %>" != "3" && parent.parent.document.QKform.sw_mode.value == "3"){
 				parent.parent.$('drword').innerHTML = "<#LANConfig_ChangedLANIP#>";
-				setTimeout("hideLoading()	",60000);
-				setTimeout("parent.dr_advise();",60000);
+				setTimeout("parent.hideLoading()	",50000);
+				setTimeout("parent.dr_advise();",50000);
 			}
+		}
+		else if(getflag == "ap_mode_AOC"){
+			parent.showLoading(50, "waiting");
+			parent.parent.$('drword').innerHTML = "<#LANConfig_ChangedLANIP#>";
+			setTimeout("hideLoading()	",50000);
+			setTimeout("parent.dr_advise();",50000);
 		}
 		else{
 			parent.showLoading(restart_time);
-			setTimeout("top_delay_redirect('"+next_page+"');", restart_time*1000);
+			if(navigator.userAgent.indexOf("Safari")  >= 0)
+				setTimeout("parent.parent.location.href='"+next_page+"';", restart_time*1000);
+			else
+				setTimeout("top_delay_redirect('"+next_page+"');", restart_time*1000);
 		}
 	}
 	else{

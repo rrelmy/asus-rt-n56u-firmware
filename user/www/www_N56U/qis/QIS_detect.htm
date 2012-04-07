@@ -64,6 +64,7 @@ function getWANStatus(){
 		dataType: 'script',
 		
 		error: function(xhr){
+			--proceeding_time;
 			setTimeout("getWANStatus();", 1000);
 		},
 		success: function(response){
@@ -137,12 +138,16 @@ function successstatus(){
 			return;
 		}
 		else{
-			now_flag = "auto_way";
-			
-			if(parent.ifResetModem() == 1)
+			if(parent.ifResetModem() == 1){
+				now_flag = "auto_way_static";
+				
 				document.redirectForm.next_page.value = "/qis/QIS_internet_ip.htm";
-			else
+			}
+			else{
+				now_flag = "auto_way";
+				
 				document.redirectForm.next_page.value = "/qis/QIS_autoMAC.htm";
+			}
 		}
 	}
 	else if(detectType == "pppoe"){

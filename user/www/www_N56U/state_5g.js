@@ -643,11 +643,6 @@ menuL1_link = new Array("", "index.asp", "aidisk.asp", "upnp.asp", "QoS_EZQoS.as
 
 function show_menu(L1, L2, L3){
 
-	//if(productid == "RT-N13"){	
-	//menuL1_link[3] = "";  //remove AiDisk;
-	//menuL1_title[3] = "";
-	//}
-	
 	tabtitle[3].splice(4,1);//HSDPA
 	tablink[3].splice(4,1);//HSDPA
 	
@@ -1014,6 +1009,21 @@ function showhtmlspace(ori_str){
 	while((tail_num = head.indexOf(" ")) >= 0){
 		str += head.substring(0, tail_num);
 		str += "&nbsp;";
+		
+		head = head.substr(tail_num+1, head.length-(tail_num+1));
+	}
+	str += head;
+	
+	return str;
+}
+
+function showhtmland(ori_str){
+	var str = "", head, tail_num;
+	
+	head = ori_str;
+	while((tail_num = head.indexOf("&")) >= 0){
+		str += head.substring(0, tail_num);
+		str += "&amp;";
 		
 		head = head.substr(tail_num+1, head.length-(tail_num+1));
 	}

@@ -19,6 +19,7 @@
 #define _DHCPC_H
 
 #include "libbb_udhcp.h"
+#include "uptime.h"
 
 #define INIT_SELECTING	0
 #define REQUESTING	1

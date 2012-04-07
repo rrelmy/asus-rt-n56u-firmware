@@ -77,6 +77,7 @@ extern void wan_down(char *ifname);
 extern int hotplug_net(void);
 extern int wan_ifunit(char *ifname);
 extern int wan_primary_ifunit(void);
+extern int update_resolvconf(void);
 
 /* services */
 extern int start_dhcpd(void);

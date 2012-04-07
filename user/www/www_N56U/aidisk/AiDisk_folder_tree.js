@@ -153,6 +153,24 @@ function BuildTree(){
 	
 	for(var i = 0; i < this.Items.length; ++i){
 		this.Items[i] = this.Items[i].split("#");
+		
+		var Item_size = 0;
+		Item_size = this.Items[i].length;
+		if(Item_size > 3){
+			var temp_array = new Array(3);
+			
+			temp_array[2] = this.Items[i][Item_size-1];
+			temp_array[1] = this.Items[i][Item_size-2];
+			
+			temp_array[0] = "";
+			for(var j = 0; j < Item_size-2; ++j){
+				if(j != 0)
+					temp_array[0] += "#";
+				temp_array[0] += this.Items[i][j];
+			}
+			this.Items[i] = temp_array;
+		}
+		
 		ItemText = (this.Items[i][0]).replace(/^[\s]+/gi,"").replace(/[\s]+$/gi,"");
 		ItemBarCode = this.FromObject+"_"+(this.Items[i][1]).replace(/^[\s]+/gi,"").replace(/[\s]+$/gi,"");
 		ItemSub = parseInt((this.Items[i][2]).replace(/^[\s]+/gi,"").replace(/[\s]+$/gi,""));
@@ -191,26 +209,34 @@ function BuildTree(){
 	'</td>\n'+
 	
 	'<td>\n';
-	
-		var ori_ItemText = showhtmlspace(ItemText);
+		
+		var short_ItemText = "";
+		var shown_ItemText = "";
+		
 		if(layer == 3){
-			if(ItemText.length > 14){
-		 		ItemText = ItemText.substring(0,11)+"...";
-		 	}
+			if(ItemText.length > 14)
+		 		short_ItemText = ItemText.substring(0,11)+"...";
+		 	else
+		 		short_ItemText = ItemText;
+		 	
+		 	shown_ItemText = showhtmlspace(short_ItemText);
+			
 			TempObject += 
 		'<div id="b'+ItemBarCode+'" style="float:left; width:117px; overflow:hidden;" class="FdText">\n'+
 			'<img id="c'+ItemBarCode+'" onclick=\'$("d'+ItemBarCode+'").onclick();\' src="/images/Tree/'+ItemIcon+'.gif" align=top>\n'+
-			'<span id="d'+ItemBarCode+'"'+SubClick+' title='+ori_ItemText+'>'+ItemText+'</span>\n'+
+			'<span id="d'+ItemBarCode+'"'+SubClick+' title="'+ItemText+'">'+shown_ItemText+'</span>\n'+
 		'</div>\n';
 			
 			TempObject += 
 		'<div id=\"f'+ItemBarCode+'" class="FileStatus" onclick="getChangedPermission(this);"></div>\n\n';		 	
 		}
 		else{
+			shown_ItemText = showhtmlspace(ItemText);
+			
 			TempObject += 
 		'<div id="b'+ItemBarCode+'" class="FdText">\n'+
 			'<img id="c'+ItemBarCode+'" onclick=\'$("d'+ItemBarCode+'").onclick();\' src="/images/Tree/'+ItemIcon+'.gif" align=top>\n'+
-			'<span id="d'+ItemBarCode+'"'+SubClick+' title='+ori_ItemText+'>'+ItemText+'</span>\n'+
+			'<span id="d'+ItemBarCode+'"'+SubClick+' title="'+ItemText+'">'+shown_ItemText+'</span>\n'+
 		'</div>\n';			
 			TempObject += 
 		'<div id="e'+ItemBarCode+'" class="FdTemp"></div>\n';
@@ -302,7 +328,7 @@ function BuildTree2(){
 		TempObject += 
 		'<div id="b'+ItemBarCode+'" class="FdText">\n'+
 			'<img id="c'+ItemBarCode+'" onclick=\'$("d'+ItemBarCode+'").onclick();\' src="/images/Tree/'+ItemIcon+'.gif" align=top>\n'+
-			'<span id="d'+ItemBarCode+'"'+SubClick+' title='+ItemText+'>'+ItemText+'</span>\n'+
+			'<span id="d'+ItemBarCode+'"'+SubClick+' title="'+ItemText+'">'+ItemText+'</span>\n'+
 		'</div>\n';			
 		TempObject += 
 		'<div id="e'+ItemBarCode+'" class="FdTemp"></div>\n';

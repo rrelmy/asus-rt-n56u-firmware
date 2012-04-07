@@ -94,9 +94,15 @@ process_cgi (struct ushare_t *ut, char *cgiargs)
 
   if (refresh && ut->contentlist)
   {
-    free_metadata_list (ut);
-    build_metadata_list (ut);
-  }
+  /*KTi, signal refresh to main thread*/
+  pthread_mutex_lock (&ut->action_mutex);
+    ut->action=REFRESH_ACTION;
+    pthread_cond_signal (&ut->action_cond);
+  pthread_mutex_unlock (&ut->action_mutex);
+ }
+
+ /*KTi give main thread some time to start refresh*/
+sleep (1);
 
   if (ut->presentation)
     buffer_free (ut->presentation);
@@ -148,6 +154,11 @@ build_presentation_page (struct ushare_t *ut)
                  "<meta http-equiv=\"pragma\" content=\"no-cache\"/>");
   buffer_append (ut->presentation,
                  "<meta http-equiv=\"expires\" content=\"1970-01-01\"/>");
+ 
+ if(ut->refresh==TRUE)
+ 	buffer_append (ut->presentation,
+                 "<meta http-equiv=\"refresh\" content=\"10; URL=/web/ushare.html\"/>");
+
   buffer_append (ut->presentation, "</head>");
   buffer_append (ut->presentation, "<body>");
   buffer_append (ut->presentation, "<h1 align=\"center\">");
@@ -166,6 +177,10 @@ build_presentation_page (struct ushare_t *ut)
                   _("Device UDN"), ut->udn);
   buffer_appendf (ut->presentation, "<b>%s :</b> %d<br/>",
                   _("Number of shared files and directories"), ut->nr_entries);
+
+  if(ut->refresh==TRUE)
+	buffer_append (ut->presentation, "<br/><h1 style=\"color:red\">Refreshing shares, please wait...</h1><br/>");
+
   buffer_append (ut->presentation, "</center><br/>");
 
   buffer_appendf (ut->presentation,

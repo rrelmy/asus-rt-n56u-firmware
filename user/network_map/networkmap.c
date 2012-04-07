@@ -146,6 +146,15 @@ int  sent_arppacket(int raw_sockfd, unsigned char * dst_ipaddr)
 }
 /******* End of Build ARP Socket Function ********/
 
+#include <sys/sysinfo.h>
+long uptime(void)
+{
+	struct sysinfo info;
+	sysinfo(&info);
+        
+	return info.uptime;
+}
+
 /*********** Signal function **************/
 static void refresh_sig(int sig)
 {
@@ -154,6 +163,14 @@ static void refresh_sig(int sig)
         refresh_exist_table = 0;
 	scan_count = 0;	
 	nvram_set("networkmap_fullscan", "1");
+
+	time_t fullscan_timestamp;
+	char fullscan_timestampstr[32];
+	fullscan_timestamp = uptime();
+	memset(fullscan_timestampstr, 0, 32);
+	sprintf(fullscan_timestampstr, "%lu", fullscan_timestamp);
+	nvram_set("fullscan_timestamp", fullscan_timestampstr);
+
 #if 0
 	//reset exixt ip table
         memset(&ip_tab, 0x00, sizeof(IP_TABLE));
@@ -161,6 +178,26 @@ static void refresh_sig(int sig)
 	//remove file;
 	ret = unlink("/tmp/static_ip.inf");
 #endif
+}
+
+char copy[16];
+char *fixstr(const char *buf)
+{
+	char *p;
+	int i;
+        
+	memcpy(copy, buf, 16);
+	p = (char *) copy;
+        
+	for (i = 0; i < 16; i++)
+	{
+		if (*p < 0x20)
+			*p = 0x0;
+                
+		p++;
+	}
+
+	return copy;
 }
 
 /******************************************/
@@ -188,7 +225,8 @@ int main()
 	
 	//Get Router's IP/Mac
 	strcpy(router_ipaddr, nvram_safe_get("lan_ipaddr_t"));
-	strcpy(router_mac, nvram_safe_get("et0macaddr"));
+//	strcpy(router_mac, nvram_safe_get("et0macaddr"));
+	strcpy(router_mac, nvram_safe_get("lan_hwaddr"));
         inet_aton(router_ipaddr, &router_addr.sin_addr);
         memcpy(my_ipaddr,  &router_addr.sin_addr, 4);
 
@@ -197,6 +235,13 @@ int main()
         memcpy(scan_ipaddr, &router_addr.sin_addr, 3);
 	networkmap_fullscan = 1;
 	nvram_set("networkmap_fullscan", "1");
+
+	time_t fullscan_timestamp;
+	char fullscan_timestampstr[32];
+	fullscan_timestamp = uptime();
+	memset(fullscan_timestampstr, 0, 32);
+	sprintf(fullscan_timestampstr, "%lu", fullscan_timestamp);
+	nvram_set("fullscan_timestamp", fullscan_timestampstr);
 
 	if (strlen(router_mac)!=0) ether_atoe(router_mac, my_hwaddr);
 
@@ -303,8 +348,9 @@ int main()
 							arp_ptr->source_hwaddr[0], arp_ptr->source_hwaddr[1], 
 							arp_ptr->source_hwaddr[2], arp_ptr->source_hwaddr[3],
 							arp_ptr->source_hwaddr[4], arp_ptr->source_hwaddr[5],
-							ip_tab.device_name[i], ip_tab.type[i], ip_tab.http[i],
-							ip_tab.printer[i], ip_tab.itune[i]);
+//							ip_tab.device_name[i],
+							fixstr(ip_tab.device_name[i]),
+							ip_tab.type[i], ip_tab.http[i], ip_tab.printer[i], ip_tab.itune[i]);
                                 	        fclose(fp_ip);
                                 	}
 	                        	ip_tab.num++;

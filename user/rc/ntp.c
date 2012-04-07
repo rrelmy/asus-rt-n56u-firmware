@@ -52,6 +52,11 @@ static void catch_sig(int sig)
 		nvram_set("ntp_server_tried", servers);
 		server_idx = (++server_idx) % 2;
 	}
+	else if (sig == SIGTERM)
+	{
+		remove("/var/run/ntp.pid");
+		exit(0);
+	}
 }
 
 int ntp_main(void)

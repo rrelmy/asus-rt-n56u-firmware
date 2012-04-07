@@ -253,16 +253,21 @@
 			{0,0,0,0,0,0} //Viz changed 2010.08
 		};      
 	
-	struct variable variables_FirewallConfig_UrlList[] = {	  
-			{"url_keyword_x", "36", validate_string, ARGV("32"), FALSE, RESTART_REBOOT},														     
+	struct variable variables_FirewallConfig_UrlList[] = {
+			{"url_keyword_x", "36", validate_string, ARGV("32"), FALSE, RESTART_FIREWALL},
 			{0,0,0,0,0,0} //Viz changed 2010.08
-		};      
-	
-	struct variable variables_FirewallConfig_MFList[] = {	  
+		};
+
+	struct variable variables_FirewallConfig_KeywordList[] = {
+			{"keyword_keyword_x", "36", validate_string, ARGV("32"), FALSE, RESTART_FIREWALL},
+			{0,0,0,0,0,0}
+		};
+
+	struct variable variables_FirewallConfig_MFList[] = {
 			{"macfilter_list_x", "32", validate_hwaddr, NULL, FALSE, FALSE},
 		        {0,0,0,0,0,0} //Viz changed 2010.08
-		};      
-	
+		};
+
 	struct variable variables_RouterConfig_GWStatic[] = {	  
 			{"sr_ipaddr_x", "17", validate_ipaddr, NULL, FALSE, FALSE},
 			{"sr_netmask_x", "17", validate_ipaddr, NULL, FALSE, FALSE},
@@ -893,16 +898,18 @@
 
       {"SystemCmd", "Status", NULL, ARGV("syscmd.log",""), FALSE, FALSE},
 		 
-		 {"url_enable_x", "", validate_range, ARGV("0","1"), FALSE, RESTART_REBOOT},	// 2007.10 James
-	      
-		{"url_enable_x_1", "", validate_range, ARGV("0","1"), FALSE, RESTART_REBOOT},   // jerry5 added for n56u  
+		{"url_enable_x", "", validate_range, ARGV("0","1"), FALSE, RESTART_FIREWALL},	// 2007.10 James
+		{"url_enable_x_1", "", validate_range, ARGV("0","1"), FALSE, RESTART_FIREWALL},	// jerry5 added for n56u
+		{"url_date_x", "", validate_portrange, NULL, FALSE, RESTART_FIREWALL},	// 2007.10 James
+		{"url_time_x", "", validate_portrange, NULL, FALSE, RESTART_FIREWALL},	// 2007.10 James
+		{"url_time_x_1", "", validate_portrange, NULL, FALSE, RESTART_FIREWALL},	// jerry5 added for n56u
 
-		{"url_date_x", "", validate_portrange, NULL, FALSE, RESTART_REBOOT},	// 2007.10 James
-	    
-		{"url_time_x", "", validate_portrange, NULL, FALSE, RESTART_REBOOT},	// 2007.10 James
-	    
-		{"url_time_x_1", "", validate_portrange, NULL, FALSE, RESTART_REBOOT},   // jerry5 added for n56u 
-	
+		{"keyword_enable_x", "", validate_range, ARGV("0","1"), FALSE, RESTART_FIREWALL},
+		{"keyword_enable_x_1", "", validate_range, ARGV("0","1"), FALSE, RESTART_FIREWALL},
+		{"keyword_date_x", "", validate_portrange, NULL, FALSE, RESTART_FIREWALL},
+		{"keyword_time_x", "", validate_portrange, NULL, FALSE, RESTART_FIREWALL},
+		{"keyword_time_x_1", "", validate_portrange, NULL, FALSE, RESTART_FIREWALL},
+
 	      {"", "", validate_choice, ARGV(	      
 	      
 		   "DROP",
@@ -911,7 +918,9 @@
 	      
 	      0), FALSE, FALSE},
 				    
-		       {"url_num_x", "", validate_range, ARGV("0","65535"), FALSE, RESTART_REBOOT},	// 2007.10 James
+		       {"url_num_x", "", validate_range, ARGV("0","65535"), FALSE, RESTART_FIREWALL},	// 2007.10 James
+
+		       {"keyword_num_x", "", validate_range, ARGV("0","65535"), FALSE, RESTART_FIREWALL},
 					     
 		       {"filter_wl_num_x", "", validate_range, ARGV("0","65535"), FALSE, RESTART_FIREWALL},	// 2007.10 James
 					     
@@ -928,26 +937,34 @@
 	      0), FALSE, RESTART_FIREWALL},	// 2007.10 James
 				    
 		       {"macfilter_num_x", "", validate_range, ARGV("0","65535"), FALSE, RESTART_FIREWALL},	// 2007.10 James
-		     
-      {"WLFilterList", "Group", validate_group, ARGV(variables_FirewallConfig_WLFilterList, "32", "63", "filter_wl_num_x"), FALSE, RESTART_FIREWALL},	// 2007.10 James
-       
-      {"LWFilterList", "Group", validate_group, ARGV(variables_FirewallConfig_LWFilterList, "32", "63", "filter_lw_num_x"), FALSE, RESTART_FIREWALL},	// 2007.11 James
-       
-      {"UrlList", "Group", validate_group, ARGV(variables_FirewallConfig_UrlList, "128", "36", "url_num_x"), FALSE, RESTART_REBOOT},	// 2007.11 James
 
-      {"MFList", "Group", validate_group, ARGV(variables_FirewallConfig_MFList, "16", "32", "macfilter_num_x"), FALSE, RESTART_FIREWALL},	// 2007.11 James
-			
-      { 0, 0, 0, 0, 0, 0}
-      };
-   
+	{"WLFilterList", "Group", validate_group, ARGV(variables_FirewallConfig_WLFilterList, "32", "63", "filter_wl_num_x"), FALSE, RESTART_FIREWALL},	// 2007.10 James
+
+	{"LWFilterList", "Group", validate_group, ARGV(variables_FirewallConfig_LWFilterList, "32", "63", "filter_lw_num_x"), FALSE, RESTART_FIREWALL},	// 2007.11 James
+
+	{"UrlList", "Group", validate_group, ARGV(variables_FirewallConfig_UrlList, "128", "36", "url_num_x"), FALSE, RESTART_FIREWALL},	// 2007.11 James
+
+	{"KeywordList", "Group", validate_group, ARGV(variables_FirewallConfig_KeywordList, "128", "36", "keyword_num_x"), FALSE, RESTART_FIREWALL},
+
+	{"MFList", "Group", validate_group, ARGV(variables_FirewallConfig_MFList, "16", "32", "macfilter_num_x"), FALSE, RESTART_FIREWALL},	// 2007.11 James
+
+	{ 0, 0, 0, 0, 0, 0}
+
+	};
+
       struct variable variables_RouterConfig[] = {
 		       
-		 {"sr_enable_x", "", validate_range, ARGV("0","1"), FALSE, RESTART_REBOOT},	// 2007.10 James
+		{"sr_enable_x", "", validate_range, ARGV("0","1"), FALSE, RESTART_REBOOT},	// 2007.10 James
 		
 		{"dr_enable_x", "", validate_range, ARGV("0","1"), FALSE, RESTART_REBOOT},	// 2008.03 James
 		
 		{"mr_enable_x", "", validate_range, ARGV("0","1"), FALSE, RESTART_REBOOT},	// 2008.03 James
-	      	
+/*
+		{"controlrate_unknown_unicast", "", validate_range, ARGV("0", "1024"), FALSE, RESTART_REBOOT},
+		{"controlrate_unknown_multicast", "", validate_range, ARGV("0", "1024"), FALSE, RESTART_REBOOT},
+		{"controlrate_multicast", "", validate_range, ARGV("0", "1024"), FALSE, RESTART_REBOOT},
+		{"controlrate_broadcast", "", validate_range, ARGV("0", "1024"), FALSE, RESTART_REBOOT},
+*/
 	      {"sr_rip_x", "", validate_choice, ARGV(	      
 	      
 		   "0:Disabled",
@@ -995,6 +1012,11 @@
 		{"lan_ipaddr", "", validate_ipaddr, NULL, FALSE, RESTART_REBOOT},	// 2007.10 James
 	    
 		{"lan_netmask", "", validate_ipaddr, NULL, FALSE, RESTART_REBOOT},	// 2007.10 James
+
+                {"controlrate_unknown_unicast", "", validate_range, ARGV("0", "1024"), FALSE, RESTART_REBOOT},
+                {"controlrate_unknown_multicast", "", validate_range, ARGV("0", "1024"), FALSE, RESTART_REBOOT},
+                {"controlrate_multicast", "", validate_range, ARGV("0", "1024"), FALSE, RESTART_REBOOT},
+                {"controlrate_broadcast", "", validate_range, ARGV("0", "1024"), FALSE, RESTART_REBOOT},
 
 		{"udpxy_enable_x", "", validate_range, ARGV("0","65535"), FALSE, RESTART_REBOOT},
 	    

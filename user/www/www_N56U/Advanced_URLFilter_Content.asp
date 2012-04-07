@@ -217,7 +217,7 @@ function done_validating(action){
         </tr>
         
 	<tr id="url_time">
-          <th><a class="hintstyle"  href="javascript:void(0);" onClick="openHint(9,2);"><#FirewallConfig_URLActiveTime_itemname#> 1:</a></th>
+          <th><a class="hintstyle"  href="javascript:void(0);" onClick="openHint(9,2);"><#FirewallConfig_KeywordActiveTime_itemname#> 1:</a></th>
 	        <td>
 			<input type="text" maxlength="2" class="input" size="2" name="url_time_x_starthour" onKeyPress="return is_number(this)">:
 			<input type="text" maxlength="2" class="input" size="2" name="url_time_x_startmin" onKeyPress="return is_number(this)">-
@@ -235,7 +235,7 @@ function done_validating(action){
         </tr>
         
 	<tr id="url_time_1">
-          <th><a class="hintstyle"  href="javascript:void(0);" onClick="openHint(9,2);"><#FirewallConfig_URLActiveTime_itemname#> 2:</a></th>
+          <th><a class="hintstyle"  href="javascript:void(0);" onClick="openHint(9,2);"><#FirewallConfig_KeywordActiveTime_itemname#> 2:</a></th>
           	<td>
 			<input type="text" maxlength="2" class="input" size="2" name="url_time_x_starthour_1" onKeyPress="return is_number(this)">:
 			<input type="text" maxlength="2" class="input" size="2" name="url_time_x_startmin_1" onKeyPress="return is_number(this)">-
@@ -245,7 +245,7 @@ function done_validating(action){
         </tr>
         
         <tr>
-          <th><a class="hintstyle"  href="javascript:void(0);" onClick="openHint(9,1);"><#FirewallConfig_URLActiveDate_itemname#></a></th>
+          <th><a class="hintstyle"  href="javascript:void(0);" onClick="openHint(9,1);"><#FirewallConfig_KeywordActiveDate_itemname#></a></th>
           <td>
 		  	<input type="checkbox" name="url_date_x_Sun" class="input" onChange="return changeDate();">Sun
 			<input type="checkbox" name="url_date_x_Mon" class="input" onChange="return changeDate();">Mon			

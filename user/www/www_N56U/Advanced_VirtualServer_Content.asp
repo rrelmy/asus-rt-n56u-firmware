@@ -444,7 +444,7 @@ function changeBgColor(obj, num){
 	</thead>
 	
 	<tr>
-	  <td bgcolor="#FFFFFF"><#IPConnection_VServerEnable_sectiondesc#>
+	  <td bgcolor="#FFFFFF"><#IPConnection_VServerEnable_sectiondesc#><br/><br/>1. <#FirewallConfig_Port80_itemdesc#><br/>2. <#FirewallConfig_FTPPrompt_itemdesc#>
 		<table width="100%" border="1" align="center" cellpadding="4" cellspacing="0" class="FormTable">
           <tr>
             <th colspan="3"><#IPConnection_VServerEnable_itemname#><input type="hidden" name="vts_num_x_0" value="<% nvram_get_x("IPConnection", "vts_num_x"); %>" readonly="1" /></th>

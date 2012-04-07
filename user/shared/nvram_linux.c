@@ -62,7 +62,7 @@ static char *nvram_xfr_buf = NULL;
 #define MAJ_NUM_STR	"major number"
 #define NVRAM_DEV_NODE	"/tmp/dev_nvram"
 
-static BUFFER[2048];
+static char BUFFER[2048];
 
 /* Get major number of nvra driver and create an device node
  * return 0: fail

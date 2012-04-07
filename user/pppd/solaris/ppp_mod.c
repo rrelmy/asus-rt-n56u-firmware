@@ -1,20 +1,4 @@
 /*
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License as
- * published by the Free Software Foundation; either version 2 of
- * the License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston,
- * MA 02111-1307 USA
- */
-/*
  * ppp_mod.c - modload support for PPP pseudo-device driver.
  *
  * Copyright (c) 1994 Paul Mackerras. All rights reserved.
@@ -48,7 +32,7 @@
  * AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING
  * OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  *
- * $Id: ppp_mod.c,v 1.2 2002/12/06 09:49:16 paulus Exp $
+ * $Id: ppp_mod.c,v 1.3 2004/01/17 05:47:55 carlsonj Exp $
  */
 
 /*
@@ -140,8 +124,13 @@ static int
 ppp_identify(dip)
     dev_info_t *dip;
 {
+    /* This entry point is not used as of Solaris 10 */
+#ifdef DDI_IDENTIFIED
     return strcmp(ddi_get_name(dip), "ppp") == 0? DDI_IDENTIFIED:
 	DDI_NOT_IDENTIFIED;
+#else
+    return 0;
+#endif
 }
 
 static int

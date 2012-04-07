@@ -14,7 +14,6 @@
 	background-color:#C0DAE4;
 }
 </style>
-
 <script type="text/JavaScript" src="/jquery.js"></script>
 <script type="text/javascript">
 var now_flag = '<% get_parameter("flag"); %>';
@@ -53,13 +52,17 @@ function ajax_detectWAN(){
 		dataType: 'script',
 		
 		error: function(xhr){
-			$("#string_obj2")[0].innerHTML = "<#QIS_autoMAC_result_desc1#>";
-			
-			setTimeout("ajax_detectWAN();", 3000);
+			setTimeout("ajax_detectWAN();", 1000);
 		},
 		success: function(response){
 			if(done_auto_mac == 1 && wan_status_t == "Connected"){
-				$("#img_obj2")[0].src = "/images/checked_qis.png";
+
+				var isIE6 = navigator.userAgent.search("MSIE 6") > -1; 
+		    if(isIE6)
+    	    $("#img_obj2")[0].src = "/images/checked_qis.gif";
+				else
+					$("#img_obj2")[0].src = "/images/checked_qis.png";
+
 				$("#string_obj2")[0].innerHTML = "<#QIS_autoMAC_result_desc2#>";
 				
 				document.redirectForm.prev_page.value = "/qis/QIS_autoMAC.htm";

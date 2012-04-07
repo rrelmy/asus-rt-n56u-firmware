@@ -1711,14 +1711,33 @@ ppp_decompress_frame(struct ppp *ppp, struct sk_buff *skb)
 		goto err;
 
 	if (proto == PPP_COMP) {
+#if 0
 		ns = dev_alloc_skb(ppp->mru + PPP_HDRLEN);
+#else		/* ppp-mppe-overflow-fix */
+		int obuff_size;
+
+		switch(ppp->rcomp->compress_proto) {
+		case CI_MPPE:
+			obuff_size = ppp->mru + PPP_HDRLEN + 1;
+			break;
+		default:
+			obuff_size = ppp->mru + PPP_HDRLEN;
+			break;
+		}
+
+		ns = dev_alloc_skb(obuff_size);
+#endif
 		if (ns == 0) {
 			printk(KERN_ERR "ppp_decompress_frame: no memory\n");
 			goto err;
 		}
 		/* the decompressor still expects the A/C bytes in the hdr */
 		len = ppp->rcomp->decompress(ppp->rc_state, skb->data - 2,
+#if 0
 				skb->len + 2, ns->data, ppp->mru + PPP_HDRLEN);
+#else		/* ppp-mppe-overflow-fix */
+				skb->len + 2, ns->data, obuff_size);
+#endif
 		if (len < 0) {
 			/* Pass the compressed frame to pppd as an
 			   error indication. */

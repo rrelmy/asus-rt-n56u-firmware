@@ -22,7 +22,7 @@ int rand_seed_by_time()
 }
 
 #include <sys/sysinfo.h>
-static long uptime(void)
+long uptime(void)
 {
 	struct sysinfo info;
 	sysinfo(&info);
@@ -91,6 +91,10 @@ static void catch_sig_detect_internet(int sig)
 	time_t now;
 	int link_internet = 0;
 
+	int no_login_timestamp = 0;
+	int no_detect_timestamp = 0;
+	int no_detect_for_timeout = 0;
+
 	if (sig == SIGALRM)
 	{
 		if (di_debug) fprintf(stderr, "[di] SIGALRM\n");
@@ -103,28 +107,47 @@ static void catch_sig_detect_internet(int sig)
 			fprintf(stderr, "timeout: %d\n", (unsigned long)(now - strtoul(nvram_safe_get("detect_timestamp"), NULL, 10)));
 		}
 
-		if ((unsigned long)(now - strtoul(nvram_safe_get("detect_timestamp"), NULL, 10)) > 60)
-		{
-			if (di_debug) fprintf(stderr, "sleep for timeout!\n");
-			alarmtimer(0, 0);
-			return;
-		}
+		if (!nvram_get("login_timestamp") || nvram_match("login_timestamp", ""))
+			no_login_timestamp = 1;
 
-		if (!is_phyconnected() || !has_wan_ip() || !found_default_route())
+		if (nvram_match("detect_timestamp", "0"))
+			no_detect_timestamp = 1;
+
+		if ((unsigned long)(now - strtoul(nvram_safe_get("detect_timestamp"), NULL, 10)) > 60)
+			no_detect_for_timeout = 1;
+
+		if (no_login_timestamp || no_detect_timestamp || no_detect_for_timeout)
 		{
-			if (di_debug) fprintf(stderr, "link down, no WAN IP, or no default route!\n");
-			nvram_set("link_internet", "0");
-			alarm(5);
+			if (di_debug)
+			{
+				if (no_login_timestamp)
+					fprintf(stderr, "sleep for no login timestamp!");
+				else if (no_detect_timestamp)
+					fprintf(stderr, "sleep for no detect timestamp!");
+				else if (no_detect_for_timeout)
+					fprintf(stderr, "sleep for timeout!");
+			}
+
+			alarmtimer(0, 0);
 			return;
 		}
 
 		if (nvram_match("no_internet_detect", "1"))
 		{
 			if (di_debug) fprintf(stderr, "pause for wan rate detection!\n");
-//			alarmtimer(0, 0);
-			alarm(10);
+
+			alarm(1);
 			return;
-		}	
+		}
+
+		if (!is_phyconnected() || !has_wan_ip() || !found_default_route())
+		{
+			if (di_debug) fprintf(stderr, "link down, no WAN IP, or no default route!\n");
+
+			nvram_set("link_internet", "0");
+			alarm(5);
+			return;
+		}
 
 		if (do_detect() == 1)
 		{
@@ -160,7 +183,6 @@ static void catch_sig_detect_internet(int sig)
 			di_debug = 0;
 
 		if (di_debug) fprintf(stderr, "[di] SIGUSR1\n");
-
 		alarmtimer(1, 0);
 	}
 }

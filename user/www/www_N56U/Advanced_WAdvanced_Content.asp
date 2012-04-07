@@ -41,7 +41,7 @@ function initial(){
 		
 	show_footer();
 	
-	enable_auto_hint(3, 16);
+	enable_auto_hint(3, 20);
 
 	load_body();
 	if(document.form.wl_gmode.value == "1")
@@ -229,7 +229,7 @@ function disableAdvFn(row){
 			<tr>
 				<th><a class="hintstyle" href="javascript:void(0);" onClick="openHint(3, 7);"><#WLANConfig11b_MultiRateAll_itemname#></a></th>
 				<td>
-					<select name="wl_mrate" class="input" onChange="return change_common(this, 'WLANConfig11b', 'wl_mrate')">
+					<select name="wl_mrate" class="input" onClick="openHint(3, 7);" onChange="return change_common(this, 'WLANConfig11b', 'wl_mrate')">
 						<option value="0" <% nvram_match_x("WLANConfig11b", "wl_mrate", "0", "selected"); %>>Disable</option>
 						<!--option value="1" <% nvram_match_x("WLANConfig11b", "wl_mrate", "1", "selected"); %>>1</option>
 						<option value="2" <% nvram_match_x("WLANConfig11b", "wl_mrate", "2", "selected"); %>>2</option>

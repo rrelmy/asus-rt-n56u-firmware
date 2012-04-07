@@ -54,30 +54,37 @@ echo "mkdir /media/$2 fail"
 exit 1
 fi
 
-dosfsck -V "/dev/$1" > "/tmp/dosfsck_result_$1" 2>&1
-e2fsck -p "/dev/$1" > "/tmp/e2fsck_result_$1" 2>&1
-chkntfs --verbose --showminors -a -f "/dev/$1" > "/tmp/chkntfs_result_$1" 2>&1
+asus_mfg=`nvram get asus_mfg`
+#echo "asus_mfg $asus_mfg"
+if [ $asus_mfg = "0" ]; then
+dosfsck -a -v "/dev/$1" > "/tmp/dosfsck_result_$1" 2>&1
+e2fsck -p -v "/dev/$1" > "/tmp/e2fsck_result_$1" 2>&1
+chkntfs -a -f --verbose "/dev/$1" > "/tmp/chkntfs_result_$1" 2>&1
+fi
 
 if [ $country_code = "TW" ]; then
 #	echo "country_code TW case" >> /tmp/auto01
-	mount "/dev/$1" "/media/$2" -o iocharset=utf8,codepage=950
+	mount -t vfat "/dev/$1" "/media/$2" -o iocharset=utf8,codepage=950
 elif [ $country_code = "CN" ]; then
 #	echo "country_code CN case" >> /tmp/auto01
-	mount "/dev/$1" "/media/$2" -o iocharset=utf8,codepage=936
+	mount -t vfat "/dev/$1" "/media/$2" -o iocharset=utf8,codepage=936
 else
 #	echo "country_code XX case" >> /tmp/auto01
-	mount "/dev/$1" "/media/$2" -o iocharset=utf8
+	mount -t vfat "/dev/$1" "/media/$2" -o iocharset=utf8
 fi
+
 mounted=`mount | grep $1 | wc -l`
 if [ $mounted == "0" ]; then
 # echo "mount try 1 fail" >> /tmp/auto01
-mount "/dev/$1" "/media/$2"					# ext2, ext3
-mounted=`mount | grep $1 | wc -l`
-if [ $mounted == "0" ]; then
-# echo "mount try 2 fail" >> /tmp/auto01
 #ntfs-3g "/dev/$1" "/media/$2" -o force
 #ntfs-3g "/dev/$1" "/media/$2" -o force,umask=0,locale=utf8	# ntfs
 mount -t ufsd -o iocharset=utf8 -o force "/dev/$1" "/media/$2"	# ntfs
+
+mounted=`mount | grep $1 | wc -l`
+if [ $mounted == "0" ]; then
+# echo "mount try 2 fail" >> /tmp/auto01
+mount "/dev/$1" "/media/$2"					# ext2, ext3
+
 # failed to mount, clean up mountpoint
 mounted=`mount | grep $1 | wc -l`
 if [ $mounted == "0" ]; then

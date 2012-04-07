@@ -1,7 +1,6 @@
-
 ROMFS_DIR = $(ROOTDIR)/romfs
 
-all: chkntfs  ufsd.ko
+all: chkntfs ufsd.ko
 
 clean:
 

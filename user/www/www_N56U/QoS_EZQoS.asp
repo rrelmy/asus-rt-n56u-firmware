@@ -5,14 +5,15 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta HTTP-EQUIV="Pragma" CONTENT="no-cache">
 <meta HTTP-EQUIV="Expires" CONTENT="-1">
+<link rel="shortcut icon" href="images/favicon.png">
+<link rel="icon" href="images/favicon.png">
 <title>ASUS Wireless Router <#Web_Title#> - <#EZQoS#></title>
 <link rel="stylesheet" type="text/css" href="index_style.css"> 
 <link rel="stylesheet" type="text/css" href="form_style.css">
 <link rel="stylesheet" type="text/css" href="usp_style.css">
-
 <script type="text/javascript" src="/state.js"></script>
-<script type="text/javascript" src="/popup.js"></script>
 <script type="text/javascript" src="/help.js"></script>
+<script type="text/javascript" src="/popup.js"></script>
 <script>
 wan_route_x = '<% nvram_get_x("IPConnection", "wan_route_x"); %>';
 wan_nat_x = '<% nvram_get_x("IPConnection", "wan_nat_x"); %>';
@@ -83,6 +84,7 @@ function showDescription(a, btn_obj){
 }
 
 function setBW(qosnum){
+	openHint(16, 1);
 	if(qosflag[qosnum] == 0)
 		qosflag[qosnum] = 1;
 	else
@@ -313,11 +315,11 @@ function is_number_sp(event, o){
 			</div>
 			
 			<div id="qosenableblock">
-				<input type="radio" name="ubw_method" value="0">
-        <#BM_measured_uplink_speed#>
+				<input type="radio" name="ubw_method" value="0" onClick="openHint(20, 1);">
+        	<a class="hintstyle" href="javascript:void(0);" onClick="openHint(20, 1);"><#BM_measured_uplink_speed#></a>
 				<span id="qos_ubw"><% nvram_get_x("PrinterStatus", "qos_ubw"); %> Kb/s</span><br />
-				<input type="radio" name="ubw_method" value="1">
-        <#BM_manual_uplink_speed#>
+				<input type="radio" name="ubw_method" value="1" onClick="openHint(20, 2);">
+        	<a class="hintstyle" href="javascript:void(0);" onClick="openHint(20, 2);"><#BM_manual_uplink_speed#></a>
 				<input type="text" maxlength="10" name="qos_manual_ubw" onKeyPress="return is_number_sp(event, this);" class="input" size="8" value="<% nvram_get_x("PrinterStatus", "qos_manual_ubw"); %>"> Kb/s
 			</div>
 

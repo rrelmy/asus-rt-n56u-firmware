@@ -426,7 +426,11 @@ static inline void sk_acceptq_added(struct sock *sk)
 
 static inline int sk_acceptq_is_full(struct sock *sk)
 {
+#if 0
 	return sk->sk_ack_backlog > sk->sk_max_ack_backlog;
+#else	/* sock-backlog-fix */
+	return sk->sk_ack_backlog >= sk->sk_max_ack_backlog;
+#endif
 }
 
 /*

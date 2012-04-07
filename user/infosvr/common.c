@@ -816,16 +816,17 @@ char *processPacket(int sockfd, char *pdubuf)
 	//printf("get storage status(1)\n");	// tmp test
 		     getStorageStatus(st);
 //#endif /* #ifdef WL700G */
- 		     /* Disable  WSC functions for MFG test*/ 
-		     nvram_set("wsc_config_state", "1");
+ 		     /* Disable  WSC functions for MFG test*/
 		     nvram_set("asus_mfg", "1");
+/*
+		     nvram_set("wsc_config_state", "1");
 		     system("killall wsccmd");
 		     system("killall wsc");
 		     system("killall upnp");
 		     system("killall ntp");
 	 	     system("killall ntpclient");
 		     system("killall lld2d");
-
+*/
 		     sendInfo(sockfd, pdubuf_res);
 		     return pdubuf_res;
 

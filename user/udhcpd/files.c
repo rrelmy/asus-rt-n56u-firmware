@@ -34,17 +34,6 @@
 #include "options.h"
 #include "leases.h"
 
-#ifndef BRCM_UDHCPD
-#include <sys/sysinfo.h>
-static long uptime(void)
-{
-	struct sysinfo info;
-	sysinfo(&info);
-
-	return info.uptime;
-}
-#endif
-
 /* on these functions, make sure you datatype matches */
 static int read_ip(char *line, void *arg)
 {

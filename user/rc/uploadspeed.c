@@ -13,6 +13,8 @@
  6 2.2.2.2 33.33 ms * 44.44 ms		// case 6
  7 5.5.5.5 66.66 ms 77.77 ms *		// case 7
  8 8.8.8.8 99.99 ms 11.11 ms 22.22 ms	// case 8
+ 9 3.3.3.3 44.44 ms 55.55 ms		// case 9
+10 6.6.6.6 77.77 ms			// case 10
 */
 
 #define DETECT_UL_SPD_FILE "/tmp/detect_ul_spd"
@@ -22,6 +24,24 @@
 #define min(a,b)  (((a) < (b)) ? (a) : (b))
 
 /**************************************************************************/
+
+int count_of_ms(const char *buf)
+{
+	char *p; 
+	char copy[256];
+	int count = 0;
+                                
+	memcpy(copy, buf, 256);
+	p = (char *) copy;
+                                
+	while (p = strstr(p, "ms"))
+	{
+		count++;
+		p = p + 2;
+	}
+
+	return count;
+}
 
 int detect_upload_speed(double *upload_speed_p)
 {
@@ -78,7 +98,8 @@ int detect_upload_speed(double *upload_speed_p)
 
 				if (!strstr(buf, "*"))		// case 8
 				{
-					num_of_delta = 3;
+//					num_of_delta = 3;
+					num_of_delta = count_of_ms(buf);
 					sscanf(buf, "%s %s %s %s %s %s %s %s", idx, ipaddr, delta1, ms1, delta2, ms2, delta3, ms3);
 				}
 				else if (strstr(buf, "  * * "))// case 2
@@ -154,6 +175,9 @@ int detect_upload_speed(double *upload_speed_p)
 
 		fprintf(stderr, "\nhop count: %12d\n", valid_hop);
 
+		if (valid_hop <= 1)
+			goto END_calc;
+
 		i = 0;
 		double_delta_max = 0.000;
 		double_delta_min = 0.000;
@@ -179,18 +203,22 @@ int detect_upload_speed(double *upload_speed_p)
 
 			i++;
 		}
-		double_delta_avg = double_delta_total / valid_hop;
-		if ((valid_hop > 1) && (double_delta_max > double_delta_avg * 1.166))
+
+		if (valid_hop > 2)
 		{
-			fprintf(stderr, "skip delta:  %10.3f ms\n", double_delta_max);
-			valid_hop--;
-			double_delta_total -= double_delta_max;
-		}
-		if ((valid_hop > 1) && (double_delta_min * 1.166 < double_delta_avg))
-		{
-			fprintf(stderr, "skip delta:  %10.3f ms\n", double_delta_min);
-			valid_hop--;
-			double_delta_total -= double_delta_min;
+			double_delta_avg = double_delta_total / valid_hop;
+			if ((valid_hop > 1) && (double_delta_max > double_delta_avg * 1.166))
+			{
+				fprintf(stderr, "skip delta:  %10.3f ms\n", double_delta_max);
+				valid_hop--;
+				double_delta_total -= double_delta_max;
+			}
+			if ((valid_hop > 1) && (double_delta_min * 1.166 < double_delta_avg))
+			{
+				fprintf(stderr, "skip delta:  %10.3f ms\n", double_delta_min);
+				valid_hop--;
+				double_delta_total -= double_delta_min;
+			}
 		}
 
 		if (valid_hop > 0)
@@ -199,14 +227,15 @@ int detect_upload_speed(double *upload_speed_p)
 			fprintf(stderr, "total payload: %8d bytes\n", PAYLOAD * valid_hop);
 
 			if ((double_delta_total > 0.000) && ((PAYLOAD * valid_hop) > 0))
-				upload_speed = ((PAYLOAD * valid_hop) / double_delta_total * 1000000 / 1024) * 0.890;
+				upload_speed = ((PAYLOAD * valid_hop) / double_delta_total * 1000000 / 1024) * 0.900;
 			else
 				upload_speed = 0.000;
 
-			fprintf(stderr, "upload speed:%10.3f kb/s (89%%)\n", upload_speed);
+			fprintf(stderr, "upload speed:%10.3f kb/s (90%%)\n", upload_speed);
 		}
 		else
 		{
+END_calc:
 			upload_speed = 0.000;
 
 			fprintf(stderr, "upload speed:%10.3f kb/s\n", upload_speed);

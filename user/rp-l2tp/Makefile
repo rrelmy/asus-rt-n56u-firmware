@@ -57,11 +57,11 @@ libevent/libevent.a:
 	#mipsel-uclibc-gcc -c -o $@ $(CFLAGS) $<
 	$(CC) -c -o $@ $(CFLAGS) $<
 
-depend: .depend
+#depend: .depend
 
-.depend: $(SRCS)
+#.depend: $(SRCS)
 	#mipsel-uclibc-gcc -M $(CFLAGS) $^ > .depend
-	$(CC) -M $(CFLAGS) $^ > .depend
+#	$(CC) -M $(CFLAGS) $^ > .depend
 
 handlers:
 	$(MAKE) -C handlers
@@ -85,7 +85,7 @@ distclean: clean
 	rm -f Makefile config.cache
 	$(MAKE) -C handlers distclean
 
--include .depend
+#-include .depend
 
 romfs: all
 	$(STRIP) l2tpd

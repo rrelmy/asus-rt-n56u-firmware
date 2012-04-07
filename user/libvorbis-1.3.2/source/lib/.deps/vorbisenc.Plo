@@ -1,0 +1,199 @@
+vorbisenc.lo vorbisenc.o: vorbisenc.c \
+  /root/RT-N56U/source/lib/include/stdlib.h \
+  /root/RT-N56U/source/lib/include/features.h \
+  /root/RT-N56U/source/lib/include/bits/uClibc_config.h \
+  /root/RT-N56U/source/lib/include/sys/cdefs.h \
+  /opt/buildroot-gcc342/bin/../lib/gcc/mipsel-linux-uclibc/3.4.2/include/stddef.h \
+  /root/RT-N56U/source/lib/include/sys/types.h \
+  /root/RT-N56U/source/lib/include/bits/types.h \
+  /root/RT-N56U/source/lib/include/bits/kernel_types.h \
+  /root/RT-N56U/source/lib/include/bits/wordsize.h \
+  /root/RT-N56U/source/lib/include/bits/pthreadtypes.h \
+  /root/RT-N56U/source/lib/include/bits/sched.h \
+  /root/RT-N56U/source/lib/include/time.h \
+  /root/RT-N56U/source/lib/include/endian.h \
+  /root/RT-N56U/source/lib/include/bits/endian.h \
+  /root/RT-N56U/source/lib/include/sys/select.h \
+  /root/RT-N56U/source/lib/include/bits/select.h \
+  /root/RT-N56U/source/lib/include/bits/sigset.h \
+  /root/RT-N56U/source/lib/include/bits/time.h \
+  /root/RT-N56U/source/lib/include/sys/sysmacros.h \
+  /root/RT-N56U/source/lib/include/alloca.h \
+  /root/RT-N56U/source/lib/include/string.h \
+  /root/RT-N56U/source/lib/include/math.h \
+  /root/RT-N56U/source/lib/include/bits/huge_val.h \
+  /root/RT-N56U/source/lib/include/bits/mathdef.h \
+  /root/RT-N56U/source/lib/include/bits/mathcalls.h \
+  ../include/vorbis/codec.h ../include/ogg/ogg.h \
+  ../include/ogg/os_types.h ../include/ogg/config_types.h \
+  /root/RT-N56U/source/lib/include/inttypes.h \
+  /root/RT-N56U/source/lib/include/stdint.h \
+  /root/RT-N56U/source/lib/include/bits/wchar.h \
+  ../include/vorbis/vorbisenc.h ../include/vorbis/codec.h \
+  codec_internal.h envelope.h mdct.h codebook.h psy.h smallft.h \
+  backends.h bitrate.h os.h ../config.h misc.h \
+  /root/RT-N56U/source/lib/include/memory.h highlevel.h modes/setup_44.h \
+  ./modes/floor_all.h ../include/vorbis/codec.h ./backends.h \
+  ./books/floor/floor_books.h ./codebook.h ./modes/residue_44.h \
+  ./books/coupled/res_books_stereo.h ./codebook.h ./modes/psych_44.h \
+  modes/setup_44u.h ./modes/residue_44u.h \
+  ./books/uncoupled/res_books_uncoupled.h ./codebook.h \
+  modes/setup_44p51.h ./modes/residue_44p51.h \
+  ./books/coupled/res_books_51.h modes/setup_32.h modes/setup_8.h \
+  modes/psych_8.h modes/residue_8.h ../include/vorbis/codec.h \
+  ./backends.h modes/setup_11.h modes/psych_11.h modes/setup_16.h \
+  modes/psych_16.h modes/residue_16.h modes/setup_22.h modes/setup_X.h
+
+/root/RT-N56U/source/lib/include/stdlib.h:
+
+/root/RT-N56U/source/lib/include/features.h:
+
+/root/RT-N56U/source/lib/include/bits/uClibc_config.h:
+
+/root/RT-N56U/source/lib/include/sys/cdefs.h:
+
+/opt/buildroot-gcc342/bin/../lib/gcc/mipsel-linux-uclibc/3.4.2/include/stddef.h:
+
+/root/RT-N56U/source/lib/include/sys/types.h:
+
+/root/RT-N56U/source/lib/include/bits/types.h:
+
+/root/RT-N56U/source/lib/include/bits/kernel_types.h:
+
+/root/RT-N56U/source/lib/include/bits/wordsize.h:
+
+/root/RT-N56U/source/lib/include/bits/pthreadtypes.h:
+
+/root/RT-N56U/source/lib/include/bits/sched.h:
+
+/root/RT-N56U/source/lib/include/time.h:
+
+/root/RT-N56U/source/lib/include/endian.h:
+
+/root/RT-N56U/source/lib/include/bits/endian.h:
+
+/root/RT-N56U/source/lib/include/sys/select.h:
+
+/root/RT-N56U/source/lib/include/bits/select.h:
+
+/root/RT-N56U/source/lib/include/bits/sigset.h:
+
+/root/RT-N56U/source/lib/include/bits/time.h:
+
+/root/RT-N56U/source/lib/include/sys/sysmacros.h:
+
+/root/RT-N56U/source/lib/include/alloca.h:
+
+/root/RT-N56U/source/lib/include/string.h:
+
+/root/RT-N56U/source/lib/include/math.h:
+
+/root/RT-N56U/source/lib/include/bits/huge_val.h:
+
+/root/RT-N56U/source/lib/include/bits/mathdef.h:
+
+/root/RT-N56U/source/lib/include/bits/mathcalls.h:
+
+../include/vorbis/codec.h:
+
+../include/ogg/ogg.h:
+
+../include/ogg/os_types.h:
+
+../include/ogg/config_types.h:
+
+/root/RT-N56U/source/lib/include/inttypes.h:
+
+/root/RT-N56U/source/lib/include/stdint.h:
+
+/root/RT-N56U/source/lib/include/bits/wchar.h:
+
+../include/vorbis/vorbisenc.h:
+
+../include/vorbis/codec.h:
+
+codec_internal.h:
+
+envelope.h:
+
+mdct.h:
+
+codebook.h:
+
+psy.h:
+
+smallft.h:
+
+backends.h:
+
+bitrate.h:
+
+os.h:
+
+../config.h:
+
+misc.h:
+
+/root/RT-N56U/source/lib/include/memory.h:
+
+highlevel.h:
+
+modes/setup_44.h:
+
+./modes/floor_all.h:
+
+../include/vorbis/codec.h:
+
+./backends.h:
+
+./books/floor/floor_books.h:
+
+./codebook.h:
+
+./modes/residue_44.h:
+
+./books/coupled/res_books_stereo.h:
+
+./codebook.h:
+
+./modes/psych_44.h:
+
+modes/setup_44u.h:
+
+./modes/residue_44u.h:
+
+./books/uncoupled/res_books_uncoupled.h:
+
+./codebook.h:
+
+modes/setup_44p51.h:
+
+./modes/residue_44p51.h:
+
+./books/coupled/res_books_51.h:
+
+modes/setup_32.h:
+
+modes/setup_8.h:
+
+modes/psych_8.h:
+
+modes/residue_8.h:
+
+../include/vorbis/codec.h:
+
+./backends.h:
+
+modes/setup_11.h:
+
+modes/psych_11.h:
+
+modes/setup_16.h:
+
+modes/psych_16.h:
+
+modes/residue_16.h:
+
+modes/setup_22.h:
+
+modes/setup_X.h:

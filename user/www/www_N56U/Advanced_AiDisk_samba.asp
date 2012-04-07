@@ -250,6 +250,9 @@ function switchAccount(protocol){
 				$("protocol").value = protocol;
 				$("mode").value = "account";
 				
+				if(this.accounts.length <= 0){
+				}
+
 				showLoading();
 				document.aidiskForm.submit();
 			}
@@ -739,11 +742,9 @@ function unload_body(){
 				<img id="deleteFolderBtn" src="/images/AiDisk/FolderDel.gif" hspace="1" title="<#DelFolderTitle#>">
 				<img id="modifyFolderBtn" src="/images/AiDisk/FolderMod.gif" hspace="1" title="<#ModFolderTitle#>">
 				</td>
-		  	  
-  			</tr>
+		  	  </tr>
 	  	  </table>
 	  	</div>
-	    
 		<!-- The table of accounts and folders. -->
 	    <table width="500" height="200"  border="0" align="center" cellpadding="0" cellspacing="1" bgcolor="#999999">
   		  <tr>
@@ -774,7 +775,6 @@ function unload_body(){
 		    </td>
           </tr>
 	    </table>
-	  </div>
 	 </td>
 	 <td id="help_td" style="width:15px;" align="center" valign="top">
 	<!--==============Beginning of hint content=============-->

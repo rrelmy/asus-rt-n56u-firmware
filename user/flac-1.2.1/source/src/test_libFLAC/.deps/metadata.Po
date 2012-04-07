@@ -1,0 +1,59 @@
+metadata.o metadata.o: metadata.c ../../config.h metadata.h \
+  ../../include/FLAC/ordinals.h \
+  /root/RT-N56U/source/lib/include/inttypes.h \
+  /root/RT-N56U/source/lib/include/features.h \
+  /root/RT-N56U/source/lib/include/bits/uClibc_config.h \
+  /root/RT-N56U/source/lib/include/sys/cdefs.h \
+  /root/RT-N56U/source/lib/include/stdint.h \
+  /root/RT-N56U/source/lib/include/bits/wchar.h \
+  /root/RT-N56U/source/lib/include/bits/wordsize.h \
+  /root/RT-N56U/source/lib/include/stdio.h \
+  /opt/buildroot-gcc342/bin/../lib/gcc/mipsel-linux-uclibc/3.4.2/include/stddef.h \
+  /root/RT-N56U/source/lib/include/bits/types.h \
+  /root/RT-N56U/source/lib/include/bits/kernel_types.h \
+  /root/RT-N56U/source/lib/include/bits/pthreadtypes.h \
+  /root/RT-N56U/source/lib/include/bits/sched.h \
+  /root/RT-N56U/source/lib/include/bits/uClibc_stdio.h \
+  /root/RT-N56U/source/lib/include/wchar.h \
+  /opt/buildroot-gcc342/bin/../lib/gcc/mipsel-linux-uclibc/3.4.2/include/stdarg.h \
+  /root/RT-N56U/source/lib/include/bits/stdio_lim.h
+
+../../config.h:
+
+metadata.h:
+
+../../include/FLAC/ordinals.h:
+
+/root/RT-N56U/source/lib/include/inttypes.h:
+
+/root/RT-N56U/source/lib/include/features.h:
+
+/root/RT-N56U/source/lib/include/bits/uClibc_config.h:
+
+/root/RT-N56U/source/lib/include/sys/cdefs.h:
+
+/root/RT-N56U/source/lib/include/stdint.h:
+
+/root/RT-N56U/source/lib/include/bits/wchar.h:
+
+/root/RT-N56U/source/lib/include/bits/wordsize.h:
+
+/root/RT-N56U/source/lib/include/stdio.h:
+
+/opt/buildroot-gcc342/bin/../lib/gcc/mipsel-linux-uclibc/3.4.2/include/stddef.h:
+
+/root/RT-N56U/source/lib/include/bits/types.h:
+
+/root/RT-N56U/source/lib/include/bits/kernel_types.h:
+
+/root/RT-N56U/source/lib/include/bits/pthreadtypes.h:
+
+/root/RT-N56U/source/lib/include/bits/sched.h:
+
+/root/RT-N56U/source/lib/include/bits/uClibc_stdio.h:
+
+/root/RT-N56U/source/lib/include/wchar.h:
+
+/opt/buildroot-gcc342/bin/../lib/gcc/mipsel-linux-uclibc/3.4.2/include/stdarg.h:
+
+/root/RT-N56U/source/lib/include/bits/stdio_lim.h:

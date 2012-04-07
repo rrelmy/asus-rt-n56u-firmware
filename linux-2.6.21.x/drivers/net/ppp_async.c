@@ -35,8 +35,11 @@
 #include <asm/string.h>
 
 #define PPP_VERSION	"2.4.2"
-
+#if 0
 #define OBUFSIZE	256
+#else	/* ppp-upload-speedup */
+#define OBUFSIZE	2048
+#endif
 
 /* Structure for storing local state. */
 struct asyncppp {

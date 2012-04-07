@@ -32,14 +32,11 @@
 #endif
 #endif
 
-#include <linux/version.h>
-
 #ifdef	__KERNEL__
 #include <linux/in.h>
 #include <linux/if_ether.h>
 #include <linux/if.h>
 #include <linux/netdevice.h>
-#include <linux/sched.h>
 #include <asm/semaphore.h>
 #include <linux/ppp_channel.h>
 #endif /* __KERNEL__ */
@@ -153,10 +150,6 @@ struct pppoe_hdr {
 	struct pppoe_tag tag[0];
 } __attribute__ ((packed));
 
-/* Socket options */
-#define PPTP_SO_TIMEOUT 1
-#define PPTP_SO_WINDOW  2
-
 #ifdef __KERNEL__
 struct pppoe_opt {
 	struct net_device	*dev;	  /* device associated with socket*/
@@ -167,53 +160,14 @@ struct pppoe_opt {
 };
 
 #include <net/sock.h>
-#if 0
-struct pptp_opt {
-       struct pptp_addr        src_addr;
-       struct pptp_addr        dst_addr;
-       int timeout;
-       int window;
-       __u32 ack_sent, ack_recv;
-       __u32 seq_sent, seq_recv;
-       int ppp_flags;
-       int flags;
-       int pause:1;
-       int proc:1;
-       spinlock_t skb_buf_lock;
-       struct sk_buff_head skb_buf;
-       struct delayed_work buf_work; //check bufferd packets work
-       struct gre_statistics *stat;
-	wait_queue_head_t	wait;
-	spinlock_t xmit_lock;
-	spinlock_t rcv_lock;
-};
-#endif
 
 struct pptp_opt {
 	struct pptp_addr	src_addr;
 	struct pptp_addr	dst_addr;
-	int timeout;
 	__u32 ack_sent, ack_recv;
 	__u32 seq_sent, seq_recv;
 	int ppp_flags;
-	int flags;
-	struct sk_buff_head skb_buf;
-  #if LINUX_VERSION_CODE < KERNEL_VERSION(2,6,0)
-	struct tq_struct buf_work; //check bufferd packets work
-	struct timer_list buf_timer;
-	#else
-  #if LINUX_VERSION_CODE >= KERNEL_VERSION(2,6,20)
-	struct delayed_work buf_work; //check bufferd packets work
-  #else
-	struct work_struct buf_work; //check bufferd packets work
-  #endif
-  #endif 
-	struct gre_statistics *stat;
-	spinlock_t xmit_lock;
-	spinlock_t rcv_lock;
 };
-#define PPTP_FLAG_PAUSE 0
-#define PPTP_FLAG_PROC 1
 
 struct pppox_sock {
 	/* struct sock must be the first member of pppox_sock */
@@ -254,8 +208,6 @@ extern int register_pppox_proto(int proto_num, struct pppox_proto *pp);
 extern void unregister_pppox_proto(int proto_num);
 extern void pppox_unbind_sock(struct sock *sk);/* delete ppp-channel binding */
 extern int pppox_ioctl(struct socket *sock, unsigned int cmd, unsigned long arg);
-extern int pppox_channel_ioctl(struct ppp_channel *pc, unsigned int cmd,
-			       unsigned long arg);
 
 /* PPPoX socket states */
 enum {
@@ -266,10 +218,6 @@ enum {
     PPPOX_ZOMBIE	= 8,  /* dead, but still bound to ppp device */
     PPPOX_DEAD		= 16  /* dead, useless, please clean me up!*/
 };
-
-extern struct ppp_channel_ops pppoe_chan_ops;
-
-//extern int pppox_proto_init(struct net_proto *np);
 
 #endif /* __KERNEL__ */
 

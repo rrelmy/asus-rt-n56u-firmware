@@ -6,11 +6,11 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta HTTP-EQUIV="Pragma" CONTENT="no-cache">
 <meta HTTP-EQUIV="Expires" CONTENT="-1">
-<title>ASUS Wireless Router <#Web_Title#> - <#menu2#></title>
+<link rel="shortcut icon" href="images/favicon.png">
+<link rel="icon" href="images/favicon.png"><title>ASUS Wireless Router <#Web_Title#> - <#menu2#></title>
 <link rel="stylesheet" type="text/css" href="index_style.css">
 <link rel="stylesheet" type="text/css" href="form_style.css">
 <link rel="stylesheet" type="text/css" href="usp_style.css">
-
 <script type="text/javascript" src="/state.js"></script>
 <script type="text/javascript" src="/popup.js"></script>
 <script type="text/javascript" src="/help.js"></script>
@@ -117,7 +117,7 @@ function update_UPnP(){
 		<td align="left" valign="top" width="550">
 			<table width="500" border="0" align="center" cellpadding="0" cellspacing="0">
   			<tr>
-					<td class="upnp" width="250">
+					<td class="upnp" width="300">
 	  					<img src="images/bullet.gif" width="20" height="20" align="absmiddle"/><#UPnPMediaServer#> : <span id="UPnPstatus"></span>
 					</td>
 					
@@ -175,16 +175,16 @@ function update_UPnP(){
 									<img src="images/ill-25.gif" width="53" height="78">
 								</td>
 
-								<td width="85" align="center" valign="top">
-									<img src="images/ill-3.gif" width="100%" height="87">
+								<td width="170" align="center" valign="top">
+									<img src="images/ill-6.gif" width="100%" height="87">
 									<br>
 									<#DigitalMediaPlayer#>
 								</td>
 
-								<td width="42" align="center" valign="top" class="account">
+								<!--td width="42" align="center" valign="top" class="account">
 									<img src="images/ill-4.gif" width="84" height="88">
 									<br>
-								</td>
+								</td-->
 
 								<td width="42" align="center" valign="middle" class="account">
 									<#TV#>

@@ -27,6 +27,7 @@
 #include <unistd.h>
 #include <errno.h>
 #include <getopt.h>
+#include <time.h> /*KTI*/
 
 #if (defined(BSD) || defined(__FreeBSD__) || defined(__APPLE__))
 #include <sys/socket.h>
@@ -118,8 +119,8 @@ ushare_new (void)
   ut->override_iconv_err = true;
   ut->cfg_file = NULL;
 
-  pthread_mutex_init (&ut->termination_mutex, NULL);
-  pthread_cond_init (&ut->termination_cond, NULL);
+  pthread_mutex_init (&ut->action_mutex, NULL);
+  pthread_cond_init (&ut->action_cond, NULL);
 
   return ut;
 }
@@ -159,8 +160,8 @@ ushare_free (struct ushare_t *ut)
   if (ut->cfg_file)
     free (ut->cfg_file);
 
-  pthread_cond_destroy (&ut->termination_cond);
-  pthread_mutex_destroy (&ut->termination_mutex);
+  pthread_cond_destroy (&ut->action_cond);
+  pthread_mutex_destroy (&ut->action_mutex);
 
   free (ut);
 }
@@ -168,9 +169,10 @@ ushare_free (struct ushare_t *ut)
 static void
 ushare_signal_exit (void)
 {
-  pthread_mutex_lock (&ut->termination_mutex);
-  pthread_cond_signal (&ut->termination_cond);
-  pthread_mutex_unlock (&ut->termination_mutex);
+  pthread_mutex_lock (&ut->action_mutex);
+  ut->action=TERMINATE_ACTION;
+  pthread_cond_signal (&ut->action_cond);
+  pthread_mutex_unlock (&ut->action_mutex);
 }
 
 static void
@@ -466,15 +468,15 @@ has_iface (char *interface)
     if ((itf->ifa_flags & IFF_UP)
         && !strncmp (itf->ifa_name, interface, IFNAMSIZ))
     {
-      log_error (_("Interface %s is down.\n"), interface);
-      log_error (_("Recheck uShare's configuration and try again !\n"));
+/*      log_error (_("Interface %s is down.\n"), interface);
+      log_error (_("Recheck uShare's configuration and try again !\n"));*/
       freeifaddrs (itflist);
       return true;
     }
     itf = itf->ifa_next;
   }
 
-  freeifaddrs (itflist);
+  freeifaddrs (itf);
 #else  
   int sock, i, n;
   struct ifconf ifc;
@@ -750,8 +752,10 @@ reload_config (int s __attribute__ ((unused)))
 
   if (ut->contentlist)
   {
+    ut->refresh=TRUE;
     free_metadata_list (ut);
     build_metadata_list (ut);
+    ut->refresh=FALSE;
   }
   else
   {
@@ -766,8 +770,10 @@ reload_contentlist (int s __attribute__ ((unused)))
 //  log_info (_("Reloading media content...\n"));	
   if (ut->contentlist)
   {
+    ut->refresh=TRUE;
     free_metadata_list (ut);
     build_metadata_list (ut);
+    ut->refresh=FALSE;
   }
 }
 
@@ -835,6 +841,8 @@ main (int argc, char **argv)
              ut->cfg_file ? ut->cfg_file : SYSCONFDIR "/" USHARE_CONFIG_FILE);
   }
 
+  log_info (_("Starting uShare ...\n"));
+
   if (ut->xbox360)
   {
     char *name;
@@ -901,6 +909,7 @@ main (int argc, char **argv)
   signal (SIGINT, UPnPBreak);
 //  signal (SIGHUP, reload_config);
   signal (SIGHUP, reload_contentlist);	// ASUS EXT
+  signal (SIGTERM, UPnPBreak);
 
   if (ut->use_telnet)
   {
@@ -928,12 +937,26 @@ main (int argc, char **argv)
     fclose(fp);
   }
 
-  build_metadata_list (ut);
+  ut->refresh=TRUE;
+    build_metadata_list (ut);
+  ut->refresh=FALSE;
 
-  /* Let main sleep until it's time to die... */
-  pthread_mutex_lock (&ut->termination_mutex);
-  pthread_cond_wait (&ut->termination_cond, &ut->termination_mutex);
-  pthread_mutex_unlock (&ut->termination_mutex);
+  /* KTI, Let main wait on condition until it's time to die or refresh... */
+  while (TRUE) {
+    pthread_mutex_lock (&ut->action_mutex);
+  	if(pthread_cond_wait (&ut->action_cond, &ut->action_mutex)==0)
+	 	{
+		if(ut->action == REFRESH_ACTION) 
+			reload_config(SIGHUP);
+		else if(ut->action == TERMINATE_ACTION)
+			break;
+		else continue;
+		}
+		ut->action = NO_ACTION;
+     pthread_mutex_unlock (&ut->action_mutex);
+  }
+
+  log_info (_("Stopping uShare ...\n"));
 
   if (ut->use_telnet)
     ctrl_telnet_stop ();
@@ -942,6 +965,7 @@ main (int argc, char **argv)
   ushare_free (ut);
   finish_iconv ();
 
-  /* it should never be executed */
+  log_info (_("uShare stopped...\n"));
+
   return EXIT_SUCCESS;
 }

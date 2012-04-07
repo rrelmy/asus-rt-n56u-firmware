@@ -107,8 +107,11 @@ static void init_packet(struct dhcpMessage *packet, char type)
  * goes towards the head of the packet. */
 static void add_requests(struct dhcpMessage *packet)
 {
-	int end = end_option(packet->options);
+	int end;
 	int i, len = 0;
+
+	add_simple_option(packet->options, DHCP_MAX_SIZE, htons(576));
+	end = end_option(packet->options);
 
 	packet->options[end + OPT_CODE] = DHCP_PARAM_REQ;
 	for (i = 0; options[i].code; i++)

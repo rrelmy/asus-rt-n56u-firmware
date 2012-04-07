@@ -47,17 +47,6 @@
 #include "options.h"
 #include "leases.h"
 
-#ifndef BRCM_UDHCPD
-#include <sys/sysinfo.h>
-static long uptime(void)
-{
-	struct sysinfo info;
-	sysinfo(&info);
-
-	return info.uptime;
-}
-#endif
-
 /* send a packet to giaddr using the kernel ip stack */
 static int send_packet_to_relay(struct dhcpMessage *payload)
 {

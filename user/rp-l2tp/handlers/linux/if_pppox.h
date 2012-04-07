@@ -69,7 +69,8 @@ struct pppoe_addr{
  */
 #define PX_PROTO_OE    0 /* Currently just PPPoE */
 #define PX_PROTO_OL2TP 1 /* Now L2TP also */
-#define PX_MAX_PROTO   2
+#define PX_PROTO_PPTP  2
+#define PX_MAX_PROTO   3
 
 /* The use of a union isn't viable because the size of this struct
  * must stay fixed over time -- applications use sizeof(struct

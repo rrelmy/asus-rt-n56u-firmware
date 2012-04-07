@@ -1,27 +1,79 @@
+# PPP top-level Makefile for Linux.
 
 PPPD_DIR = $(ROOTDIR)/user/pppd
-INSTALLDIR = $(ROOTDIR)/romfs
+INSTROOT = $(ROOTDIR)/romfs
 
-all: pppd
+DESTDIR = $(INSTROOT)/usr
+BINDIR = $(DESTDIR)/sbin
+INCDIR = $(DESTDIR)/include
+MANDIR = $(DESTDIR)/share/man
+ETCDIR = $(INSTROOT)/tmp/ppp
 
-pppd:
-	$(MAKE) -C pppd_src
+# uid 0 = root
+INSTALL= install
 
-romfs:	pppd_src pppd_src/plugins
-	$(MAKE) -C pppd_src/plugins
-	cp pppd_src/pppd ./
-	$(STRIP) pppd
-	$(ROMFSINST) /usr/sbin/pppd
-	cp pppd_src/plugins/rp-pppoe/rp-pppoe.so ./
-	$(STRIP) rp-pppoe.so
-	$(ROMFSINST) /usr/lib/pppd/rp-pppoe.so
-	cp pppd_src/plugins/pppol2tp.so ./
-	$(STRIP) pppol2tp.so
-	$(ROMFSINST) /usr/lib/pppd/pppol2tp.so
-	cp pppd_src/plugins/pptp/pptp.so ./
-	$(STRIP) pptp.so
-	$(ROMFSINST) /usr/lib/pppd/pptp.so	
+romfs:
+	cd pppd; $(MAKE) $(MFLAGS) all
+	cd pppd/plugins; $(MAKE) $(MFLAGS) all
+	$(ROMFSINST) -d pppd/pppd /usr/sbin/pppd
+	$(STRIP) $(INSTROOT)/usr/sbin/pppd
+	$(ROMFSINST) -d pppd/plugins/rp-pppoe/rp-pppoe.so /usr/lib/pppd/rp-pppoe.so
+	$(ROMFSINST) -d pppd/plugins/pppol2tp/pppol2tp.so /usr/lib/pppd/pppol2tp.so
+	$(ROMFSINST) -d pppd/plugins/pptp/pptp.so /usr/lib/pppd/pptp.so
+	$(STRIP) $(INSTROOT)/usr/lib/pppd/*.so
+
+all:
+	cd chat; $(MAKE) $(MFLAGS) all
+	cd pppd/plugins; $(MAKE) $(MFLAGS) all
+	cd pppd; $(MAKE) $(MFLAGS) all
+	cd pppstats; $(MAKE) $(MFLAGS) all
+	cd pppdump; $(MAKE) $(MFLAGS) all
+
+install: $(BINDIR) $(MANDIR)/man8 install-progs install-devel
+
+install-progs:
+	cd chat; $(MAKE) $(MFLAGS) install
+	cd pppd/plugins; $(MAKE) $(MFLAGS) install
+	cd pppd; $(MAKE) $(MFLAGS) install
+	cd pppstats; $(MAKE) $(MFLAGS) install
+	cd pppdump; $(MAKE) $(MFLAGS) install
+
+install-etcppp: $(ETCDIR) $(ETCDIR)/options $(ETCDIR)/pap-secrets \
+	$(ETCDIR)/chap-secrets
+
+install-devel:
+	cd pppd; $(MAKE) $(MFLAGS) install-devel
+
+$(ETCDIR)/options:
+	$(INSTALL) -c -m 644 etc.ppp/options $@
+$(ETCDIR)/pap-secrets:
+	$(INSTALL) -c -m 600 etc.ppp/pap-secrets $@
+$(ETCDIR)/chap-secrets:
+	$(INSTALL) -c -m 600 etc.ppp/chap-secrets $@
+
+$(BINDIR):
+	$(INSTALL) -d -m 755 $@
+$(MANDIR)/man8:
+	$(INSTALL) -d -m 755 $@
+$(ETCDIR):
+	$(INSTALL) -d -m 755 $@
 
 clean:
-	rm -f pppd rp-pppoe.so pppol2tp.so pptp.so
-	$(MAKE) -C pppd_src clean
+	rm -f `find . -name '*.[oas]' -print`
+	rm -f `find . -name 'core' -print`
+	rm -f `find . -name '*~' -print`
+	cd chat; $(MAKE) clean
+	cd pppd/plugins; $(MAKE) clean
+	cd pppd; $(MAKE) clean
+	cd pppstats; $(MAKE) clean
+	cd pppdump; $(MAKE) clean
+
+dist-clean:	clean
+	rm -f Makefile `find . -name Makefile -print`
+
+#kernel:
+#	cd linux; ./kinstall.sh
+
+# no tests yet, one day...
+installcheck:
+	true

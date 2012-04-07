@@ -1,28 +1,28 @@
 src/genlib/util/libupnp_la-upnp_timeout.lo \
   src/genlib/util/libupnp_la-upnp_timeout.o:  \
  src/genlib/util/upnp_timeout.c ./src/inc/config.h ../autoconfig.h \
-  ./src/inc/upnp_timeout.h /root/temp/source/lib/include/stdlib.h \
-  /root/temp/source/lib/include/features.h \
-  /root/temp/source/lib/include/bits/uClibc_config.h \
-  /root/temp/source/lib/include/sys/cdefs.h \
+  ./src/inc/upnp_timeout.h /root/RT-N56U/source/lib/include/stdlib.h \
+  /root/RT-N56U/source/lib/include/features.h \
+  /root/RT-N56U/source/lib/include/bits/uClibc_config.h \
+  /root/RT-N56U/source/lib/include/sys/cdefs.h \
   /opt/buildroot-gcc342/bin/../lib/gcc/mipsel-linux-uclibc/3.4.2/include/stddef.h \
-  /root/temp/source/lib/include/bits/waitflags.h \
-  /root/temp/source/lib/include/bits/waitstatus.h \
-  /root/temp/source/lib/include/endian.h \
-  /root/temp/source/lib/include/bits/endian.h \
-  /root/temp/source/lib/include/sys/types.h \
-  /root/temp/source/lib/include/bits/types.h \
-  /root/temp/source/lib/include/bits/kernel_types.h \
-  /root/temp/source/lib/include/bits/wordsize.h \
-  /root/temp/source/lib/include/bits/pthreadtypes.h \
-  /root/temp/source/lib/include/bits/sched.h \
-  /root/temp/source/lib/include/time.h \
-  /root/temp/source/lib/include/sys/select.h \
-  /root/temp/source/lib/include/bits/select.h \
-  /root/temp/source/lib/include/bits/sigset.h \
-  /root/temp/source/lib/include/bits/time.h \
-  /root/temp/source/lib/include/sys/sysmacros.h \
-  /root/temp/source/lib/include/alloca.h
+  /root/RT-N56U/source/lib/include/bits/waitflags.h \
+  /root/RT-N56U/source/lib/include/bits/waitstatus.h \
+  /root/RT-N56U/source/lib/include/endian.h \
+  /root/RT-N56U/source/lib/include/bits/endian.h \
+  /root/RT-N56U/source/lib/include/sys/types.h \
+  /root/RT-N56U/source/lib/include/bits/types.h \
+  /root/RT-N56U/source/lib/include/bits/kernel_types.h \
+  /root/RT-N56U/source/lib/include/bits/wordsize.h \
+  /root/RT-N56U/source/lib/include/bits/pthreadtypes.h \
+  /root/RT-N56U/source/lib/include/bits/sched.h \
+  /root/RT-N56U/source/lib/include/time.h \
+  /root/RT-N56U/source/lib/include/sys/select.h \
+  /root/RT-N56U/source/lib/include/bits/select.h \
+  /root/RT-N56U/source/lib/include/bits/sigset.h \
+  /root/RT-N56U/source/lib/include/bits/time.h \
+  /root/RT-N56U/source/lib/include/sys/sysmacros.h \
+  /root/RT-N56U/source/lib/include/alloca.h
 
 ./src/inc/config.h:
 
@@ -30,46 +30,46 @@ src/genlib/util/libupnp_la-upnp_timeout.lo \
 
 ./src/inc/upnp_timeout.h:
 
-/root/temp/source/lib/include/stdlib.h:
+/root/RT-N56U/source/lib/include/stdlib.h:
 
-/root/temp/source/lib/include/features.h:
+/root/RT-N56U/source/lib/include/features.h:
 
-/root/temp/source/lib/include/bits/uClibc_config.h:
+/root/RT-N56U/source/lib/include/bits/uClibc_config.h:
 
-/root/temp/source/lib/include/sys/cdefs.h:
+/root/RT-N56U/source/lib/include/sys/cdefs.h:
 
 /opt/buildroot-gcc342/bin/../lib/gcc/mipsel-linux-uclibc/3.4.2/include/stddef.h:
 
-/root/temp/source/lib/include/bits/waitflags.h:
+/root/RT-N56U/source/lib/include/bits/waitflags.h:
 
-/root/temp/source/lib/include/bits/waitstatus.h:
+/root/RT-N56U/source/lib/include/bits/waitstatus.h:
 
-/root/temp/source/lib/include/endian.h:
+/root/RT-N56U/source/lib/include/endian.h:
 
-/root/temp/source/lib/include/bits/endian.h:
+/root/RT-N56U/source/lib/include/bits/endian.h:
 
-/root/temp/source/lib/include/sys/types.h:
+/root/RT-N56U/source/lib/include/sys/types.h:
 
-/root/temp/source/lib/include/bits/types.h:
+/root/RT-N56U/source/lib/include/bits/types.h:
 
-/root/temp/source/lib/include/bits/kernel_types.h:
+/root/RT-N56U/source/lib/include/bits/kernel_types.h:
 
-/root/temp/source/lib/include/bits/wordsize.h:
+/root/RT-N56U/source/lib/include/bits/wordsize.h:
 
-/root/temp/source/lib/include/bits/pthreadtypes.h:
+/root/RT-N56U/source/lib/include/bits/pthreadtypes.h:
 
-/root/temp/source/lib/include/bits/sched.h:
+/root/RT-N56U/source/lib/include/bits/sched.h:
 
-/root/temp/source/lib/include/time.h:
+/root/RT-N56U/source/lib/include/time.h:
 
-/root/temp/source/lib/include/sys/select.h:
+/root/RT-N56U/source/lib/include/sys/select.h:
 
-/root/temp/source/lib/include/bits/select.h:
+/root/RT-N56U/source/lib/include/bits/select.h:
 
-/root/temp/source/lib/include/bits/sigset.h:
+/root/RT-N56U/source/lib/include/bits/sigset.h:
 
-/root/temp/source/lib/include/bits/time.h:
+/root/RT-N56U/source/lib/include/bits/time.h:
 
-/root/temp/source/lib/include/sys/sysmacros.h:
+/root/RT-N56U/source/lib/include/sys/sysmacros.h:
 
-/root/temp/source/lib/include/alloca.h:
+/root/RT-N56U/source/lib/include/alloca.h:

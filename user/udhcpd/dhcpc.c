@@ -123,10 +123,20 @@ static void change_mode(int new_mode)
 {
 	DEBUG(LOG_INFO, "entering %s listen mode",
 		new_mode ? (new_mode == 1 ? "kernel" : "raw") : "none");
-	if(fd >= 0)	// oleg patch
-		close(fd);
-	fd = -1;
+
 	listen_mode = new_mode;
+	if(fd >= 0) {
+		close(fd);
+		fd = -1;
+	}
+
+#ifndef BRCM_UDHCPD
+	if (new_mode == LISTEN_KERNEL)
+		fd = listen_socket(INADDR_ANY, CLIENT_PORT, client_config.interface);
+	else if (new_mode != LISTEN_NONE)
+		fd = raw_socket(client_config.ifindex);
+	/* else LISTEN_NONE: fd stays closed */
+#endif
 }
 
 
@@ -223,17 +233,6 @@ void reapchild()        // 0527 add
         signal(SIGCHLD, reapchild);
         wait(NULL);
 }
-
-#ifndef BRCM_UDHCPD
-#include <sys/sysinfo.h>
-static long uptime(void)
-{
-	struct sysinfo info;
-	sysinfo(&info);
-
-	return info.uptime;
-}
-#endif
 
 #ifdef COMBINED_BINARY
 int udhcpc_main(int argc, char *argv[])
@@ -453,11 +452,7 @@ int main(int argc, char *argv[])
 			case BOUND:
 				/* Lease is starting to run out, time to enter renewing state */
 				state = RENEWING;
-#ifndef BRCM_UDHCPD
-				change_mode(LISTEN_RAW);
-#else
 				change_mode(LISTEN_KERNEL);
-#endif
 				DEBUG(LOG_INFO, "Entering renew state");
 				/* fall right through */
 			case RENEWING:
@@ -465,6 +460,7 @@ int main(int argc, char *argv[])
 				if ((t2 - t1) <= (lease / 14400 + 1)) {
 					/* timed out, enter rebinding state */
 					state = REBINDING;
+					change_mode(LISTEN_RAW);
 					timeout = now + (t2 - t1);
 					DEBUG(LOG_INFO, "Entering rebinding state");
 				} else {
@@ -568,9 +564,6 @@ int main(int argc, char *argv[])
 					start = now;
 					timeout = t1 + start;
 					requested_ip = packet.yiaddr;
-#ifndef BRCM_UDHCPD
-					if (state != RENEWING && state !=REBINDING)
-#endif
 					run_script(&packet,
 						   ((state == RENEWING || state == REBINDING) ? "renew" : "bound"));
 

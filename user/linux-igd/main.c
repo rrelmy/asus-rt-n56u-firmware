@@ -116,6 +116,12 @@ int main (int argc, char** argv)
 		}
 	}
 
+	FILE *fp = fopen("/var/run/upnpd.pid","w");
+        if (fp == NULL)
+		exit(EXIT_FAILURE);
+        fprintf(fp, "%d", getpid());
+        fclose(fp);
+
 	umask(0);
 
 // End Daemon initialization
@@ -230,6 +236,8 @@ int main (int argc, char** argv)
 	} while (signum!=SIGTERM && signum!=SIGINT);
 
 	trace(2, "Shutting down on signal %d...\n", signum);
+
+	remove("/var/run/upnpd.pid");
 
 	// Cleanup UPnP SDK and free memory
 	DeleteAllPortMappings();

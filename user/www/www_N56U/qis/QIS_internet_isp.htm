@@ -10,11 +10,8 @@
 <script type="text/javascript" src="/alttxt.js"></script>
 <script type="text/javascript" src="/general.js"></script>
 <script type="text/javascript">
-// for client_function.js
-<% login_state_hook(); %>
-
-var client_ip = login_ip_str_now();
-var client_mac = login_mac_str();
+var client_ip = parent.login_ip_str_now();
+var client_mac = parent.login_mac_str();
 
 var now_flag = '<% get_parameter("flag"); %>';
 
@@ -181,7 +178,7 @@ function submitForm(){
 		<input type="text" name="wan_hwaddr_x" onkeypress="return is_hwaddr(this);" class="input" maxlength="" size="36" value=""/>
 	  </td>
 	</tr>
-
+	
 	<tr valign="top" Height="50"><td colspan="2" align="right">
 		<input type="button" class="button" onclick="showMAC();" value="<#BOP_isp_MACclone#>">
 	</td></tr>

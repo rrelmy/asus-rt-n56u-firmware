@@ -870,6 +870,7 @@ inline int deal_track(struct nf_conntrack_tuple_hash *h, int len)
 		return IP_TRACK_DATA;
 
 	// if the destination port of this connect track is one of 80,8080,443.We return IP_TRACK_PORT
+
 	if((h->track.flag & IP_TRACK_PORT) == IP_TRACK_PORT)
 		return IP_TRACK_PORT;
 
@@ -890,7 +891,7 @@ inline int deal_track(struct nf_conntrack_tuple_hash *h, int len)
 	if(!rep_h)
 		return 0;
 
-	if(ntohs(dport) == 80 || ntohs(dport) == 8080 || ntohs(dport) == 443)
+	if((ntohs(dport) == 53) || (ntohs(dport) == 80) || (ntohs(dport) == 8080) || (ntohs(dport) == 443))
 	{
 		h->track.flag |= IP_TRACK_PORT;
 		rep_h->track.flag |= IP_TRACK_PORT;
@@ -906,9 +907,11 @@ inline int deal_track(struct nf_conntrack_tuple_hash *h, int len)
 		return IP_TRACK_UDP;
 	}
 
-	if(h->track.number == 250)
+//	if(h->track.number == 250)
+	if(h->track.number == 125)
 	{
-		if(h->track.large_packet<70)
+//		if(h->track.large_packet<70)
+		if(h->track.large_packet<35)
 		{
 			if((rep_h->track.flag & IP_TRACK_DATA) == IP_TRACK_DATA)
 			{
@@ -1139,17 +1142,26 @@ resolve_normal_ct(struct sk_buff *skb,
 				else
 					skb->mark = 50;
 				break;
+
 			case IP_TRACK_PORT:
 				if(ntohl(h->tuple.dst.u3.ip) == nf_ipaddr)
 					skb->mark = 80;
 				else
 					skb->mark = 20;
 				break;
+
 			case IP_TRACK_SMALL:
 				if(ntohl(h->tuple.dst.u3.ip) == nf_ipaddr)
 					skb->mark = 70;
 				else
 					skb->mark = 10;
+				break;
+
+			default:
+				if(ntohl(h->tuple.dst.u3.ip) == nf_ipaddr)
+					skb->mark = 80;
+				else
+					skb->mark = 51;
 				break;
 		}
 	}

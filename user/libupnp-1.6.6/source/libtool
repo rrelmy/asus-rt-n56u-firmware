@@ -85,7 +85,7 @@ AR_FLAGS="cru"
 LTCC="/opt/buildroot-gcc342/bin/mipsel-linux-uclibc-gcc "
 
 # LTCC compiler flags.
-LTCFLAGS="-O2 -fomit-frame-pointer -pipe  -Dlinux -D__linux__ -Dunix -DEMBED -I/root/temp/source/lib/include -I/root/temp/source/uClibc++/include -I/root/temp/source "
+LTCFLAGS="-O2 -fomit-frame-pointer -pipe  -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source "
 
 # A language-specific compiler.
 CC="/opt/buildroot-gcc342/bin/mipsel-linux-uclibc-gcc "
@@ -7256,7 +7256,7 @@ AR_FLAGS="cru"
 LTCC="/opt/buildroot-gcc342/bin/mipsel-linux-uclibc-gcc "
 
 # LTCC compiler flags.
-LTCFLAGS="-O2 -fomit-frame-pointer -pipe  -Dlinux -D__linux__ -Dunix -DEMBED -I/root/temp/source/lib/include -I/root/temp/source/uClibc++/include -I/root/temp/source "
+LTCFLAGS="-O2 -fomit-frame-pointer -pipe  -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source "
 
 # A language-specific compiler.
 CC="/opt/buildroot-gcc342/bin/mipsel-linux-uclibc-g++ "
@@ -7561,7 +7561,7 @@ AR_FLAGS="cru"
 LTCC="/opt/buildroot-gcc342/bin/mipsel-linux-uclibc-gcc "
 
 # LTCC compiler flags.
-LTCFLAGS="-O2 -fomit-frame-pointer -pipe  -Dlinux -D__linux__ -Dunix -DEMBED -I/root/temp/source/lib/include -I/root/temp/source/uClibc++/include -I/root/temp/source "
+LTCFLAGS="-O2 -fomit-frame-pointer -pipe  -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source "
 
 # A language-specific compiler.
 CC="g77"

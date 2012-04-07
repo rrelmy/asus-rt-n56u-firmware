@@ -640,6 +640,13 @@ int if_wan_phyconnected(void)
         	disconn_case = CASE_DISWAN;
                 return DISCONN;
         }
+// 2010.12 James. {
+	else if(!strcmp(nvram_safe_get("manually_disconnect_wan"), "1")){
+		disconn_case = CASE_OTHERS;
+		
+		return DISCONN;
+	}
+// 2010.12 James. }
 	else
                 return chk_proto();
 }
@@ -679,6 +686,7 @@ void change_redirect_rules(int num, int force_link_down_up){
 	//nvram_set("wan_state_changed", "1");
 	track_set("101");
 	// In experience, need to clean the ip_conntrack up in three times for a clean ip_conntrack.
+	if (nvram_match("asus_mfg", "0"))
 	for(i = 0; i < num; ++i){
 csprintf("**** clean ip_conntrack %d time. ****\n", i+1);
 		_eval(clean_ip_conntrack, ">/dev/null", 0, NULL);

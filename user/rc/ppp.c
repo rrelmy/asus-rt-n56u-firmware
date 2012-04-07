@@ -182,8 +182,8 @@ ipdown_main_sp(int sig)
 {
 	stop_upnp();
 
-	nvram_set("wan_ipaddr_cut", nvram_safe_get("wan_ipaddr_t"));
-	doSystem("/usr/bin/cutter %s", nvram_safe_get("wan_ipaddr_t"));
+//	nvram_set("wan_ipaddr_cut", nvram_safe_get("wan_ipaddr_t"));
+//	doSystem("/usr/bin/cutter %s", nvram_safe_get("wan_ipaddr_t"));
 
 /*
 	nvram_set("wan0_ipaddr", "0.0.0.0");

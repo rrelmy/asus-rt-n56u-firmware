@@ -42,6 +42,8 @@ static char const RCSID[] =
 #include <errno.h>
 #include <sys/ioctl.h>
 #include <netdb.h>
+#include <features.h>
+#include <resolv.h>
 
 /* Hash tables of all tunnels */
 static hash_table tunnels_by_my_id;
@@ -533,6 +535,12 @@ tunnel_establish(l2tp_peer *peer, EventSelector *es)
 
     /* check peer_addr and resolv it based on the peername if needed */
     if (peer_addr.sin_addr.s_addr == INADDR_ANY) {
+#if !defined(__UCLIBC__) \
+ || (__UCLIBC_MAJOR__ == 0 \
+ && (__UCLIBC_MINOR__ < 9 || (__UCLIBC_MINOR__ == 9 && __UCLIBC_SUBLEVEL__ < 31)))
+	/* force ns refresh from resolv.conf with uClibc pre-0.9.31 */
+	res_init();
+#endif
 	he = gethostbyname(peer->peername);
 	if (!he) {
             l2tp_set_errmsg("tunnel_establish: gethostbyname failed for '%s'", peer->peername);
@@ -602,7 +610,7 @@ tunnel_send_SCCRQ(l2tp_tunnel *tunnel)
     l2tp_dgram_add_avp(dgram, tunnel, MANDATORY,
 		  sizeof(u32), VENDOR_IETF, AVP_FRAMING_CAPABILITIES, &u32);
 
-    hostname = tunnel->peer->hostname ? tunnel->peer->hostname : Hostname;
+    hostname = tunnel->peer->hostname[0] ? tunnel->peer->hostname : Hostname;
 
     /* Host name */
     l2tp_dgram_add_avp(dgram, tunnel, MANDATORY,
@@ -824,7 +832,7 @@ tunnel_handle_SCCRQ(l2tp_dgram *dgram,
     l2tp_dgram_add_avp(dgram, tunnel, MANDATORY,
 		  sizeof(u32), VENDOR_IETF, AVP_FRAMING_CAPABILITIES, &u32);
 
-    hostname = tunnel->peer->hostname ? tunnel->peer->hostname : Hostname;
+    hostname = tunnel->peer->hostname[0] ? tunnel->peer->hostname : Hostname;
 
     /* Host name */
     l2tp_dgram_add_avp(dgram, tunnel, MANDATORY,
@@ -1314,7 +1322,7 @@ tunnel_send_ZLB(l2tp_tunnel *tunnel)
 	return;
     }
     dgram->Nr = tunnel->Nr;
-    dgram->Ns = tunnel->Ns;
+    dgram->Ns = tunnel->Ns_on_wire;
     l2tp_dgram_send_to_wire(dgram, &tunnel->peer_addr);
     l2tp_dgram_free(dgram);
 }
@@ -2030,9 +2038,10 @@ route_add(const struct in_addr inetaddr, struct rtentry *rt)
 		if (sscanf(buf, "%63s %x %x %X %*s %*s %d %x", dev, &dest,
 		    	&sin_addr(&rt->rt_gateway).s_addr, &flags, &metric, &mask) != 6)
 			continue;
-		if ((flags & (RTF_UP | RTF_GATEWAY)) == (RTF_UP | RTF_GATEWAY) && (inetaddr.s_addr & mask) == dest)
+		if ((flags & RTF_UP) == (RTF_UP) && (inetaddr.s_addr & mask) == dest &&
+		    (dest || strncmp(dev, "ppp", 3)) /* avoid default via pppX to avoid on-demand loops*/)
 		{
-			rt->rt_metric = metric;
+			rt->rt_metric = metric + 1;
 			rt->rt_gateway.sa_family = AF_INET;
 			break;
 		}
@@ -2043,13 +2052,13 @@ route_add(const struct in_addr inetaddr, struct rtentry *rt)
 	/* check for no route */
 	if (rt->rt_gateway.sa_family != AF_INET) 
 	{
-	        l2tp_set_errmsg("route_add: no route to host");
+	        /*l2tp_set_errmsg("route_add: no route to host");*/
 		return -1;
 	}
 
 	/* check for existing route to this host, 
 	add if missing based on the existing routes */
-	if (mask == INADDR_BROADCAST) {
+	if (flags & RTF_HOST) {
 	        /*l2tp_set_errmsg("route_add: not adding existing route");*/
 		return -1;
 	}
@@ -2061,7 +2070,7 @@ route_add(const struct in_addr inetaddr, struct rtentry *rt)
 	rt->rt_genmask.sa_family = AF_INET;
 
 	rt->rt_flags = RTF_UP | RTF_HOST;
-	if (sin_addr(&rt->rt_gateway).s_addr)
+	if (flags & RTF_GATEWAY)
 		rt->rt_flags |= RTF_GATEWAY;
 
 	rt->rt_metric++;

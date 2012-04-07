@@ -36,17 +36,6 @@
 
 unsigned char blank_chaddr[] = {[0 ... 15] = 0};
 struct dhcpOfferedAddr *static_lease;
-	
-#ifndef BRCM_UDHCPD
-#include <sys/sysinfo.h>
-static long uptime(void)
-{
-	struct sysinfo info;
-	sysinfo(&info);
-
-	return info.uptime;
-}
-#endif
 
 /* clear every lease out that chaddr OR yiaddr matches and is nonzero */
 void clear_lease(u_int8_t *chaddr, u_int32_t yiaddr)

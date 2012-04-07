@@ -1,20 +1,4 @@
 /*
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License as
- * published by the Free Software Foundation; either version 2 of
- * the License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston,
- * MA 02111-1307 USA
- */
-/*
  *	Chat -- a program for automatic session establishment (i.e. dial
  *		the phone and log in).
  *
@@ -103,7 +87,7 @@
 #endif
 
 #ifndef lint
-static const char rcsid[] = "$Id: chat.c,v 1.29 2003/03/04 06:17:21 fcusack Exp $";
+static const char rcsid[] = "$Id: chat.c,v 1.30 2004/01/17 05:47:55 carlsonj Exp $";
 #endif
 
 #include <stdio.h>
@@ -215,8 +199,9 @@ struct termios saved_tty_parameters;
 
 char *abort_string[MAX_ABORTS], *fail_reason = (char *)0,
 	fail_buffer[50];
-int n_aborts = 0, abort_next = 0, timeout_next = 0, echo_next = 0;
+int n_aborts = 0, abort_next = 0, timeout_next = 0, echo_next = 0, hex_next = 0;
 int clear_abort_next = 0;
+int hex = -1;
 
 char *report_string[MAX_REPORTS] ;
 char  report_buffer[256] ;
@@ -629,7 +614,7 @@ void set_tty_parameters()
     saved_tty_parameters = t;
     have_tty_parameters  = 1;
 
-    t.c_iflag     |= IGNBRK | ISTRIP | IGNPAR;
+    t.c_iflag     |= IGNBRK | IGNPAR;
     t.c_oflag      = 0;
     t.c_lflag      = 0;
     t.c_cc[VERASE] =
@@ -985,6 +970,11 @@ char *s;
 	return;
     }
 
+    if (strcmp(s, "HEX") == 0) {
+	++hex_next;
+	return;
+    }
+
 /*
  * Fetch the expect and reply string.
  */
@@ -1183,6 +1173,7 @@ register char *s;
 
     if (timeout_next) {
 	timeout_next = 0;
+	s = clean(s, 0);
 	timeout = atoi(s);
 	
 	if (timeout <= 0)
@@ -1192,6 +1183,12 @@ register char *s;
 	    msgf("timeout set to %d seconds", timeout);
 
 	return;
+    }
+    
+    if (hex_next) {
+	hex_next = 0;
+    	hex = (strcmp(s, "ON") == 0);
+    	return;
     }
 
     /*
@@ -1249,7 +1246,7 @@ int get_char()
 
     switch (status) {
     case 1:
-	return ((int)c & 0x7F);
+	return ((int)c & 0xFF);
 
     default:
 	msgf("warning: read() on stdin returned %d", status);
@@ -1319,7 +1316,7 @@ register char *s;
 
     if (verbose) {
 	if (quiet)
-	    msgf("send (??????)");
+	    msgf("send (?????\?)");
 	else
 	    msgf("send (%v)", s);
     }
@@ -1446,7 +1443,9 @@ register char *string;
 	}
 
 	if (Verbose) {
-	   if (c == '\n')
+	   if ((hex == 2) || (hex == 0))
+	       fprintf( stderr, "%.2X", c);
+	   else if (c == '\n')
 	       fputc( '\n', stderr );
 	   else if (c != '\r')
 	       fprintf( stderr, "%s", character(c) );
@@ -1492,6 +1491,10 @@ register char *string;
 
 	    alarm(0);
 	    alarmed = 0;
+	    if (hex == 1)
+	      hex = 2;
+	    if (hex == 0)
+	      hex = -1;
 	    return (1);
 	}
 

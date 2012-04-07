@@ -1,19 +1,3 @@
-/*
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License as
- * published by the Free Software Foundation; either version 2 of
- * the License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston,
- * MA 02111-1307 USA
- */
 /* Because this code is derived from the 4.3BSD compress source:
  *
  *
@@ -57,7 +41,7 @@
  * This version is for use with STREAMS under SunOS 4.x,
  * Digital UNIX, AIX 4.x, and SVR4 systems including Solaris 2.
  *
- * $Id: bsd-comp.c,v 1.20 1996/08/28 06:31:57 paulus Exp $
+ * $Id: bsd-comp.c,v 1.21 2004/01/17 05:47:55 carlsonj Exp $
  */
 
 #ifdef AIX4
@@ -80,6 +64,10 @@
 #undef FIRST
 #undef LAST
 #define BSD_LITTLE_ENDIAN
+#endif
+
+#ifdef SOL2
+#include <sys/sunddi.h>
 #endif
 
 #define PACKETPTR	mblk_t *

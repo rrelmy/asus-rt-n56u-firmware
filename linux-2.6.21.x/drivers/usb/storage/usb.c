@@ -1000,9 +1000,13 @@ static int storage_probe(struct usb_interface *intf,
 
 	if (us->pusb_dev->actconfig->desc.bNumInterfaces > 1)	// patch for U2EC
 	{
-		printk("We only support single-interface storage device!\n");
-		result = -ENOMEM;
-		goto BadDevice;
+		if (	(us->pusb_dev->descriptor.idVendor != 0x0bc2) &&	// Seagate VID
+			(us->pusb_dev->descriptor.idVendor != 0x1058) )		// WD VID
+		{
+			printk("We only support single-interface storage device!\n");
+			result = -ENOMEM;
+			goto BadDevice;
+		}
 	}
 
 	/*

@@ -916,7 +916,7 @@ int main(int argc, char *argv[]) {
             old_song_count = db_get_song_count();
             start_time=time(NULL);
 
-            DPRINTF(E_LOG,L_MAIN|L_DB|L_SCAN,"Rescanning database\n");
+//            DPRINTF(E_LOG,L_MAIN|L_DB|L_SCAN,"Rescanning database\n");	// J++. noisy...
             if(scan_init(config.mp3dir)) {
                 DPRINTF(E_LOG,L_MAIN|L_DB|L_SCAN,"Error rescanning... exiting\n");
                 config.stop=1;

@@ -14,6 +14,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston,
  * MA 02111-1307 USA
  */
+
 #include <errno.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -25,8 +26,10 @@
 #include <netinet/if_ether.h>
 #include <net/if_arp.h>
 #include <net/if.h>
-#include <nvram/bcmnvram.h>
 #include <unistd.h>
+#include <signal.h>
+
+#include <nvram/bcmnvram.h>
 
 #define ETHER_ADDR_STR_LEN	18
 #define MAC_BCAST_ADDR		(uint8_t *) "\xff\xff\xff\xff\xff\xff"
@@ -36,7 +39,6 @@
 
 char *get_lan_ipaddr();
 char *get_wan_ipaddr();
-char *gateway_ip;
 
 #include<syslog.h>
 #include<stdarg.h>
@@ -54,38 +56,25 @@ void logmessage(char *logheader, char *fmt, ...)
 	va_end(args);
 }
 
-void
-chk_udhcpc()
+long uptime(void)
 {
-	if ((nvram_match("wan_route_x", "IP_Routed") && nvram_match("wan0_proto", "dhcp") && !nvram_match("manually_disconnect_wan", "1"))
-			|| nvram_match("wan_route_x", "IP_Bridged")
-			)
+	struct sysinfo info;
+
+	sysinfo(&info);
+	return info.uptime;
+}
+
+static void catch_sig(int sig)
+{
+/*
+	if (sig == SIGUSR1 && nvram_match("dhcp_renew", "1"))
 	{
-#ifdef DEBUG
-        	printf("try to refresh udhcpc\n");      // tmp test
-#endif
-		if (nvram_match("sw_mode", "1")) {
-			system("killall -SIGTERM wanduck");
-			sleep(3);
-		}
-
-		if (	(nvram_match("wan_route_x", "IP_Routed") && !strcmp(get_wan_ipaddr(), "0.0.0.0"))/* ||
-			(nvram_match("wan_route_x", "IP_Bridged") && !strcmp(get_lan_ipaddr(), "0.0.0.0"))*/
-		)
-		{
-			logmessage("detectWAN", "perform DHCP release");
-			system("killall -SIGUSR2 udhcpc");	// J++			
-		}
-
-		logmessage("detectWAN", "perform DHCP renew");
-		system("killall -SIGUSR1 udhcpc");
-
-		if (nvram_match("sw_mode", "1")) {
-			system("wanduck&");
-		}
+		nvram_set("dhcp_renew", "0");
 
 		if (nvram_match("wan_route_x", "IP_Bridged"))
 		{
+			nvram_set("dw_busy", "1");
+
 			logmessage("detectWAN", "link down LAN ports");
 			system("rtl8367m_AllPort_linkDown");
 			logmessage("detectWAN", "radio off");
@@ -102,6 +91,72 @@ chk_udhcpc()
 				system("radioctrl 1");
 			if (nvram_match("rt_radio_x", "1"))
 				system("radioctrl_rt 1");
+
+			nvram_set("dw_busy", "0");
+		}
+	}
+*/
+}
+
+void
+chk_udhcpc()
+{
+	char *gateway_ip;
+
+	if (	(nvram_match("wan_route_x", "IP_Routed") && nvram_match("wan0_proto", "dhcp") && !nvram_match("manually_disconnect_wan", "1")) ||
+		nvram_match("wan_route_x", "IP_Bridged"))
+	{
+//		if (nvram_match("wan_route_x", "IP_Bridged") && nvram_match("dw_busy", "1"))
+//			return;
+
+		if (nvram_match("wan_route_x", "IP_Routed"))
+			gateway_ip = nvram_get("wan_gateway_t");
+		else
+			gateway_ip = nvram_get("lan_gateway_t");
+
+		if (!gateway_ip || (strlen(gateway_ip) < 7) || (!strncmp(gateway_ip, "0.0.0.0", 7)))
+		{
+			if (nvram_match("dw_debug", "1"))
+				fprintf(stderr, "[detectWAN] invalid gateway ip\n");
+
+			return;
+		}
+
+		if (nvram_match("dhcp_renew", "1"))
+		{
+			if (nvram_match("dw_debug", "1"))
+				fprintf(stderr, "[detectWAN] skip udhcpc refresh...\n");
+
+			return;
+		}
+		else
+			nvram_set("dhcp_renew", "1");
+
+		if (nvram_match("dw_debug", "1"))
+			fprintf(stderr, "[detectWAN] try to refresh udhcpc\n");
+
+		if (nvram_match("wan_route_x", "IP_Routed"))
+		{
+			{
+				if (strcmp(get_wan_ipaddr(), "0.0.0.0"))
+				{
+					logmessage("detectWAN", "perform DHCP release");
+					system("killall -SIGUSR2 udhcpc");
+
+					sleep(1);
+//					fprintf(stderr, "[detectWAN] wan_ipaddr_t: %s, wan_gateway_t: %s\n", nvram_safe_get("wan_ipaddr_t"), nvram_safe_get("wan_gateway_t"));
+					kill_pidfile_s("/var/run/wanduck.pid", SIGUSR1);
+					kill_pidfile_s("/var/run/wanduck.pid", SIGUSR2);
+				}
+
+				logmessage("detectWAN", "perform DHCP renew");
+				system("killall -SIGUSR1 udhcpc");
+			}
+		}
+		else
+		{
+			logmessage("detectWAN", "perform DHCP renew");
+			system("killall -SIGUSR1 udhcpc");
 		}
 	}
 }
@@ -201,13 +256,6 @@ int setsockopt_broadcast(int fd)
     return setsockopt(fd, SOL_SOCKET, SO_BROADCAST, &one, sizeof(one));
 }
 
-long uptime(void)
-{
-    struct sysinfo info;
-    sysinfo(&info);
-    return info.uptime;
-}
-
 /* FIXME: match response against chaddr */
 int arpping(/*uint32_t yiaddr, uint32_t ip, uint8_t *mac, char *interface*/)
 {
@@ -218,6 +266,17 @@ int arpping(/*uint32_t yiaddr, uint32_t ip, uint8_t *mac, char *interface*/)
 	char tmp[3];
 	int i, ret;
 	char DEV[8];
+	char *gateway_ip;
+
+	if (nvram_match("wan_route_x", "IP_Routed"))
+		gateway_ip = nvram_get("wan_gateway_t");
+	else
+		gateway_ip = nvram_get("lan_gateway_t");
+
+	if (!gateway_ip || (strlen(gateway_ip) < 7) || (!strncmp(gateway_ip, "0.0.0.0", 7)))
+	{
+		return 1;
+	}
 
 	if (nvram_match("wan_route_x", "IP_Routed"))
 	{
@@ -384,27 +443,45 @@ int detectWAN_arp()
 
 		while (count < MAX_ARP_RETRY)
 		{
-			if (!is_phyconnected())
+			/*
+			if (nvram_match("wan_route_x", "IP_Bridged") && nvram_match("dw_busy", "1"))
 			{
+				break;
+			}
+			else */
+			if (nvram_match("wan_route_x", "IP_Routed") && !is_phyconnected())
+			{
+				if (nvram_match("dw_debug", "1"))
+					fprintf(stderr, "[detectWAN] phy disconnected\n");
+
 				count++;
-				sleep(1);
+				sleep(2);
 			}
 			else if (arpping())
 			{
+				if (nvram_match("dw_debug", "1"))
+					fprintf(stderr, "[detectWAN] got response from gateway\n");
+
 				break;
 			}
 			else
 			{
+				if (nvram_match("dw_debug", "1"))
+					fprintf(stderr, "[detectWAN] no response from gateway\n");
+
 				count++;
 			}
+
+			if (nvram_match("dw_debug", "1"))
+				fprintf(stderr, "[detectWAN] count: %d\n", count);
 		}
 
-		if (is_phyconnected() && (count == MAX_ARP_RETRY))
+		if (is_phyconnected() && (count >= MAX_ARP_RETRY))
 		{
 			chk_udhcpc();
 		}
 
-		sleep(15);
+		sleep(20);
 	}
 
 	return 0;
@@ -412,23 +489,42 @@ int detectWAN_arp()
 
 int main(int argc, char *argv[])
 {
+	FILE *fp;
 	int ret;
+	char *gateway_ip;
+
+	/* write pid */
+	if ((fp = fopen("/var/run/detectWan.pid", "w")) != NULL)
+	{
+		fprintf(fp, "%d", getpid());
+		fclose(fp);
+	}
+
+//	signal(SIGUSR1, catch_sig);
+//	nvram_set("dhcp_renew", "0");
+//	nvram_set("dw_busy", "0");
 
 	for(;;)
 	{
 		if (nvram_match("wan_route_x", "IP_Routed"))
-			gateway_ip = nvram_safe_get("wan_gateway_t");
+			gateway_ip = nvram_get("wan_gateway_t");
 		else
-			gateway_ip = nvram_safe_get("lan_gateway_t");
+			gateway_ip = nvram_get("lan_gateway_t");
 
 		/* if not valid gateway, poll for it at first */
-		if (!gateway_ip || ((gateway_ip)&&(strlen(gateway_ip)<7)) || ((gateway_ip)&&(strncmp(gateway_ip, "0.0.0.0", 7)==0)))
+		if (!gateway_ip || (strlen(gateway_ip) < 7) || (!strncmp(gateway_ip, "0.0.0.0", 7)))
 		{
+			if (nvram_match("dw_debug", "1"))
+				fprintf(stderr, "[detectWAN] no valid gateway\n");
+
 			sleep(15);
 		}
 		/* valid gateway for now */
 		else
 		{
+			if (nvram_match("dw_debug", "1"))
+				fprintf(stderr, "[detectWAN] got valid gateway\n");
+
 			break;
 		}
 	}

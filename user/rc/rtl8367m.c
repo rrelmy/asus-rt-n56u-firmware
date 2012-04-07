@@ -17,11 +17,8 @@
 #include <stdio.h>	     
 #include <stdlib.h>
 #include <unistd.h>
-//#include <string.h>
 #include <fcntl.h>
-//#include <signal.h>
 #include <sys/ioctl.h>
-//#include <rtl8366s/smi.h>
 #include <linux/config.h>
 #include <ralink_gpio.h>
 
@@ -146,6 +143,49 @@ int rtl8367m_ioctl(int val, int val2)
                 }
                 break;
 
+        case 21:
+                if(ioctl(fd, 21, 0) < 0){
+                        perror("rtl8367m ioctl");
+                        close(fd);
+                        return -1;
+                }
+                break;
+
+        case 22:
+                value2 = (unsigned int) val2;
+                if(ioctl(fd, 22, &value2) < 0){
+                        perror("rtl8367m ioctl");
+                        close(fd);
+                        return -1;
+                }
+                break;
+
+        case 23:
+                value2 = (unsigned int) val2;
+                if(ioctl(fd, 23, &value2) < 0){
+                        perror("rtl8367m ioctl");
+                        close(fd);
+                        return -1;
+                }
+                break;
+
+        case 24:
+                value2 = (unsigned int) val2;
+                if(ioctl(fd, 24, &value2) < 0){
+                        perror("rtl8367m ioctl");
+                        close(fd);
+                        return -1;
+                }
+                break;
+
+        case 25:
+                value2 = (unsigned int) val2;
+                if(ioctl(fd, 25, &value2) < 0){
+                        perror("rtl8367m ioctl");
+                        close(fd);
+                        return -1;
+                }
+                break;
 
 	default:
 		printf("wrong ioctl cmd: %d\n", val);
@@ -345,6 +385,14 @@ int
 rtl8367m_AllPort_linkDown()
 {
 	system("8367m 17");
+
+	return 0;
+}
+
+int
+rtl8367m_Reset_Storm_Control()
+{
+	system("8367m 21");
 
 	return 0;
 }

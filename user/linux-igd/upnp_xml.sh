@@ -562,6 +562,9 @@ echo "<?xml version=\"1.0\"?>
 " > /etc/linuxigd/l3fwdSCPD.xml
 
 WEB_ADDR="http://$1"
+UUIDA="75802409-bccb-40e7-8e6c-$2"
+UUIDB="c4131cbd-0408-463d-91b0-$2"
+UUIDC="5f75f342-9f96-4ecc-9dbd-$2"
 echo "<?xml version=\"1.0\"?>
 <root xmlns=\"urn:schemas-upnp-org:device-1-0\">
         <specVersion>
@@ -578,12 +581,12 @@ echo "<?xml version=\"1.0\"?>
                 <modelName>Wireless Router</modelName>
                 <modelNumber>RT-N56U</modelNumber>
                 <serialNumber>1.00</serialNumber>
-                <UDN>uuid:75802409-bccb-40e7-8e6c-fa095ecce13e</UDN>
+                <UDN>uuid:$UUIDA</UDN>
                 <iconList>
                         <icon>
                                 <mimetype>image/gif</mimetype>
-                                <width>118</width>
-                                <height>119</height>
+                                <width>16</width>
+                                <height>16</height>
                                 <depth>8</depth>
                                 <url>/ligd.gif</url>
                         </icon>
@@ -608,7 +611,7 @@ echo "<?xml version=\"1.0\"?>
                                 <modelNumber>RT-N56U</modelNumber>
                                 <modelURL>http://www.asus.com</modelURL>
                                 <serialNumber>1.00</serialNumber>
-                                <UDN>uuid:c4131cbd-0408-463d-91b0-38dd1ee22fd6</UDN>
+                                <UDN>uuid:$UUIDB</UDN>
                                 <UPC>RT-N56U</UPC>
                                 <serviceList>
                                         <service>
@@ -630,7 +633,7 @@ echo "<?xml version=\"1.0\"?>
                                                 <modelNumber>RT-N56U</modelNumber>
                                                 <modelURL>http://www.asus.com</modelURL>
                                                 <serialNumber>0.95</serialNumber>
-                                                <UDN>uuid:5f75f342-9f96-4ecc-9dbd-6f981efc3f14</UDN>
+                                                <UDN>uuid:$UUIDC</UDN>
                                                 <UPC>RT-N56U</UPC>
                                                 <serviceList>
                                                         <service>

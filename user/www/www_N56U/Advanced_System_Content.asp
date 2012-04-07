@@ -28,12 +28,16 @@ function initial(){
 	show_banner(1);
 	show_menu(5,6,2);	
 	show_footer();
-	
 	enable_auto_hint(11, 3);
 
 	//load_body();
-	corrected_timezone();
 	document.form.http_passwd2.value = "";
+	
+	calculate_time_zone();	
+	if(document.getElementById('time_zone').selectedIndex != document.getElementById('timezone').selectedIndex){
+		if(confirm("<#LANHostConfig_x_TimeZone_itemhint_2#>"))
+			document.getElementById('time_zone').selectedIndex = document.getElementById('timezone').selectedIndex;
+	}	
 }
 
 function applyRule(){
@@ -42,6 +46,7 @@ function applyRule(){
 		
 		if(document.form.http_passwd2.value.length > 0)
 			document.form.http_passwd.value = document.form.http_passwd2.value;
+
 		document.form.action_mode.value = " Apply ";
 		document.form.next_page.value = "";
 		
@@ -98,6 +103,61 @@ function corrected_timezone(){
 		return;	
 }
 
+function calculate_time_zone() {
+	var rightNow = new Date();
+	var jan1 = new Date(rightNow.getFullYear(), 0, 1, 0, 0, 0, 0);  // jan 1st
+	var june1 = new Date(rightNow.getFullYear(), 6, 1, 0, 0, 0, 0); // june 1st
+	var temp = jan1.toGMTString();
+	var jan2 = new Date(temp.substring(0, temp.lastIndexOf(" ")-1));
+	temp = june1.toGMTString();
+	var june2 = new Date(temp.substring(0, temp.lastIndexOf(" ")-1));
+	var std_time_offset = (jan1 - jan2) / (1000 * 60 * 60);
+	var daylight_time_offset = (june1 - june2) / (1000 * 60 * 60);
+	var dst;
+	if (std_time_offset == daylight_time_offset) {
+		dst = "0"; // daylight savings time is NOT observed
+	} else {
+		// positive is southern, negative is northern hemisphere
+		var hemisphere = std_time_offset - daylight_time_offset;
+		if (hemisphere >= 0)
+			std_time_offset = daylight_time_offset;
+		dst = "1"; // daylight savings time is observed
+	}
+	var i;
+	// check just to avoid error messages
+	if (document.getElementById('timezone')) {
+		for (i = 0; i < document.getElementById('timezone').options.length; i++) {
+			if (document.getElementById('timezone').options[i].value == convert(std_time_offset)+","+dst) {
+				document.getElementById('timezone').selectedIndex = i;
+				break;
+			}
+		}
+	}
+}
+
+function convert(value) {
+	var hours = parseInt(value);
+   	value -= parseInt(value);
+	value *= 60;
+	var mins = parseInt(value);
+   	value -= parseInt(value);
+	value *= 60;
+	var secs = parseInt(value);
+	var display_hours = hours;
+	// handle GMT case (00:00)
+	if (hours == 0) {
+		display_hours = "00";
+	} else if (hours > 0) {
+		// add a plus sign and perhaps an extra 0
+		display_hours = (hours < 10) ? "+0"+hours : "+"+hours;
+	} else {
+		// add an extra 0 if needed 
+		display_hours = (hours > -10) ? "-0"+Math.abs(hours) : hours;
+	}
+	
+	mins = (mins < 10) ? "0"+mins : mins;
+	return display_hours+":"+mins;
+}
 </script>
 </head>
 
@@ -190,28 +250,28 @@ function corrected_timezone(){
         <tr>
           <th><a class="hintstyle"  href="javascript:void(0);" onClick="openHint(11,2)"><#LANHostConfig_x_TimeZone_itemname#></a></th>
           <td>
-            <select name="time_zone" class="input" onchange="return change_common(this, 'LANHostConfig', 'time_zone')">						
+            <select name="time_zone" id="time_zone" class="input" onchange="return change_common(this, 'LANHostConfig', 'time_zone')">						
 							<option value="UCT12" <% nvram_match_x("LANHostConfig","time_zone", "UCT12","selected"); %>			>(GMT-12:00) <#TZ01#></option>
 							<option value="UCT11" <% nvram_match_x("LANHostConfig","time_zone", "UCT11","selected"); %>			>(GMT-11:00) <#TZ02#></option>
 							<option value="UCT10" <% nvram_match_x("LANHostConfig","time_zone", "UCT10","selected"); %>			>(GMT-10:00) <#TZ03#></option>
 							<option value="NAST9NADT" <% nvram_match_x("LANHostConfig","time_zone", "NAST9NADT","selected"); %>		>(GMT-09:00) <#TZ04#></option>
 							<option value="PST8PDT" <% nvram_match_x("LANHostConfig","time_zone", "PST8PDT","selected"); %>		>(GMT-08:00) <#TZ05#></option>
 							<option value="MST7_1" <% nvram_match_x("LANHostConfig","time_zone", "MST7_1","selected"); %>		>(GMT-07:00) <#TZ06#></option>
-							<option value="MST7" <% nvram_match_x("LANHostConfig","time_zone", "MST7","selected"); %>			>(GMT-07:00) <#TZ07#></option>
+							<!--option value="MST7" <% nvram_match_x("LANHostConfig","time_zone", "MST7","selected"); %>			>(GMT-07:00) <#TZ07#></option-->
 							<option value="MST7MDT" <% nvram_match_x("LANHostConfig","time_zone", "MST7MDT","selected"); %>		>(GMT-07:00) <#TZ08#></option>
 							<option value="CST6CDT_1" <% nvram_match_x("LANHostConfig","time_zone", "CST6CDT_1","selected"); %>		>(GMT-06:00) <#TZ09#></option>
 							<option value="CST6CDT_2" <% nvram_match_x("LANHostConfig","time_zone", "CST6CDT_2","selected"); %>		>(GMT-06:00) <#TZ10#></option>
-							<option value="CST6CDT_3" <% nvram_match_x("LANHostConfig","time_zone", "CST6CDT_3","selected"); %>		>(GMT-06:00) <#TZ11#></option>
+							<!--option value="CST6CDT_3" <% nvram_match_x("LANHostConfig","time_zone", "CST6CDT_3","selected"); %>		>(GMT-06:00) <#TZ11#></option>
 							<option value="CST6CDT_3_1" <% nvram_match_x("LANHostConfig","time_zone", "CST6CDT_3_1","selected"); %>	>(GMT-06:00) <#TZ12#></option>
-							<option value="UCT6" <% nvram_match_x("LANHostConfig","time_zone", "UCT6","selected"); %>			>(GMT-06:00) <#TZ13#></option>
+							<option value="UCT6" <% nvram_match_x("LANHostConfig","time_zone", "UCT6","selected"); %>			>(GMT-06:00) <#TZ13#></option-->
 							<option value="EST5EDT" <% nvram_match_x("LANHostConfig","time_zone", "EST5EDT","selected"); %>		>(GMT-05:00) <#TZ14#></option>
-							<option value="UCT5_1" <% nvram_match_x("LANHostConfig","time_zone", "UCT5_1","selected"); %>			>(GMT-05:00) <#TZ15#></option>
+							<!--option value="UCT5_1" <% nvram_match_x("LANHostConfig","time_zone", "UCT5_1","selected"); %>			>(GMT-05:00) <#TZ15#></option-->
 							<option value="UCT5_2" <% nvram_match_x("LANHostConfig","time_zone", "UCT5_2","selected"); %>			>(GMT-05:00) <#TZ16#></option>
 							<option value="AST4ADT" <% nvram_match_x("LANHostConfig","time_zone", "AST4ADT","selected"); %>		>(GMT-04:00) <#TZ17#></option>
-							<option value="UCT4_1" <% nvram_match_x("LANHostConfig","time_zone", "UCT4_1","selected"); %>			>(GMT-04:00) <#TZ18#></option>
+							<!--option value="UCT4_1" <% nvram_match_x("LANHostConfig","time_zone", "UCT4_1","selected"); %>			>(GMT-04:00) <#TZ18#></option-->
 							<option value="UCT4_2" <% nvram_match_x("LANHostConfig","time_zone", "UCT4_2","selected"); %>			>(GMT-04:00) <#TZ19#></option>
 							<option value="NST3.30" <% nvram_match_x("LANHostConfig","time_zone", "NST3.30","selected"); %>		>(GMT-03:30) <#TZ20#></option>
-							<option value="EBST3EBDT_1" <% nvram_match_x("LANHostConfig","time_zone", "EBST3EBDT_1","selected"); %>	>(GMT-03:00) <#TZ21#></option>
+							<!--option value="EBST3EBDT_1" <% nvram_match_x("LANHostConfig","time_zone", "EBST3EBDT_1","selected"); %>	>(GMT-03:00) <#TZ21#></option-->
 							<option value="UCT3" <% nvram_match_x("LANHostConfig","time_zone", "UCT3","selected"); %>			>(GMT-03:00) <#TZ22#></option>
 							<option value="EBST3EBDT_2" <% nvram_match_x("LANHostConfig","time_zone", "EBST3EBDT_2","selected"); %>	>(GMT-03:00) <#TZ23#></option>
 							<option value="NORO2" <% nvram_match_x("LANHostConfig","time_zone", "NORO2","selected"); %>			>(GMT-02:00) <#TZ24#></option>
@@ -221,24 +281,24 @@ function corrected_timezone(){
 							<option value="GMT0BST_2" <% nvram_match_x("LANHostConfig","time_zone", "GMT0BST_2","selected"); %>		>(GMT) <#TZ28#></option>
 							<option value="UCT-1_1" <% nvram_match_x("LANHostConfig","time_zone", "UCT-1_1","selected"); %>		>(GMT+01:00) <#TZ29#></option>
 							<option value="UCT-1_1_1" <% nvram_match_x("LANHostConfig","time_zone", "UCT-1_1_1","selected"); %>		>(GMT+01:00) <#TZ30#></option>
-							<option value="UCT-1_2" <% nvram_match_x("LANHostConfig","time_zone", "UCT-1_2","selected"); %>		>(GMT+01:00) <#TZ31#></option>
+							<!--option value="UCT-1_2" <% nvram_match_x("LANHostConfig","time_zone", "UCT-1_2","selected"); %>		>(GMT+01:00) <#TZ31#></option>
 							<option value="UCT-1_2_1" <% nvram_match_x("LANHostConfig","time_zone", "UCT-1_2_1","selected"); %>		>(GMT+01:00) <#TZ32#></option>
 							<option value="MET-1METDST" <% nvram_match_x("LANHostConfig","time_zone", "MET-1METDST","selected"); %>	>(GMT+01:00) <#TZ33#></option>
 							<option value="MET-1METDST_1" <% nvram_match_x("LANHostConfig","time_zone", "MET-1METDST_1","selected"); %>	>(GMT+01:00) <#TZ34#></option>
 							<option value="MEZ-1MESZ" <% nvram_match_x("LANHostConfig","time_zone", "MEZ-1MESZ","selected"); %>		>(GMT+01:00) <#TZ35#></option>
 							<option value="MEZ-1MESZ_1" <% nvram_match_x("LANHostConfig","time_zone", "MEZ-1MESZ_1","selected"); %>	>(GMT+01:00) <#TZ36#></option>
-							<option value="UCT-1_3" <% nvram_match_x("LANHostConfig","time_zone", "UCT-1_3","selected"); %>		>(GMT+01:00) <#TZ37#></option>
+							<option value="UCT-1_3" <% nvram_match_x("LANHostConfig","time_zone", "UCT-1_3","selected"); %>		>(GMT+01:00) <#TZ37#></option-->
 							<option value="UCT-2" <% nvram_match_x("LANHostConfig","time_zone", "UCT-2","selected"); %>		>(GMT+02:00) <#TZ38#></option>
 							<option value="EST-2EDT" <% nvram_match_x("LANHostConfig","time_zone", "EST-2EDT","selected"); %>		>(GMT+02:00) <#TZ39#></option>
-							<option value="UCT-2_1" <% nvram_match_x("LANHostConfig","time_zone", "UCT-2_1","selected"); %>		>(GMT+02:00) <#TZ40#></option>
+							<!--option value="UCT-2_1" <% nvram_match_x("LANHostConfig","time_zone", "UCT-2_1","selected"); %>		>(GMT+02:00) <#TZ40#></option>
 							<option value="UCT-2_2" <% nvram_match_x("LANHostConfig","time_zone", "UCT-2_2","selected"); %>		>(GMT+02:00) <#TZ41#></option>
 							<option value="IST-2IDT" <% nvram_match_x("LANHostConfig","time_zone", "IST-2IDT","selected"); %>		>(GMT+02:00) <#TZ42#></option>
 							<option value="SAST-2" <% nvram_match_x("LANHostConfig","time_zone", "SAST-2","selected"); %>			>(GMT+02:00) <#TZ43#></option>
-							<option value="EET-2EETDST" <% nvram_match_x("LANHostConfig","time_zone", "EET-2EETDST","selected"); %>		>(GMT+02:00) <#TZ43_2#></option>
+							<option value="EET-2EETDST" <% nvram_match_x("LANHostConfig","time_zone", "EET-2EETDST","selected"); %>		>(GMT+02:00) <#TZ43_2#></option-->
 							<option value="MST-3MDT" <% nvram_match_x("LANHostConfig","time_zone", "MST-3MDT","selected"); %>		>(GMT+03:00) <#TZ44#></option>
-							<option value="MST-3MDT_1" <% nvram_match_x("LANHostConfig","time_zone", "MST-3MDT_1","selected"); %>		>(GMT+03:00) <#TZ45#></option>
+							<!--option value="MST-3MDT_1" <% nvram_match_x("LANHostConfig","time_zone", "MST-3MDT_1","selected"); %>		>(GMT+03:00) <#TZ45#></option>
 							<option value="UCT-3_1" <% nvram_match_x("LANHostConfig","time_zone", "UCT-3_1","selected"); %>		>(GMT+03:00) <#TZ46#></option>
-							<option value="UCT-3_2" <% nvram_match_x("LANHostConfig","time_zone", "UCT-3_2","selected"); %>		>(GMT+03:00) <#TZ47#></option>
+							<option value="UCT-3_2" <% nvram_match_x("LANHostConfig","time_zone", "UCT-3_2","selected"); %>		>(GMT+03:00) <#TZ47#></option-->
 							<option value="IST-3IDT" <% nvram_match_x("LANHostConfig","time_zone", "IST-3IDT","selected"); %>		>(GMT+03:00) <#TZ48#></option>
 							<option value="UCT-3.30" <% nvram_match_x("LANHostConfig","time_zone", "UCT-3.30","selected"); %>		>(GMT+03:30) <#TZ49#></option>
 							<option value="UCT-4_1" <% nvram_match_x("LANHostConfig","time_zone", "UCT-4_1","selected"); %>		>(GMT+04:00) <#TZ50#></option>
@@ -247,8 +307,8 @@ function corrected_timezone(){
 							<option value="RFT-5RFTDST" <% nvram_match_x("LANHostConfig","time_zone", "RFT-5RFTDST","selected"); %>	>(GMT+05:00) <#TZ53#></option>
 							<option value="UCT-5" <% nvram_match_x("LANHostConfig","time_zone", "UCT-5","selected"); %>			>(GMT+05:00) <#TZ54#></option>
 							<option value="UCT-5.30_2" <% nvram_match_x("LANHostConfig","time_zone", "UCT-5.30_2","selected"); %>		>(GMT+05:30) <#TZ55#></option>
-							<option value="UCT-5.30_1" <% nvram_match_x("LANHostConfig","time_zone", "UCT-5.30_1","selected"); %>		>(GMT+05:30) <#TZ56#></option>
-							<option value="UCT-6" <% nvram_match_x("LANHostConfig","time_zone", "UCT-6","selected"); %>			>(GMT+05:30) <#TZ58#></option>
+							<!--option value="UCT-5.30_1" <% nvram_match_x("LANHostConfig","time_zone", "UCT-5.30_1","selected"); %>		>(GMT+05:30) <#TZ56#></option>
+							<option value="UCT-6" <% nvram_match_x("LANHostConfig","time_zone", "UCT-6","selected"); %>			>(GMT+05:30) <#TZ58#></option-->
 							<option value="UCT-5.45" <% nvram_match_x("LANHostConfig","time_zone", "UCT-5.45","selected"); %>		>(GMT+05:45) <#TZ57#></option>
 							<option value="UCT-5.30" <% nvram_match_x("LANHostConfig","time_zone", "UCT-5.30","selected"); %>		>(GMT+06:00) <#TZ59#></option>
 							<option value="RFT-6RFTDST" <% nvram_match_x("LANHostConfig","time_zone", "RFT-6RFTDST","selected"); %>	>(GMT+06:00) <#TZ60#></option>
@@ -256,27 +316,83 @@ function corrected_timezone(){
 							<option value="UCT-7" <% nvram_match_x("LANHostConfig","time_zone", "UCT-7","selected"); %>			>(GMT+07:00) <#TZ62#></option>
 							<option value="RFT-7RFTDST" <% nvram_match_x("LANHostConfig","time_zone", "RFT-7RFTDST","selected"); %>	>(GMT+07:00) <#TZ63#></option>
 							<option value="CST-8" <% nvram_match_x("LANHostConfig","time_zone", "CST-8","selected"); %>			>(GMT+08:00) <#TZ64#></option>
-							<option value="CST-8_1" <% nvram_match_x("LANHostConfig","time_zone", "CST-8_1","selected"); %>		>(GMT+08:00) <#TZ65#></option>
-							<option value="SST-8" <% nvram_match_x("LANHostConfig","time_zone", "SST-8","selected"); %>			>(GMT+08:00) <#TZ66#></option>
+							<!--option value="CST-8_1" <% nvram_match_x("LANHostConfig","time_zone", "CST-8_1","selected"); %>		>(GMT+08:00) <#TZ65#></option>
+							<option value="SST-8" <% nvram_match_x("LANHostConfig","time_zone", "SST-8","selected"); %>			>(GMT+08:00) <#TZ66#></option-->
 							<option value="CCT-8" <% nvram_match_x("LANHostConfig","time_zone", "CCT-8","selected"); %>			>(GMT+08:00) <#TZ67#></option>
-							<option value="WAS-8WAD" <% nvram_match_x("LANHostConfig","time_zone", "WAS-8WAD","selected"); %>		>(GMT+08:00) <#TZ68#></option>
-							<option value="UCT-8" <% nvram_match_x("LANHostConfig","time_zone", "UCT-8","selected"); %>			>(GMT+08:00) <#TZ69#></option>
+							<!--option value="WAS-8WAD" <% nvram_match_x("LANHostConfig","time_zone", "WAS-8WAD","selected"); %>		>(GMT+08:00) <#TZ68#></option>
+							<option value="UCT-8" <% nvram_match_x("LANHostConfig","time_zone", "UCT-8","selected"); %>			>(GMT+08:00) <#TZ69#></option-->
 							<option value="UCT-9_1" <% nvram_match_x("LANHostConfig","time_zone", "UCT-9_1","selected"); %>		>(GMT+09:00) <#TZ70#></option>
 							<option value="JST" <% nvram_match_x("LANHostConfig","time_zone", "JST","selected"); %>			>(GMT+09:00) <#TZ71#></option>
-							<option value="UCT-9_2" <% nvram_match_x("LANHostConfig","time_zone", "UCT-9_2","selected"); %>		>(GMT+09:00) <#TZ72#></option>
+							<!--option value="UCT-9_2" <% nvram_match_x("LANHostConfig","time_zone", "UCT-9_2","selected"); %>		>(GMT+09:00) <#TZ72#></option-->
 							<option value="CST-9.30CDT" <% nvram_match_x("LANHostConfig","time_zone", "CST-9.30CDT","selected"); %>	>(GMT+09:30) <#TZ73#></option>
 							<option value="UCT-9.30" <% nvram_match_x("LANHostConfig","time_zone", "UCT-9.30","selected"); %>		>(GMT+09:30) <#TZ74#></option>
 							<option value="UCT-10_1" <% nvram_match_x("LANHostConfig","time_zone", "UCT-10_1","selected"); %>		>(GMT+10:00) <#TZ75#></option>
-							<option value="UCT-10_2" <% nvram_match_x("LANHostConfig","time_zone", "UCT-10_2","selected"); %>		>(GMT+10:00) <#TZ76#></option>
-							<option value="TST-10TDT" <% nvram_match_x("LANHostConfig","time_zone", "TST-10TDT","selected"); %>		>(GMT+10:00) <#TZ77#></option>
-							<option value="RFT-10RFTDST" <% nvram_match_x("LANHostConfig","time_zone", "RFT-10RFTDST","selected"); %>	>(GMT+10:00) <#TZ78#></option>
+							<!--option value="UCT-10_2" <% nvram_match_x("LANHostConfig","time_zone", "UCT-10_2","selected"); %>		>(GMT+10:00) <#TZ76#></option-->
+							<!--option value="TST-10TDT" <% nvram_match_x("LANHostConfig","time_zone", "TST-10TDT","selected"); %>		>(GMT+10:00) <#TZ77#></option>
+							<option value="RFT-10RFTDST" <% nvram_match_x("LANHostConfig","time_zone", "RFT-10RFTDST","selected"); %>	>(GMT+10:00) <#TZ78#></option-->
 							<option value="UCT-10_5" <% nvram_match_x("LANHostConfig","time_zone", "UCT-10_5","selected"); %>		>(GMT+10:00) <#TZ79#></option>
 							<option value="UCT-11" <% nvram_match_x("LANHostConfig","time_zone", "UCT-11","selected"); %>			>(GMT+11:00) <#TZ80#></option>
-							<option value="UCT-11_1" <% nvram_match_x("LANHostConfig","time_zone", "UCT-11_1","selected"); %>		>(GMT+11:00) <#TZ81#></option>
+							<!--option value="UCT-11_1" <% nvram_match_x("LANHostConfig","time_zone", "UCT-11_1","selected"); %>		>(GMT+11:00) <#TZ81#></option-->
 							<option value="UCT-12" <% nvram_match_x("LANHostConfig","time_zone", "UCT-12","selected"); %>			>(GMT+12:00) <#TZ82#></option>
 							<option value="NZST-12NZDT" <% nvram_match_x("LANHostConfig","time_zone", "NZST-12NZDT","selected"); %>	>(GMT+12:00) <#TZ83#></option>
 							<option value="UCT-13" <% nvram_match_x("LANHostConfig","time_zone", "UCT-13","selected"); %>			>(GMT+13:00) <#TZ84#></option>
             </select>
+
+ 						<select name="timezone" style="display:none" id="timezone" style="width:350px">
+            	<option value="-12:00,0">(GMT-12:00) <#TZ01#></option>
+            	<option value="-11:00,0">(GMT-11:00) Midway Island, Samoa</option>
+            	<option value="-10:00,0">(GMT-10:00) Hawaii</option>
+            	<option value="-09:00,1">(GMT-09:00) Alaska</option>
+            	<option value="-08:00,1">(GMT-08:00) Pacific Time (US &amp; Canada)</option>
+            	<option value="-07:00,0">(GMT-07:00) Arizona</option>
+            	<option value="-07:00,1">(GMT-07:00) Mountain Time (US &amp; Canada)</option>
+            	<option value="-06:00,0">(GMT-06:00) Central America, Saskatchewan</option>
+            	<option value="-06:00,1">(GMT-06:00) Central Time (US &amp; Canada), Guadalajara, Mexico city</option>
+            	<option value="-05:00,0">(GMT-05:00) Indiana, Bogota, Lima, Quito, Rio Branco</option>
+            	<option value="-05:00,1">(GMT-05:00) Eastern time (US &amp; Canada)</option>
+            	<option value="-04:00,1">(GMT-04:00) Atlantic time (Canada), Manaus, Santiago</option>
+            	<option value="-04:00,0">(GMT-04:00) Caracas, La Paz</option>
+            	<option value="-03:30,1">(GMT-03:30) Newfoundland</option>
+            	<option value="-03:00,1">(GMT-03:00) Greenland, Brasilia, Montevideo</option>
+            	<option value="-03:00,0">(GMT-03:00) Buenos Aires, Georgetown</option>
+            	<option value="-02:00,1">(GMT-02:00) Mid-Atlantic</option>
+            	<option value="-01:00,1">(GMT-01:00) Azores</option>
+            	<option value="-01:00,0">(GMT-01:00) Cape Verde Is.</option>
+            	<option value="00:00,0">(GMT) Casablanca, Monrovia, Reykjavik</option>
+            	<option value="00:00,1">(GMT) GMT: Dublin, Edinburgh, Lisbon, London</option>
+            	<option value="+01:00,1">(GMT+01:00) Amsterdam, Berlin, Rome, Vienna, Prague, Brussels</option>
+            	<option value="+01:00,0">(GMT+01:00) West Central Africa</option>
+            	<option value="+02:00,1">(GMT+02:00) Amman, Athens, Istanbul, Beirut, Cairo, Jerusalem</option>
+            	<option value="+02:00,0">(GMT+02:00) Harare, Pretoria</option>
+            	<option value="+03:00,1">(GMT+03:00) Baghdad, Moscow, St. Petersburg, Volgograd</option>
+							<option value="+03:00,0">(GMT+03:00) Kuwait, Riyadh, Nairobi, Tbilisi</option>
+							<option value="+03:30,0">(GMT+03:30) Tehran</option>
+							<option value="+04:00,0">(GMT+04:00) Abu Dhadi, Muscat</option>
+							<option value="+04:00,1">(GMT+04:00) Baku, Yerevan</option>
+							<option value="+04:30,0">(GMT+04:30) Kabul</option>
+							<option value="+05:00,1">(GMT+05:00) Ekaterinburg</option>
+							<option value="+05:00,0">(GMT+05:00) Islamabad, Karachi, Tashkent</option>
+							<option value="+05:30,0">(GMT+05:30) Chennai, Kolkata, Mumbai, New Delhi, Sri Jayawardenepura</option>
+							<option value="+05:45,0">(GMT+05:45) Kathmandu</option>
+							<option value="+06:00,0">(GMT+06:00) Astana, Dhaka</option>
+							<option value="+06:00,1">(GMT+06:00) Almaty, Nonosibirsk</option>
+							<option value="+06:30,0">(GMT+06:30) Yangon (Rangoon)</option>
+							<option value="+07:00,1">(GMT+07:00) Krasnoyarsk</option>
+							<option value="+07:00,0">(GMT+07:00) Bangkok, Hanoi, Jakarta</option>
+							<option value="+08:00,0">(GMT+08:00) Beijing, Hong Kong, Singapore, Taipei</option>
+							<option value="+08:00,1">(GMT+08:00) Irkutsk, Ulaan Bataar, Perth</option>
+							<option value="+09:00,1">(GMT+09:00) Yakutsk</option>
+							<option value="+09:00,0">(GMT+09:00) Seoul, Osaka, Sapporo, Tokyo</option>
+							<option value="+09:30,0">(GMT+09:30) Darwin</option>
+							<option value="+09:30,1">(GMT+09:30) Adelaide</option>
+							<option value="+10:00,0">(GMT+10:00) Brisbane, Guam, Port Moresby</option>
+							<option value="+10:00,1">(GMT+10:00) Canberra, Melbourne, Sydney, Hobart, Vladivostok</option>
+							<option value="+11:00,0">(GMT+11:00) Magadan, Solomon Is., New Caledonia</option>
+							<option value="+12:00,1">(GMT+12:00) Auckland, Wellington</option>
+							<option value="+12:00,0">(GMT+12:00) Fiji, Kamchatka, Marshall Is.</option>
+							<option value="+13:00,0">(GMT+13:00) Nuku'alofa</option>
+						</select>
+
             <span id="timezone_hint" style="display:none;"></span>
             </td>
         </tr>

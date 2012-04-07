@@ -50,12 +50,6 @@ int count = 0;
 
 void usbled(void)
 {
-	if (nvram_match("no_usb_led", "1"))
-	{
-		alarmtimer(0, 0);
-//		exit(0);
-	}
-	else 
 	{
 		count = (++count % 20);
 
@@ -71,8 +65,8 @@ void usbled(void)
 
 void nousbled(void)
 {
-	nvram_set("no_usb_led", "1");
 	alarmtimer(0, 0);
+	nvram_set("no_usb_led", "0");
 	remove("/var/run/usbled.pid");
 	exit(0);
 }
@@ -89,7 +83,7 @@ usbled_main(int argc, char *argv[])
 		fclose(fp);
 	}
 
-	nvram_set("no_usb_led", "0");
+	nvram_set("no_usb_led", "1");
 
 	/* set the signal handler */
 	signal(SIGALRM, usbled);

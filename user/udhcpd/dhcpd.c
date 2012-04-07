@@ -89,17 +89,6 @@ static void signal_handler(int sig)
 	}
 }
 
-#ifndef BRCM_UDHCPD
-#include <sys/sysinfo.h>
-static long uptime(void)
-{
-	struct sysinfo info;
-	sysinfo(&info);
-        
-	return info.uptime;
-}
-#endif
-
 #ifdef COMBINED_BINARY	
 int udhcpd_main(int argc, char *argv[])
 #else

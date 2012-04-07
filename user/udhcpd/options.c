@@ -59,6 +59,7 @@ struct dhcp_option options[] = {
 	{"dhcptype",	OPTION_U8,				0x35},
 	{"serverid",	OPTION_IP,				0x36},
 	{"message",	OPTION_STRING,				0x38},
+	{"max-size",	OPTION_U16,				0x39},
 	{"tftp",	OPTION_STRING,				0x42},
 	{"bootfile",	OPTION_STRING,				0x43},
 	{"",		0x00,				0x00}

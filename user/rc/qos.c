@@ -254,8 +254,10 @@ void start_qos(char *wan_ipaddr)	//modified by angela 2008.05
 			fprintf(fp, "-A POSTROUTING -p tcp -m tcp --dport 8080 -j RETURN\n");
 			fprintf(fp, "-A POSTROUTING -p tcp -m tcp --dport 443 -j MARK --set-mark 20\n");
 			fprintf(fp, "-A POSTROUTING -p tcp -m tcp --dport 443 -j RETURN\n");
-			fprintf(fp, "-A POSTROUTING -p tcp -m tcp --dport 25 -j MARK --set-mark 20\n");
-			fprintf(fp, "-A POSTROUTING -p tcp -m tcp --dport 25 -j RETURN\n");
+			fprintf(fp, "-A POSTROUTING -p tcp -m tcp --dport 53 -j MARK --set-mark 20\n");
+			fprintf(fp, "-A POSTROUTING -p tcp -m tcp --dport 53 -j RETURN\n");
+			fprintf(fp, "-A POSTROUTING -p udp -m udp --dport 53 -j MARK --set-mark 20\n");
+			fprintf(fp, "-A POSTROUTING -p udp -m udp --dport 53 -j RETURN\n");
 			flag |= 0x40;
 		}
 	}
@@ -289,8 +291,10 @@ void start_qos(char *wan_ipaddr)	//modified by angela 2008.05
 			fprintf(fp, "-A POSTROUTING -p tcp -m tcp --dport 8080 -j RETURN\n");
 			fprintf(fp, "-A POSTROUTING -p tcp -m tcp --dport 443 -j MARK --set-mark 20\n");
 			fprintf(fp, "-A POSTROUTING -p tcp -m tcp --dport 443 -j RETURN\n");
-			fprintf(fp, "-A POSTROUTING -p tcp -m tcp --dport 25 -j MARK --set-mark 20\n");
-			fprintf(fp, "-A POSTROUTING -p tcp -m tcp --dport 25 -j RETURN\n");
+			fprintf(fp, "-A POSTROUTING -p tcp -m tcp --dport 53 -j MARK --set-mark 20\n");
+			fprintf(fp, "-A POSTROUTING -p tcp -m tcp --dport 53 -j RETURN\n");
+			fprintf(fp, "-A POSTROUTING -p udp -m udp --dport 53 -j MARK --set-mark 20\n");
+			fprintf(fp, "-A POSTROUTING -p udp -m udp --dport 53 -j RETURN\n");
 			flag |= 0x40;
 		}
 
@@ -300,40 +304,40 @@ void start_qos(char *wan_ipaddr)	//modified by angela 2008.05
 		else
 			sprintf(qos_down,"256kbit");
 
-		eval("tc","qdisc","add", "dev", lan_net_name, "root", "handle", "10:", "htb", "default", "91");
+		eval("tc","qdisc","add", "dev", wan_net_name, "root", "handle", "10:", "htb", "default", "91");
 
-        	eval("tc", "class", "add", "dev", lan_net_name, "parent", "10:", "classid", "10:2",\
+        	eval("tc", "class", "add", "dev", wan_net_name, "parent", "10:", "classid", "10:2",\
                 	 "htb", "rate", "1000000kbit", "ceil", "1000000kbit");
 
-                eval("tc", "class", "add", "dev", lan_net_name, "parent", "10:2", "classid", "10:70",\
-                        "htb", "rate", "900000kbit", "ceil", "900000kbit", "prio", "1" );
-                eval("tc", "qdisc", "add", "dev", lan_net_name, "parent", "10:70", "handle", "170:", "pfifo");
-                eval("tc", "filter", "add", "dev", lan_net_name, "parent", "10:", "protocol", "ip", "prio", "1", \
+                eval("tc", "class", "add", "dev", wan_net_name, "parent", "10:2", "classid", "10:70",\
+                        "htb", "rate", "950000kbit", "ceil", "950000kbit", "prio", "1" );
+                eval("tc", "qdisc", "add", "dev", wan_net_name, "parent", "10:70", "handle", "170:", "pfifo");
+                eval("tc", "filter", "add", "dev", wan_net_name, "parent", "10:", "protocol", "ip", "prio", "1", \
                         "handle", "70", "fw", "classid", "10:70");
 
-		eval("tc", "class", "add", "dev", lan_net_name, "parent", "10:2", "classid", "10:80",\
-			"htb", "rate", "900000kbit", "ceil", "900000kbit", "prio", "8" );
-		eval("tc", "qdisc", "add", "dev", lan_net_name, "parent", "10:80", "handle", "180:", "pfifo");
-		eval("tc", "filter", "add", "dev", lan_net_name, "parent", "10:", "protocol", "ip", "prio", "8", \
+		eval("tc", "class", "add", "dev", wan_net_name, "parent", "10:2", "classid", "10:80",\
+			"htb", "rate", "950000kbit", "ceil", "950000kbit", "prio", "8" );
+		eval("tc", "qdisc", "add", "dev", wan_net_name, "parent", "10:80", "handle", "180:", "pfifo");
+		eval("tc", "filter", "add", "dev", wan_net_name, "parent", "10:", "protocol", "ip", "prio", "8", \
 			"handle", "80", "fw", "classid", "10:80");
 
-		eval("tc", "class", "add", "dev", lan_net_name, "parent", "10:2", "classid", "10:90",\
+		eval("tc", "class", "add", "dev", wan_net_name, "parent", "10:2", "classid", "10:90",\
 			"htb", "rate", qos_down, "ceil", qos_down, "prio", "9" );
-		eval("tc", "qdisc", "add", "dev", lan_net_name, "parent", "10:90", "handle", "190:", "pfifo");
-		eval("tc", "filter", "add", "dev", lan_net_name, "parent", "10:", "protocol", "ip", "prio", "9", \
+		eval("tc", "qdisc", "add", "dev", wan_net_name, "parent", "10:90", "handle", "190:", "pfifo");
+		eval("tc", "filter", "add", "dev", wan_net_name, "parent", "10:", "protocol", "ip", "prio", "9", \
 			"handle", "90", "fw", "classid", "10:90");
 
-		eval("tc", "class", "add", "dev", lan_net_name, "parent", "10:2", "classid", "10:91",\
+		eval("tc", "class", "add", "dev", wan_net_name, "parent", "10:2", "classid", "10:91",\
 			"htb", "rate", qos_down, "ceil", qos_down, "prio", "9" );
-		eval("tc", "qdisc", "add", "dev", lan_net_name, "parent", "10:91", "handle", "191:", "pfifo");
-		eval("tc", "filter", "add", "dev", lan_net_name, "parent", "10:", "protocol", "ip", "prio", "9", \
+		eval("tc", "qdisc", "add", "dev", wan_net_name, "parent", "10:91", "handle", "191:", "pfifo");
+		eval("tc", "filter", "add", "dev", wan_net_name, "parent", "10:", "protocol", "ip", "prio", "9", \
 			"handle", "91", "fw", "classid", "10:91");
 
 		/* Add the class 10:100 for LAN access the router */
-		eval("tc", "class", "add", "dev", lan_net_name, "parent", "10:2", "classid", "10:100",\
-			"htb", "rate", "900000kbit", "ceil", "900000kbit", "prio", "8" );
-		eval("tc", "qdisc", "add", "dev", lan_net_name, "parent", "10:100", "handle", "180:", "pfifo");
-		eval("tc", "filter", "add", "dev", lan_net_name, "parent", "10:", "protocol", "ip", "prio", "8", \
+		eval("tc", "class", "add", "dev", wan_net_name, "parent", "10:2", "classid", "10:100",\
+			"htb", "rate", "950000kbit", "ceil", "950000kbit", "prio", "8" );
+		eval("tc", "qdisc", "add", "dev", wan_net_name, "parent", "10:100", "handle", "180:", "pfifo");
+		eval("tc", "filter", "add", "dev", wan_net_name, "parent", "10:", "protocol", "ip", "prio", "8", \
 			"handle", "100", "fw", "classid", "10:100");
 
 		fprintf(fp, "-A POSTROUTING -s %s -d %s -j MARK --set-mark 100\n", nvram_get("lan_ipaddr"), lan_ipaddr);

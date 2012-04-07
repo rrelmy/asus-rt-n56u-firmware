@@ -17,7 +17,11 @@ helptitle[0] = [["", ""],
 				["<#WLANConfig11b_ChannelBW_itemname#>", "rt_HT_BW"],
 				["<#WLANConfig11b_EChannel_itemname#>", "rt_HT_EXTCHA"],
 				["<#WLANConfig11b_WLBand_itemname#>", "rt_nband"],
-				["<#WLANConfig11b_TxPower_itemname#>", "rt_TxPower"]];
+				["<#WLANConfig11b_TxPower_itemname#>", "rt_TxPower"],
+				["<#WLANConfig11b_WEPKey_itemname#>", "rt_key1"],
+				["<#WLANConfig11b_WEPKey_itemname#>", "rt_key2"],
+				["<#WLANConfig11b_WEPKey_itemname#>", "rt_key3"],
+				["<#WLANConfig11b_WEPKey_itemname#>", "rt_key4"]];
 helptitle[1] = [["", ""],
 				["<#WLANConfig11b_x_APMode_itemname#>", "rt_mode_x"],
 				["<#WLANConfig11b_Channel_itemname#>", "rt_channel"],
@@ -202,13 +206,17 @@ helpcontent[0] = new Array("",
 						   "<#WLANConfig11b_x_Phrase_itemdesc#>",
 						   "<#WLANConfig11b_WEPType_itemdesc#>",
 						   "<#WLANConfig11b_WEPDefaultKey_itemdesc#>",
-						   "<#WLANConfig11b_x_Rekey_itemdesc#>",
+						   "<#WLANConfig11b_x_Rekey_itemdesc#><#JS_field_wanip_rule3#>",
 						   "<#WLANConfig11b_WEPKey_itemtype1#>",
 						   "<#WLANConfig11b_WEPKey_itemtype2#>",
 						   "<#WLANConfig11b_ChannelBW_itemdesc#><br/><#WLANConfig11b_Wireless_Speed_itemname_3#>",
 						   "<#WLANConfig11b_EChannel_itemdesc#>",
 							 productid+" <#WLANConfig11b_WLband_itemdesc#>",
-							 "<#WLANConfig11b_TxPower_itemdesc#>"
+							 "<#WLANConfig11b_TxPower_itemdesc#>",
+							 "<#WLANConfig11b_WEPKey_itemtype1#><br/><#WLANConfig11b_WEPKey_itemtype2#>",
+							 "<#WLANConfig11b_WEPKey_itemtype1#><br/><#WLANConfig11b_WEPKey_itemtype2#>",
+							 "<#WLANConfig11b_WEPKey_itemtype1#><br/><#WLANConfig11b_WEPKey_itemtype2#>",
+							 "<#WLANConfig11b_WEPKey_itemtype1#><br/><#WLANConfig11b_WEPKey_itemtype2#>"
 							 );
 helpcontent[1] = new Array("",
 						   "<#WLANConfig11b_x_APMode_itemdesc#>",
@@ -220,8 +228,8 @@ helpcontent[2] = new Array("",
 						   "<#WLANAuthentication11a_ExAuthDBPassword_itemdesc#>");
 helpcontent[3] = new Array("",
 						   "<#WLANConfig11b_x_RadioEnable_itemdesc#>",
-						   "<#WLANConfig11b_x_RadioEnableDate_itemdesc#>",
-						   "<#WLANConfig11b_x_RadioEnableTime_itemdesc#>",						   
+						   "<#WLANConfig11b_x_RadioEnableDate_itemdesc#><p><a href='/Main_LogStatus_Content.asp' target='_blank'><#General_x_SystemTime_itemname#> : <#DrSurf_suggestion10#></a></p>",
+						   "<#WLANConfig11b_x_RadioEnableTime_itemdesc#><p><a href='/Main_LogStatus_Content.asp' target='_blank'><#General_x_SystemTime_itemname#> : <#DrSurf_suggestion10#></a></p>",						   
 						   "<#WLANConfig11b_x_AfterBurner_itemdesc#>",
 						   "<#WLANConfig11b_x_IsolateAP_itemdesc#>",
 						   "<#WLANConfig11b_DataRateAll_itemdesc#>",
@@ -330,7 +338,7 @@ helpcontent[15] = new Array("",
 							"<#AiDisk_Step3_help#>");
 //EzQoS
 helpcontent[16] = new Array("",
-							"<#EZQoSDesc1#><p><#EZQoSDesc2#><a href='/Advanced_QOSUserSpec_Content.asp'><#BM_title_User#></a></p>");
+							"<#EZQoSDesc1#><p><#EZQoSDesc2#> <a href='/Advanced_QOSUserSpec_Content.asp'><#BM_title_User#></a></p>");
 //Others in the USB application
 helpcontent[17] = new Array("",
 							"<#JS_storageMLU#>",

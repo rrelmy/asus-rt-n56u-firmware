@@ -40,14 +40,15 @@ function getSelectedPool(){
 }
 
 function setSelectedFolder(selectedObj){
-	var disk_id, part_id;
+	var disk_id, part_id, share_id;
 	
 	disk_id = getDiskIDfromOtherID(selectedObj.id);
 	part_id = getPoolIDfromOtherID(selectedObj.id);
+	share_id = getShareIDfromOtherID(selectedObj.id);
 	
 	this.selectedDisk = $(disk_id).firstChild.nodeValue;
 	this.selectedPool = $(part_id).firstChild.nodeValue;
-	this.selectedFolder = selectedObj.innerHTML;
+	this.selectedFolder = get_sharedfolder_in_pool(this.selectedPool)[share_id];
 }
 
 function getSelectedFolder(){
@@ -64,12 +65,21 @@ function getDiskIDfromOtherID(objID){
 }
 
 function getPoolIDfromOtherID(objID){
-	var Part_id_pos, part_id;
+	var part_id_pos, part_id;
 	
-	Part_id_pos = objID.lastIndexOf("_");
-	part_id = objID.substring(0, Part_id_pos);
+	part_id_pos = objID.lastIndexOf("_");
+	part_id = objID.substring(0, part_id_pos);
 	
 	return part_id;
+}
+
+function getShareIDfromOtherID(objID){
+	var share_id_pos, share_id;
+	
+	share_id_pos = objID.lastIndexOf("_")+1;
+	share_id = objID.substring(share_id_pos);
+	
+	return share_id;
 }
 // for folder tree }
 

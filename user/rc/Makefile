@@ -26,8 +26,7 @@ INSTALLDIR = $(ROOTDIR)/romfs
 CONF_H  = $(ROOTDIR)/$(LINUXDIR)/include/linux/autoconf.h
 UCONF_H = $(ROOTDIR)/config/autoconf.h
 
-#2008.10 magic add -DWEB_REDIRECT -DWEBSTRFILTER
-CFLAGS += -s -DASUS_NVRAM -DRPPPPOE -DBTN_SETUP -DWL500GP -DDHCP_PPTP -DQOS -DASUS_EXT -DGPQOS -DASUS_DDNS -DWSC -DGUEST_ACCOUNT -DWEB_REDIRECT -DWEBSTRFILTER -DUSB_SUPPORT -DU2EC -DDLM -DPRINTER_SUPPORT #-DUSBTPT
+CFLAGS += -s -DASUS_NVRAM -DRPPPPOE -DBTN_SETUP -DWL500GP -DDHCP_PPTP -DQOS -DASUS_EXT -DGPQOS -DASUS_DDNS -DWSC -DGUEST_ACCOUNT -DWEB_REDIRECT -DWEBSTRFILTER -DUSB_SUPPORT -DU2EC -DDLM -DPRINTER_SUPPORT -DCONTENTFILTER# -DUSBTPT
 #CFLAGS += -I. -I$(SHDIR)/include -I$(ROOTDIR)/linux-2.6.21.x/include -I$(ROOTDIR)/linux-2.6.21.x/drivers/flash -I$(HTTPDIR)/ -I$(ROOTDIR)/linux-2.6.21.x/drivers/char -I$(ROOTDIR)/linux-2.6.21.x/drivers/net/raeth -I$(ROOTDIR)/linux-2.6.21.x/include/linux -I$(MTDDIR)
 CFLAGS += -I. -I$(SHDIR)/include -I$(ROOTDIR)/linux-2.6.21.x/include -I$(ROOTDIR)/linux-2.6.21.x/drivers/flash -I$(HTTPDIR)/ -I$(ROOTDIR)/linux-2.6.21.x/drivers/char -I$(ROOTDIR)/linux-2.6.21.x/drivers/net/raeth -I$(MTDDIR) -I$(ROOTDIR)/user/busybox/include -I$(SHDIR)
 
@@ -186,6 +185,7 @@ romfs:
 	cd $(INSTALLDIR)/sbin && ln -sf rc rtl8367m_LanPort_linkDown
 	cd $(INSTALLDIR)/sbin && ln -sf rc rtl8367m_AllPort_linkUp
 	cd $(INSTALLDIR)/sbin && ln -sf rc rtl8367m_AllPort_linkDown
+	cd $(INSTALLDIR)/sbin && ln -sf rc rtl8367m_Reset_Storm_Control
 	cd $(INSTALLDIR)/sbin && ln -sf rc print_num_of_connections
 	cd $(INSTALLDIR)/sbin && ln -sf rc print_wan_ip
 	cd $(INSTALLDIR)/sbin && ln -sf rc usbled
@@ -195,4 +195,7 @@ romfs:
 	cd $(INSTALLDIR)/sbin && ln -sf rc refresh_ntpc
 	cd $(INSTALLDIR)/sbin && ln -sf rc phyState
 	cd $(INSTALLDIR)/sbin && ln -sf rc ATE_Get_WanLanStatus
+	cd $(INSTALLDIR)/sbin && ln -sf rc ATE_Get_FwReadyStatus
+	cd $(INSTALLDIR)/sbin && ln -sf rc run_telnetd
+	cd $(INSTALLDIR)/sbin && ln -sf rc umount_dev_all
 

@@ -29,6 +29,15 @@ span{
 <% wanlink(); %>
 
 var auth_mode = '<% nvram_get_x("", "wl_auth_mode"); %>';
+var wep_x = '<% nvram_get_x("", "wl_wep_x"); %>';
+var wpa_mode = '<% nvram_get_x("", "wl_wpa_mode"); %>';
+var wl_crypto = '<% nvram_get_x("", "wl_crypto"); %>';
+
+var auth_mode2 = '<% nvram_get_x("", "rt_auth_mode"); %>';
+var wep_x2 = '<% nvram_get_x("", "rt_wep_x"); %>';
+var wpa_mode2 = '<% nvram_get_x("", "rt_wpa_mode"); %>';
+var rt_crypto = '<% nvram_get_x("", "rt_crypto"); %>';
+
 var reIP = '<% nvram_get_x("", "lan_ipaddr_t"); %>';
 
 function QKfinish_load_body(){
@@ -41,23 +50,33 @@ function QKfinish_load_body(){
 	$("#ssid_5")[0].innerHTML = decodeURIComponent(document.form.wl_ssid2.value);
 	$("#security_item2")[0].innerHTML = "<#QIS_finish_wireless_item2#>";
 	$("#security_item5")[0].innerHTML = "<#QIS_finish_wireless_item2#>";
-	if(auth_mode == "open"){
+	
+	if(auth_mode == "open" && wep_x == "0" && auth_mode2 == "open" && wep_x2 == "0"){
 		$("#security2")[0].innerHTML = "Open System";
 		$("#security5")[0].innerHTML = "Open System";
 		$("#key2_block")[0].style.display = "none";
 		$("#key5_block")[0].style.display = "none";
 	}
-	else if(auth_mode == "psk"){
-		$("#security2")[0].innerHTML = "WPA-AES+TKIP";
-		$("#security5")[0].innerHTML = "WPA-AES+TKIP";
+	else if(auth_mode == "psk" && wpa_mode == "0" && wl_crypto == "tkip+aes" && auth_mode2 == "psk" && wpa_mode2 == "0" && rt_crypto == "tkip+aes"){
+		$("#security2")[0].innerHTML = "WPA-Auto-Personal - AES + TKIP";
+		$("#security5")[0].innerHTML = "WPA-Auto-Personal - AES + TKIP";
 		$("#key2_item")[0].innerHTML = "<#QIS_finish_wireless_item3#>";
 		$("#key5_item")[0].innerHTML = "<#QIS_finish_wireless_item3#>";
 		$("#key2")[0].innerHTML = decodeURIComponent(document.form.rt_wpa_psk.value);
 		$("#key5")[0].innerHTML = decodeURIComponent(document.form.wl_wpa_psk.value);
 	}
+	else{
+		$("#title_item")[0].innerHTML = "<#QKSet_finish_desc#>";
+		$("#ssid2_block")[0].style.display = "none";
+		$("#key2_block")[0].style.display = "none";
+		$("#security2_block")[0].style.display = "none";
+		$("#ssid5_block")[0].style.display = "none";
+		$("#key5_block")[0].style.display = "none";
+		$("#security5_block")[0].style.display = "none";
+	}
 	
 	// Connection Status
-	$("#mac_item")[0].innerHTML = "MAC";
+	$("#mac_item")[0].innerHTML = "Router's MAC";
 	$("#mac")[0].innerHTML = '<% nvram_get_x("", "et0macaddr"); %>';
 	$("#wantype_item")[0].innerHTML = "WAN type";
 	$("#wantype")[0].innerHTML = wanlink_type();
@@ -78,7 +97,10 @@ function gotoASUS(){
 }
 
 function gotoAdvSetting(){
-	parent.location = "/Advanced_Wireless2g_Content.asp";
+	if($("#ssid2_block")[0].style.display == "none")
+		parent.location = "/as.asp";
+	else
+		parent.location = "/Advanced_Wireless2g_Content.asp";
 }
 
 function addBookmarkForBrowser(sTitle) {
@@ -100,48 +122,47 @@ function addBookmarkForBrowser(sTitle) {
 <body onLoad="QKfinish_load_body();" >
 <div class="QISmain">
 <div class="description_down" id="title_item"><#WPS_state_configured_success#></div>
-<br/><br/>
-<table id="tblsetting_1" class="QISform2" width="400" border=0 cellpadding="5" cellspacing="0">
+<table id="tblsetting_1" class="QISform2" width="400" border=0 cellpadding="4" cellspacing="0">
 	<tr>
-		<td>&nbsp&nbsp&nbsp<span id="ssid_2_item"></span>: <span id="ssid_2"></span></td>
-    <td><span id="mac_item"></span>: <span id="mac"></span></td>
+    <td width="50%" style="padding-left:15px"><span id="mac_item"></span>: <span id="mac"></span></td>
+		<td><div id="ssid2_block"><span id="ssid_2_item"></span>: <span id="ssid_2"></span></div></td>
 	</tr>
 	<tr>
-		<td><div id="key2_block">&nbsp&nbsp&nbsp<span id="key2_item"></span>: <span id="key2"></span></div></td>
-    <td><span id="wantype_item"></span>: <span id="wantype"></span></td>
+    <td width="50%" style="padding-left:15px"><span id="wantype_item"></span>: <span id="wantype"></span></td>
+		<td><div id="key2_block"><span id="key2_item"></span>: <span id="key2"></span></div></td>
 	</tr>
 	<tr>
-		<td>&nbsp&nbsp&nbsp<span id="security_item2"></span>: <span id="security2"></span></td>
-    <td><span id="wanip_item"></span>: <span id="wanip"></span></td>
+    <td width="50%" style="padding-left:15px"><span id="wanip_item"></span>: <span id="wanip"></span></td>
+		<td><div id="security2_block"><span id="security_item2"></span>: <span id="security2"></span></div></td>
 	</tr>
 	<tr>
-		<td>&nbsp&nbsp&nbsp<span id="ssid_5_item"></span>: <span id="ssid_5"></span></td>
-		<td><span id="lanip_item"></span>: <span id="lanip"></span></td>
+		<td width="50%" style="padding-left:15px"><span id="lanip_item"></span>: <span id="lanip"></span></td>
+		<td><div id="ssid5_block"><span id="ssid_5_item"></span>: <span id="ssid_5"></span></div></td>
 	</tr>
 	<tr>
-		<td><div id="key5_block">&nbsp&nbsp&nbsp<span id="key5_item"></span>: <span id="key5"></span></div></td>
-		<td><span id="account_item"></span>: <span id="account"></span></td>
+		<td width="50%" style="padding-left:15px"><span id="account_item"></span>: <span id="account"></span></td>
+		<td><div id="key5_block"><span id="key5_item"></span>: <span id="key5"></span></div></td>
 	</tr>
 	<tr>
-		<td>&nbsp&nbsp&nbsp<span id="security_item5"></span>: <span id="security5"></span></td>
-		<td><span id="password_item"></span>: <span id="password"></span></td>
+		<td width="50%" style="padding-left:15px"><span id="password_item"></span>: <span id="password"></span></td>
+		<td><div id="security5_block"><span id="security_item5"></span>: <span id="security5"></span></div></td>
 	</tr>
 </table>
 <table class="black_line" cellpadding="0" cellspacing="0">
 	<tr><td></td></tr>
 </table>
 
-<table class="QISform" width="400" border=0 cellpadding="5" cellspacing="0">
+<table class="QISform" width="400" border=0 cellpadding="0" cellspacing="0" style="font-size:12px;">
 	<tr>
 		<td>
 			<ol>
-				<li>
+				<li style="margin-top:7px;">
 					<a href="javascript:gotoASUS();"><#QKSet_finish_moveto1#></a>
 				</li>
-				<li>
+				<li style="margin-top:7px;">
 					<a href="javascript:gotoAdvSetting();"><#QKSet_finish_moveto7#></a>
 				</li>
-				<li>
+				<li style="margin-top:7px;">
 					<a href="javascript:addBookmarkForBrowser('ASUS <#Web_Title#>');"><#Browser_action_addfavorite#></a>
 				</li>
 			</ol>

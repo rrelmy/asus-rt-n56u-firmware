@@ -56,7 +56,7 @@ static char *build_alias(char *alias, const char *device_name)
 void
 tmp_log(char *buf)
 {
-	int fd;
+	FILE *fd;
 	fd = fopen("/tmp/mdev02", "a");
 	if(fd > 0)
 	{

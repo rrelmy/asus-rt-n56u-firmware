@@ -242,14 +242,8 @@ int
 start_dhcpd(void)
 {
 	FILE *fp;
-//	char *dhcpd_argv[] = {"/usr/sbin/udhcpd", "/tmp/udhcpd.conf", NULL, NULL};
 	char *slease = "/tmp/udhcpd-br0.sleases";
-//	char dhcpd_cmd[64];
-//	pid_t pid;
 	int dns_count = 0;
-
-	//if (nvram_match("router_disable", "1") || nvram_invmatch("lan1_proto", "dhcp"))
-	//	return 0;
 
 	if (	nvram_match("sw_mode_ex", "3") ||
 		((nvram_match("sw_mode_ex", "1") || nvram_match("sw_mode_ex", "4")) && nvram_invmatch("lan_proto", "dhcp")))
@@ -259,7 +253,6 @@ start_dhcpd(void)
 	}
 	else
 		fprintf(stderr, "starting udhcpd...\n");
-
 
 	dprintf("%s %s %s %s\n",
 		nvram_safe_get("lan_ifname"),
@@ -321,7 +314,6 @@ start_dhcpd(void)
 	}
 	// dns patch check 0524 end
 
-	//fprintf(fp, "option lease %s\n", nvram_safe_get("lan_lease"));
 	fprintf(fp, "option lease %s\n", nvram_safe_get("dhcp_lease"));
 
 	if (nvram_invmatch("dhcp_wins_x",""))		
@@ -330,27 +322,16 @@ start_dhcpd(void)
 		fprintf(fp, "option domain %s\n", nvram_safe_get("lan_domain"));
 	fclose(fp);
 
-//	memset(dhcpd_cmd, 0, sizeof(dhcpd_cmd));
-
 	if (nvram_match("dhcp_static_x","1"))
 	{	
 		write_static_leases(slease);
-//		dhcpd_argv[2] = slease;
-//		sprintf(dhcpd_cmd, "/usr/sbin/udhcpd /tmp/udhcpd.conf /tmp/udhcpd-br0.sleases");
 		doSystem("/usr/sbin/udhcpd /tmp/udhcpd.conf /tmp/udhcpd-br0.sleases");
 	}
 	else
 	{
-//		dhcpd_argv[2] = NULL;
-//		sprintf(dhcpd_cmd, "/usr/sbin/udhcpd /tmp/udhcpd.conf");
 		doSystem("/usr/sbin/udhcpd /tmp/udhcpd.conf");
 	}
 
-//	system(dhcpd_cmd);
-
-	//_eval(dhcpd_argv, NULL, 0, &pid);
-
-	//dprintf("done\n");
 	return 0;
 }
 
@@ -359,7 +340,7 @@ stop_dhcpd(void)
 {
 	if (pids("udhcpd"))
 	{
-//		kill_pidfile_s("/var/run/udhcpd.pid", SIGUSR1);
+		kill_pidfile_s("/var/run/udhcpd.pid", SIGUSR1);
 		kill_pidfile_s("/var/run/udhcpd.pid", SIGTERM);
 	}
 }
@@ -610,7 +591,7 @@ start_ddns(void)
 	if (!(wan_ip = nvram_safe_get("wan_ipaddr_t")) || nvram_match("wan_ipaddr_t", "")) return -1;
 
 	if (	nvram_match("ddns_ipaddr", wan_ip) &&
-		(nvram_match("ddns_server_x_old", "") ||
+		(/*nvram_match("ddns_server_x_old", "") ||*/
 		!strcmp(nvram_safe_get("ddns_server_x"), nvram_safe_get("ddns_server_x_old")))
 	)
 	{
@@ -619,18 +600,13 @@ start_ddns(void)
 	}
 
 	if (	(inet_addr(wan_ip) == inet_addr(nvram_safe_get("ddns_ipaddr"))) &&
-		(nvram_match("ddns_server_x_old", "") ||
+		(/*nvram_match("ddns_server_x_old", "") ||*/
 		!strcmp(nvram_safe_get("ddns_server_x"), nvram_safe_get("ddns_server_x_old")))
 	)
 	{
-		logmessage("ddns", "IP address has not changed since the last update");
+		logmessage("ddns", "IP address has not changed since the last update.");
 		return -1;
 	}
-
-	if (	!nvram_match("ddns_server_x_old", "") &&
-		strcmp(nvram_safe_get("ddns_server_x"), nvram_safe_get("ddns_server_x_old"))
-	)
-		system("rm -f /tmp/ddns.cache");
 
 	// TODO : Check /tmp/ddns.cache to see current IP in DDNS
 	// update when,
@@ -640,6 +616,14 @@ start_ddns(void)
 	// * nvram ddns_cache, the same with /tmp/ddns.cache
 
 
+        if (    !nvram_match("ddns_server_x_old", "") &&
+                strcmp(nvram_safe_get("ddns_server_x"), nvram_safe_get("ddns_server_x_old"))
+        )
+        {
+                logmessage("ddns", "clear ddns cache file for server setting change");
+                unlink("/tmp/ddns.cache");
+        }
+	else
 	if (!(fp = fopen("/tmp/ddns.cache", "r")) && (ddns_cache = nvram_get("ddns_cache")))
 	{
 		if ((fp = fopen("/tmp/ddns.cache", "w+")))
@@ -758,8 +742,8 @@ stop_klogd()
 int 
 start_syslogd()
 {
-	//if (nvram_match("router_disable", "1"))
-	//	return 0;
+//	if (nvram_match("router_disable", "1"))
+//		return 0;
 
 	pid_t pid;
 
@@ -840,7 +824,7 @@ stop_misc(void)
 	if (pids("watchdog"))
 		system("killall watchdog");
 	if (pids("ntp"))
-		system("killall ntp");
+		system("killall -SIGTERM ntp");
 	if (pids("ntpclient"))
 		system("killall ntpclient");
 	if (pids("pspfix"))
@@ -870,7 +854,7 @@ stop_misc_no_watchdog(void)
 	if (pids("infosvr"))
 		system("killall infosvr");
 	if (pids("ntp"))
-		system("killall ntp");
+		system("killall -SIGTERM ntp");
 	if (pids("ntpclient"))
 		system("killall ntpclient");
 	if (pids("udhcpc"))
@@ -909,6 +893,8 @@ start_u2ec()
 	{
 		unlink("/var/run/u2ec.pid");
 		system("u2ec &");
+
+		nvram_set("apps_u2ec_ex", "1");
 	}
 #endif
 }
@@ -1459,9 +1445,9 @@ int swap_write_count = 0;
 int 
 create_swap_file(char *swap_path)
 {
-	unsigned int total_swap_size = 1024*1024*64;
-	unsigned int unit_size = 1024*2;
-	unsigned int wr_num = 8;
+	unsigned int total_swap_size = 1024*1024*56;
+	unsigned int unit_size = 1024*256;
+	unsigned int wr_num = 7;
 	unsigned int truncate_run = total_swap_size / unit_size / wr_num;
 	char test_path[128];
 	int result = 0, i;
@@ -1513,7 +1499,7 @@ create_swap_file(char *swap_path)
 		sprintf(test_path, "swapon %s", swap_path);
 		system(test_path);
 
-		logmessage("USB storage", "64MB swap file is added");
+		logmessage("USB storage", "56MB swap file is added");
 //		nvram_set("swap_on", "1");
 	}	
 	else
@@ -1647,11 +1633,19 @@ hotplug_usb_mass(char *product)
 
 	/* run ftp latter*/
 //	doSystem("/sbin/test_of_var_files_in_mount_path %s", usb_mass_first_path);	// move to busybox mdev.c
-	run_ftpsamba();
+
+#ifdef CONFIG_USER_MTDAAPD
+	if (nvram_match("wan_route_x", "IP_Routed") && !pids("mDNSResponder"))
+		doSystem("mDNSResponder %s thehost %s _daap._tcp. 3689 &", nvram_safe_get("lan_ipaddr_t"), nvram_safe_get("computer_name"));
+#endif
 
 	if (nvram_match("asus_mfg", "0"))
 		run_dms();
 
+	run_ftpsamba();
+#ifdef CONFIG_USER_MTDAAPD
+	start_mt_daapd();
+#endif
 	/* chk disk free */
 #ifndef NO_DM
 	apps_disk_free=check_disk_free_apps(tmp, apps_comp);
@@ -3720,6 +3714,19 @@ hotplug_usb_test()
 	return 0;
 }
 
+int is_usb_storage_loaded()
+{
+	DIR *dir_to_open = NULL;
+        
+	dir_to_open = opendir("/sys/module/usb_storage");
+	if (dir_to_open)
+	{
+		closedir(dir_to_open);
+		return 1;
+	}
+		return 0;
+}
+
 extern char usb_path1[];
 extern char usb_path1_old[];
 extern char usb_path2[];
@@ -3919,9 +3926,18 @@ hotplug_usb()
 			remove_usb_mass("1");
 			remove_usb_mass("2");
 
-			system("rmmod usb-storage");
-			sleep(1);
-			system("insmod -q usb-storage");
+			int try_count = 0;
+			while ((is_usb_storage_loaded()) && (try_count++ < 5))
+			{
+				usleep(500 * 1000);
+				system("rmmod usb-storage");
+			}
+
+			if (!is_usb_storage_loaded())
+			{
+				usleep(500 * 1000);
+				system("insmod -q usb-storage");
+			}
 
 			if (swap_check())
 			{
@@ -3992,6 +4008,8 @@ stop_service_main(int type)
 		stop_ots();
 		stop_networkmap();
 		stop_telnetd();
+		if (pids("igmpproxy"))
+			system("killall igmpproxy");
 	}
 }
 
@@ -4006,7 +4024,7 @@ int service_handle(void)
 	FILE *fp;
 	char pid_buf[32];
 
-	service = nvram_safe_get("rc_service");
+	service = nvram_get("rc_service");
 
 	if (!service)
 	{
@@ -4157,20 +4175,24 @@ int service_handle(void)
 		nvram_set("ddns_wildcard_x", nvram_safe_get("bak_ddns_wildcard_x"));
 		nvram_commit_safe();
 	}
-	else if (strstr(service,"restart_upnp") && !nvram_match("router_disable", "1"))
+	else if (strstr(service,"restart_upnp") && nvram_match("router_disable", "0"))
 	{
 //		fprintf(stderr, "[rc] ntp restart upnp...\n");
 
 		if (nvram_match("upnp_enable_ex", "1") && nvram_match("ntp_restart_upnp", "0"))
 		{
-			if (nvram_match("ntp_ready", "1"))
+			if (!nvram_match("ntp_ready", "0"))
 				nvram_set("ntp_restart_upnp", "1");
+
+			if (	nvram_match("ntp_ready", "1") ||
+				(nvram_match("ntp_ready", "2") && nvram_match("upnp_started", "0")) )
+			{
+				stop_upnp();
+				start_upnp();
+			}
 
 			if (nvram_match("upnp_started", "0"))
 				nvram_set("upnp_started", "1");
-
-			stop_upnp();
-			start_upnp();
 		}
 	}
 #endif
@@ -4394,10 +4416,12 @@ start_samba(void)
 
 //	nvram_set("samba_running", "1");
 
-//	system("/usr/local/samba/sbin/smbd -D -s /tmp/samba/lib/smb.conf");
-//	system("/usr/local/samba/sbin/nmbd -D -s /tmp/samba/lib/smb.conf");
-	system("smbd -D -s /etc/smb.conf");
-	system("nmbd -D -s /etc/smb.conf");
+//	system("/sbin/nmbd -D -s /etc/smb.conf");
+//	system("/sbin/smbd -D -s /etc/smb.conf");
+        eval("/sbin/nmbd", "-D", "-s", "/etc/smb.conf");
+        eval("/sbin/smbd", "-D", "-s", "/etc/smb.conf");
+
+	nvram_set("apps_smb_ex", "1");
 
 	logmessage("Samba Server", "daemon is started");
 
@@ -4880,9 +4904,6 @@ run_dms()
 {
 	fprintf(stderr, "starting media server\n");
 	start_dms();
-#ifdef CONFIG_USER_MTDAAPD
-	start_mt_daapd();
-#endif
 }
 
 #if 0
@@ -4982,6 +5003,8 @@ start_dms()
 //	system("ushare -D");
 	system("ushare 1>/dev/null 2>&1 &");
 
+	nvram_set("apps_ushare_ex", "1");
+
 	if (pids("ushare"))
 	{
 //		nvram_set("dms_running", "1");
@@ -5029,8 +5052,12 @@ start_mt_daapd()
 
 	stop_mt_daapd();
 	write_mt_daapd_conf();
-	doSystem("mDNSResponder %s thehost \"%s\" _daap._tcp. 3689 &", nvram_safe_get("lan_ipaddr_t"), nvram_safe_get("computer_name"));
-	system("mt-daapd -m");
+	if (nvram_match("wan_route_x", "IP_Routed"))
+		system("mt-daapd -m");
+	else
+		system("mt-daapd");
+
+	nvram_set("apps_itunes_ex", "1");
 
 	if (pids("mt-daapd"))
 	{
@@ -5045,7 +5072,7 @@ start_mt_daapd()
 void
 stop_mt_daapd()
 {
-	if (!pids("mDNSResponder") && !pids("mt-daapd"))
+	if (!pids("mt-daapd"))
 		return;
 
 	if (pids("mDNSResponder"))
@@ -5066,8 +5093,12 @@ stop_dms()
 	
 	fprintf(stderr, "Stoping Media Server\n");
 	
-	if (pids("ushare"))
-		system("killall -SIGKILL ushare");
+//	if (pids("ushare"))
+//		system("killall -SIGKILL ushare");
+	kill_pidfile_s("/var/run/ushare.pid", SIGTERM);
+	usleep(100 * 1000);
+	kill_pidfile_s("/var/run/ushare.pid", SIGKILL);
+	remove("/var/run/ushare.pid");
 	
 	logmessage("Media Server", "daemon is stoped");
 	
@@ -5482,6 +5513,7 @@ umount_dev(char *sd_dev)	// umount sd_dev
 	{
 		if (sscanf(line, "%s %s %s %s %d %d", devname, mpname, system_type, mount_mode, &dummy1, &dummy2) != 6)
 			continue;
+
 		if (!strncmp(devname, "/dev/sd", 7))
 		{
 			if (!strcmp(devname+5, sd_dev))
@@ -5505,6 +5537,53 @@ umount_dev(char *sd_dev)	// umount sd_dev
 				if (!strcmp(mpname, nvram_safe_get("usb_mnt_first_path")))
 					nvram_set("usb_mnt_first_path", "");
 				break;
+			}
+		}
+	}
+
+	if (procpt)
+		fclose(procpt);
+}
+
+void
+umount_dev_all(char *sd_dev)	// umount sd_dev
+{
+	FILE *procpt;
+	char line[256], devname[32], mpname[32], system_type[10], mount_mode[96];
+	int dummy1, dummy2;
+	char swap_file_path[32], cmd[32];
+
+	if (!sd_dev)
+		return;
+
+	if (procpt = fopen_or_warn("/proc/mounts", "r"))
+	while (fgets(line, sizeof(line), procpt))
+	{
+		if (sscanf(line, "%s %s %s %s %d %d", devname, mpname, system_type, mount_mode, &dummy1, &dummy2) != 6)
+			continue;
+
+		if (!strncmp(devname, "/dev/sd", 7))
+		{
+			if (!strncmp(devname+5, sd_dev, 3))
+			{
+				memset(swap_file_path, 0x0, sizeof(swap_file_path));
+				sprintf(swap_file_path, "%s/.swap", mpname);
+				
+				if (check_if_file_exist(swap_file_path))
+				{
+					sprintf(cmd, "swapoff %s", swap_file_path);
+					system(cmd);
+//					sleep(1);
+					unlink(swap_file_path);
+					unlink("/tmp/harddisk/part0");
+				}
+
+				fprintf(stderr, "umounting %s ..\n", mpname);
+				umount2(mpname, MS_NOEXEC | MS_NOSUID | 0x00000002);    // 0x00000002: MNT_DETACH
+				rmdir(mpname);
+
+				if (!strcmp(mpname, nvram_safe_get("usb_mnt_first_path")))
+					nvram_set("usb_mnt_first_path", "");
 			}
 		}
 	}
@@ -5552,15 +5631,22 @@ umount_usb_path(char *port)
 		return;
 
 	char nvram_name[20], sdx1[5];
-	int index, i, len;
+//	int index;
+	int i, len;
+
+//	sprintf(nvram_name, "usb_path%d", atoi(port));
+
+	if (!strcmp(nvram_name, "printer"))
+		return;
 
 	fprintf(stderr, "umount usb path for port %d\n", atoi(port));
 	
-	sprintf(nvram_name, "usb_path%d_index", atoi(port));
-	index = atoi(nvram_safe_get(nvram_name));
-	fprintf(stderr, "usb path index %d\n", index);
+//	sprintf(nvram_name, "usb_path%d_index", atoi(port));
+//	index = atoi(nvram_safe_get(nvram_name));
+//	fprintf(stderr, "usb path index %d\n", index);
 
-	for (i = 0; i < index + 1 ; i++)
+//	for (i = 0; i < index + 1 ; i++)
+	for (i = 0; i < 16 ; i++)
 	{
 		sprintf(nvram_name, "usb_path%d_fs_path%d", atoi(port), i);
 		if ((len = strlen(nvram_safe_get(nvram_name))))
@@ -5580,11 +5666,12 @@ umount_usb_path(char *port)
 		}
 	}
 
-	sprintf(nvram_name, "usb_path%d_index", atoi(port));
-	nvram_set(nvram_name, "0");
-	sprintf(nvram_name, "usb_path%d", atoi(port));
-	nvram_set(nvram_name, "");
+//	sprintf(nvram_name, "usb_path%d_index", atoi(port));
+//	nvram_set(nvram_name, "0");
+//	sprintf(nvram_name, "usb_path%d", atoi(port));
+//	nvram_set(nvram_name, "");
 	sprintf(nvram_name, "usb_path%d_sddev", atoi(port));
+	umount_dev_all(nvram_name);
 	nvram_set(nvram_name, "");
 	nvram_set("usb_path", "");
 }
@@ -5729,7 +5816,7 @@ count_sddev_partition()
 void
 tmp_log(char *buf)
 {
-	int fd;
+	FILE* fd;
 	fd = fopen("/tmp/mdev02", "a");
 	if(fd > 0)
 	{
@@ -5791,28 +5878,28 @@ void usb_path_nvram(char *action, char *env_path)
 
 			sprintf(nvram_name, "usb_path%d_fs_path0", usb_path);
 			nvram_set(nvram_name, &env_path[7]);
-			sprintf(nvram_name, "usb_path%d_index", usb_path);
-			nvram_set(nvram_name, "0");
+//			sprintf(nvram_name, "usb_path%d_index", usb_path);
+//			nvram_set(nvram_name, "0");
 			sprintf(nvram_name, "usb_path%d", usb_path);
 			nvram_set(nvram_name, "storage");
 			sprintf(nvram_name, "usb_path%d_sddev", usb_path);
 			nvram_set(nvram_name, &env_path[7]);
-//			sprintf(nvram_name, "usb_path%d_add", usb_path);
-//			nvram_set(nvram_name, "1");
+			sprintf(nvram_name, "usb_path%d_add", usb_path);
+			nvram_set(nvram_name, "1");
 		}
 		else if (env_path[14] == '1')				// sda1, sdb1, sdc1...
 		{
 			sprintf(nvram_name, "usb_path%d_fs_path0", usb_path);
 			nvram_set(nvram_name, &env_path[11]);
-			sprintf(nvram_name, "usb_path%d_index", usb_path);
-			nvram_set(nvram_name, "0");
+//			sprintf(nvram_name, "usb_path%d_index", usb_path);
+//			nvram_set(nvram_name, "0");
 		}
 		else if (check_dev_sb_block_count(&env_path[11]))	// sda2, sdb2, sdc2...
 		{
 			sprintf(nvram_name, "usb_path%d_fs_path%c", usb_path, env_path[14] - 1);
 			nvram_set(nvram_name, &env_path[11]);
-			sprintf(nvram_name, "usb_path%d_index", usb_path);
-			nvram_set(nvram_name, &env_path[14]);
+//			sprintf(nvram_name, "usb_path%d_index", usb_path);
+//			nvram_set(nvram_name, &env_path[14]);
 		}
 	}
 /*
@@ -5839,3 +5926,4 @@ void usb_path_nvram(char *action, char *env_path)
 	}
 */
 }
+

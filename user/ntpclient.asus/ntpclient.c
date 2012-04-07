@@ -392,12 +392,14 @@ int primary_loop(int usd, int num_probes, int cycle_time)
 		}
 		if (probes_sent >= num_probes && num_probes != 0) break;
 	}
+
 	nvram_set("ntp_ready", "2");
-	if (!nvram_match("router_disable", "1"))
+	if (!nvram_match("router_disable", "1") && nvram_match("upnp_started", "0"))
 	{
 		nvram_set("rc_service", "restart_upnp");
 		kill(1, SIGUSR1);
 	}
+
 	return -1;
 }
 

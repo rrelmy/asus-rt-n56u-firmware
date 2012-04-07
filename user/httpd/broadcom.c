@@ -556,6 +556,7 @@ ej_nat_table(int eid, webs_t wp, int argc, char_t **argv)
 		ret += websWrite(wp, "Software QoS: %s\n", nvram_match("qos_enable", "1") ? "Enabled": "Disabled");
 	}
 #if 0
+#if 0
 	FILE *fp = fopen("/proc/sys/net/netfilter/nf_conntrack_count", "r");
 	char buf[16];
 	long nf_conntrack_count;
@@ -587,6 +588,7 @@ ej_nat_table(int eid, webs_t wp, int argc, char_t **argv)
 
 //	fprintf(stderr, "connection count: %ld\n", num_of_entries);
 	ret += websWrite(wp, "Connection count: %ld\n\n", num_of_entries);
+#endif
 #endif
 	ret += websWrite(wp, "Destination     Proto.  Port Range  Redirect to\n");
 
@@ -933,6 +935,107 @@ wl_ioctl(const char *ifname, int cmd, struct iwreq *pwrq)
 	return ret;
 }
 
+char* GetBW(int BW)
+{
+	switch(BW)
+	{
+		case BW_10:
+			return "10M";
+
+		case BW_20:
+			return "20M";
+
+		case BW_40:
+			return "40M";
+
+		default:
+			return "N/A";
+	}
+}
+
+char* GetPhyMode(int Mode)
+{
+	switch(Mode)
+	{
+		case MODE_CCK:
+			return "CCK";
+
+		case MODE_OFDM:
+			return "OFDM";
+		case MODE_HTMIX:
+			return "HTMIX";
+
+		case MODE_HTGREENFIELD:
+			return "GREEN";
+		default:
+			return "N/A";
+	}
+}
+
+int MCSMappingRateTable[] =
+	{2,  4,   11,  22, // CCK
+	12, 18,   24,  36, 48, 72, 96, 108, // OFDM
+	13, 26,   39,  52,  78, 104, 117, 130, 26,  52,  78, 104, 156, 208, 234, 260, // 20MHz, 800ns GI, MCS: 0 ~ 15
+	39, 78,  117, 156, 234, 312, 351, 390,										  // 20MHz, 800ns GI, MCS: 16 ~ 23
+	27, 54,   81, 108, 162, 216, 243, 270, 54, 108, 162, 216, 324, 432, 486, 540, // 40MHz, 800ns GI, MCS: 0 ~ 15
+	81, 162, 243, 324, 486, 648, 729, 810,										  // 40MHz, 800ns GI, MCS: 16 ~ 23
+	14, 29,   43,  57,  87, 115, 130, 144, 29, 59,   87, 115, 173, 230, 260, 288, // 20MHz, 400ns GI, MCS: 0 ~ 15
+	43, 87,  130, 173, 260, 317, 390, 433,										  // 20MHz, 400ns GI, MCS: 16 ~ 23
+	30, 60,   90, 120, 180, 240, 270, 300, 60, 120, 180, 240, 360, 480, 540, 600, // 40MHz, 400ns GI, MCS: 0 ~ 15
+	90, 180, 270, 360, 540, 720, 810, 900};
+
+int
+getRate(MACHTTRANSMIT_SETTING HTSetting)
+{
+	int rate_count = sizeof(MCSMappingRateTable)/sizeof(int);
+	int rate_index = 0;  
+	int value = 0;
+
+    if (HTSetting.field.MODE >= MODE_HTMIX)
+    {
+    	rate_index = 12 + ((unsigned char)HTSetting.field.BW *24) + ((unsigned char)HTSetting.field.ShortGI *48) + ((unsigned char)HTSetting.field.MCS);
+    }
+    else 
+    if (HTSetting.field.MODE == MODE_OFDM)                
+    	rate_index = (unsigned char)(HTSetting.field.MCS) + 4;
+    else if (HTSetting.field.MODE == MODE_CCK)   
+    	rate_index = (unsigned char)(HTSetting.field.MCS);
+
+    if (rate_index < 0)
+        rate_index = 0;
+    
+    if (rate_index > rate_count)
+        rate_index = rate_count;
+
+	return (MCSMappingRateTable[rate_index] * 5)/10;
+}
+
+int
+getRate_2g(MACHTTRANSMIT_SETTING_2G HTSetting)
+{
+	int rate_count = sizeof(MCSMappingRateTable)/sizeof(int);
+	int rate_index = 0;  
+	int value = 0;
+
+    if (HTSetting.field.MODE >= MODE_HTMIX)
+    {
+    	rate_index = 12 + ((unsigned char)HTSetting.field.BW *24) + ((unsigned char)HTSetting.field.ShortGI *48) + ((unsigned char)HTSetting.field.MCS);
+    }
+    else 
+    if (HTSetting.field.MODE == MODE_OFDM)                
+    	rate_index = (unsigned char)(HTSetting.field.MCS) + 4;
+    else if (HTSetting.field.MODE == MODE_CCK)   
+    	rate_index = (unsigned char)(HTSetting.field.MCS);
+
+    if (rate_index < 0)
+        rate_index = 0;
+    
+    if (rate_index > rate_count)
+        rate_index = rate_count;
+
+	return (MCSMappingRateTable[rate_index] * 5)/10;
+}
+
 int
 ej_wl_status(int eid, webs_t wp, int argc, char_t **argv)
 {	int ret = 0;
@@ -1068,19 +1171,39 @@ ej_wl_status(int eid, webs_t wp, int argc, char_t **argv)
 	RT_802_11_MAC_TABLE* mp=(RT_802_11_MAC_TABLE*)wrq3.u.data.pointer;
 	int i;
 
-//	ret+=websWrite(wp, "\n%-4s%-20s%-4s%-11s%-11s%-11s\n", "AID", "MAC_Address", "PSM", "LastTime", "RxByte", "TxByte");
+	ret+=websWrite(wp, "\nStations List			   \n");
+	ret+=websWrite(wp, "----------------------------------------\n");
+	ret+=websWrite(wp, "%-18s%-4s%-8s%-4s%-4s%-4s%-5s%-5s%-12s\n",
+			   "MAC", "PSM", "PhyMode", "BW", "MCS", "SGI", "STBC", "Rate", "Connect Time");
 
-	websWrite(wp, "\n\n");
-	websWrite(wp, "Stations List			   \n");
-	websWrite(wp, "----------------------------------------\n");
-
+	int hr, min, sec;
 	for (i=0;i<mp->Num;i++)
 	{
+#if 0
 		ret+=websWrite(wp, "%02X:%02X:%02X:%02X:%02X:%02X\n",
 				mp->Entry[i].Addr[0], mp->Entry[i].Addr[1],
 				mp->Entry[i].Addr[2], mp->Entry[i].Addr[3],
 				mp->Entry[i].Addr[4], mp->Entry[i].Addr[5]
 		);
+#else
+                hr = mp->Entry[i].ConnectedTime/3600;
+                min = (mp->Entry[i].ConnectedTime % 3600)/60;
+                sec = mp->Entry[i].ConnectedTime - hr*3600 - min*60;
+
+		ret+=websWrite(wp, "%02X:%02X:%02X:%02X:%02X:%02X %s %-7s %s %-03d %s %s  %-03dM %02d:%02d:%02d\n",
+				mp->Entry[i].Addr[0], mp->Entry[i].Addr[1],
+				mp->Entry[i].Addr[2], mp->Entry[i].Addr[3],
+				mp->Entry[i].Addr[4], mp->Entry[i].Addr[5],
+				mp->Entry[i].Psm ? "Yes" : "NO ",
+				GetPhyMode(mp->Entry[i].TxRate.field.MODE),
+				GetBW(mp->Entry[i].TxRate.field.BW),
+				mp->Entry[i].TxRate.field.MCS,
+				mp->Entry[i].TxRate.field.ShortGI ? "Yes" : "NO ",
+				mp->Entry[i].TxRate.field.STBC ? "Yes" : "NO ",
+				getRate(mp->Entry[i].TxRate),
+				hr, min, sec
+		);
+#endif
 	}
 
 	return ret;
@@ -1221,19 +1344,39 @@ ej_wl_status_2g(int eid, webs_t wp, int argc, char_t **argv)
 	RT_802_11_MAC_TABLE_2G* mp=(RT_802_11_MAC_TABLE_2G*)wrq3.u.data.pointer;
 	int i;
 
-//	ret+=websWrite(wp, "\n%-4s%-20s%-4s%-11s%-11s%-11s\n", "AID", "MAC_Address", "PSM", "LastTime", "RxByte", "TxByte");
+	ret+=websWrite(wp, "\nStations List			   \n");
+	ret+=websWrite(wp, "----------------------------------------\n");
+	ret+=websWrite(wp, "%-18s%-4s%-8s%-4s%-4s%-4s%-5s%-5s%-12s\n",
+			   "MAC", "PSM", "PhyMode", "BW", "MCS", "SGI", "STBC", "Rate", "Connect Time");
 
-	websWrite(wp, "\n\n");
-	websWrite(wp, "Stations List			   \n");
-	websWrite(wp, "----------------------------------------\n");
-
+	int hr, min, sec;
 	for (i=0;i<mp->Num;i++)
 	{
+#if 0
 		ret+=websWrite(wp, "%02X:%02X:%02X:%02X:%02X:%02X\n",
 				mp->Entry[i].Addr[0], mp->Entry[i].Addr[1],
 				mp->Entry[i].Addr[2], mp->Entry[i].Addr[3],
 				mp->Entry[i].Addr[4], mp->Entry[i].Addr[5]
 		);
+#else
+                hr = mp->Entry[i].ConnectedTime/3600;
+                min = (mp->Entry[i].ConnectedTime % 3600)/60;
+                sec = mp->Entry[i].ConnectedTime - hr*3600 - min*60;
+
+		ret+=websWrite(wp, "%02X:%02X:%02X:%02X:%02X:%02X %s %-7s %s %-03d %s %s  %-03dM %02d:%02d:%02d\n",
+				mp->Entry[i].Addr[0], mp->Entry[i].Addr[1],
+				mp->Entry[i].Addr[2], mp->Entry[i].Addr[3],
+				mp->Entry[i].Addr[4], mp->Entry[i].Addr[5],
+				mp->Entry[i].Psm ? "Yes" : "NO ",
+				GetPhyMode(mp->Entry[i].TxRate.field.MODE),
+				GetBW(mp->Entry[i].TxRate.field.BW),
+				mp->Entry[i].TxRate.field.MCS,
+				mp->Entry[i].TxRate.field.ShortGI ? "Yes" : "NO ",
+				mp->Entry[i].TxRate.field.STBC ? "Yes" : "NO ",
+				getRate_2g(mp->Entry[i].TxRate),
+				hr, min, sec
+		);
+#endif
 	}
 
 	return ret;

@@ -1,20 +1,4 @@
 /*
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License as
- * published by the Free Software Foundation; either version 2 of
- * the License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston,
- * MA 02111-1307 USA
- */
-/*
  * ppp_ahdlc.c - STREAMS module for doing PPP asynchronous HDLC.
  *
  * Re-written by Adi Masputra <adi.masputra@sun.com>, based on 
@@ -65,7 +49,7 @@
  * AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING
  * OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  *
- * $Id: ppp_ahdlc.c,v 1.3 2002/12/06 09:49:16 paulus Exp $
+ * $Id: ppp_ahdlc.c,v 1.5 2005/06/27 00:59:57 carlsonj Exp $
  */
 
 /*
@@ -74,6 +58,7 @@
 #include <sys/types.h>
 #include <sys/param.h>
 #include <sys/stream.h>
+#include <sys/stropts.h>
 #include <sys/errno.h>
 
 #ifdef SVR4
@@ -98,6 +83,14 @@
 #if defined(SOL2)
 #define USE_MUTEX
 #endif /* SOL2 */
+
+#ifdef USE_MUTEX
+#define	MUTEX_ENTER(x)	mutex_enter(x)
+#define	MUTEX_EXIT(x)	mutex_exit(x)
+#else
+#define	MUTEX_ENTER(x)
+#define	MUTEX_EXIT(x)
+#endif
 
 /*
  * intpointer_t and uintpointer_t are signed and unsigned integer types 
@@ -260,6 +253,7 @@ static u_int32_t paritytab[8] =
 MOD_OPEN(ahdlc_open)
 {
     ahdlc_state_t   *state;
+    mblk_t *mp;
 
     /*
      * Return if it's already opened
@@ -272,7 +266,7 @@ MOD_OPEN(ahdlc_open)
      * This can only be opened as a module
      */
     if (sflag != MODOPEN) {
-	return 0;
+	OPEN_ERROR(EINVAL);
     }
 
     state = (ahdlc_state_t *) ALLOC_NOSLEEP(sizeof(ahdlc_state_t));
@@ -285,7 +279,6 @@ MOD_OPEN(ahdlc_open)
 
 #if defined(USE_MUTEX)
     mutex_init(&state->lock, NULL, MUTEX_DEFAULT, NULL);
-    mutex_enter(&state->lock);
 #endif /* USE_MUTEX */
 
     state->xaccm[0] = ~0;	    /* escape 0x00 through 0x1f */
@@ -295,16 +288,18 @@ MOD_OPEN(ahdlc_open)
     state->flag_time = drv_usectohz(FLAG_TIME);
 #endif /* SOL2 */
 
-#if defined(USE_MUTEX)
-    mutex_exit(&state->lock);
-#endif /* USE_MUTEX */	
-
 #if defined(SUNOS4)
     ppp_ahdlc_count++;
 #endif /* SUNOS4 */
 
     qprocson(q);
-    
+
+    if ((mp = allocb(1, BPRI_HI)) != NULL) {
+	    mp->b_datap->db_type = M_FLUSH;
+	    *mp->b_wptr++ = FLUSHR;
+	    putnext(q, mp);
+    }
+
     return 0;
 }
 
@@ -324,17 +319,12 @@ MOD_CLOSE(ahdlc_close)
 	return 0;
     }
 
-#if defined(USE_MUTEX)
-    mutex_enter(&state->lock);
-#endif /* USE_MUTEX */
-
     if (state->rx_buf != 0) {
 	freemsg(state->rx_buf);
 	state->rx_buf = 0;
     }
 
 #if defined(USE_MUTEX)
-    mutex_exit(&state->lock);
     mutex_destroy(&state->lock);
 #endif /* USE_MUTEX */
 
@@ -394,16 +384,12 @@ ahdlc_wput(q, mp)
 		DPRINT1("ahdlc_wput/%d: PPPIO_XACCM b_cont = 0!\n", state->unit);
 		break;
 	    }
-#if defined(USE_MUTEX)
-	    mutex_enter(&state->lock);
-#endif /* USE_MUTEX */
+	    MUTEX_ENTER(&state->lock);
 	    bcopy((caddr_t)mp->b_cont->b_rptr, (caddr_t)state->xaccm,
 		  iop->ioc_count);
 	    state->xaccm[2] &= ~0x40000000;	/* don't escape 0x5e */
 	    state->xaccm[3] |= 0x60000000;	/* do escape 0x7d, 0x7e */
-#if defined(USE_MUTEX)
-	    mutex_exit(&state->lock);
-#endif /* USE_MUTEX */
+	    MUTEX_EXIT(&state->lock);
 	    iop->ioc_count = 0;
 	    error = 0;
 	    break;
@@ -415,14 +401,10 @@ ahdlc_wput(q, mp)
 		DPRINT1("ahdlc_wput/%d: PPPIO_RACCM b_cont = 0!\n", state->unit);
 		break;
 	    }
-#if defined(USE_MUTEX)
-	    mutex_enter(&state->lock);
-#endif /* USE_MUTEX */
+	    MUTEX_ENTER(&state->lock);
 	    bcopy((caddr_t)mp->b_cont->b_rptr, (caddr_t)&state->raccm,
 		  sizeof(u_int32_t));
-#if defined(USE_MUTEX)
-	    mutex_exit(&state->lock);
-#endif /* USE_MUTEX */
+	    MUTEX_EXIT(&state->lock);
 	    iop->ioc_count = 0;
 	    error = 0;
 	    break;
@@ -436,13 +418,9 @@ ahdlc_wput(q, mp)
 	    if (mp->b_cont != 0)
 		freemsg(mp->b_cont);
 	    mp->b_cont = np;
-#if defined(USE_MUTEX)
-	    mutex_enter(&state->lock);
-#endif /* USE_MUTEX */
+	    MUTEX_ENTER(&state->lock);
 	    *(int *)np->b_wptr = state->flags & RCV_FLAGS;
-#if defined(USE_MUTEX)
-	    mutex_exit(&state->lock);
-#endif /* USE_MUTEX */
+	    MUTEX_EXIT(&state->lock);
 	    np->b_wptr += sizeof(int);
 	    iop->ioc_count = sizeof(int);
 	    error = 0;
@@ -491,37 +469,25 @@ ahdlc_wput(q, mp)
     case M_CTL:
 	switch (*mp->b_rptr) {
 	case PPPCTL_MTU:
-#if defined(USE_MUTEX)
-	    mutex_enter(&state->lock);
-#endif /* USE_MUTEX */
+	    MUTEX_ENTER(&state->lock);
 	    state->mtu = ((unsigned short *)mp->b_rptr)[1];
-#if defined(USE_MUTEX)
-	    mutex_exit(&state->lock);
-#endif /* USE_MUTEX */
-	    freemsg(mp);
+	    MUTEX_EXIT(&state->lock);
 	    break;
 	case PPPCTL_MRU:
-#if defined(USE_MUTEX)
-	    mutex_enter(&state->lock);
-#endif /* USE_MUTEX */
+	    MUTEX_ENTER(&state->lock);
 	    state->mru = ((unsigned short *)mp->b_rptr)[1];
-#if defined(USE_MUTEX)
-	    mutex_exit(&state->lock);
-#endif /* USE_MUTEX */
-	    freemsg(mp);
+	    MUTEX_EXIT(&state->lock);
 	    break;
 	case PPPCTL_UNIT:
-#if defined(USE_MUTEX)
-	    mutex_enter(&state->lock);
-#endif /* USE_MUTEX */
+	    MUTEX_ENTER(&state->lock);
 	    state->unit = mp->b_rptr[1];
-#if defined(USE_MUTEX)
-	    mutex_exit(&state->lock);
-#endif /* USE_MUTEX */
+	    MUTEX_EXIT(&state->lock);
 	    break;
 	default:
 	    putnext(q, mp);
+	    return 0;
 	}
+	freemsg(mp);
 	break;
 
     default:
@@ -554,18 +520,14 @@ ahdlc_rput(q, mp)
 	break;
 
     case M_HANGUP:
-#if defined(USE_MUTEX)
-	mutex_enter(&state->lock);
-#endif /* USE_MUTEX */
+	MUTEX_ENTER(&state->lock);
 	if (state->rx_buf != 0) {
 	    /* XXX would like to send this up for debugging */
 	    freemsg(state->rx_buf);
 	    state->rx_buf = 0;
 	}
 	state->flags = IFLUSH;
-#if defined(USE_MUTEX)
-	mutex_exit(&state->lock);
-#endif /* USE_MUTEX */
+	MUTEX_EXIT(&state->lock);
 	putnext(q, mp);
 	break;
 
@@ -601,9 +563,7 @@ ahdlc_encode(q, mp)
     }
 
     state = (ahdlc_state_t *)q->q_ptr;
-#if defined(USE_MUTEX)
-    mutex_enter(&state->lock);
-#endif /* USE_MUTEX */
+    MUTEX_ENTER(&state->lock);
 
     /*
      * Allocate an output buffer large enough to handle a case where all
@@ -616,9 +576,7 @@ ahdlc_encode(q, mp)
     outmp = allocb(outmp_len, BPRI_MED);
     if (outmp == NULL) {
 	state->stats.ppp_oerrors++;
-#if defined(USE_MUTEX)
-	mutex_exit(&state->lock);
-#endif /* USE_MUTEX */
+	MUTEX_EXIT(&state->lock);
 	putctl1(RD(q)->q_next, M_CTL, PPPCTL_OERROR);
 	return;
     }
@@ -712,12 +670,9 @@ ahdlc_encode(q, mp)
     state->stats.ppp_obytes += msgdsize(outmp);
     state->stats.ppp_opackets++;
 
-#if defined(USE_MUTEX)
-    mutex_exit(&state->lock);
-#endif /* USE_MUTEX */
+    MUTEX_EXIT(&state->lock);
 
     putnext(q, outmp);
-    return;
 }
 
 /*
@@ -741,9 +696,7 @@ ahdlc_decode(q, mp)
 
     state = (ahdlc_state_t *) q->q_ptr;
 
-#if defined(USE_MUTEX)
-    mutex_enter(&state->lock);
-#endif /* USE_MUTEX */
+    MUTEX_ENTER(&state->lock);
 
     state->stats.ppp_ibytes += msgdsize(mp);
 
@@ -864,9 +817,7 @@ ahdlc_decode(q, mp)
 	}
     }
 
-#if defined(USE_MUTEX)
-    mutex_exit(&state->lock);
-#endif /* USE_MUTEX */
+    MUTEX_EXIT(&state->lock);
 }
 
 static int

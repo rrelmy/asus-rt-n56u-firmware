@@ -260,6 +260,20 @@ sock_read_write( IN SOCKINFO * info,
 
             byte_left = byte_left - num_written;
             bytes_sent += num_written;
+
+            if( byte_left > 0 ) {					// ASUS EXT
+                if( *timeoutSecs == 0 )
+                    retCode = select( sockfd + 1, &readSet, &writeSet, NULL, NULL );
+                else
+                    retCode = select( sockfd + 1, &readSet, &writeSet, NULL, &timeout );
+                if( retCode == 0 )
+                    return UPNP_E_TIMEDOUT;
+                if( retCode == -1 ) {
+                    if( errno == EINTR )
+                        continue;
+                    return UPNP_E_SOCKET_ERROR;
+                }
+            }
         }
 
         numBytes = bytes_sent;

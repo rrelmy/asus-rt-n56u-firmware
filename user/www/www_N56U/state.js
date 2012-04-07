@@ -112,16 +112,12 @@ function check_changed_status(flag){
 					showMapWANStatus(2);
 			else if(old_wan_ipaddr_t == "0.0.0.0")
 				showMapWANStatus(0);
-			/*else if(old_ifWANConnect == 1 && old_wan_link_str == "Connected")
-				showMapWANStatus(1);
-			else if(usb_path1 == "HSDPA" && wan0_ipaddr != "")
-				showMapWANStatus(1);*/
 			else
 				showMapWANStatus(0);
 		}
 		
-		// Dr. Surf
-		if(old_ifWANConnect == 0) // WAN port is not plugged.
+		// Dr. Surf -- stop crying.
+/*	if(old_ifWANConnect == 0) // WAN port is not plugged. 
 			parent.showDrSurf("1");
 		else if(old_qos_ready == 0)
 			parent.showDrSurf("40");
@@ -145,7 +141,7 @@ function check_changed_status(flag){
 			parent.showDrSurf("2_2");
 		else 
 			parent.showDrSurf("0_0"); // connection is ok.
-		
+*/		
 		enableCheckChangedStatus();
 		
 		return;
@@ -159,26 +155,38 @@ function check_changed_status(flag){
 			showMapWANStatus(2);
 		else if(new_wan_ipaddr_t == "0.0.0.0")
 			showMapWANStatus(0);
-		/*else if(new_ifWANConnect == 1 && new_wan_link_str == "Connected")
-			showMapWANStatus(1);
-		else if(usb_path1 == "HSDPA" && wan0_ipaddr != "")
-			showMapWANStatus(1);*/
 		else
 			showMapWANStatus(0);
 	}
 	
-	// Dr.Surf.
-	
+	// Dr.Surf.	
 	var diff_number = compareWirelessClient(old_wireless_clients, new_wireless_clients);
-
-	if(diff_number != 0){
+	
+	if(old_ifWANConnect != new_ifWANConnect){ // if WAN port is plugged.
+		old_ifWANConnect = new_ifWANConnect;
+		
+		if(new_ifWANConnect == 1)
+			parent.showDrSurf("0_2");	// not plugged -> plugged
+		else
+			parent.showDrSurf("1");	// plugged -> not plugged
+	}	
+	else if(old_detect_wan_conn != new_detect_wan_conn){
+		if(new_detect_wan_conn == "1")
+			parent.showDrSurf("0_0");
+		else if(new_detect_wan_conn == "0")
+			parent.showDrSurf("2_2");
+		else
+			parent.showDrSurf("2_3");
+		old_detect_wan_conn = new_detect_wan_conn;
+	}	
+	else if(diff_number != 0){
 		old_wireless_clients = new_wireless_clients;
 		
 		if(diff_number >= 0)
 			parent.showDrSurf("11");
 		else
 			parent.showDrSurf("12");
-	}
+	} 
 	else if(old_disk_status != new_disk_status){
 		old_disk_status = new_disk_status;
 		
@@ -194,14 +202,6 @@ function check_changed_status(flag){
 	
 		parent.showDrSurf("30");
 	} //lock modified 2009.04.01
-	else if(old_ifWANConnect != new_ifWANConnect){ // if WAN port is plugged.
-		old_ifWANConnect = new_ifWANConnect;
-		
-		if(new_ifWANConnect == 1)
-			parent.showDrSurf("0_2");	// not plugged -> plugged
-		else
-			parent.showDrSurf("1");	// plugged -> not plugged
-	}	
 	else if(old_wan_link_str != new_wan_link_str){
 		old_wan_link_str = new_wan_link_str;
 		
@@ -244,7 +244,7 @@ function check_changed_status(flag){
 		else
 			parent.showDrSurf("0_1"); 
 	}
-	
+
 	enableCheckChangedStatus();
 }
 
@@ -404,6 +404,7 @@ var alert_event0_2 = new Array("<#DrSurf_word_connection_WANport_recover#>", "<#
 var alert_event1 = new Array("<#web_redirect_reason1#>", "<#DrSurf_referto_diagnosis#>", drdiagnose);
 var alert_event2_1 = new Array("<#web_redirect_reason2_1#>", "<#DrSurf_referto_diagnosis#>", drdiagnose);
 var alert_event2_2 = new Array("<#web_redirect_reason2_2#>", "<#DrSurf_referto_diagnosis#>", drdiagnose);
+var alert_event2_3 = new Array("<#QKSet_detect_desc2#>", "", drdiagnose);
 var alert_event3 = new Array("<#web_redirect_reason3_1#>", "<#DrSurf_referto_diagnosis#>", drdiagnose);
 var alert_event4 = new Array("<#web_redirect_reason4#>", "<#DrSurf_referto_diagnosis#>", drdiagnose);  //wan_gateway & lan_ipaddr;
 var alert_event5 = new Array("1. <#web_redirect_reason5_1#><br>2. <#web_redirect_reason5_2#>", "<#DrSurf_referto_diagnosis#>", drdiagnose);
@@ -616,7 +617,7 @@ tabtitle[0] = new Array("", "<#menu5_1_1#>", "<#menu5_1_2#>", "<#menu5_1_3#>", "
 tabtitle[1] = new Array("", "<#menu5_2_1#>", "<#menu5_2_2#>", "<#menu5_2_3#>");
 tabtitle[2] = new Array("", "<#menu5_3_1#>", "<#menu5_3_2#>", "<#menu5_3_3#>", "<#menu5_3_4#>", "<#menu5_3_5#>", "<#menu5_3_6#>");
 tabtitle[3] = new Array("", "<#menu5_4_1#>", "<#menu5_4_2#>", "<#menu5_4_3#>", "<#menu5_4_4#>");
-tabtitle[4] = new Array("", "<#menu5_5_1#>", "<#menu5_5_2#>", "<#menu5_5_3#>", "<#menu5_5_4#>");
+tabtitle[4] = new Array("", "<#menu5_5_1#>", "<#menu5_5_2#>", "<#menu5_5_5#>", "<#menu5_5_3#>", "<#menu5_5_4#>");
 tabtitle[5] = new Array("", "<#menu5_6_1#>", "<#menu5_6_2#>", "<#menu5_6_3#>", "<#menu5_6_4#>");
 tabtitle[6] = new Array("", "<#menu5_7_2#>", "<#menu5_7_3#>", "<#menu5_7_4#>", "<#menu5_7_5#>", "<#menu5_7_6#>");
 tabtitle[7] = new Array("", "EZQoS", "Traffic Monitor");
@@ -627,7 +628,7 @@ tablink[0] = new Array("", "Advanced_Wireless2g_Content.asp", "Advanced_WWPS2g_C
 tablink[1] = new Array("", "Advanced_LAN_Content.asp", "Advanced_DHCP_Content.asp", "Advanced_GWStaticRoute_Content.asp");
 tablink[2] = new Array("", "Advanced_WAN_Content.asp", "Advanced_QOSUserSpec_Content.asp", "Advanced_PortTrigger_Content.asp", "Advanced_VirtualServer_Content.asp", "Advanced_Exposed_Content.asp", "Advanced_ASUSDDNS_Content.asp");
 tablink[3] = new Array("", "Advanced_AiDisk_samba.asp", "Advanced_AiDisk_ftp.asp", "Advanced_AiDisk_others.asp", "Advanced_HSDPA_others.asp");
-tablink[4] = new Array("", "Advanced_BasicFirewall_Content.asp", "Advanced_URLFilter_Content.asp", "Advanced_MACFilter_Content.asp", "Advanced_Firewall_Content.asp");
+tablink[4] = new Array("", "Advanced_BasicFirewall_Content.asp", "Advanced_URLFilter_Content.asp", "Advanced_KeywordFilter_Content.asp", "Advanced_MACFilter_Content.asp", "Advanced_Firewall_Content.asp");
 tablink[5] = new Array("", "Advanced_OperationMode_Content.asp", "Advanced_System_Content.asp", "Advanced_FirmwareUpgrade_Content.asp", "Advanced_SettingBackup_Content.asp");
 tablink[6] = new Array("", "Main_LogStatus_Content.asp", "Main_DHCPStatus_Content.asp", "Main_WStatus2g_Content.asp", "Main_IPTStatus_Content.asp", "Main_RouteStatus_Content.asp");
 tablink[7] = new Array("", "QoS_EZQoS.asp", "Main_TrafficMonitor_realtime.asp");
@@ -641,12 +642,9 @@ menuL1_title = new Array("", "<#menu1#>", "<#menu3#>", "<#menu2#>", "<#menu4#>",
 menuL1_link = new Array("", "index.asp", "aidisk.asp", "upnp.asp", "QoS_EZQoS.asp", "as.asp");
 
 function show_menu(L1, L2, L3){
+	tabtitle[4].splice(3,1);//Keyword Filter
+	tablink[4].splice(3,1);//Keyword Filter
 
-	//if(productid == "RT-N13"){	
-	//menuL1_link[3] = "";  //remove AiDisk;
-	//menuL1_title[3] = "";
-	//}
-	
 	tabtitle[3].splice(4,1);//HSDPA
 	tablink[3].splice(4,1);//HSDPA
 	
@@ -675,7 +673,7 @@ function show_menu(L1, L2, L3){
 		tabtitle[1].splice(2,2);//LAN
 		tabtitle[2].splice(1,6);//WAN
 		tabtitle[3].splice(4,1);//WAN
-		tabtitle[4].splice(1,4);//firewall
+		tabtitle[4].splice(1,5);//firewall
 		tabtitle[6].splice(2,1);//log
 		tabtitle[6].splice(3,2);//log
 
@@ -684,7 +682,7 @@ function show_menu(L1, L2, L3){
 		menuL2_link[2] = "Advanced_APLAN_Content.asp";
 		tablink[2].splice(1,6);
 		tablink[3].splice(4,1);		
-		tablink[4].splice(1,4);
+		tablink[4].splice(1,5);
 		tablink[6].splice(2,1);
 		tablink[6].splice(3,2);
 		
@@ -1039,6 +1037,21 @@ function showhtmlspace(ori_str){
 	while((tail_num = head.indexOf(" ")) >= 0){
 		str += head.substring(0, tail_num);
 		str += "&nbsp;";
+		
+		head = head.substr(tail_num+1, head.length-(tail_num+1));
+	}
+	str += head;
+	
+	return str;
+}
+
+function showhtmland(ori_str){
+	var str = "", head, tail_num;
+	
+	head = ori_str;
+	while((tail_num = head.indexOf("&")) >= 0){
+		str += head.substring(0, tail_num);
+		str += "&amp;";
 		
 		head = head.substr(tail_num+1, head.length-(tail_num+1));
 	}

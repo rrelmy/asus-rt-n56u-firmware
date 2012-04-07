@@ -70,6 +70,7 @@
  *	Alexey Kuznetsov:		allow both IPv4 and IPv6 sockets to bind
  *					a single port at the same time.
  *	Derek Atkins <derek@ihtfp.com>: Add Encapulation Support
+ *	James Chapman		:	Add L2TP encapsulation type.
  *
  *
  *		This program is free software; you can redistribute it and/or
@@ -101,7 +102,9 @@
 #include <net/route.h>
 #include <net/checksum.h>
 #include <net/xfrm.h>
+#if 0	/* l2tp-encap */
 #include <net/xfrmudp.h>
+#endif
 #include "udp_impl.h"
 
 /*
@@ -893,13 +896,14 @@ csum_copy_err:
 	goto try_again;
 }
 
+#if 0	/* l2tp-encap */
 /* if XFRM isn't a module, then register it directly. */
 #if !defined(CONFIG_XFRM_MODULE)
 static xfrm4_rcv_encap_t xfrm4_rcv_encap_func = xfrm4_rcv_encap;
 #else
 static xfrm4_rcv_encap_t xfrm4_rcv_encap_func = NULL;
 #endif
-
+#endif
 
 #if defined(CONFIG_XFRM) || defined(CONFIG_IPSEC_NAT_TRAVERSAL)
 
@@ -954,6 +958,7 @@ int udp_disconnect(struct sock *sk, int flags)
 	return 0;
 }
 
+#if 0	/* l2tp-encap */
 /* return:
  * 	1  if the the UDP system should process it
  *	0  if we should drop this packet
@@ -1050,6 +1055,7 @@ static int udp_encap_rcv(struct sock * sk, struct sk_buff *skb)
 	return -1;
 #endif
 }
+#endif
 
 /* returns:
  *  -1: error
@@ -1073,14 +1079,16 @@ int udp_queue_rcv_skb(struct sock * sk, struct sk_buff *skb)
 
 	if (up->encap_type) {
 		/*
-		 * This is an encapsulation socket, so let's see if this is
-		 * an encapsulated packet.
-		 * If it's a keepalive packet, then just eat it.
-		 * If it's an encapsulateed packet, then pass it to the
-		 * IPsec xfrm input and return the response
-		 * appropriately.  Otherwise, just fall through and
-		 * pass this up the UDP socket.
+		 * This is an encapsulation socket so pass the skb to
+		 * the socket's udp_encap_rcv() hook. Otherwise, just
+		 * fall through and pass this up the UDP socket.
+		 * up->encap_rcv() returns the following value:
+		 * =0 if skb was successfully passed to the encap
+		 *    handler or was discarded by it.
+		 * >0 if skb should be passed on to UDP.
+		 * <0 if skb should be resubmitted as proto -N
 		 */
+#if 0	/* l2tp-encap */
 		int ret;
 
 		ret = udp_encap_rcv(sk, skb);
@@ -1099,7 +1107,18 @@ int udp_queue_rcv_skb(struct sock * sk, struct sk_buff *skb)
 			    ret = 1;
 			}
 			return ret;
+#else
+		/* if we're overly short, let UDP handle it */
+		if (skb->len > sizeof(struct udphdr) &&
+		    up->encap_rcv != NULL) {
+			int ret;
 
+			ret = (*up->encap_rcv)(sk, skb);
+			if (ret <= 0) {
+				UDP_INC_STATS_BH(UDP_MIB_INDATAGRAMS, up->pcflag);
+				return -ret;
+			}
+#endif
 		}
 		/* FALLTHROUGH -- it's a UDP Packet */
 	}
@@ -1381,6 +1400,11 @@ int udp_lib_setsockopt(struct sock *sk, int level, int optname,
 		case 0:
 		case UDP_ENCAP_ESPINUDP:
 		case UDP_ENCAP_ESPINUDP_NON_IKE:
+#if 1	/* l2tp-encap */
+			up->encap_rcv = xfrm4_udp_encap_rcv;
+			/* FALLTHROUGH */
+		case UDP_ENCAP_L2TPINUDP:
+#endif
 			up->encap_type = val;
 			break;
 		default:

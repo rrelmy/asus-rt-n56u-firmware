@@ -105,6 +105,30 @@ legend {
 	margin-top:10px;
 }
 
+.QISform_wireless{
+	width:450px;
+	font-size:12px;
+	color:#333333;
+}
+
+.QISform_wireless thead{
+	font-size:15px;
+	line-height:20px;
+	color:#666;	
+}
+
+.QISform_wireless th{
+	padding-left:10px;
+	font-size:12px;
+	font-weight:bolder;
+	color: #003399;
+	text-align:right; 
+}
+               
+.QISform_wireless li{	
+	margin-top:10px;
+}
+
 .QISform2{
 	width:450px;
 	font-size:12px;

@@ -25,6 +25,16 @@
 #define ETHER_ADDR_LEN		6
 #define MAX_NUMBER_OF_MAC	32
 
+#define MODE_CCK		0
+#define MODE_OFDM		1
+#define MODE_HTMIX		2
+#define MODE_HTGREENFIELD	3
+
+#define BW_20			0
+#define BW_40			1
+#define BW_BOTH			2
+#define BW_10			3
+
 // MIMO Tx parameter, ShortGI, MCS, STBC, etc.  these are fields in TXWI. Don't change this definition!!!
 typedef union  _MACHTTRANSMIT_SETTING {
         struct  {

@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -7,6 +7,7 @@
 <link rel="shortcut icon" href="images/favicon.png">
 <link rel="icon" href="images/favicon.png">
 <title>ASUS Wireless Router <#Web_Title#> - Quickly Internet Setup</title>
+
 <link rel="stylesheet" type="text/css" href="/qis/qis_style.css">
 <link rel="stylesheet" type="text/css" href="/form_style.css">
 <link rel="stylesheet" type="text/css" href="/other.css">
@@ -61,6 +62,12 @@ function QIS_load_body(){
 			action = "/qis/QIS_internet_ip.htm";
 			flag.value = showCase;
 			prev_page.value = "/qis/QIS_detect.htm";
+			submit();
+		}
+		else if(showCase == "auto_way_vpn"){
+			action = "/qis/QIS_internet_ip.htm";
+			flag.value = showCase;
+			prev_page.value = "start_apply.htm";
 			submit();
 		}
 		else if(showCase == "auto_way"){
@@ -119,11 +126,6 @@ function QIS_load_body(){
 			submit();
 		}
 		else if(showCase == "opmode"){
-			//For RT-N10
-			action = "/qis/QIS_op_mode.htm"; 
-			submit();
-		}
-		else if(document.QKform.x_Setting.value == "0"){
 			//For RT-N10
 			action = "/qis/QIS_op_mode.htm"; 
 			submit();
@@ -363,7 +365,6 @@ function set_detectWAN(result){
 <form method="post" name="redirectForm" action="" target="contentM">
 <input type="hidden" name="flag" value="">
 <input type="hidden" name="prev_page" value="">
-<input type="hidden" name="cacheflag" value="">
 </form>
 </body>
 </html>

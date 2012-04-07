@@ -8,14 +8,14 @@
 <title>ASUS Wireless Router <#Web_Title#> - <#menu5_8_3#></title>
 <link rel="stylesheet" type="text/css" href="index_style.css"> 
 <link rel="stylesheet" type="text/css" href="form_style.css">
-<link rel="stylesheet" type="text/css" href="tomato.css">
+<link rel="stylesheet" type="text/css" href="tmmenu.css">
 
 <script language="JavaScript" type="text/javascript" src="/state.js"></script>
 <script language="JavaScript" type="text/javascript" src="/general.js"></script>
 <script language="JavaScript" type="text/javascript" src="/popup.js"></script>
 <script language="JavaScript" type="text/javascript" src="/help.js"></script>
-<script language="JavaScript" type="text/javascript" src="/tomato.js"></script>
-<script language="JavaScript" type="text/javascript" src="/bwm-hist.js"></script>
+<script language="JavaScript" type="text/javascript" src="/tmmenu.js"></script>
+<script language="JavaScript" type="text/javascript" src="/tmhist.js"></script>
 
 <script type='text/javascript'>
 

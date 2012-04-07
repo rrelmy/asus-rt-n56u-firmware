@@ -163,7 +163,8 @@ document.form.filter_wl_dstport_x_0.value=="") bFlag=1;
 					if(document.form.filter_lw_srcip_x_0.value == LWFilterList[i][0] &&
 						 document.form.filter_lw_srcport_x_0.value == LWFilterList[i][1] &&
 						 document.form.filter_lw_dstip_x_0.value == LWFilterList[i][2] &&
-						 document.form.filter_lw_dstport_x_0.value == LWFilterList[i][3]){
+						 document.form.filter_lw_dstport_x_0.value == LWFilterList[i][3] &&
+						 document.form.filter_lw_proto_x_0.value == LWFilterList[i][4]){
 							alert("<#JS_duplicate#>");
 							return false;
 					}
@@ -187,6 +188,14 @@ document.form.filter_wl_dstport_x_0.value=="") bFlag=1;
 			else if (document.form.url_keyword_x_0.value=="")
 				bFlag=1;
 			else if (!validate_duplicate(document.form.UrlList_s, document.form.url_keyword_x_0.value, 32, 0))
+				return false;
+		}
+		else if (s=='KeywordList'){
+			if (document.form.keyword_num_x_0.value >= c)
+				cFlag=1;
+			else if (document.form.keyword_keyword_x_0.value=="")
+				bFlag=1;
+			else if (!validate_duplicate(document.form.KeywordList_s, document.form.keyword_keyword_x_0.value, 32, 0))
 				return false;
 		}
 		else if (s=='x_QRuleList'){
@@ -274,6 +283,9 @@ top.Edit_Flag = "on";
 		}
 		else if(s == 'UrlList'){
 			updateDateTime("Advanced_URLFilter_Content.asp");
+		}
+		else if(s == 'KeywordList'){
+			updateDateTime("Advanced_KeywordFilter_Content.asp");
 		}
 		else if(s == 'LocalCertDB'){}
 		
@@ -1760,6 +1772,23 @@ document.form.url_time_x_startmin_1.value = getTimeRange(document.form.url_time_
 document.form.url_time_x_endhour_1.value = getTimeRange(document.form.url_time_x_1.value, 2);
 document.form.url_time_x_endmin_1.value = getTimeRange(document.form.url_time_x_1.value, 3);
 }
+else if (document.form.current_page.value == "Advanced_KeywordFilter_Content.asp")
+{document.form.keyword_date_x_Sun.checked = getDateCheck(document.form.keyword_date_x.value, 0);
+document.form.keyword_date_x_Mon.checked = getDateCheck(document.form.keyword_date_x.value, 1);
+document.form.keyword_date_x_Tue.checked = getDateCheck(document.form.keyword_date_x.value, 2);
+document.form.keyword_date_x_Wed.checked = getDateCheck(document.form.keyword_date_x.value, 3);
+document.form.keyword_date_x_Thu.checked = getDateCheck(document.form.keyword_date_x.value, 4);
+document.form.keyword_date_x_Fri.checked = getDateCheck(document.form.keyword_date_x.value, 5);
+document.form.keyword_date_x_Sat.checked = getDateCheck(document.form.keyword_date_x.value, 6);
+document.form.keyword_time_x_starthour.value = getTimeRange(document.form.keyword_time_x.value, 0);
+document.form.keyword_time_x_startmin.value = getTimeRange(document.form.keyword_time_x.value, 1);
+document.form.keyword_time_x_endhour.value = getTimeRange(document.form.keyword_time_x.value, 2);
+document.form.keyword_time_x_endmin.value = getTimeRange(document.form.keyword_time_x.value, 3);
+document.form.keyword_time_x_starthour_1.value = getTimeRange(document.form.keyword_time_x_1.value, 0);
+document.form.keyword_time_x_startmin_1.value = getTimeRange(document.form.keyword_time_x_1.value, 1);
+document.form.keyword_time_x_endhour_1.value = getTimeRange(document.form.keyword_time_x_1.value, 2);
+document.form.keyword_time_x_endmin_1.value = getTimeRange(document.form.keyword_time_x_1.value, 3);
+}
 else if (document.form.current_page.value == "Advanced_DHCP_Content.asp" ||
 document.form.current_page.value == "Advanced_RDHCP_Content.asp")
 {final_flag = 1;
@@ -1801,7 +1830,8 @@ else document.form.WirelessFirewall_img.src = "graph/wf_none.gif";
 }
 function change_firewall(r)
 {if (r == "0")
-{inputRCtrl1(document.form.misc_http_x, 0);
+{inputCtrl(document.form.fw_log_x, 0);
+inputRCtrl1(document.form.misc_http_x, 0);
 inputRCtrl2(document.form.misc_http_x, 1);
 inputCtrl(document.form.misc_httpport_x, 0);
 if (isModel()!="WL520gc" && isModel()!="SnapAP")
@@ -1815,7 +1845,9 @@ inputRCtrl2(document.form.misc_ping_x, 1);
 }
 }
 else
-{inputRCtrl1(document.form.misc_http_x, 1);
+{
+inputCtrl(document.form.fw_log_x, 1);
+inputRCtrl1(document.form.misc_http_x, 1);
 inputCtrl(document.form.misc_httpport_x, 1);
 if (isModel()!="WL520gc" && isModel()!="SnapAP")
 {if (isFlash() != '2MB' && isModel()!="WL331")
@@ -2043,8 +2075,11 @@ return false;
 }
 }
 if (!validate_hostnamechar(c))
-{alert("<#LANHostConfig_x_DDNS_alarm_13#> '" + s.charAt(i) +"' !");
-return(false);
+{
+	if(document.form.current_page.value == "Advanced_ASUSDDNS_Content.asp") 
+		document.form.ddns_hostname_x.value = ""; 
+	alert("<#LANHostConfig_x_DDNS_alarm_13#> '" + s.charAt(i) +"' !");
+	return(false);
 }
 }
 return(true);
@@ -2816,6 +2851,27 @@ function updateDateTime(s)
 		document.form.url_time_x_endhour_1,
 		document.form.url_time_x_endmin_1);
 	}		
+	else if (s == "Advanced_KeywordFilter_Content.asp")
+	{
+		document.form.keyword_date_x.value = setDateCheck(
+		document.form.keyword_date_x_Sun,
+		document.form.keyword_date_x_Mon,
+		document.form.keyword_date_x_Tue,
+		document.form.keyword_date_x_Wed,
+		document.form.keyword_date_x_Thu,
+		document.form.keyword_date_x_Fri,
+		document.form.keyword_date_x_Sat);
+		document.form.keyword_time_x.value = setTimeRange(
+		document.form.keyword_time_x_starthour,
+		document.form.keyword_time_x_startmin,
+		document.form.keyword_time_x_endhour,
+		document.form.keyword_time_x_endmin);
+		document.form.keyword_time_x_1.value = setTimeRange(
+		document.form.keyword_time_x_starthour_1,
+		document.form.keyword_time_x_startmin_1,
+		document.form.keyword_time_x_endhour_1,
+		document.form.keyword_time_x_endmin_1);
+	}		
 	else if (s == "Advanced_LFirewall_Content.asp")
 	{
 		document.form.FirewallConfig_WanLocalActiveDate.value = setDateCheck(
@@ -3327,14 +3383,128 @@ function insertExtChannelOption(){
                 		country == "KR" || 
             		    	country == "UY" ||
             		    	country == "VE")
-                		channels = new Array(0, 149, 153, 157, 161, 165);
+                		channels = new Array(0, 149, 153, 157, 161);
                    	
 									else if(country == "JP")
-                		channels = new Array(0, 36, 40, 44, 48, 149, 153, 157, 161, 165);
+                		channels = new Array(0, 36, 40, 44, 48);
 									
 									else
                 		channels = new Array(0, 36, 40, 44, 48, 52, 56, 60, 64, 100, 104, 108, 112, 116, 120, 124, 128, 132, 136, 140, 149, 153, 157, 161, 165);
                 }
+								else if(document.form.HT_BW.value == "1"){
+                	if (country == "AL" || 
+                	 country == "DZ" || 
+			 country == "AU" || 
+			 country == "BH" || 
+              	         country == "BY" ||
+              	         country == "CA" || 
+              	         country == "CL" || 
+              	         country == "CO" || 
+                	 country == "CR" ||
+                	 country == "DO" || 
+                	 country == "SV" || 
+                	 country == "GT" || 
+			 country == "HN" || 
+			 country == "HK" || 
+              	         country == "IN" ||
+              	         country == "IL" || 
+              	         country == "JO" || 
+              	         country == "KZ" || 
+                	 country == "LB" ||
+                	 country == "MO" || 
+                	 country == "MK" ||                	 
+                	 country == "MY" ||
+                	 country == "MX" || 
+			 country == "NZ" || 
+			 country == "NO" || 
+              	         country == "OM" ||
+              	         country == "PK" || 
+              	         country == "PA" || 
+              	         country == "PR" || 
+                	 country == "QA" ||
+                	 country == "RO" || 
+                	 country == "RU" || 
+                	 country == "SA" || 
+			 country == "SG" || 
+			 country == "SY" || 
+              	         country == "TH" ||
+              	         country == "UA" || 
+              	         country == "AE" || 
+              	         country == "US" || 
+                	 country == "VN" ||
+                	 country == "YE" || 
+                	 country == "ZW")
+                		channels = new Array(0, 36, 40, 44, 48, 149, 153, 157, 161, 165);
+                		
+                	else if(country == "AT" ||
+                		country == "BE" ||
+            		    	country == "BR" ||
+            		    	country == "BG" ||
+            		    	country == "CY" || 
+            		    	country == "DK" || 
+            		    	country == "EE" ||
+            		    	country == "FI" || 
+            	  	        country == "DE" || 
+            	  	        country == "GR" || 
+                		country == "HU" ||
+             		   	country == "IS" ||
+             		   	country == "IE" || 
+            		    	country == "IT" || 
+            		    	country == "LV" ||
+            		    	country == "LI" || 
+            		    	country == "LT" || 
+            		    	country == "LU" || 
+            		    	country == "NL" ||
+            		    	country == "PL" || 
+            		    	country == "PT" || 
+            		    	country == "SK" || 
+            		    	country == "SI" ||
+            		    	country == "ZA" || 
+            		    	country == "ES" || 
+            		    	country == "SE" || 
+            		    	country == "CH" ||
+            		    	country == "GB" || 
+            		    	country == "UZ")
+                		channels = new Array(0, 36, 40, 44, 48);
+                	
+                	else if(country == "AM" ||
+            		    	country == "AZ" || 
+            		    	country == "HR" ||
+            		    	country == "CZ" || 
+            		    	country == "EG" || 
+            		    	country == "FR" || 
+            		    	country == "GE" ||
+            		    	country == "MC" ||
+            		    	country == "TT" || 
+            		    	country == "TN" ||
+            		    	country == "TR")
+                		channels = new Array(0, 36, 40, 44, 48);
+                	
+                	else if(country == "AR" || country == "TW")
+                		channels = new Array(0, 149, 153, 157, 161, 165);
+                	
+                	else if(country == "BZ" ||
+                		country == "BO" || 
+            		    	country == "BN" ||
+            		    	country == "CN" || 
+            		    	country == "ID" || 
+            		    	country == "IR" || 
+            		    	country == "PE" ||
+            		    	country == "PH")
+                		channels = new Array(0, 149, 153, 157, 161, 165);
+                	
+                	else if(country == "KP" ||
+                		country == "KR" || 
+            		    	country == "UY" ||
+            		    	country == "VE")
+                		channels = new Array(0, 149, 153, 157, 161);
+                	
+									else if(country == "JP")
+                		channels = new Array(0, 36, 40, 44, 48);
+
+									else
+                		channels = new Array(36, 40, 44, 48, 52, 56, 60, 64, 100, 104, 108, 112, 116, 120, 124, 128, 132, 136, 140, 149, 153, 157, 161, 165);
+                }		
                 else{
                 	if (country == "AL" || 
                 	 country == "DZ" || 
@@ -3444,7 +3614,7 @@ function insertExtChannelOption(){
                 		channels = new Array(0, 149, 153, 157, 161);
                 	
 									else if(country == "JP")
-                		channels = new Array(0, 36, 40, 44, 48, 149, 153, 157, 161);
+                		channels = new Array(0, 36, 40, 44, 48);
 
 									else
                 		channels = new Array(36, 40, 44, 48, 52, 56, 60, 64, 100, 104, 108, 112, 116, 120, 124, 128, 132, 136, 140, 149, 153, 157, 161, 165);

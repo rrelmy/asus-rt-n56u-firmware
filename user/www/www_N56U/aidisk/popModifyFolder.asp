@@ -17,7 +17,7 @@ var folderlist = parent.get_sharedfolder_in_pool(selectedPool);
 
 function initial(){
 	showtext($("selected_Pool"), selectedPool);
-	showtext($("selected_Folder"), selectedFolder);
+	showtext($("selected_Folder"), showhtmlspace(showhtmland(selectedFolder)));
 	
 	clickevent();
 }

@@ -472,9 +472,10 @@ do_file(char *path, FILE *stream)
 	fclose(fp);
 }
 
-time_t detect_timestamp, detect_timestamp_old, signal_timestamp;
-
 int is_firsttime(void);
+
+time_t detect_timestamp, detect_timestamp_old, signal_timestamp;
+char detect_timestampstr[32];
 
 static void
 handle_request(void)
@@ -486,8 +487,6 @@ handle_request(void)
     int len;
     struct mime_handler *handler;
     int cl = 0, flags;
-
-    char detect_timestampstr[32];
 
     /* Initialize the request variables. */
     authorization = boundary = NULL;
@@ -700,6 +699,7 @@ handle_request(void)
 							|| !strcmp(url, "setting_lan.htm")
 							|| !strcmp(url, "status.asp")
 // 2010.09 James. }
+							|| !strcmp(url, "httpd_check.htm")
 							)
 					) {
 				turn_off_auth_timestamp = request_timestamp;
@@ -805,11 +805,11 @@ handle_request(void)
 #endif
 			}
 #if (!defined(W7_LOGO) && !defined(WIFI_LOGO))
-			if (	nvram_invmatch("sw_mode_ex", "3") &&
-				(strstr(file, "result_of_get_changed_status.asp")) &&
+			if (	nvram_match("wan_route_x", "IP_Routed") &&
 				nvram_match("no_internet_detect", "0") &&
 //				nvram_match("x_Setting", "1") &&
-				is_phyconnected()
+				is_phyconnected() &&
+				(strstr(file, "result_of_get_changed_status.asp") || strstr(file, "result_of_get_changed_status_QIS.asp") || strstr(file, "detectWAN2.asp"))
 			)
 			{
 				detect_timestamp_old = detect_timestamp;
@@ -829,7 +829,7 @@ handle_request(void)
 					_eval(detect_internet_argv, NULL, 0, &dipid);
 				}
 */
-				if ((detect_timestamp - signal_timestamp) > (60 - 1))
+				if (!signal_timestamp || ((detect_timestamp - signal_timestamp) > (60 - 1)))
 				{
 					if (nvram_match("di_debug", "1")) fprintf(stderr, "refresh timer of detect_internet\n");
 
@@ -900,7 +900,7 @@ void http_login(unsigned int ip, char *url) {
 	memset(login_ipstr, 0, 32);
 	sprintf(login_ipstr, "%u", login_ip);
 	nvram_set("login_ip", login_ipstr);
-	
+
 	if (strcmp(url, "result_of_get_changed_status.asp")
 			&& strcmp(url, "WPS_info.asp")
 			&& strcmp(url, "WAN_info.asp")) {//2008.11 magic
@@ -1270,6 +1270,7 @@ int main(int argc, char **argv)
 	//2008.08 magic
 	nvram_unset("login_timestamp");
 	nvram_unset("login_ip");
+	nvram_unset("login_ip_str");
 
 	detect_timestamp_old = 0;
 	detect_timestamp = 0;

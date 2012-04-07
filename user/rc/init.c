@@ -326,7 +326,13 @@ shutdown_system(void)
 	for (sig = 0; sig < (_NSIG-1); sig++)
 		signal(sig, SIG_DFL);
 
-	printf("Sending SIGTERM to all processes");	// tmp test
+	/* Disconnect pppd - need this for PPTP/L2TP to finish gracefully */
+	if (pids("l2tpd"))
+		eval("killall", "l2tpd");
+	if (pids("pppd"))
+		eval("killall", "pppd");
+	sleep(1);
+
 	cprintf("Sending SIGTERM to all processes\n");
 	kill(-1, SIGTERM);
 	sleep(1);

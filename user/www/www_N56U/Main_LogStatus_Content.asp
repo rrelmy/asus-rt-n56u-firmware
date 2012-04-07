@@ -107,7 +107,7 @@ function clearLog(){
 							<td bgcolor="#FFFFFF">
 								<table width="100%" border="1" align="center" cellpadding="4" cellspacing="0" bordercolor="#6b8fa3" class="FormTable">
 									<tr>
-										<th width="20%"><#General_x_SystemTime_itemname#></th>
+										<th width="20%"><#General_x_SystemTime_itemname#> : </th>
 										<td>
 											<input type="text" id="system_time" name="system_time" size="40" class="devicepin" value="" readonly="1" style="font-size:12px;">											
 										</td>										

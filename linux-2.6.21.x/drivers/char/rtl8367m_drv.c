@@ -508,7 +508,7 @@ void LANWANPartition_adv(int wan_stb_x)
 		rtk_port_isolation_set(LAN_PORT_4, fwd_mask);
 		rtk_port_isolation_set(8, fwd_mask);
 	}
-	else if (wan_stb_x == 1)	// P1,P2,P3
+	else if (wan_stb_x == 1)	// P0,P1,P2
 	{
 		fwd_mask.bits[0] = 0x107;
 		rtk_port_isolation_set(LAN_PORT_2, fwd_mask);
@@ -516,7 +516,7 @@ void LANWANPartition_adv(int wan_stb_x)
 		rtk_port_isolation_set(LAN_PORT_4, fwd_mask);
 		rtk_port_isolation_set(8, fwd_mask);
 	}
-	else if (wan_stb_x == 2)	// P0,P2,P3
+	else if (wan_stb_x == 2)	// P0,P1,P3
 	{
 		fwd_mask.bits[0] = 0x10B;
 		rtk_port_isolation_set(LAN_PORT_1, fwd_mask);
@@ -524,7 +524,7 @@ void LANWANPartition_adv(int wan_stb_x)
 		rtk_port_isolation_set(LAN_PORT_4, fwd_mask);
 		rtk_port_isolation_set(8, fwd_mask);
 	}
-	else if (wan_stb_x == 3)	// P0,P1,P3
+	else if (wan_stb_x == 3)	// P0,P2,P3
 	{
 		fwd_mask.bits[0] = 0x10D;
 		rtk_port_isolation_set(LAN_PORT_1, fwd_mask);
@@ -532,7 +532,7 @@ void LANWANPartition_adv(int wan_stb_x)
 		rtk_port_isolation_set(LAN_PORT_4, fwd_mask);
 		rtk_port_isolation_set(8, fwd_mask);
 	}
- 	else if (wan_stb_x == 4)	// P0,P1,P2
+ 	else if (wan_stb_x == 4)	// P1,P2,P3
 	{
 		fwd_mask.bits[0] = 0x10E;
 		rtk_port_isolation_set(LAN_PORT_1, fwd_mask);
@@ -540,11 +540,18 @@ void LANWANPartition_adv(int wan_stb_x)
 		rtk_port_isolation_set(LAN_PORT_3, fwd_mask);
 		rtk_port_isolation_set(8, fwd_mask);
 	}
-	else if (wan_stb_x == 5)	// P0,P1
+	else if (wan_stb_x == 5)	// P2,P3
 	{
 		fwd_mask.bits[0] = 0x10C;
 		rtk_port_isolation_set(LAN_PORT_1, fwd_mask);
 		rtk_port_isolation_set(LAN_PORT_2, fwd_mask);
+		rtk_port_isolation_set(8, fwd_mask);
+	}
+ 	else if (wan_stb_x == 6)	// P0,P1
+	{
+		fwd_mask.bits[0] = 0x103;
+		rtk_port_isolation_set(LAN_PORT_4, fwd_mask);
+		rtk_port_isolation_set(LAN_PORT_3, fwd_mask);
 		rtk_port_isolation_set(8, fwd_mask);
 	}
  
@@ -555,39 +562,47 @@ void LANWANPartition_adv(int wan_stb_x)
 		rtk_port_isolation_set(4, fwd_mask);
 		rtk_port_isolation_set(9, fwd_mask);
 	}
-	else if (wan_stb_x == 1)	// P0,P4
+	else if (wan_stb_x == 1)	// P3,P4
 	{
 		fwd_mask.bits[0] = 0x218;
 		rtk_port_isolation_set(LAN_PORT_1, fwd_mask);
 		rtk_port_isolation_set(4, fwd_mask);
 		rtk_port_isolation_set(9, fwd_mask);
 	}
-	else if (wan_stb_x == 2)	// P1,P4
+	else if (wan_stb_x == 2)	// P2,P4
 	{
 		fwd_mask.bits[0] = 0x214;
 		rtk_port_isolation_set(LAN_PORT_2, fwd_mask);
 		rtk_port_isolation_set(4, fwd_mask);
 		rtk_port_isolation_set(9, fwd_mask);
 	}
-	else if (wan_stb_x == 3)	// P2,P4
+	else if (wan_stb_x == 3)	// P1,P4
 	{
 		fwd_mask.bits[0] = 0x212;
 		rtk_port_isolation_set(LAN_PORT_3, fwd_mask);
 		rtk_port_isolation_set(4, fwd_mask);
 		rtk_port_isolation_set(9, fwd_mask);
 	}
-	else if (wan_stb_x == 4)	// P3,P4
+	else if (wan_stb_x == 4)	// P0,P4
 	{
 		fwd_mask.bits[0] = 0x211;
 		rtk_port_isolation_set(LAN_PORT_4, fwd_mask);
 		rtk_port_isolation_set(4, fwd_mask);
 		rtk_port_isolation_set(9, fwd_mask);
 	}
-	else if (wan_stb_x == 5)	// P2,P3,P4
+	else if (wan_stb_x == 5)	// P0,P1,P4
 	{
 		fwd_mask.bits[0] = 0x213;
 		rtk_port_isolation_set(LAN_PORT_3, fwd_mask);
 		rtk_port_isolation_set(LAN_PORT_4, fwd_mask);
+		rtk_port_isolation_set(4, fwd_mask);
+		rtk_port_isolation_set(9, fwd_mask);
+	}
+	else if (wan_stb_x == 6)	// P2,P3,P4
+	{
+		fwd_mask.bits[0] = 0x21C;
+		rtk_port_isolation_set(LAN_PORT_2, fwd_mask);
+		rtk_port_isolation_set(LAN_PORT_1, fwd_mask);
 		rtk_port_isolation_set(4, fwd_mask);
 		rtk_port_isolation_set(9, fwd_mask);
 	}
@@ -601,38 +616,44 @@ void LANWANPartition_adv(int wan_stb_x)
 		rtk_port_efid_set(LAN_PORT_4, 0);
 		rtk_port_efid_set(8, 0);
 	}
-	else if (wan_stb_x == 1)	// P1,P2,P3
+	else if (wan_stb_x == 1)	// P0,P1,P2
 	{
 		rtk_port_efid_set(LAN_PORT_2, 0);
 		rtk_port_efid_set(LAN_PORT_3, 0);
 		rtk_port_efid_set(LAN_PORT_4, 0);
 		rtk_port_efid_set(8, 0);
 	}
-	else if (wan_stb_x == 2)	// P0,P2,P3
+	else if (wan_stb_x == 2)	// P0,P1,P3
 	{
 		rtk_port_efid_set(LAN_PORT_1, 0);
 		rtk_port_efid_set(LAN_PORT_3, 0);
 		rtk_port_efid_set(LAN_PORT_4, 0);
 		rtk_port_efid_set(8, 0);
 	}
-	else if (wan_stb_x == 3)	// P0,P1,P3
+	else if (wan_stb_x == 3)	// P0,P2,P3
 	{
 		rtk_port_efid_set(LAN_PORT_1, 0);
 		rtk_port_efid_set(LAN_PORT_2, 0);
 		rtk_port_efid_set(LAN_PORT_4, 0);
 		rtk_port_efid_set(8, 0);
 	}
-	else if (wan_stb_x == 4)	// P0,P1,P2
+	else if (wan_stb_x == 4)	// P1,P2,P3
 	{
 		rtk_port_efid_set(LAN_PORT_1, 0);
 		rtk_port_efid_set(LAN_PORT_2, 0);
 		rtk_port_efid_set(LAN_PORT_3, 0);
 		rtk_port_efid_set(8, 0);
 	}
-	else if (wan_stb_x == 5)	// P0,P1
+	else if (wan_stb_x == 5)	// P2,P3
 	{
 		rtk_port_efid_set(LAN_PORT_1, 0);
 		rtk_port_efid_set(LAN_PORT_2, 0);
+		rtk_port_efid_set(8, 0);
+	}
+	else if (wan_stb_x == 6)	// P0,P1
+	{
+		rtk_port_efid_set(LAN_PORT_4, 0);
+		rtk_port_efid_set(LAN_PORT_3, 0);
 		rtk_port_efid_set(8, 0);
 	}
  
@@ -642,34 +663,41 @@ void LANWANPartition_adv(int wan_stb_x)
 		rtk_port_efid_set(4, 1);
 		rtk_port_efid_set(9, 1);
 	}
-	else if (wan_stb_x == 1)	// P0,P4
+	else if (wan_stb_x == 1)	// P3,P4
 	{
 		rtk_port_efid_set(LAN_PORT_1, 1);
 		rtk_port_efid_set(4, 1);
 		rtk_port_efid_set(9, 1);
 	}
-	else if (wan_stb_x == 2)	// P1,P4
+	else if (wan_stb_x == 2)	// P2,P4
 	{
 		rtk_port_efid_set(LAN_PORT_2, 1);
 		rtk_port_efid_set(4, 1);
 		rtk_port_efid_set(9, 1);
 	}
-	else if (wan_stb_x == 3)	// P2,P4
+	else if (wan_stb_x == 3)	// P1,P4
 	{
 		rtk_port_efid_set(LAN_PORT_3, 1);
 		rtk_port_efid_set(4, 1);
 		rtk_port_efid_set(9, 1);
 	}
-	else if (wan_stb_x == 4)	// P3,P4
+	else if (wan_stb_x == 4)	// P0,P4
 	{
 		rtk_port_efid_set(LAN_PORT_4, 1);
 		rtk_port_efid_set(4, 1);
 		rtk_port_efid_set(9, 1);
 	}
-	else if (wan_stb_x == 5)	// P2,P3,P4
+	else if (wan_stb_x == 5)	// P0,P1,P4
 	{
 		rtk_port_efid_set(LAN_PORT_3, 1);
 		rtk_port_efid_set(LAN_PORT_4, 1);
+		rtk_port_efid_set(4, 1);
+		rtk_port_efid_set(9, 1);
+	}
+	else if (wan_stb_x == 6)	// P2,P3,P4
+	{
+		rtk_port_efid_set(LAN_PORT_2, 1);
+		rtk_port_efid_set(LAN_PORT_1, 1);
 		rtk_port_efid_set(4, 1);
 		rtk_port_efid_set(9, 1);
 	}
@@ -734,6 +762,7 @@ int rtl8367m_ioctl(struct inode *inode, struct file *file, unsigned int req,
 	rtk_data_t txDelay_ro, rxDelay_ro;
 	unsigned int regData;
 	rtk_port_phy_data_t pData;
+	unsigned int control_rate;
 
 	switch(req) {
 	case 0:					// check WAN port phy status
@@ -744,7 +773,7 @@ int rtl8367m_ioctl(struct inode *inode, struct file *file, unsigned int req,
 			put_user(pLinkStatus, (unsigned int __user *)arg);
 			break;
 		}
-		else if (wan_stb_g == 1)	// P0,P4
+		else if (wan_stb_g == 1)	// P3,P4
 		{
 			port = LAN_PORT_1;
 			rtk_port_linkStatus_get(port, &pLinkStatus);
@@ -759,7 +788,7 @@ int rtl8367m_ioctl(struct inode *inode, struct file *file, unsigned int req,
 			put_user(pLinkStatus, (unsigned int __user *)arg);
 			break;
 		}
-		else if (wan_stb_g == 2)	// P1,P4
+		else if (wan_stb_g == 2)	// P2,P4
 		{
 			port = LAN_PORT_2;
 			rtk_port_linkStatus_get(port, &pLinkStatus);
@@ -774,7 +803,7 @@ int rtl8367m_ioctl(struct inode *inode, struct file *file, unsigned int req,
 			put_user(pLinkStatus, (unsigned int __user *)arg);
 			break;
 		}
-		else if (wan_stb_g == 3)	// P2,P4
+		else if (wan_stb_g == 3)	// P1,P4
 		{
 			port = LAN_PORT_3;
 			rtk_port_linkStatus_get(port, &pLinkStatus);
@@ -789,7 +818,7 @@ int rtl8367m_ioctl(struct inode *inode, struct file *file, unsigned int req,
 			put_user(pLinkStatus, (unsigned int __user *)arg);
 			break;
 		}
-		else if (wan_stb_g == 4)	// P3,P4
+		else if (wan_stb_g == 4)	// P0,P4
 		{
 			port = LAN_PORT_4;
 			rtk_port_linkStatus_get(port, &pLinkStatus);
@@ -804,7 +833,7 @@ int rtl8367m_ioctl(struct inode *inode, struct file *file, unsigned int req,
 			put_user(pLinkStatus, (unsigned int __user *)arg);
 			break;
 		}
-		else if (wan_stb_g == 5)	// P2,P3,P4
+		else if (wan_stb_g == 5)	// P0,P1,P4
 		{
 			port = LAN_PORT_4;
 			rtk_port_linkStatus_get(port, &pLinkStatus);
@@ -815,6 +844,29 @@ int rtl8367m_ioctl(struct inode *inode, struct file *file, unsigned int req,
 			}
 
 			port = LAN_PORT_3;
+			rtk_port_linkStatus_get(port, &pLinkStatus);
+			if (pLinkStatus)
+			{
+				put_user(pLinkStatus, (unsigned int __user *)arg);
+				break;
+			}
+
+			port = 4;
+			rtk_port_linkStatus_get(port, &pLinkStatus);
+			put_user(pLinkStatus, (unsigned int __user *)arg);
+			break;
+		}
+		else if (wan_stb_g == 6)	// P2,P3,P4
+		{
+			port = LAN_PORT_2;
+			rtk_port_linkStatus_get(port, &pLinkStatus);
+			if (pLinkStatus)
+			{
+				put_user(pLinkStatus, (unsigned int __user *)arg);
+				break;
+			}
+
+			port = LAN_PORT_1;
 			rtk_port_linkStatus_get(port, &pLinkStatus);
 			if (pLinkStatus)
 			{
@@ -864,7 +916,7 @@ int rtl8367m_ioctl(struct inode *inode, struct file *file, unsigned int req,
 			put_user(pLinkStatus, (unsigned int __user *)arg);
 			break;
 		}
-		else if (wan_stb_g == 1)	// P1,P2,P3
+		else if (wan_stb_g == 1)	// P0,P1,P2
 		{
 			port = LAN_PORT_4;
 			rtk_port_linkStatus_get(port, &pLinkStatus);
@@ -887,7 +939,7 @@ int rtl8367m_ioctl(struct inode *inode, struct file *file, unsigned int req,
 			put_user(pLinkStatus, (unsigned int __user *)arg);
 			break;
 		}
-		else if (wan_stb_g == 2)	// P0,P2,P3
+		else if (wan_stb_g == 2)	// P0,P1,P3
 		{
 			port = LAN_PORT_4;
 			rtk_port_linkStatus_get(port, &pLinkStatus);
@@ -910,7 +962,7 @@ int rtl8367m_ioctl(struct inode *inode, struct file *file, unsigned int req,
 			put_user(pLinkStatus, (unsigned int __user *)arg);
 			break;
 		}
-		else if (wan_stb_g == 3)	// P0,P1,P3
+		else if (wan_stb_g == 3)	// P0,P2,P3
 		{
 			port = LAN_PORT_4;
 			rtk_port_linkStatus_get(port, &pLinkStatus);
@@ -933,7 +985,7 @@ int rtl8367m_ioctl(struct inode *inode, struct file *file, unsigned int req,
 			put_user(pLinkStatus, (unsigned int __user *)arg);
 			break;
 		}
- 		else if (wan_stb_g == 4)	// P0,P1,P2
+ 		else if (wan_stb_g == 4)	// P1,P2,P3
  		{
 			port = LAN_PORT_3;
 			rtk_port_linkStatus_get(port, &pLinkStatus);
@@ -956,7 +1008,7 @@ int rtl8367m_ioctl(struct inode *inode, struct file *file, unsigned int req,
 			put_user(pLinkStatus, (unsigned int __user *)arg);
 			break;
 		}
-		else if (wan_stb_g == 5)	// P0,P1
+		else if (wan_stb_g == 5)	// P2,P3
 		{
 			port = LAN_PORT_2;
 			rtk_port_linkStatus_get(port, &pLinkStatus);
@@ -967,6 +1019,21 @@ int rtl8367m_ioctl(struct inode *inode, struct file *file, unsigned int req,
 			}
 
 			port = LAN_PORT_1;
+			rtk_port_linkStatus_get(port, &pLinkStatus);
+			put_user(pLinkStatus, (unsigned int __user *)arg);
+			break;
+		}
+		else if (wan_stb_g == 6)	// P0,P1
+		{
+			port = LAN_PORT_4;
+			rtk_port_linkStatus_get(port, &pLinkStatus);
+			if (pLinkStatus)
+			{
+				put_user(pLinkStatus, (unsigned int __user *)arg);
+				break;
+			}
+
+			port = LAN_PORT_3;
 			rtk_port_linkStatus_get(port, &pLinkStatus);
 			put_user(pLinkStatus, (unsigned int __user *)arg);
 			break;
@@ -1191,30 +1258,36 @@ int rtl8367m_ioctl(struct inode *inode, struct file *file, unsigned int req,
 		{				// default mode
 			rtk_stat_port_reset(4);
 		}
-		else if (wan_stb_g == 1)	// P0,P4
+		else if (wan_stb_g == 1)	// P3,P4
 		{
 			rtk_stat_port_reset(LAN_PORT_4);
 			rtk_stat_port_reset(4);
 		}
-		else if (wan_stb_g == 2)	// P1,P4
+		else if (wan_stb_g == 2)	// P2,P4
 		{
 			rtk_stat_port_reset(LAN_PORT_3);
 			rtk_stat_port_reset(4);
 		}
-		else if (wan_stb_g == 3)	// P2,P4
+		else if (wan_stb_g == 3)	// P1,P4
 		{
 			rtk_stat_port_reset(LAN_PORT_2);
 			rtk_stat_port_reset(4);
 		}
-		else if (wan_stb_g == 4)	// P3,P4
+		else if (wan_stb_g == 4)	// P0,P4
 		{
 			rtk_stat_port_reset(LAN_PORT_1);
 			rtk_stat_port_reset(4);
 		}
-		else if (wan_stb_g == 5)	// P2,P3,P4
+		else if (wan_stb_g == 5)	// P0,P1,P4
 		{
 			rtk_stat_port_reset(LAN_PORT_2);
 			rtk_stat_port_reset(LAN_PORT_1);
+			rtk_stat_port_reset(4);
+		}
+		else if (wan_stb_g == 6)	// P2,P3,P4
+		{
+			rtk_stat_port_reset(LAN_PORT_4);
+			rtk_stat_port_reset(LAN_PORT_3);
 			rtk_stat_port_reset(4);
 		}
 		rtk_stat_port_reset(8);
@@ -1230,21 +1303,25 @@ int rtl8367m_ioctl(struct inode *inode, struct file *file, unsigned int req,
 		}
 		else if (wan_stb_x == 1)
 		{
-			printk("LAN: P1,P2,P3 WAN: P0,P4\n");
+			printk("LAN: P0,P1,P2 WAN: P3,P4\n");
 		}
 		else if (wan_stb_x == 2)
 		{
-			printk("LAN: P0,P2,P3 WAN: P1,P4\n");
+			printk("LAN: P0,P1,P3 WAN: P2,P4\n");
 		}
 		else if (wan_stb_x == 3)
 		{
-			printk("LAN: P0,P1,P3 WAN: P2,P4\n");
+			printk("LAN: P0,P2,P3 WAN: P1,P4\n");
 		}
 		else if (wan_stb_x == 4)
 		{
-			printk("LAN: P0,P1,P2 WAN: P3,P4\n");
+			printk("LAN: P1,P2,P3 WAN: P0,P4\n");
 		}
 		else if (wan_stb_x == 5)
+		{
+			printk("LAN: P2,P3 WAN: P0,P1,P4\n");
+		}
+		else if (wan_stb_x == 6)
 		{
 			printk("LAN: P0,P1 WAN: P2,P3,P4\n");
 		}
@@ -1324,7 +1401,7 @@ int rtl8367m_ioctl(struct inode *inode, struct file *file, unsigned int req,
 			pData &= ~CONTROL_REG_PORT_POWER_BIT;
 			rtk_port_phyReg_set(LAN_PORT_1, PHY_CONTROL_REG, pData);
 		}
-		else if (wan_stb_g == 1)	// P1,P2,P3
+		else if (wan_stb_g == 1)	// P0,P1,P2
 		{
 			rtk_port_phyReg_get(LAN_PORT_3, PHY_CONTROL_REG, &pData);
 			pData &= ~CONTROL_REG_PORT_POWER_BIT;
@@ -1338,7 +1415,7 @@ int rtl8367m_ioctl(struct inode *inode, struct file *file, unsigned int req,
 			pData &= ~CONTROL_REG_PORT_POWER_BIT;
 			rtk_port_phyReg_set(LAN_PORT_1, PHY_CONTROL_REG, pData);
 		}
-		else if (wan_stb_g == 2)	// P0,P2,P3
+		else if (wan_stb_g == 2)	// P0,P1,P3
 		{
 			rtk_port_phyReg_get(LAN_PORT_4, PHY_CONTROL_REG, &pData);
 			pData &= ~CONTROL_REG_PORT_POWER_BIT;
@@ -1352,7 +1429,7 @@ int rtl8367m_ioctl(struct inode *inode, struct file *file, unsigned int req,
 			pData &= ~CONTROL_REG_PORT_POWER_BIT;
 			rtk_port_phyReg_set(LAN_PORT_1, PHY_CONTROL_REG, pData);
 		}
-		else if (wan_stb_g == 3)	// P0,P1,P3
+		else if (wan_stb_g == 3)	// P0,P2,P3
 		{
 			rtk_port_phyReg_get(LAN_PORT_4, PHY_CONTROL_REG, &pData);
 			pData &= ~CONTROL_REG_PORT_POWER_BIT;
@@ -1366,7 +1443,7 @@ int rtl8367m_ioctl(struct inode *inode, struct file *file, unsigned int req,
 			pData &= ~CONTROL_REG_PORT_POWER_BIT;
 			rtk_port_phyReg_set(LAN_PORT_1, PHY_CONTROL_REG, pData);
 		}
- 		else if (wan_stb_g == 4)	// P0,P1,P2
+ 		else if (wan_stb_g == 4)	// P1,P2,P3
  		{
 			rtk_port_phyReg_get(LAN_PORT_4, PHY_CONTROL_REG, &pData);
 			pData &= ~CONTROL_REG_PORT_POWER_BIT;
@@ -1380,7 +1457,7 @@ int rtl8367m_ioctl(struct inode *inode, struct file *file, unsigned int req,
 			pData &= ~CONTROL_REG_PORT_POWER_BIT;
 			rtk_port_phyReg_set(LAN_PORT_2, PHY_CONTROL_REG, pData);
 		}
-		else if (wan_stb_g == 5)	// P0,P1
+		else if (wan_stb_g == 5)	// P2,P3
 		{
 			rtk_port_phyReg_get(LAN_PORT_4, PHY_CONTROL_REG, &pData);
 			pData &= ~CONTROL_REG_PORT_POWER_BIT;
@@ -1389,6 +1466,16 @@ int rtl8367m_ioctl(struct inode *inode, struct file *file, unsigned int req,
 			rtk_port_phyReg_get(LAN_PORT_3, PHY_CONTROL_REG, &pData);
 			pData &= ~CONTROL_REG_PORT_POWER_BIT;
 			rtk_port_phyReg_set(LAN_PORT_3, PHY_CONTROL_REG, pData);
+		}
+		else if (wan_stb_g == 6)	// P0,P1
+		{
+			rtk_port_phyReg_get(LAN_PORT_2, PHY_CONTROL_REG, &pData);
+			pData &= ~CONTROL_REG_PORT_POWER_BIT;
+			rtk_port_phyReg_set(LAN_PORT_2, PHY_CONTROL_REG, pData);
+
+			rtk_port_phyReg_get(LAN_PORT_1, PHY_CONTROL_REG, &pData);
+			pData &= ~CONTROL_REG_PORT_POWER_BIT;
+			rtk_port_phyReg_set(LAN_PORT_1, PHY_CONTROL_REG, pData);
 		}
 		
 		break;
@@ -1412,7 +1499,7 @@ int rtl8367m_ioctl(struct inode *inode, struct file *file, unsigned int req,
 			pData |= CONTROL_REG_PORT_POWER_BIT;
 			rtk_port_phyReg_set(LAN_PORT_1, PHY_CONTROL_REG, pData);
 		}
-		else if (wan_stb_g == 1)	// P1,P2,P3
+		else if (wan_stb_g == 1)	// P0,P1,P2
 		{
 			rtk_port_phyReg_get(LAN_PORT_3, PHY_CONTROL_REG, &pData);
 			pData |= CONTROL_REG_PORT_POWER_BIT;
@@ -1426,7 +1513,7 @@ int rtl8367m_ioctl(struct inode *inode, struct file *file, unsigned int req,
 			pData |= CONTROL_REG_PORT_POWER_BIT;
 			rtk_port_phyReg_set(LAN_PORT_1, PHY_CONTROL_REG, pData);
 		}
-		else if (wan_stb_g == 2)	// P0,P2,P3
+		else if (wan_stb_g == 2)	// P0,P1,P3
 		{
 			rtk_port_phyReg_get(LAN_PORT_4, PHY_CONTROL_REG, &pData);
 			pData |= CONTROL_REG_PORT_POWER_BIT;
@@ -1440,7 +1527,7 @@ int rtl8367m_ioctl(struct inode *inode, struct file *file, unsigned int req,
 			pData |= CONTROL_REG_PORT_POWER_BIT;
 			rtk_port_phyReg_set(LAN_PORT_1, PHY_CONTROL_REG, pData);
 		}
-		else if (wan_stb_g == 3)	// P0,P1,P3
+		else if (wan_stb_g == 3)	// P0,P2,P3
 		{
 			rtk_port_phyReg_get(LAN_PORT_4, PHY_CONTROL_REG, &pData);
 			pData |= CONTROL_REG_PORT_POWER_BIT;
@@ -1454,7 +1541,7 @@ int rtl8367m_ioctl(struct inode *inode, struct file *file, unsigned int req,
 			pData |= CONTROL_REG_PORT_POWER_BIT;
 			rtk_port_phyReg_set(LAN_PORT_1, PHY_CONTROL_REG, pData);
 		}
- 		else if (wan_stb_g == 4)	// P0,P1,P2
+ 		else if (wan_stb_g == 4)	// P1,P2,P3
  		{
 			rtk_port_phyReg_get(LAN_PORT_4, PHY_CONTROL_REG, &pData);
 			pData |= CONTROL_REG_PORT_POWER_BIT;
@@ -1468,7 +1555,7 @@ int rtl8367m_ioctl(struct inode *inode, struct file *file, unsigned int req,
 			pData |= CONTROL_REG_PORT_POWER_BIT;
 			rtk_port_phyReg_set(LAN_PORT_2, PHY_CONTROL_REG, pData);
 		}
-		else if (wan_stb_g == 5)	// P0,P1
+		else if (wan_stb_g == 5)	// P2,P3
 		{
 			rtk_port_phyReg_get(LAN_PORT_4, PHY_CONTROL_REG, &pData);
 			pData |= CONTROL_REG_PORT_POWER_BIT;
@@ -1477,6 +1564,16 @@ int rtl8367m_ioctl(struct inode *inode, struct file *file, unsigned int req,
 			rtk_port_phyReg_get(LAN_PORT_3, PHY_CONTROL_REG, &pData);
 			pData |= CONTROL_REG_PORT_POWER_BIT;
 			rtk_port_phyReg_set(LAN_PORT_3, PHY_CONTROL_REG, pData);
+		}
+		else if (wan_stb_g == 6)	// P0,P1
+		{
+			rtk_port_phyReg_get(LAN_PORT_2, PHY_CONTROL_REG, &pData);
+			pData |= CONTROL_REG_PORT_POWER_BIT;
+			rtk_port_phyReg_set(LAN_PORT_2, PHY_CONTROL_REG, pData);
+
+			rtk_port_phyReg_get(LAN_PORT_1, PHY_CONTROL_REG, &pData);
+			pData |= CONTROL_REG_PORT_POWER_BIT;
+			rtk_port_phyReg_set(LAN_PORT_1, PHY_CONTROL_REG, pData);
 		}
 
 		break;
@@ -1559,17 +1656,99 @@ int rtl8367m_ioctl(struct inode *inode, struct file *file, unsigned int req,
                 break;
 
         case 20:
-                copy_from_user(&rxDelay_user, (unsigned int __user *)arg, sizeof(unsigned int));
-                printk("WAN port rxDelay: %d\n", rxDelay_user);
+		copy_from_user(&rxDelay_user, (unsigned int __user *)arg, sizeof(unsigned int));
+		printk("WAN port rxDelay: %d\n", rxDelay_user);
 
-                printk("new txDelay: %d, rxDelay: %d\n", txDelay_user, rxDelay_user);
-                retVal = rtk_port_rgmiiDelayExt0_set(txDelay_user, rxDelay_user);
-                printk("rtk_port_rgmiiDelayExt0_set(): return %d\n", retVal);
+		printk("new txDelay: %d, rxDelay: %d\n", txDelay_user, rxDelay_user);
+		retVal = rtk_port_rgmiiDelayExt0_set(txDelay_user, rxDelay_user);
+		printk("rtk_port_rgmiiDelayExt0_set(): return %d\n", retVal);
 
-                rtk_port_rgmiiDelayExt0_get(&txDelay_ro, &rxDelay_ro);
-                printk("current Ext0 txDelay: %d, rxDelay: %d\n", txDelay_ro, rxDelay_ro);
+		rtk_port_rgmiiDelayExt0_get(&txDelay_ro, &rxDelay_ro);
+		printk("current Ext0 txDelay: %d, rxDelay: %d\n", txDelay_ro, rxDelay_ro);
 
-                break;
+		break;
+
+	case 21:
+		printk("reset strom control\n");
+
+		rtk_storm_controlRate_set(0, STORM_GROUP_UNKNOWN_UNICAST, 1048568, 1, 0);
+		rtk_storm_controlRate_set(0, STORM_GROUP_UNKNOWN_MULTICAST, 1048568, 1, 0);
+		rtk_storm_controlRate_set(0, STORM_GROUP_MULTICAST, 1048568, 1, 0);
+		rtk_storm_controlRate_set(0, STORM_GROUP_BROADCAST, 1048568, 1, 0);
+	
+		rtk_storm_controlRate_set(1, STORM_GROUP_UNKNOWN_UNICAST, 1048568, 1, 0);
+		rtk_storm_controlRate_set(1, STORM_GROUP_UNKNOWN_MULTICAST, 1048568, 1, 0);
+		rtk_storm_controlRate_set(1, STORM_GROUP_MULTICAST, 1048568, 1, 0);
+		rtk_storm_controlRate_set(1, STORM_GROUP_BROADCAST, 1048568, 1, 0);
+	
+		rtk_storm_controlRate_set(2, STORM_GROUP_UNKNOWN_UNICAST, 1048568, 1, 0);
+		rtk_storm_controlRate_set(2, STORM_GROUP_UNKNOWN_MULTICAST, 1048568, 1, 0);
+		rtk_storm_controlRate_set(2, STORM_GROUP_MULTICAST, 1048568, 1, 0);
+		rtk_storm_controlRate_set(2, STORM_GROUP_BROADCAST, 1048568, 1, 0);
+	
+		rtk_storm_controlRate_set(3, STORM_GROUP_UNKNOWN_UNICAST, 1048568, 1, 0);
+		rtk_storm_controlRate_set(3, STORM_GROUP_UNKNOWN_MULTICAST, 1048568, 1, 0);
+		rtk_storm_controlRate_set(3, STORM_GROUP_MULTICAST, 1048568, 1, 0);
+		rtk_storm_controlRate_set(3, STORM_GROUP_BROADCAST, 1048568, 1, 0);
+	
+		rtk_storm_controlRate_set(4, STORM_GROUP_UNKNOWN_UNICAST, 1048568, 1, 0);
+		rtk_storm_controlRate_set(4, STORM_GROUP_UNKNOWN_MULTICAST, 1048568, 1, 0);
+		rtk_storm_controlRate_set(4, STORM_GROUP_MULTICAST, 1048568, 1, 0);
+		rtk_storm_controlRate_set(4, STORM_GROUP_BROADCAST, 1048568, 1, 0);
+
+		break;
+
+        case 22:
+		copy_from_user(&control_rate, (unsigned int __user *)arg, sizeof(unsigned int));
+		if ((control_rate < 1) || (control_rate > 1024))
+			break;
+		printk("set unknown unicast strom control as: %d\n", control_rate);
+		rtk_storm_controlRate_set(0, STORM_GROUP_UNKNOWN_UNICAST, control_rate*1024, 1, 0);
+		rtk_storm_controlRate_set(1, STORM_GROUP_UNKNOWN_UNICAST, control_rate*1024, 1, 0);
+		rtk_storm_controlRate_set(2, STORM_GROUP_UNKNOWN_UNICAST, control_rate*1024, 1, 0);
+		rtk_storm_controlRate_set(3, STORM_GROUP_UNKNOWN_UNICAST, control_rate*1024, 1, 0);
+		rtk_storm_controlRate_set(4, STORM_GROUP_UNKNOWN_UNICAST, control_rate*1024, 1, 0);
+		
+		break;
+
+        case 23:
+		copy_from_user(&control_rate, (unsigned int __user *)arg, sizeof(unsigned int));
+		if ((control_rate < 1) || (control_rate > 1024))
+			break;
+		printk("set unknown multicast strom control as: %d\n", control_rate);
+		rtk_storm_controlRate_set(0, STORM_GROUP_UNKNOWN_MULTICAST, control_rate*1024, 1, 0);
+		rtk_storm_controlRate_set(1, STORM_GROUP_UNKNOWN_MULTICAST, control_rate*1024, 1, 0);
+		rtk_storm_controlRate_set(2, STORM_GROUP_UNKNOWN_MULTICAST, control_rate*1024, 1, 0);
+		rtk_storm_controlRate_set(3, STORM_GROUP_UNKNOWN_MULTICAST, control_rate*1024, 1, 0);
+		rtk_storm_controlRate_set(4, STORM_GROUP_UNKNOWN_MULTICAST, control_rate*1024, 1, 0);
+		
+		break;
+
+        case 24:
+		copy_from_user(&control_rate, (unsigned int __user *)arg, sizeof(unsigned int));
+		if ((control_rate < 1) || (control_rate > 1024))
+			break;
+		printk("set multicast strom control as: %d\n", control_rate);
+		rtk_storm_controlRate_set(0, STORM_GROUP_MULTICAST, control_rate*1024, 1, 0);
+		rtk_storm_controlRate_set(1, STORM_GROUP_MULTICAST, control_rate*1024, 1, 0);
+		rtk_storm_controlRate_set(2, STORM_GROUP_MULTICAST, control_rate*1024, 1, 0);
+		rtk_storm_controlRate_set(3, STORM_GROUP_MULTICAST, control_rate*1024, 1, 0);
+		rtk_storm_controlRate_set(4, STORM_GROUP_MULTICAST, control_rate*1024, 1, 0);
+		
+		break;
+
+        case 25:
+		copy_from_user(&control_rate, (unsigned int __user *)arg, sizeof(unsigned int));
+		if ((control_rate < 1) || (control_rate > 1024))
+			break;
+		printk("set broadcast strom control as: %d\n", control_rate);
+		rtk_storm_controlRate_set(0, STORM_GROUP_BROADCAST, control_rate*1024, 1, 0);
+		rtk_storm_controlRate_set(1, STORM_GROUP_BROADCAST, control_rate*1024, 1, 0);
+		rtk_storm_controlRate_set(2, STORM_GROUP_BROADCAST, control_rate*1024, 1, 0);
+		rtk_storm_controlRate_set(3, STORM_GROUP_BROADCAST, control_rate*1024, 1, 0);
+		rtk_storm_controlRate_set(4, STORM_GROUP_BROADCAST, control_rate*1024, 1, 0);
+		
+		break;
 
 	default:
 		return -ENOIOCTLCMD;
@@ -1765,32 +1944,32 @@ int __init rtl8367m_init(void)
 #endif
 
 	/* Storm Filtering Control */
+#if 0
+	rtk_storm_controlRate_set(0, STORM_GROUP_UNKNOWN_UNICAST, 16384, 1, 0);
+	rtk_storm_controlRate_set(0, STORM_GROUP_UNKNOWN_MULTICAST, 20000, 1, 0);
+	rtk_storm_controlRate_set(0, STORM_GROUP_MULTICAST, 20000, 1, 0);
+	rtk_storm_controlRate_set(0, STORM_GROUP_BROADCAST, 16384, 1, 0);
 
-	rtk_storm_controlRate_set(0, STORM_GROUP_UNKNOWN_UNICAST, 100000, 1, 0);
-	rtk_storm_controlRate_set(0, STORM_GROUP_UNKNOWN_MULTICAST, 100000, 1, 0);
-	rtk_storm_controlRate_set(0, STORM_GROUP_MULTICAST, 100000, 1, 0);
-	rtk_storm_controlRate_set(0, STORM_GROUP_BROADCAST, 100000, 1, 0);
+	rtk_storm_controlRate_set(1, STORM_GROUP_UNKNOWN_UNICAST, 16384, 1, 0);
+	rtk_storm_controlRate_set(1, STORM_GROUP_UNKNOWN_MULTICAST, 20000, 1, 0);
+	rtk_storm_controlRate_set(1, STORM_GROUP_MULTICAST, 20000, 1, 0);
+	rtk_storm_controlRate_set(1, STORM_GROUP_BROADCAST, 16384, 1, 0);
 
-	rtk_storm_controlRate_set(1, STORM_GROUP_UNKNOWN_UNICAST, 100000, 1, 0);
-	rtk_storm_controlRate_set(1, STORM_GROUP_UNKNOWN_MULTICAST, 100000, 1, 0);
-	rtk_storm_controlRate_set(1, STORM_GROUP_MULTICAST, 100000, 1, 0);
-	rtk_storm_controlRate_set(1, STORM_GROUP_BROADCAST, 100000, 1, 0);
+	rtk_storm_controlRate_set(2, STORM_GROUP_UNKNOWN_UNICAST, 16384, 1, 0);
+	rtk_storm_controlRate_set(2, STORM_GROUP_UNKNOWN_MULTICAST, 20000, 1, 0);
+	rtk_storm_controlRate_set(2, STORM_GROUP_MULTICAST, 20000, 1, 0);
+	rtk_storm_controlRate_set(2, STORM_GROUP_BROADCAST, 16384, 1, 0);
 
-	rtk_storm_controlRate_set(2, STORM_GROUP_UNKNOWN_UNICAST, 100000, 1, 0);
-	rtk_storm_controlRate_set(2, STORM_GROUP_UNKNOWN_MULTICAST, 100000, 1, 0);
-	rtk_storm_controlRate_set(2, STORM_GROUP_MULTICAST, 100000, 1, 0);
-	rtk_storm_controlRate_set(2, STORM_GROUP_BROADCAST, 100000, 1, 0);
+	rtk_storm_controlRate_set(3, STORM_GROUP_UNKNOWN_UNICAST, 16384, 1, 0);
+	rtk_storm_controlRate_set(3, STORM_GROUP_UNKNOWN_MULTICAST, 20000, 1, 0);
+	rtk_storm_controlRate_set(3, STORM_GROUP_MULTICAST, 20000, 1, 0);
+	rtk_storm_controlRate_set(3, STORM_GROUP_BROADCAST, 16384, 1, 0);
 
-	rtk_storm_controlRate_set(3, STORM_GROUP_UNKNOWN_UNICAST, 100000, 1, 0);
-	rtk_storm_controlRate_set(3, STORM_GROUP_UNKNOWN_MULTICAST, 100000, 1, 0);
-	rtk_storm_controlRate_set(3, STORM_GROUP_MULTICAST, 100000, 1, 0);
-	rtk_storm_controlRate_set(3, STORM_GROUP_BROADCAST, 100000, 1, 0);
-
-	rtk_storm_controlRate_set(4, STORM_GROUP_UNKNOWN_UNICAST, 100000, 1, 0);
-	rtk_storm_controlRate_set(4, STORM_GROUP_UNKNOWN_MULTICAST, 100000, 1, 0);
-	rtk_storm_controlRate_set(4, STORM_GROUP_MULTICAST, 100000, 1, 0);
-	rtk_storm_controlRate_set(4, STORM_GROUP_BROADCAST, 100000, 1, 0);
-
+	rtk_storm_controlRate_set(4, STORM_GROUP_UNKNOWN_UNICAST, 16384, 1, 0);
+	rtk_storm_controlRate_set(4, STORM_GROUP_UNKNOWN_MULTICAST, 20000, 1, 0);
+	rtk_storm_controlRate_set(4, STORM_GROUP_MULTICAST, 20000, 1, 0);
+	rtk_storm_controlRate_set(4, STORM_GROUP_BROADCAST, 16384, 1, 0);
+#endif
 	LANWANPartition();
 
 	printk("RTL8367M driver initialized\n");

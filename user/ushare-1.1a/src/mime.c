@@ -35,31 +35,54 @@ const struct mime_type_t MIME_Type_List[] = {
   /* Video files */
   { "asf",   UPNP_VIDEO, "http-get:*:video/x-ms-asf:"},
   { "avc",   UPNP_VIDEO, "http-get:*:video/avi:"},
+#if 0
   { "avi",   UPNP_VIDEO, "http-get:*:video/avi:"},
+#else
+  { "avi",   UPNP_VIDEO, "http-get:*:video/divx:DLNA.ORG_PN=MPEG4_P2_TS_SP_MPEG1_L3;DLNA.ORG_OP=01;"},
+#endif
   { "dv",    UPNP_VIDEO, "http-get:*:video/x-dv:"},
+#if 0
   { "divx",  UPNP_VIDEO, "http-get:*:video/avi:"},
   { "wmv",   UPNP_VIDEO, "http-get:*:video/x-ms-wmv:"},
+#else
+  { "divx",  UPNP_VIDEO, "http-get:*:video/divx:DLNA.ORG_PN=MPEG4_P2_TS_SP_MPEG1_L3;DLNA.ORG_OP=01;"},
+  { "xvid",  UPNP_VIDEO, "http-get:*:video/divx:DLNA.ORG_PN=MPEG4_P2_TS_SP_MPEG1_L3;DLNA.ORG_OP=01;"},
+  { "wmv",   UPNP_VIDEO, "http-get:*:video/x-ms-wmv:DLNA.ORG_PN=WMVHIGH_PRO;DLNA.ORG_OP=01;"},
+  { "m2ts",  UPNP_VIDEO, "http-get:*:video/vnd.dlna.mpeg-tts:DLNA.ORG_PN=AVC_TS_MP_HD_AC3;DLNA.ORG_OP=01;"},
+#endif
   { "mjpg",  UPNP_VIDEO, "http-get:*:video/x-motion-jpeg:"},
   { "mjpeg", UPNP_VIDEO, "http-get:*:video/x-motion-jpeg:"},
   { "mpeg",  UPNP_VIDEO, "http-get:*:video/mpeg:"},
+#if 0
   { "mpg",   UPNP_VIDEO, "http-get:*:video/mpeg:"},
+#else
+  { "mpg",   UPNP_VIDEO, "http-get:*:video/mpeg:DLNA.ORG_PN=MPEG_PS;DLNA.ORG_OP=01;"},
+#endif
   { "mpe",   UPNP_VIDEO, "http-get:*:video/mpeg:"},
   { "mp2p",  UPNP_VIDEO, "http-get:*:video/mp2p:"},
   { "vob",   UPNP_VIDEO, "http-get:*:video/mp2p:"},
   { "mp2t",  UPNP_VIDEO, "http-get:*:video/mp2t:"},
   { "m1v",   UPNP_VIDEO, "http-get:*:video/mpeg:"},
   { "m2v",   UPNP_VIDEO, "http-get:*:video/mpeg2:"},
+#if 0
   { "mpg2",  UPNP_VIDEO, "http-get:*:video/mpeg2:"},
+#else
+  { "mpg2",  UPNP_VIDEO, "http-get:*:video/mpeg2:DLNA.ORG_PN=MPEG_PS;DLNA.ORG_OP=01;"},
+#endif
   { "mpeg2", UPNP_VIDEO, "http-get:*:video/mpeg2:"},
   { "m4v",   UPNP_VIDEO, "http-get:*:video/mp4:"},
+  { "mp4",   UPNP_VIDEO, "http-get:*:video/mp4:DLNA.ORG_PN=MPEG4_P2_MP4_SP_AAC;DLNA.ORG_OP=01;"},	// ASUS EXT
   { "m4p",   UPNP_VIDEO, "http-get:*:video/mp4:"},
   { "mp4ps", UPNP_VIDEO, "http-get:*:video/x-nerodigital-ps:"},
+#if 0
   { "ts",    UPNP_VIDEO, "http-get:*:video/mpeg2:"},
-  { "m2ts",  UPNP_VIDEO, "http-get:*:video/mpeg2:"},		// ASUS EXT
-  { "tp",    UPNP_VIDEO, "http-get:*:video/mpeg2:"},		// ASUS EXT
+#else
+  { "ts",    UPNP_VIDEO, "http-get:*:video/mpeg2:DLNA.ORG_PN=MPEG_PS;DLNA.ORG_OP=01;"},
+  { "tp",    UPNP_VIDEO, "http-get:*:video/mpeg2:DLNA.ORG_PN=MPEG_PS;DLNA.ORG_OP=01;"},
+#endif
   { "ogm",   UPNP_VIDEO, "http-get:*:video/mpeg:"},
   { "mkv",   UPNP_VIDEO, "http-get:*:video/mpeg:"},
-  { "rm",    UPNP_VIDEO, "http-get:*:video/mpeg:"},		// ASUS EXT
+  { "rm",    UPNP_VIDEO, "http-get:*:video/mpeg:"},							// ASUS EXT
   { "rmvb",  UPNP_VIDEO, "http-get:*:video/mpeg:"},
   { "mov",   UPNP_VIDEO, "http-get:*:video/quicktime:"},
   { "hdmov", UPNP_VIDEO, "http-get:*:video/quicktime:"},
@@ -81,7 +104,11 @@ const struct mime_type_t MIME_Type_List[] = {
   { "mid",  UPNP_AUDIO, "http-get:*:audio/midi:"},
   { "mp1",  UPNP_AUDIO, "http-get:*:audio/mp1:"},
   { "mp2",  UPNP_AUDIO, "http-get:*:audio/mp2:"},
+#if 0
   { "mp3",  UPNP_AUDIO, "http-get:*:audio/mpeg:"},
+#else
+  { "mp3",  UPNP_AUDIO, "http-get:*:audio/mpeg:DLNA.ORG_PN=MP3;DLNA.ORG_OP=01;"},
+#endif
   { "mp4",  UPNP_AUDIO, "http-get:*:audio/mp4:"},
   { "m4a",  UPNP_AUDIO, "http-get:*:audio/mp4:"},
   { "ogg",  UPNP_AUDIO, "http-get:*:audio/x-ogg:"},

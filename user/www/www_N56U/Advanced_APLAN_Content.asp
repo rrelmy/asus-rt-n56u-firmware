@@ -27,7 +27,7 @@ function initial(){
 	show_banner(1);
 	show_menu(5,2,1);
 	show_footer();
-	
+
 	if(document.form.lan_proto_x[0].checked == true){
 		inputCtrl(document.form.lan_ipaddr, 0);
 		inputCtrl(document.form.lan_netmask, 0);
@@ -75,7 +75,7 @@ function applyRule(){
 		showLoading();
 		
 		document.form.action_mode.value = " Apply ";
-		document.form.current_page.value = "";
+		document.form.current_page.value = "Advanced_APLAN_Content.asp";
 		document.form.next_page.value = "/as.asp";
 		get_dhcp_range();
 		
@@ -142,6 +142,21 @@ function done_validating(action){
 
 <body onload="initial();" onunLoad="disable_auto_hint(4, 2);return unload_body();">
 <div id="TopBanner"></div>
+<div id="hiddenMask" class="popup_bg">
+	<table cellpadding="5" cellspacing="0" id="dr_sweet_advise" class="dr_sweet_advise" align="center">
+		<tr>
+		<td>
+			<div class="drword" id="drword" style="height:80px;"><#Main_alert_proceeding_desc4#> <#Main_alert_proceeding_desc1#>...
+				<br/>
+				<br/>
+	    </div>
+		  <div class="drImg"><img src=""></div>
+			<div style="height:10px;"></div>
+		</td>
+		</tr>
+	</table>
+<!--[if lte IE 6.5]><iframe class="hackiframe"></iframe><![endif]-->
+</div>
 
 <div id="Loading" class="popup_bg"></div>
 

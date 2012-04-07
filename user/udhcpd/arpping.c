@@ -38,17 +38,6 @@
 #include "debug.h"
 #include "arpping.h"
 
-#ifndef BRCM_UDHCPD
-#include <sys/sysinfo.h>
-static long uptime(void)
-{
-        struct sysinfo info;
-        sysinfo(&info);
-
-        return info.uptime;
-}
-#endif
-
 /* args:	yiaddr - what IP to ping
  *		ip - our ip
  *		mac - our arp address

@@ -30,7 +30,7 @@ INSTALL = install
 VER := 0.9.8
 
 
-OBJS_SHARED = options.o socket.o packet.o pidfile.o
+OBJS_SHARED = options.o socket.o packet.o pidfile.o uptime.o
 DHCPD_OBJS = dhcpd.o arpping.o files.o leases.o serverpacket.o
 DHCPC_OBJS = dhcpc.o clientpacket.o script.o
 

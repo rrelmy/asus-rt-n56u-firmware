@@ -128,7 +128,7 @@
 	text-align:left;
 	padding:10px;
 	width:390px;
-	height:70px;
+	height:100px;
 	font-size:18px;
 	font-family:Arial, Verdana, Helvetica, sans-serif;
 	line-height:130%;
@@ -145,6 +145,38 @@
 }
 
 .drword a{
+	font-size:12px;
+	font-family: Arial, Helvetica, sans-serif;
+	color: #003366;
+}
+
+.drword_Nologin{
+	background-color:#FFFFFF;
+	color:#006699;
+	border:1px solid #999;
+	margin-left:10px;
+	margin-top:10px;
+	text-align:left;
+	padding:10px;
+	width:390px;
+	height:100px;
+	font-size:16px;
+	font-family:Arial, Verdana, Helvetica, sans-serif;
+	line-height:130%;
+}
+
+.drword_Nologin span{
+	font-size:15px;
+	font-family:"Times New Roman", Times, serif;
+	color:#FF6600;
+}
+
+.drword_Nologin img{
+	margin-right:10px;
+	vertical-align:middle;	
+}
+
+.drword_Nologin a{
 	font-size:12px;
 	font-family: Arial, Helvetica, sans-serif;
 	color: #003366;

@@ -92,10 +92,6 @@ int start_pppd(char *prefix)
 
 	if (nvram_match(strcat_r(prefix, "proto", tmp), "pptp"))
 	{
-		fprintf(fp, "lock\n");
-		fprintf(fp, "refuse-chap\n");
-		fprintf(fp, "refuse-mschap\n");
-
 		fprintf(fp, "plugin pptp.so\n");
 		fprintf(fp, "pptp_server '%s'\n",
 			nvram_invmatch("wan_heartbeat_x", "") ?
@@ -110,8 +106,6 @@ int start_pppd(char *prefix)
 
 	if (nvram_match(strcat_r(prefix, "proto", tmp), "pppoe"))
 	{
-		fprintf(fp, "nodetach\n");
-
 		fprintf(fp, "plugin rp-pppoe.so");
 
 		if (nvram_invmatch(strcat_r(prefix, "pppoe_service", tmp), "")) {
@@ -140,8 +134,6 @@ int start_pppd(char *prefix)
 		}
 		fprintf(fp, "demand\n");
 	}
-	else
-		fprintf(fp, "persist\n");
 	
 	fprintf(fp, "maxfail 0\n");
 	fprintf(fp, "holdoff 10\n");	// pppd re-call-time(s)
@@ -149,8 +141,8 @@ int start_pppd(char *prefix)
 	if (nvram_invmatch(strcat_r(prefix, "dnsenable_x", tmp), "0"))
 		fprintf(fp, "usepeerdns\n");
 
-//	if (nvram_invmatch(strcat_r(prefix, "proto", tmp), "l2tp"))
-//		fprintf(fp, "persist\n");
+	if (nvram_invmatch(strcat_r(prefix, "proto", tmp), "l2tp"))
+		fprintf(fp, "persist\n");
 
 	fprintf(fp, "ipcp-accept-remote ipcp-accept-local noipdefault\n");
 	fprintf(fp, "ktune\n");
@@ -185,7 +177,6 @@ int start_pppd(char *prefix)
 			return -1;
 		}
 
-		printf("\n\nbuild l2tp.conf\n");	// tmp test
 		fprintf(fp, "# automagically generated\n"
 			"global\n\n"
 			"load-handler \"sync-pppd.so\"\n"
@@ -193,10 +184,6 @@ int start_pppd(char *prefix)
 			"section sync-pppd\n\n"
 			"lac-pppd-opts \"file %s\"\n\n"
 			"section peer\n"
-/*
-			"peer %s\n"
-*/
-			"port 1701\n"
 			"peername %s\n"
 			"hostname %s\n"
 			"lac-handler sync-pppd\n"
@@ -209,11 +196,6 @@ int start_pppd(char *prefix)
                         nvram_invmatch("wan_heartbeat_x", "") ?
                                 nvram_safe_get("wan_heartbeat_x") :
                                 nvram_safe_get(strcat_r(prefix, "pppoe_gateway", tmp)),
-/*
-			nvram_invmatch("wan_heartbeat_x", "") ?
-				nvram_safe_get("wan_heartbeat_x") :
-				nvram_safe_get(strcat_r(prefix, "pppoe_gateway", tmp)),
-*/
 			nvram_invmatch(strcat_r(prefix, "hostname", tmp), "") ?	// ham 0509
 				nvram_safe_get(strcat_r(prefix, "hostname", tmp)) : "localhost",
 			nvram_invmatch(strcat_r(prefix, "pppoe_maxfail", tmp), "") ?
@@ -224,12 +206,12 @@ int start_pppd(char *prefix)
 		fclose(fp);
 
 		/* launch l2tp */
-		system("/usr/sbin/l2tpd");		// tmp disable
+		system("/usr/sbin/l2tpd");
 
 		sleep(1);
 
 		/* start-session */
-		ret = system("/usr/sbin/l2tp-control \"start-session 0.0.0.0\"");	// tmp disable
+		ret = system("/usr/sbin/l2tp-control \"start-session 0.0.0.0\"");
 
 		/* pppd sync nodetach noaccomp nobsdcomp nodeflate */
 		/* nopcomp novj novjccomp file /tmp/ppp/options.l2tp */

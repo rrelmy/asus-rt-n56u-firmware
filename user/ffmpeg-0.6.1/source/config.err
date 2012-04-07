@@ -1,0 +1,4094 @@
+# ./configure --cross-prefix=mipsel-linux- --enable-cross-compile --arch=mips --target-os=linux --prefix=/root/RT-N56U/source/user/ffmpeg-0.6.1/source/../install --enable-pthreads --disable-avdevice --disable-swscale --disable-ffmpeg --disable-ffplay --disable-ffprobe --disable-ffserver --disable-swscale-alpha --disable-encoders --disable-decoders --disable-bsfs --disable-indevs --disable-outdevs --disable-devices --disable-filters --disable-muxers --disable-parsers --disable-protocols --enable-protocol=file --disable-aandct --disable-dct --disable-fft --disable-golomb --disable-lpc --disable-mdct --disable-rdft --disable-vaapi --disable-vdpau --disable-dxva2
+AR=/opt/buildroot-gcc342/bin/mipsel-linux-uclibc-ar
+ARCH=mips
+ARCH_CONFIG=/root/RT-N56U/source/config.arch
+ARCH_EXT_LIST='
+    altivec
+    amd3dnow
+    amd3dnowext
+    armv5te
+    armv6
+    armv6t2
+    armvfp
+    iwmmxt
+    mmi
+    mmx
+    mmx2
+    neon
+    ppc4xx
+    sse
+    ssse3
+    vis
+'
+ARCH_LIST='
+    alpha
+    arm
+    avr32
+    avr32_ap
+    avr32_uc
+    bfin
+    ia64
+    m68k
+    mips
+    mips64
+    parisc
+    ppc
+    ppc64
+    s390
+    sh4
+    sparc
+    sparc64
+    tomi
+    x86
+    x86_32
+    x86_64
+'
+AS='/opt/buildroot-gcc342/bin/mipsel-linux-uclibc-as '
+BASH=/bin/sh
+BASHOPTS=cmdhist:extquote:force_fignore:hostcomplete:interactive_comments:progcomp:promptvars:sourcepath
+BASH_ALIASES=()
+BASH_ARGC=([0]="34")
+BASH_ARGV=([0]="--disable-dxva2" [1]="--disable-vdpau" [2]="--disable-vaapi" [3]="--disable-rdft" [4]="--disable-mdct" [5]="--disable-lpc" [6]="--disable-golomb" [7]="--disable-fft" [8]="--disable-dct" [9]="--disable-aandct" [10]="--enable-protocol=file" [11]="--disable-protocols" [12]="--disable-parsers" [13]="--disable-muxers" [14]="--disable-filters" [15]="--disable-devices" [16]="--disable-outdevs" [17]="--disable-indevs" [18]="--disable-bsfs" [19]="--disable-decoders" [20]="--disable-encoders" [21]="--disable-swscale-alpha" [22]="--disable-ffserver" [23]="--disable-ffprobe" [24]="--disable-ffplay" [25]="--disable-ffmpeg" [26]="--disable-swscale" [27]="--disable-avdevice" [28]="--enable-pthreads" [29]="--prefix=/root/RT-N56U/source/user/ffmpeg-0.6.1/source/../install" [30]="--target-os=linux" [31]="--arch=mips" [32]="--enable-cross-compile" [33]="--cross-prefix=mipsel-linux-")
+BASH_CMDS=()
+BASH_LINENO=([0]="0")
+BASH_SOURCE=([0]="./configure")
+BASH_VERSINFO=([0]="4" [1]="1" [2]="7" [3]="1" [4]="release" [5]="i386-redhat-linux-gnu")
+BASH_VERSION='4.1.7(1)-release'
+BSF_LIST='aac_adtstoasc_bsf
+dump_extradata_bsf
+h264_mp4toannexb_bsf
+imx_dump_header_bsf
+mjpega_dump_header_bsf
+mp3_header_compress_bsf
+mp3_header_decompress_bsf
+mov2textsub_bsf
+noise_bsf
+remove_extradata_bsf
+text2movsub_bsf'
+BUILD_START_STRING='Mon, 24 Jan 2011 17:03:51 +0800'
+BUSYBOX_CONFIG=/root/RT-N56U/source/user/busybox/.config
+CC='/opt/buildroot-gcc342/bin/mipsel-linux-uclibc-gcc '
+CCACHE_DIR=/var/cache/ccache
+CCACHE_UMASK=002
+CC_O='-o $@'
+CFLAGS='-O2 -fomit-frame-pointer -pipe  -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source '
+CMDLINE_APPEND='
+    extra_cflags
+'
+CMDLINE_SELECT='
+    
+    altivec
+    amd3dnow
+    amd3dnowext
+    armv5te
+    armv6
+    armv6t2
+    armvfp
+    iwmmxt
+    mmi
+    mmx
+    mmx2
+    neon
+    ppc4xx
+    sse
+    ssse3
+    vis
+
+    
+    
+    bsfs
+    decoders
+    demuxers
+    encoders
+    filters
+    hwaccels
+    indevs
+    muxers
+    outdevs
+    parsers
+    protocols
+
+    aandct
+    avcodec
+    avdevice
+    avfilter
+    avfilter_lavf
+    avformat
+    avisynth
+    beos_netserver
+    bzlib
+    dct
+    doc
+    dwt
+    dxva2
+    fastdiv
+    ffmpeg
+    ffplay
+    ffprobe
+    ffserver
+    fft
+    golomb
+    gpl
+    gprof
+    gray
+    h264dsp
+    hardcoded_tables
+    libdc1394
+    libdirac
+    libfaac
+    libfaad
+    libfaadbin
+    libgsm
+    libmp3lame
+    libnut
+    libopencore_amrnb
+    libopencore_amrwb
+    libopenjpeg
+    librtmp
+    libschroedinger
+    libspeex
+    libtheora
+    libvorbis
+    libvpx
+    libx264
+    libxvid
+    lpc
+    lsp
+    mdct
+    memalign_hack
+    mlib
+    mpegaudio_hp
+    network
+    nonfree
+    pic
+    postproc
+    powerpc_perf
+    rdft
+    runtime_cpudetect
+    shared
+    small
+    sram
+    static
+    swscale
+    swscale_alpha
+    vaapi
+    vdpau
+    version3
+    x11grab
+    zlib
+
+    
+    beosthreads
+    os2threads
+    pthreads
+    w32threads
+
+    asm
+    cross_compile
+    debug
+    extra_warnings
+    logging
+    optimizations
+    stripping
+    yasm
+'
+CMDLINE_SET='
+    
+    bindir
+    datadir
+    incdir
+    libdir
+    mandir
+    prefix
+    shlibdir
+
+    ar
+    arch
+    as
+    build_suffix
+    cc
+    cpu
+    cross_prefix
+    dep_cc
+    extra_version
+    host_cc
+    host_cflags
+    host_ldflags
+    host_libs
+    host_os
+    ld
+    logfile
+    malloc_prefix
+    nm
+    samples
+    source_path
+    strip
+    sysinclude
+    sysroot
+    target_exec
+    target_os
+    target_path
+'
+COLORTERM=gnome-terminal
+COMPONENT_LIST='
+    bsfs
+    decoders
+    demuxers
+    encoders
+    filters
+    hwaccels
+    indevs
+    muxers
+    outdevs
+    parsers
+    protocols
+'
+CONFIGURE_HOST='"/opt/buildroot-gcc342/bin"/mipsel-linux-uclibc-'
+CONFIG_32BIT=y
+CONFIG_ADDGROUP=y
+CONFIG_ADDUSER=y
+CONFIG_AIO=y
+CONFIG_ARCH_FLATMEM_ENABLE=y
+CONFIG_ASH=y
+CONFIG_ASH_MATH_SUPPORT=y
+CONFIG_ASUS_DETECTWAN=y
+CONFIG_ASUS_HTTPD=y
+CONFIG_ASUS_INFOSVR=y
+CONFIG_ASUS_LIBDISK=y
+CONFIG_ASUS_LPRNG=y
+CONFIG_ASUS_NETCONF=y
+CONFIG_ASUS_NETWORK_MAP=y
+CONFIG_ASUS_NTFS3G=y
+CONFIG_ASUS_NTPCLIENT=y
+CONFIG_ASUS_NVRAM_API=m
+CONFIG_ASUS_NVRAM_UTIL=y
+CONFIG_ASUS_RC=y
+CONFIG_ASUS_SAMBA=y
+CONFIG_ASUS_SHARED=y
+CONFIG_ASUS_SW_QOS=y
+CONFIG_ASUS_U2EC=y
+CONFIG_ASUS_WANDUCK=y
+CONFIG_ASUS_WWW=y
+CONFIG_BASENAME=y
+CONFIG_BASE_FULL=y
+CONFIG_BASE_SMALL=0
+CONFIG_BINFMT_ELF=y
+CONFIG_BINFMT_ELF_AOUT=y
+CONFIG_BLK_DEV_INITRD=y
+CONFIG_BLK_DEV_LOOP=y
+CONFIG_BLK_DEV_RAM=y
+CONFIG_BLK_DEV_RAM_BLOCKSIZE=1024
+CONFIG_BLK_DEV_RAM_COUNT=16
+CONFIG_BLK_DEV_RAM_SIZE=16384
+CONFIG_BLK_DEV_SD=y
+CONFIG_BLK_DEV_SR=y
+CONFIG_BLOCK=y
+CONFIG_BOOT_ELF32=y
+CONFIG_BPALOGIN=y
+CONFIG_BRIDGE=y
+CONFIG_BRIDGE_2WAYS_FDB=y
+CONFIG_BROKEN_ON_SMP=y
+CONFIG_BUSYBOX_EXEC_PATH='"/proc/self/exe"'
+CONFIG_CAT=y
+CONFIG_CHMOD=y
+CONFIG_CHPASSWD=y
+CONFIG_CHR_DEV_SG=y
+CONFIG_CLEAR=y
+CONFIG_CMDLINE='"console=ttyS1,57600n8 root=/dev/ram0"'
+CONFIG_CONFIG=/root/RT-N56U/source/config/.config
+CONFIG_CP=y
+CONFIG_CPU_HAS_LLSC=y
+CONFIG_CPU_HAS_PREFETCH=y
+CONFIG_CPU_HAS_SYNC=y
+CONFIG_CPU_LITTLE_ENDIAN=y
+CONFIG_CPU_MIPS32=y
+CONFIG_CPU_MIPS32_R2=y
+CONFIG_CPU_MIPSR2=y
+CONFIG_CPU_SUPPORTS_32BIT_KERNEL=y
+CONFIG_CPU_SUPPORTS_HIGHMEM=y
+CONFIG_CRC_CCITT=y
+CONFIG_CROSSCOMPILE=y
+CONFIG_CROSS_COMPILER_PATH='"/opt/buildroot-gcc342/bin"'
+CONFIG_CROSS_COMPILER_PREFIX='""'
+CONFIG_CRYPTO=y
+CONFIG_CRYPTO_ALGAPI=y
+CONFIG_CRYPTO_ARC4=y
+CONFIG_CRYPTO_BLKCIPHER=y
+CONFIG_CRYPTO_CBC=y
+CONFIG_CRYPTO_ECB=y
+CONFIG_CRYPTO_MANAGER=y
+CONFIG_CRYPTO_PCBC=y
+CONFIG_CRYPTO_SHA1=y
+CONFIG_CTTYHACK=y
+CONFIG_DATE=y
+CONFIG_DEFAULTS_KERNEL_2_6_21=y
+CONFIG_DEFAULTS_RALINK_RT3883=y
+CONFIG_DEFAULT_DEPMOD_FILE='"modules.dep"'
+CONFIG_DEFAULT_IOSCHED='"noop"'
+CONFIG_DEFAULT_MODULES_DIR='"/lib/modules"'
+CONFIG_DEFAULT_NOOP=y
+CONFIG_DEFAULT_TCP_CONG='"cubic"'
+CONFIG_DEFCONFIG_LIST='"/lib/modules/NAME_RELEASE/.config"'
+CONFIG_DEFSETTING_8M64M=y
+CONFIG_DELGROUP=y
+CONFIG_DELUSER=y
+CONFIG_DHCPC_DEFAULT_SCRIPT='""'
+CONFIG_DHCPD_LEASES_FILE='""'
+CONFIG_DMA_ENGINE=y
+CONFIG_DMA_NEED_PCI_MAP_STATE=y
+CONFIG_DMA_NONCOHERENT=y
+CONFIG_DMESG=y
+CONFIG_DPROXY=y
+CONFIG_ECHO=y
+CONFIG_EJECT=y
+CONFIG_ELF_CORE=y
+CONFIG_EMBEDDED=y
+CONFIG_ENABLE_MUST_CHECK=y
+CONFIG_EPOLL=y
+CONFIG_ETHTOOL=y
+CONFIG_EXPERIMENTAL=y
+CONFIG_EXPR=y
+CONFIG_EXT2_FS=y
+CONFIG_EXT2_FS_POSIX_ACL=y
+CONFIG_EXT2_FS_SECURITY=y
+CONFIG_EXT2_FS_XATTR=y
+CONFIG_EXT3_FS=y
+CONFIG_EXT3_FS_POSIX_ACL=y
+CONFIG_EXT3_FS_SECURITY=y
+CONFIG_EXT3_FS_XATTR=y
+CONFIG_EXTRA='
+    avutil
+    gplv3
+    lgplv3
+'
+CONFIG_EZ_IPUPDATE=y
+CONFIG_FAT_DEFAULT_CODEPAGE=437
+CONFIG_FAT_DEFAULT_IOCHARSET='"iso8859-1"'
+CONFIG_FAT_FS=y
+CONFIG_FDISK_SUPPORT_LARGE_DISKS=y
+CONFIG_FEATURE_2_4_MODULES=y
+CONFIG_FEATURE_2_6_MODULES=y
+CONFIG_FEATURE_ADDUSER_TO_GROUP=y
+CONFIG_FEATURE_ALLOW_EXEC=y
+CONFIG_FEATURE_AUTOWIDTH=y
+CONFIG_FEATURE_BUFFERS_USE_MALLOC=y
+CONFIG_FEATURE_COPYBUF_KB=4
+CONFIG_FEATURE_DEL_USER_FROM_GROUP=y
+CONFIG_FEATURE_DEVPTS=y
+CONFIG_FEATURE_DMESG_PRETTY=y
+CONFIG_FEATURE_EDITING=y
+CONFIG_FEATURE_EDITING_HISTORY=20
+CONFIG_FEATURE_EDITING_MAX_LEN=1024
+CONFIG_FEATURE_EJECT_SCSI=y
+CONFIG_FEATURE_FANCY_PING=y
+CONFIG_FEATURE_FANCY_TAIL=y
+CONFIG_FEATURE_FAST_TOP=y
+CONFIG_FEATURE_FIND_DEPTH=y
+CONFIG_FEATURE_FIND_EXEC=y
+CONFIG_FEATURE_FIND_GROUP=y
+CONFIG_FEATURE_FIND_INUM=y
+CONFIG_FEATURE_FIND_MAXDEPTH=y
+CONFIG_FEATURE_FIND_MMIN=y
+CONFIG_FEATURE_FIND_MTIME=y
+CONFIG_FEATURE_FIND_NEWER=y
+CONFIG_FEATURE_FIND_NOT=y
+CONFIG_FEATURE_FIND_PAREN=y
+CONFIG_FEATURE_FIND_PATH=y
+CONFIG_FEATURE_FIND_PERM=y
+CONFIG_FEATURE_FIND_PRINT0=y
+CONFIG_FEATURE_FIND_PRUNE=y
+CONFIG_FEATURE_FIND_REGEX=y
+CONFIG_FEATURE_FIND_SIZE=y
+CONFIG_FEATURE_FIND_TYPE=y
+CONFIG_FEATURE_FIND_USER=y
+CONFIG_FEATURE_FIND_XDEV=y
+CONFIG_FEATURE_HUMAN_READABLE=y
+CONFIG_FEATURE_IFCONFIG_HW=y
+CONFIG_FEATURE_IFCONFIG_SLIP=y
+CONFIG_FEATURE_IFCONFIG_STATUS=y
+CONFIG_FEATURE_IPC_SYSLOG_BUFFER_SIZE=
+CONFIG_FEATURE_KILL_DELAY=0
+CONFIG_FEATURE_LESS_MAXLINES=
+CONFIG_FEATURE_LSMOD_PRETTY_2_6_OUTPUT=y
+CONFIG_FEATURE_LS_FOLLOWLINKS=y
+CONFIG_FEATURE_LS_SORTFILES=y
+CONFIG_FEATURE_LS_TIMESTAMPS=y
+CONFIG_FEATURE_LS_USERNAME=y
+CONFIG_FEATURE_MDEV_CONF=y
+CONFIG_FEATURE_MDEV_EXEC=y
+CONFIG_FEATURE_MOUNT_FLAGS=y
+CONFIG_FEATURE_MOUNT_FSTAB=y
+CONFIG_FEATURE_NETSTAT_PRG=y
+CONFIG_FEATURE_NETSTAT_WIDE=y
+CONFIG_FEATURE_SH_IS_ASH=y
+CONFIG_FEATURE_SUID=y
+CONFIG_FEATURE_SYSLOG=y
+CONFIG_FEATURE_TAB_COMPLETION=y
+CONFIG_FEATURE_TELNETD_STANDALONE=y
+CONFIG_FEATURE_TOP_CPU_GLOBAL_PERCENTS=y
+CONFIG_FEATURE_TOP_CPU_USAGE_PERCENTAGE=y
+CONFIG_FEATURE_USE_TERMIOS=y
+CONFIG_FEATURE_VERBOSE_CP_MESSAGE=y
+CONFIG_FEATURE_VI_8BIT=y
+CONFIG_FEATURE_VI_COLON=y
+CONFIG_FEATURE_VI_DOT_CMD=y
+CONFIG_FEATURE_VI_MAX_LEN=4096
+CONFIG_FEATURE_VI_OPTIMIZE_CURSOR=y
+CONFIG_FEATURE_VI_READONLY=y
+CONFIG_FEATURE_VI_SEARCH=y
+CONFIG_FEATURE_VI_SET=y
+CONFIG_FEATURE_VI_SETOPTS=y
+CONFIG_FEATURE_VI_USE_SIGNALS=y
+CONFIG_FEATURE_VI_WIN_RESIZE=y
+CONFIG_FEATURE_VI_YANKMARK=y
+CONFIG_FILE_LOCKING=y
+CONFIG_FIND=y
+CONFIG_FLATMEM=y
+CONFIG_FLATMEM_MANUAL=y
+CONFIG_FLAT_NODE_MEM_MAP=y
+CONFIG_FREE=y
+CONFIG_FS_MBCACHE=y
+CONFIG_FS_POSIX_ACL=y
+CONFIG_FULL_PANIC=y
+CONFIG_FUSE_FS=y
+CONFIG_FUTEX=y
+CONFIG_GE1_RGMII_FORCE_1000=y
+CONFIG_GE2_RGMII_FORCE_1000=y
+CONFIG_GENERIC_CALIBRATE_DELAY=y
+CONFIG_GENERIC_FIND_NEXT_BIT=y
+CONFIG_GENERIC_HARDIRQS=y
+CONFIG_GENERIC_HWEIGHT=y
+CONFIG_GENERIC_IRQ_PROBE=y
+CONFIG_GENERIC_TIME=y
+CONFIG_GREP=y
+CONFIG_GUNZIP=y
+CONFIG_GZIP=y
+CONFIG_HALT=y
+CONFIG_HAS_IOMEM=y
+CONFIG_HAS_IOPORT=y
+CONFIG_HAVE_DOT_CONFIG=y
+CONFIG_HOSTNAME=y
+CONFIG_HOTPLUG=y
+CONFIG_HOTPLUG_PCI=y
+CONFIG_HW_HAS_PCI=y
+CONFIG_HZ=250
+CONFIG_HZ_250=y
+CONFIG_IFCONFIG=y
+CONFIG_IFUPDOWN_IFSTATE_PATH='""'
+CONFIG_IGMP=y
+CONFIG_INET=y
+CONFIG_INETPEER=y
+CONFIG_INITRAMFS_ROOT_GID=0
+CONFIG_INITRAMFS_ROOT_UID=0
+CONFIG_INITRAMFS_SOURCE='"../romfs"'
+CONFIG_INIT_ENV_ARG_LIMIT=32
+CONFIG_INOTIFY=y
+CONFIG_INOTIFY_USER=y
+CONFIG_INSMOD=y
+CONFIG_INSTALL_APPLET_SYMLINKS=y
+CONFIG_IOSCHED_NOOP=y
+CONFIG_IP_FIB_HASH=y
+CONFIG_IP_MROUTE=y
+CONFIG_IP_MULTICAST=y
+CONFIG_IP_NF_ARPTABLES=y
+CONFIG_IP_NF_FILTER=y
+CONFIG_IP_NF_IPTABLES=y
+CONFIG_IP_NF_MANGLE=y
+CONFIG_IP_NF_MATCH_TOS=y
+CONFIG_IP_NF_TARGET_AUTOFW=y
+CONFIG_IP_NF_TARGET_LOG=y
+CONFIG_IP_NF_TARGET_MASQUERADE=y
+CONFIG_IP_NF_TARGET_NETMAP=y
+CONFIG_IP_NF_TARGET_REDIRECT=y
+CONFIG_IP_NF_TARGET_REJECT=y
+CONFIG_IP_NF_TARGET_TOS=y
+CONFIG_IRQ_CPU=y
+CONFIG_JBD=y
+CONFIG_KALLSYMS=y
+CONFIG_KILL=y
+CONFIG_KILLALL=y
+CONFIG_KLOGD=y
+CONFIG_LANGUAGE=
+CONFIG_LBD=y
+CONFIG_LEGACY_PTYS=y
+CONFIG_LEGACY_PTY_COUNT=256
+CONFIG_LFS=y
+CONFIG_LIBCDIR=
+CONFIG_LIB_CRYPT_FORCE=y
+CONFIG_LIB_LIBGDBM_FORCE=y
+CONFIG_LIB_LIBID3TAG_FORCE=y
+CONFIG_LIB_LIBM_FORCE=y
+CONFIG_LIB_LIBPTHREAD_FORCE=y
+CONFIG_LIB_LIBSTDC_PLUS_FORCE=y
+CONFIG_LIB_LIBUPNP_FORCE=y
+CONFIG_LIB_RESOLV_FORCE=y
+CONFIG_LIB_USB0112_FORCE=y
+CONFIG_LIB_UTIL_FORCE=y
+CONFIG_LIB_ZLIB_FORCE=y
+CONFIG_LINUXDIR=linux-2.6.21.x
+CONFIG_LIST='
+    
+    bsfs
+    decoders
+    demuxers
+    encoders
+    filters
+    hwaccels
+    indevs
+    muxers
+    outdevs
+    parsers
+    protocols
+
+    aandct
+    avcodec
+    avdevice
+    avfilter
+    avfilter_lavf
+    avformat
+    avisynth
+    beos_netserver
+    bzlib
+    dct
+    doc
+    dwt
+    dxva2
+    fastdiv
+    ffmpeg
+    ffplay
+    ffprobe
+    ffserver
+    fft
+    golomb
+    gpl
+    gprof
+    gray
+    h264dsp
+    hardcoded_tables
+    libdc1394
+    libdirac
+    libfaac
+    libfaad
+    libfaadbin
+    libgsm
+    libmp3lame
+    libnut
+    libopencore_amrnb
+    libopencore_amrwb
+    libopenjpeg
+    librtmp
+    libschroedinger
+    libspeex
+    libtheora
+    libvorbis
+    libvpx
+    libx264
+    libxvid
+    lpc
+    lsp
+    mdct
+    memalign_hack
+    mlib
+    mpegaudio_hp
+    network
+    nonfree
+    pic
+    postproc
+    powerpc_perf
+    rdft
+    runtime_cpudetect
+    shared
+    small
+    sram
+    static
+    swscale
+    swscale_alpha
+    vaapi
+    vdpau
+    version3
+    x11grab
+    zlib
+'
+CONFIG_LLC=y
+CONFIG_LN=y
+CONFIG_LOCALVERSION='""'
+CONFIG_LOCKDEP_SUPPORT=y
+CONFIG_LOGGER=y
+CONFIG_LOGIN=y
+CONFIG_LOG_BUF_SHIFT=14
+CONFIG_LS=y
+CONFIG_LSF=y
+CONFIG_LSMOD=y
+CONFIG_LZMARAMFS=y
+CONFIG_MAC_TO_MAC_MODE=y
+CONFIG_MAX_SWAPFILES_SHIFT=5
+CONFIG_MAX_USER_RT_PRIO=100
+CONFIG_MD5_SIZE_VS_SPEED=0
+CONFIG_MDEV=y
+CONFIG_MEMPOOL=y
+CONFIG_MII=y
+CONFIG_MIPS=y
+CONFIG_MIPS_L1_CACHE_SHIFT=5
+CONFIG_MIPS_MT_DISABLED=y
+CONFIG_MKDIR=y
+CONFIG_MKNOD=y
+CONFIG_MKSWAP=y
+CONFIG_MMU=y
+CONFIG_MODULES=y
+CONFIG_MODULE_UNLOAD=y
+CONFIG_MONOTONIC_SYSCALL=y
+CONFIG_MOUNT=y
+CONFIG_MSDOS_PARTITION=y
+CONFIG_MTD=y
+CONFIG_MTD_BLKDEVS=y
+CONFIG_MTD_BLOCK=y
+CONFIG_MTD_CFI=y
+CONFIG_MTD_CFI_AMDSTD=y
+CONFIG_MTD_CFI_I1=y
+CONFIG_MTD_CFI_I2=y
+CONFIG_MTD_CFI_SSTSTD=y
+CONFIG_MTD_CFI_UTIL=y
+CONFIG_MTD_CHAR=y
+CONFIG_MTD_GEN_PROBE=y
+CONFIG_MTD_MAP_BANK_WIDTH_1=y
+CONFIG_MTD_MAP_BANK_WIDTH_2=y
+CONFIG_MTD_MAP_BANK_WIDTH_4=y
+CONFIG_MTD_NOR_RALINK=y
+CONFIG_MTD_PARTITIONS=y
+CONFIG_MTD_PHYSMAP_BUSWIDTH=2
+CONFIG_MTD_PHYSMAP_LEN=0x1000000
+CONFIG_MTD_PHYSMAP_START=0x1C000000
+CONFIG_MTD_RALINK=y
+CONFIG_MV=y
+CONFIG_NAT_RCONE=y
+CONFIG_NET=y
+CONFIG_NETDEVICES=y
+CONFIG_NETFILTER=y
+CONFIG_NETFILTER_XTABLES=y
+CONFIG_NETFILTER_XT_MATCH_CONNTRACK=y
+CONFIG_NETFILTER_XT_MATCH_DSCP=y
+CONFIG_NETFILTER_XT_MATCH_HELPER=y
+CONFIG_NETFILTER_XT_MATCH_LENGTH=y
+CONFIG_NETFILTER_XT_MATCH_LIMIT=y
+CONFIG_NETFILTER_XT_MATCH_MAC=y
+CONFIG_NETFILTER_XT_MATCH_STATE=y
+CONFIG_NETFILTER_XT_MATCH_STRING=y
+CONFIG_NETFILTER_XT_MATCH_TCPMSS=y
+CONFIG_NETFILTER_XT_MATCH_TIME=y
+CONFIG_NETFILTER_XT_MATCH_WEBSTR=y
+CONFIG_NETFILTER_XT_TARGET_DSCP=y
+CONFIG_NETFILTER_XT_TARGET_MARK=y
+CONFIG_NETFILTER_XT_TARGET_TCPMSS=y
+CONFIG_NETSTAT=y
+CONFIG_NET_CLS=y
+CONFIG_NET_CLS_FW=y
+CONFIG_NET_CLS_TCINDEX=y
+CONFIG_NET_DEV_MULTICAST=y
+CONFIG_NET_DMA=y
+CONFIG_NET_ETHERNET=y
+CONFIG_NET_RADIO=y
+CONFIG_NET_SCHED=y
+CONFIG_NET_SCH_CLK_GETTIMEOFDAY=y
+CONFIG_NET_SCH_DSMARK=y
+CONFIG_NET_SCH_FIFO=y
+CONFIG_NET_SCH_GRED=y
+CONFIG_NET_SCH_HTB=y
+CONFIG_NET_SCH_PRIO=y
+CONFIG_NET_SCH_RED=y
+CONFIG_NET_SCH_SFQ=y
+CONFIG_NET_SK_FILTER=y
+CONFIG_NET_WIRELESS=y
+CONFIG_NF_CONNTRACK=y
+CONFIG_NF_CONNTRACK_ENABLED=y
+CONFIG_NF_CONNTRACK_FTP=y
+CONFIG_NF_CONNTRACK_H323=y
+CONFIG_NF_CONNTRACK_IPV4=y
+CONFIG_NF_CONNTRACK_PPTP=y
+CONFIG_NF_CONNTRACK_PROC_COMPAT=y
+CONFIG_NF_CONNTRACK_SUPPORT=y
+CONFIG_NF_CT_ACCT=y
+CONFIG_NF_CT_PROTO_GRE=y
+CONFIG_NF_NAT=y
+CONFIG_NF_NAT_FTP=y
+CONFIG_NF_NAT_H323=y
+CONFIG_NF_NAT_NEEDED=y
+CONFIG_NF_NAT_PPTP=y
+CONFIG_NF_NAT_PROTO_GRE=y
+CONFIG_NLS=y
+CONFIG_NLS_CODEPAGE_437=y
+CONFIG_NLS_CODEPAGE_936=y
+CONFIG_NLS_CODEPAGE_950=y
+CONFIG_NLS_DEFAULT='"UTF8"'
+CONFIG_NLS_ISO8859_1=y
+CONFIG_NLS_UTF8=y
+CONFIG_NOUSB=y
+CONFIG_NO_DEBUG_LIB=y
+CONFIG_NR_LDISCS=16
+CONFIG_NSLOOKUP=y
+CONFIG_N_HDLC=y
+CONFIG_PACKET=y
+CONFIG_PACKET_MMAP=y
+CONFIG_PAGE_SIZE_4KB=y
+CONFIG_PANIC=y
+CONFIG_PARTITION_ADVANCED=y
+CONFIG_PASSWORD_MINLEN=6
+CONFIG_PCI=y
+CONFIG_PCIEPORTBUS=y
+CONFIG_PCIE_ONLY=y
+CONFIG_PDFLUSH=y
+CONFIG_PING=y
+CONFIG_PLIST=y
+CONFIG_PM=y
+CONFIG_PPP=y
+CONFIG_PPPD=y
+CONFIG_PPPOE=y
+CONFIG_PPPOE_RELAY=y
+CONFIG_PPPOL2TP=y
+CONFIG_PPP_ASYNC=y
+CONFIG_PPP_BSDCOMP=y
+CONFIG_PPP_DEFLATE=y
+CONFIG_PPP_FILTER=y
+CONFIG_PPP_MPPE=y
+CONFIG_PPP_MULTILINK=y
+CONFIG_PPP_SYNC_TTY=y
+CONFIG_PPTP_KERNEL=y
+CONFIG_PREEMPT_NONE=y
+CONFIG_PREFIX='"../../romfs"'
+CONFIG_PRINTK=y
+CONFIG_PRINTK_FUNC=y
+CONFIG_PROC_FS=y
+CONFIG_PROC_KCORE=y
+CONFIG_PROC_SYSCTL=y
+CONFIG_PRODUCT=RT3883
+CONFIG_PS=y
+CONFIG_PWD=y
+CONFIG_RAETH=y
+CONFIG_RAETH_CHECKSUM_OFFLOAD=y
+CONFIG_RAETH_GMAC2=y
+CONFIG_RALINKAPP=y
+CONFIG_RALINKAPP_ATED=y
+CONFIG_RALINKAPP_FLASH=y
+CONFIG_RALINKAPP_GPIO=y
+CONFIG_RALINKAPP_HWNAT=y
+CONFIG_RALINKAPP_REG_RW=y
+CONFIG_RALINKAPP_SCRIPTS=y
+CONFIG_RALINK_GPIO=y
+CONFIG_RALINK_RAM_SIZE=128
+CONFIG_RALINK_RDM=y
+CONFIG_RALINK_RT3662_2T2R=y
+CONFIG_RALINK_RT3883=y
+CONFIG_RALINK_RT3883_MP=y
+CONFIG_RAMFS=y
+CONFIG_RA_HW_NAT=m
+CONFIG_RA_HW_NAT_ACL_DLTA=3
+CONFIG_RA_HW_NAT_AUTO_BIND=y
+CONFIG_RA_HW_NAT_BINDING_THRESHOLD=30
+CONFIG_RA_HW_NAT_FIN_DLTA=5
+CONFIG_RA_HW_NAT_FULL_LMT=25
+CONFIG_RA_HW_NAT_HALF_LMT=50
+CONFIG_RA_HW_NAT_HASH1=y
+CONFIG_RA_HW_NAT_NONE2UP=y
+CONFIG_RA_HW_NAT_POST_AC_SIZE=32
+CONFIG_RA_HW_NAT_POST_MTR_SIZE=32
+CONFIG_RA_HW_NAT_PRE_ACL_SIZE=383
+CONFIG_RA_HW_NAT_PRE_AC_SIZE=32
+CONFIG_RA_HW_NAT_PRE_MTR_SIZE=32
+CONFIG_RA_HW_NAT_QURT_LMT=100
+CONFIG_RA_HW_NAT_TBL_4K=y
+CONFIG_RA_HW_NAT_TCP_DLTA=5
+CONFIG_RA_HW_NAT_TCP_KA=1
+CONFIG_RA_HW_NAT_UDP_DLTA=5
+CONFIG_RA_HW_NAT_UDP_KA=1
+CONFIG_RA_HW_NAT_UNB_DLTA=3
+CONFIG_RA_HW_NAT_UNB_MNP=1000
+CONFIG_RA_NAT_HW=y
+CONFIG_RA_NETWORK_TASKLET_BH=y
+CONFIG_RM=y
+CONFIG_RMDIR=y
+CONFIG_RMMOD=y
+CONFIG_ROUTE=y
+CONFIG_RT2860V2_AP=m
+CONFIG_RT2860V2_AP_DLS=y
+CONFIG_RT2860V2_AP_IGMP_SNOOP=y
+CONFIG_RT2860V2_AP_INTELLIGENT_RATE_ADAPTION=y
+CONFIG_RT2860V2_AP_LED=y
+CONFIG_RT2860V2_AP_LLTD=y
+CONFIG_RT2860V2_AP_NETIF_BLOCK=y
+CONFIG_RT2860V2_AP_V24_DATA_STRUCTURE=y
+CONFIG_RT2860V2_AP_WDS=y
+CONFIG_RT2860V2_AP_WMM_ACM=y
+CONFIG_RT2860V2_AP_WSC=y
+CONFIG_RT2860V2_AUTO_CH_SELECT_ENHANCE=y
+CONFIG_RT2860V2_MCAST_RATE_SPECIFIC=y
+CONFIG_RT2880_DRAM_128M=y
+CONFIG_RT2880_ROOTFS_IN_RAM=y
+CONFIG_RT3090_AP=m
+CONFIG_RT3090_AP_DLS=y
+CONFIG_RT3090_AP_IGMP_SNOOP=y
+CONFIG_RT3090_AP_LLTD=y
+CONFIG_RT3090_AP_NETIF_BLOCK=y
+CONFIG_RT3090_AP_WDS=y
+CONFIG_RT3090_AP_WMM_ACM=y
+CONFIG_RT3090_AP_WSC=y
+CONFIG_RT3883_ASIC=y
+CONFIG_RT3XXX_EHCI=y
+CONFIG_RT3XXX_EHCI_OHCI=y
+CONFIG_RT3XXX_OHCI=y
+CONFIG_RTDEV_PCI=y
+CONFIG_RTL8367M=y
+CONFIG_RT_MUTEXES=y
+CONFIG_RWSEM_GENERIC_SPINLOCK=y
+CONFIG_SCHED_NO_NO_OMIT_FRAME_POINTER=y
+CONFIG_SCSI=y
+CONFIG_SCSI_MULTI_LUN=y
+CONFIG_SCSI_PROC_FS=y
+CONFIG_SCSI_SCAN_ASYNC=y
+CONFIG_SED=y
+CONFIG_SELECT_MEMORY_MODEL=y
+CONFIG_SERIAL_8250=y
+CONFIG_SERIAL_8250_CONSOLE=y
+CONFIG_SERIAL_8250_EXTENDED=y
+CONFIG_SERIAL_8250_NR_UARTS=2
+CONFIG_SERIAL_8250_PCI=y
+CONFIG_SERIAL_8250_RUNTIME_UARTS=2
+CONFIG_SERIAL_CORE=y
+CONFIG_SERIAL_CORE_CONSOLE=y
+CONFIG_SERIAL_NONSTANDARD=y
+CONFIG_SHELL=/bin/sh
+CONFIG_SHMEM=y
+CONFIG_SHOW_USAGE=y
+CONFIG_SLAB=y
+CONFIG_SLEEP=y
+CONFIG_SLHC=y
+CONFIG_SOLARIS_X86_PARTITION=y
+CONFIG_SPLIT_PTLOCK_CPUS=4
+CONFIG_SQUASHFS=y
+CONFIG_SQUASHFS_EMBEDDED=y
+CONFIG_SQUASHFS_FRAGMENT_CACHE_SIZE=3
+CONFIG_STACKTRACE_SUPPORT=y
+CONFIG_SWAP=y
+CONFIG_SWAPONOFF=y
+CONFIG_SWAP_IO_SPACE=y
+CONFIG_SYNC=y
+CONFIG_SYN_COOKIES=y
+CONFIG_SYSCTL=y
+CONFIG_SYSCTL_SYSCALL=y
+CONFIG_SYSFS=y
+CONFIG_SYSLOGD=y
+CONFIG_SYSVIPC=y
+CONFIG_SYSVIPC_SYSCTL=y
+CONFIG_SYS_HAS_CPU_MIPS32_R1=y
+CONFIG_SYS_HAS_CPU_MIPS32_R2=y
+CONFIG_SYS_SUPPORTS_32BIT_KERNEL=y
+CONFIG_SYS_SUPPORTS_ARBIT_HZ=y
+CONFIG_SYS_SUPPORTS_LITTLE_ENDIAN=y
+CONFIG_TAIL=y
+CONFIG_TC=y
+CONFIG_TCP_CONG_CUBIC=y
+CONFIG_TELNETD=y
+CONFIG_TEST=y
+CONFIG_TEXTSEARCH=y
+CONFIG_TEXTSEARCH_BM=y
+CONFIG_TEXTSEARCH_FSM=y
+CONFIG_TEXTSEARCH_KMP=y
+CONFIG_TOP=y
+CONFIG_TOUCH=y
+CONFIG_TRACEROUTE=y
+CONFIG_TRACE_IRQFLAGS_SUPPORT=y
+CONFIG_TRAD_SIGNALS=y
+CONFIG_UDHCPC_SLACK_FOR_BUGGY_SERVERS=
+CONFIG_UDHCPD=y
+CONFIG_UMOUNT=y
+CONFIG_UNAME=y
+CONFIG_UNIX=y
+CONFIG_UNIX98_PTYS=y
+CONFIG_UNZIP=y
+CONFIG_UPTIME=y
+CONFIG_USB=m
+CONFIG_USB_ARCH_HAS_EHCI=y
+CONFIG_USB_ARCH_HAS_HCD=y
+CONFIG_USB_ARCH_HAS_OHCI=y
+CONFIG_USB_DEVICEFS=y
+CONFIG_USB_EHCI_HCD=m
+CONFIG_USB_EHCI_ROOT_HUB_TT=y
+CONFIG_USB_EHCI_SPLIT_ISO=y
+CONFIG_USB_EHCI_TT_NEWSCHED=y
+CONFIG_USB_OHCI_HCD=m
+CONFIG_USB_OHCI_LITTLE_ENDIAN=y
+CONFIG_USB_PRINTER=m
+CONFIG_USB_STORAGE=m
+CONFIG_USB_STORAGE_ALAUDA=y
+CONFIG_USB_STORAGE_DATAFAB=y
+CONFIG_USB_STORAGE_DPCM=y
+CONFIG_USB_STORAGE_FREECOM=y
+CONFIG_USB_STORAGE_JUMPSHOT=y
+CONFIG_USB_STORAGE_KARMA=y
+CONFIG_USB_STORAGE_SDDR09=y
+CONFIG_USB_STORAGE_SDDR55=y
+CONFIG_USB_STORAGE_USBAT=y
+CONFIG_USB_TEST=y
+CONFIG_USER_802_1X=y
+CONFIG_USER_BRCTL_BRCTL=y
+CONFIG_USER_BUSYBOX_BUSYBOX=y
+CONFIG_USER_DNS_RESPONDER=y
+CONFIG_USER_GOAHEAD_LANG_EN=y
+CONFIG_USER_IGMP_PROXY=y
+CONFIG_USER_IPROUTE2=y
+CONFIG_USER_IPROUTE2_TC=y
+CONFIG_USER_IPTABLES_IPTABLES=y
+CONFIG_USER_LLTD=y
+CONFIG_USER_MTDAAPD=y
+CONFIG_USER_MTD_WRITE=y
+CONFIG_USER_PPTP_CLIENT=y
+CONFIG_USER_RP_L2TP=y
+CONFIG_USER_UPNP_IGD=y
+CONFIG_USER_WIRELESS_TOOLS=y
+CONFIG_USER_WIRELESS_TOOLS_IWCONFIG=y
+CONFIG_USER_WIRELESS_TOOLS_IWPRIV=y
+CONFIG_USER_WSC=y
+CONFIG_VENDOR=Ralink
+CONFIG_VFAT_FS=y
+CONFIG_VI=y
+CONFIG_VLAN_8021Q=y
+CONFIG_VSFTPD=y
+CONFIG_WAN_AT_P0=y
+CONFIG_WC=y
+CONFIG_WGET=y
+CONFIG_WIRELESS_EXT=y
+CONFIG_XATTR=y
+CONFIG_ZLIB_DEFLATE=y
+CONFIG_ZLIB_INFLATE=y
+CONFIG_ZONE_DMA=y
+CONFIG_ZONE_DMA_FLAG=1
+CONSOLE_BAUD_RATE=57600
+CONVERT=/bin/true
+CPUFLAGS=
+CROSS=/opt/buildroot-gcc342/bin/mipsel-linux-uclibc-
+CROSS_COMPILE=/opt/buildroot-gcc342/bin/mipsel-linux-uclibc-
+CRTI='-nostartfiles /root/RT-N56U/source/lib/crt0.o'
+CRTN=
+CURDIR=/root/RT-N56U/source/user/ffmpeg-0.6.1
+CVS_RSH=ssh
+CXX='/opt/buildroot-gcc342/bin/mipsel-linux-uclibc-g++ '
+CXXFLAGS='-O2 -fomit-frame-pointer -pipe  -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source  '
+CXXLIBS='-Wl,-Bstatic -Wl,-Bstatic -lstdc++ -Wl,-Bdynamic -Wl,-Bdynamic -lc -lgcc '
+DBUS_SESSION_BUS_ADDRESS=unix:abstract=/tmp/dbus-uzCX1kpoPs,guid=7573644a81ddb7228771eb5e00000050
+DECODER_LIST='aasc_decoder
+amv_decoder
+anm_decoder
+asv1_decoder
+asv2_decoder
+aura_decoder
+aura2_decoder
+avs_decoder
+bethsoftvid_decoder
+bfi_decoder
+bink_decoder
+bmp_decoder
+c93_decoder
+cavs_decoder
+cdgraphics_decoder
+cinepak_decoder
+cljr_decoder
+cscd_decoder
+cyuv_decoder
+dnxhd_decoder
+dpx_decoder
+dsicinvideo_decoder
+dvvideo_decoder
+dxa_decoder
+eacmv_decoder
+eamad_decoder
+eatgq_decoder
+eatgv_decoder
+eatqi_decoder
+eightbps_decoder
+eightsvx_exp_decoder
+eightsvx_fib_decoder
+escape124_decoder
+ffv1_decoder
+ffvhuff_decoder
+flashsv_decoder
+flic_decoder
+flv_decoder
+fourxm_decoder
+fraps_decoder
+frwu_decoder
+gif_decoder
+h261_decoder
+h263_decoder
+h263i_decoder
+h264_decoder
+h264_vdpau_decoder
+huffyuv_decoder
+idcin_decoder
+iff_byterun1_decoder
+iff_ilbm_decoder
+indeo2_decoder
+indeo3_decoder
+indeo5_decoder
+interplay_video_decoder
+jpegls_decoder
+kgv1_decoder
+kmvc_decoder
+loco_decoder
+mdec_decoder
+mimic_decoder
+mjpeg_decoder
+mjpegb_decoder
+mmvideo_decoder
+motionpixels_decoder
+mpeg_xvmc_decoder
+mpeg1video_decoder
+mpeg2video_decoder
+mpeg4_decoder
+mpeg4_vdpau_decoder
+mpegvideo_decoder
+mpeg_vdpau_decoder
+mpeg1_vdpau_decoder
+msmpeg4v1_decoder
+msmpeg4v2_decoder
+msmpeg4v3_decoder
+msrle_decoder
+msvideo1_decoder
+mszh_decoder
+nuv_decoder
+pam_decoder
+pbm_decoder
+pcx_decoder
+pgm_decoder
+pgmyuv_decoder
+png_decoder
+ppm_decoder
+ptx_decoder
+qdraw_decoder
+qpeg_decoder
+qtrle_decoder
+r210_decoder
+rawvideo_decoder
+rl2_decoder
+roq_decoder
+rpza_decoder
+rv10_decoder
+rv20_decoder
+rv30_decoder
+rv40_decoder
+sgi_decoder
+smacker_decoder
+smc_decoder
+snow_decoder
+sp5x_decoder
+sunrast_decoder
+svq1_decoder
+svq3_decoder
+targa_decoder
+theora_decoder
+thp_decoder
+tiertexseqvideo_decoder
+tiff_decoder
+tmv_decoder
+truemotion1_decoder
+truemotion2_decoder
+tscc_decoder
+txd_decoder
+ulti_decoder
+v210_decoder
+v210x_decoder
+vb_decoder
+vc1_decoder
+vc1_vdpau_decoder
+vcr1_decoder
+vmdvideo_decoder
+vmnc_decoder
+vp3_decoder
+vp5_decoder
+vp6_decoder
+vp6a_decoder
+vp6f_decoder
+vqa_decoder
+wmv1_decoder
+wmv2_decoder
+wmv3_decoder
+wmv3_vdpau_decoder
+wnv1_decoder
+xan_wc3_decoder
+xl_decoder
+yop_decoder
+zlib_decoder
+zmbv_decoder
+aac_decoder
+ac3_decoder
+alac_decoder
+als_decoder
+amrnb_decoder
+ape_decoder
+atrac1_decoder
+atrac3_decoder
+binkaudio_dct_decoder
+binkaudio_rdft_decoder
+cook_decoder
+dca_decoder
+dsicinaudio_decoder
+eac3_decoder
+flac_decoder
+imc_decoder
+mace3_decoder
+mace6_decoder
+mlp_decoder
+mp1_decoder
+mp2_decoder
+mp3_decoder
+mp3adu_decoder
+mp3on4_decoder
+mpc7_decoder
+mpc8_decoder
+nellymoser_decoder
+qcelp_decoder
+qdm2_decoder
+ra_144_decoder
+ra_288_decoder
+shorten_decoder
+sipr_decoder
+smackaud_decoder
+sonic_decoder
+truehd_decoder
+truespeech_decoder
+tta_decoder
+twinvq_decoder
+vmdaudio_decoder
+vorbis_decoder
+wavpack_decoder
+wmapro_decoder
+wmav1_decoder
+wmav2_decoder
+wmavoice_decoder
+ws_snd1_decoder
+pcm_alaw_decoder
+pcm_bluray_decoder
+pcm_dvd_decoder
+pcm_f32be_decoder
+pcm_f32le_decoder
+pcm_f64be_decoder
+pcm_f64le_decoder
+pcm_mulaw_decoder
+pcm_s8_decoder
+pcm_s16be_decoder
+pcm_s16le_decoder
+pcm_s16le_planar_decoder
+pcm_s24be_decoder
+pcm_s24daud_decoder
+pcm_s24le_decoder
+pcm_s32be_decoder
+pcm_s32le_decoder
+pcm_u8_decoder
+pcm_u16be_decoder
+pcm_u16le_decoder
+pcm_u24be_decoder
+pcm_u24le_decoder
+pcm_u32be_decoder
+pcm_u32le_decoder
+pcm_zork_decoder
+interplay_dpcm_decoder
+roq_dpcm_decoder
+sol_dpcm_decoder
+xan_dpcm_decoder
+adpcm_4xm_decoder
+adpcm_adx_decoder
+adpcm_ct_decoder
+adpcm_ea_decoder
+adpcm_ea_maxis_xa_decoder
+adpcm_ea_r1_decoder
+adpcm_ea_r2_decoder
+adpcm_ea_r3_decoder
+adpcm_ea_xas_decoder
+adpcm_g726_decoder
+adpcm_ima_amv_decoder
+adpcm_ima_dk3_decoder
+adpcm_ima_dk4_decoder
+adpcm_ima_ea_eacs_decoder
+adpcm_ima_ea_sead_decoder
+adpcm_ima_iss_decoder
+adpcm_ima_qt_decoder
+adpcm_ima_smjpeg_decoder
+adpcm_ima_wav_decoder
+adpcm_ima_ws_decoder
+adpcm_ms_decoder
+adpcm_sbpro_2_decoder
+adpcm_sbpro_3_decoder
+adpcm_sbpro_4_decoder
+adpcm_swf_decoder
+adpcm_thp_decoder
+adpcm_xa_decoder
+adpcm_yamaha_decoder
+dvbsub_decoder
+dvdsub_decoder
+pgssub_decoder
+xsub_decoder
+libdirac_decoder
+libfaad_decoder
+libgsm_decoder
+libgsm_ms_decoder
+libopencore_amrnb_decoder
+libopencore_amrwb_decoder
+libopenjpeg_decoder
+libschroedinger_decoder
+libspeex_decoder
+libvpx_decoder'
+DEMUXER_LIST='aac_demuxer
+ac3_demuxer
+aea_demuxer
+aiff_demuxer
+amr_demuxer
+anm_demuxer
+apc_demuxer
+ape_demuxer
+asf_demuxer
+ass_demuxer
+au_demuxer
+avi_demuxer
+avisynth_demuxer
+avs_demuxer
+bethsoftvid_demuxer
+bfi_demuxer
+bink_demuxer
+c93_demuxer
+caf_demuxer
+cavsvideo_demuxer
+cdg_demuxer
+daud_demuxer
+dirac_demuxer
+dnxhd_demuxer
+dsicin_demuxer
+dts_demuxer
+dv_demuxer
+dxa_demuxer
+ea_demuxer
+ea_cdata_demuxer
+eac3_demuxer
+ffm_demuxer
+filmstrip_demuxer
+flac_demuxer
+flic_demuxer
+flv_demuxer
+fourxm_demuxer
+gsm_demuxer
+gxf_demuxer
+h261_demuxer
+h263_demuxer
+h264_demuxer
+idcin_demuxer
+iff_demuxer
+image2_demuxer
+image2pipe_demuxer
+ingenient_demuxer
+ipmovie_demuxer
+iss_demuxer
+iv8_demuxer
+lmlm4_demuxer
+m4v_demuxer
+matroska_demuxer
+mjpeg_demuxer
+mlp_demuxer
+mm_demuxer
+mmf_demuxer
+mov_demuxer
+mp3_demuxer
+mpc_demuxer
+mpc8_demuxer
+mpegps_demuxer
+mpegts_demuxer
+mpegtsraw_demuxer
+mpegvideo_demuxer
+msnwc_tcp_demuxer
+mtv_demuxer
+mvi_demuxer
+mxf_demuxer
+nc_demuxer
+nsv_demuxer
+nut_demuxer
+nuv_demuxer
+ogg_demuxer
+oma_demuxer
+pcm_alaw_demuxer
+pcm_mulaw_demuxer
+pcm_f64be_demuxer
+pcm_f64le_demuxer
+pcm_f32be_demuxer
+pcm_f32le_demuxer
+pcm_s32be_demuxer
+pcm_s32le_demuxer
+pcm_s24be_demuxer
+pcm_s24le_demuxer
+pcm_s16be_demuxer
+pcm_s16le_demuxer
+pcm_s8_demuxer
+pcm_u32be_demuxer
+pcm_u32le_demuxer
+pcm_u24be_demuxer
+pcm_u24le_demuxer
+pcm_u16be_demuxer
+pcm_u16le_demuxer
+pcm_u8_demuxer
+pva_demuxer
+qcp_demuxer
+r3d_demuxer
+rawvideo_demuxer
+rl2_demuxer
+rm_demuxer
+roq_demuxer
+rpl_demuxer
+rtsp_demuxer
+sdp_demuxer
+segafilm_demuxer
+shorten_demuxer
+siff_demuxer
+smacker_demuxer
+sol_demuxer
+sox_demuxer
+str_demuxer
+swf_demuxer
+thp_demuxer
+tiertexseq_demuxer
+tmv_demuxer
+truehd_demuxer
+tta_demuxer
+txd_demuxer
+vc1_demuxer
+vc1t_demuxer
+vmd_demuxer
+voc_demuxer
+vqf_demuxer
+w64_demuxer
+wav_demuxer
+wc3_demuxer
+wsaud_demuxer
+wsvqa_demuxer
+wv_demuxer
+xa_demuxer
+yop_demuxer
+yuv4mpegpipe_demuxer
+libnut_demuxer'
+DEPEND_CMD='$(DEPCC) $(DEPFLAGS) $< | sed -e "/^\#.*/d" -e "s,^[[:space:]]*$(*F)\\.o,$(@D)/$(*F).o," > $(@:.o=.d)'
+DEPFLAGS='$(CPPFLAGS) $(CFLAGS) -MM'
+DESKTOP_SESSION=gnome
+DIRS='/root/RT-N56U/source/vendors include uClibc++ user lib'
+DIRSTACK=()
+DISABLE_MOVE_RODATA='1       '
+DISABLE_XIP=1
+DISPLAY=:0.0
+E1=0
+E2=1
+ELF2FLT=elf2flt
+ENCODER_LIST='asv1_encoder
+asv2_encoder
+bmp_encoder
+dnxhd_encoder
+dvvideo_encoder
+ffv1_encoder
+ffvhuff_encoder
+flashsv_encoder
+flv_encoder
+gif_encoder
+h261_encoder
+h263_encoder
+h263p_encoder
+huffyuv_encoder
+jpegls_encoder
+ljpeg_encoder
+mjpeg_encoder
+mpeg1video_encoder
+mpeg2video_encoder
+mpeg4_encoder
+msmpeg4v1_encoder
+msmpeg4v2_encoder
+msmpeg4v3_encoder
+pam_encoder
+pbm_encoder
+pcx_encoder
+pgm_encoder
+pgmyuv_encoder
+png_encoder
+ppm_encoder
+qtrle_encoder
+rawvideo_encoder
+roq_encoder
+rv10_encoder
+rv20_encoder
+sgi_encoder
+snow_encoder
+svq1_encoder
+targa_encoder
+tiff_encoder
+v210_encoder
+wmv1_encoder
+wmv2_encoder
+zlib_encoder
+zmbv_encoder
+aac_encoder
+ac3_encoder
+alac_encoder
+flac_encoder
+mp2_encoder
+nellymoser_encoder
+sonic_encoder
+sonic_ls_encoder
+wmav1_encoder
+wmav2_encoder
+pcm_alaw_encoder
+pcm_f32be_encoder
+pcm_f32le_encoder
+pcm_f64be_encoder
+pcm_f64le_encoder
+pcm_mulaw_encoder
+pcm_s8_encoder
+pcm_s16be_encoder
+pcm_s16le_encoder
+pcm_s24be_encoder
+pcm_s24daud_encoder
+pcm_s24le_encoder
+pcm_s32be_encoder
+pcm_s32le_encoder
+pcm_u8_encoder
+pcm_u16be_encoder
+pcm_u16le_encoder
+pcm_u24be_encoder
+pcm_u24le_encoder
+pcm_u32be_encoder
+pcm_u32le_encoder
+pcm_zork_encoder
+roq_dpcm_encoder
+adpcm_adx_encoder
+adpcm_g726_encoder
+adpcm_ima_qt_encoder
+adpcm_ima_wav_encoder
+adpcm_ms_encoder
+adpcm_swf_encoder
+adpcm_yamaha_encoder
+dvbsub_encoder
+dvdsub_encoder
+xsub_encoder
+libdirac_encoder
+libfaac_encoder
+libgsm_encoder
+libgsm_ms_encoder
+libmp3lame_encoder
+libopencore_amrnb_encoder
+libschroedinger_encoder
+libtheora_encoder
+libvorbis_encoder
+libvpx_encoder
+libx264_encoder
+libxvid_encoder'
+ENDIAN=little
+EUID=0
+EXTRA_CFLAGS='-Dlinux '
+FFMPEG_CONFIGURATION='--cross-prefix=mipsel-linux- --enable-cross-compile --arch=mips --target-os=linux --prefix=/root/RT-N56U/source/user/ffmpeg-0.6.1/source/../install --enable-pthreads --disable-avdevice --disable-swscale --disable-ffmpeg --disable-ffplay --disable-ffprobe --disable-ffserver --disable-swscale-alpha --disable-encoders --disable-decoders --disable-bsfs --disable-indevs --disable-outdevs --disable-devices --disable-filters --disable-muxers --disable-parsers --disable-protocols --enable-protocol=file --disable-aandct --disable-dct --disable-fft --disable-golomb --disable-lpc --disable-mdct --disable-rdft --disable-vaapi --disable-vdpau --disable-dxva2'
+FFSERVERLDFLAGS=-Wl,-E
+FILTER_LIST='aspect_filter
+crop_filter
+format_filter
+noformat_filter
+null_filter
+pixelaspect_filter
+scale_filter
+slicify_filter
+unsharp_filter
+vflip_filter
+nullsrc_filter
+nullsink_filter'
+FLTFLAGS=
+FULLNAME='$(NAME)$(BUILDSUF)'
+GCC_DIR=/opt/buildroot-gcc342/bin/../lib/gcc/mipsel-linux-uclibc/3.4.2/.
+GDMSESSION=gnome
+GDM_KEYBOARD_LAYOUT=us
+GDM_LANG=en_US.UTF-8
+GNOME_DESKTOP_SESSION_ID=this-is-deprecated
+GNOME_KEYRING_CONTROL=/tmp/keyring-jgDnSC
+GNOME_KEYRING_PID=1684
+GROUPS=()
+GTK_RC_FILES=/etc/gtk/gtkrc:/root/.gtkrc-1.2-gnome2
+G_BROKEN_FILENAMES=1
+HAVE_LIST='
+    
+    altivec
+    amd3dnow
+    amd3dnowext
+    armv5te
+    armv6
+    armv6t2
+    armvfp
+    iwmmxt
+    mmi
+    mmx
+    mmx2
+    neon
+    ppc4xx
+    sse
+    ssse3
+    vis
+
+    
+    bigendian
+
+    
+    beosthreads
+    os2threads
+    pthreads
+    w32threads
+
+    alsa_asoundlib_h
+    altivec_h
+    arpa_inet_h
+    attribute_may_alias
+    attribute_packed
+    bswap
+    closesocket
+    cmov
+    conio_h
+    dcbzl
+    dev_bktr_ioctl_bt848_h
+    dev_bktr_ioctl_meteor_h
+    dev_ic_bt8xx_h
+    dev_video_meteor_ioctl_meteor_h
+    dev_video_bktr_ioctl_bt848_h
+    dlfcn_h
+    dlopen
+    dos_paths
+    ebp_available
+    ebx_available
+    exp2
+    exp2f
+    fast_64bit
+    fast_clz
+    fast_cmov
+    fast_unaligned
+    fork
+    getaddrinfo
+    gethrtime
+    GetProcessMemoryInfo
+    GetProcessTimes
+    getrusage
+    struct_rusage_ru_maxrss
+    inet_aton
+    inline_asm
+    isatty
+    ldbrx
+    libdc1394_1
+    libdc1394_2
+    llrint
+    llrintf
+    local_aligned_16
+    local_aligned_8
+    log2
+    log2f
+    loongson
+    lrint
+    lrintf
+    lzo1x_999_compress
+    machine_ioctl_bt848_h
+    machine_ioctl_meteor_h
+    malloc_h
+    memalign
+    mkstemp
+    pld
+    posix_memalign
+    round
+    roundf
+    sdl
+    sdl_video_size
+    setmode
+    socklen_t
+    soundcard_h
+    poll_h
+    setrlimit
+    strerror_r
+    struct_addrinfo
+    struct_ipv6_mreq
+    struct_sockaddr_in6
+    struct_sockaddr_sa_len
+    struct_sockaddr_storage
+    symver
+    symver_gnu_asm
+    symver_asm_label
+    sys_mman_h
+    sys_resource_h
+    sys_select_h
+    sys_soundcard_h
+    sys_videoio_h
+    ten_operands
+    termios_h
+    threads
+    truncf
+    vfp_args
+    VirtualAlloc
+    winsock2_h
+    xform_asm
+    yasm
+'
+HAVE_LIST_PUB='
+    bigendian
+'
+HISTCONTROL=ignoredups
+HISTSIZE=1000
+HOME=/root
+HOSTCC=cc
+HOSTNAME=F13
+HOSTTYPE=i386
+HOST_NCPU='1 '
+HWACCEL_LIST='h263_vaapi_hwaccel
+h264_dxva2_hwaccel
+h264_vaapi_hwaccel
+mpeg2_vaapi_hwaccel
+mpeg4_vaapi_hwaccel
+vc1_dxva2_hwaccel
+vc1_vaapi_hwaccel
+wmv3_dxva2_hwaccel
+wmv3_vaapi_hwaccel'
+IFS=' 	
+'
+IMAGEDIR=/root/RT-N56U/source/images
+IMSETTINGS_INTEGRATE_DESKTOP=yes
+IMSETTINGS_MODULE=none
+INDEV_LIST='alsa_indev
+audio_beos_indev
+bktr_indev
+dv1394_indev
+jack_indev
+oss_indev
+v4l2_indev
+v4l_indev
+vfwcap_indev
+x11_grab_device_indev
+libdc1394_indev'
+INSTALLDIR=/root/RT-N56U/source/romfs
+KERNEL_CROSS_COMPILE='"/opt/buildroot-gcc342/bin"/mipsel-linux-uclibc-'
+LANG=en_US.UTF-8
+LC_ALL=C
+LD=/opt/buildroot-gcc342/bin/mipsel-linux-uclibc-ld
+LDFLAGS='-Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src'
+LDLIBS='-lc -lgcc '
+LESSOPEN='|/usr/bin/lesspipe.sh %s'
+LIBAES=-laes
+LIBATM=-latm
+LIBC=-lc
+LIBCDIR=
+LIBCRYPT=-lcrypt
+LIBCRYPTO=-lcrypto
+LIBDES=-ldes
+LIBDL=-ldl
+LIBEXPAT=-lexpat
+LIBFLEX=-lfl
+LIBGCC=-lgcc
+LIBIBERTY=-liberty
+LIBIO=-lio
+LIBIOSTREAM=-liostream
+LIBIXML=-lixml
+LIBJPEG=-ljpeg
+LIBM=-lm
+LIBNAME='$(LIBPREF)$(FULLNAME)$(LIBSUF)'
+LIBNETOLD=-lnetold
+LIBPCAP=-lpcap
+LIBPNG=-lpng
+LIBPREF=lib
+LIBPTHREAD=-lpthread
+LIBSSL=-lssl
+LIBSTDCPP='-Wl,-Bstatic -lstdc++ -Wl,-Bdynamic'
+LIBSUF=.a
+LIBTCL=-ltcl
+LIBTHREADUTIL=-lthreadutil
+LIBUPNP=-lupnp
+LIBUTIL=-lutil
+LIBZ=-lz
+LIB_INSTALL_EXTRA_CMD='$$(RANLIB) "$(LIBDIR)/$(LIBNAME)"'
+LINUXDIR=linux-2.6.21.x
+LINUX_CONFIG=/root/RT-N56U/source/linux-2.6.21.x/.config
+LOGNAME=root
+LS_COLORS='rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=01;05;37;41:su=37;41:sg=30;43:ca=30;41:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arj=01;31:*.taz=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.zip=01;31:*.z=01;31:*.Z=01;31:*.dz=01;31:*.gz=01;31:*.lz=01;31:*.xz=01;31:*.bz2=01;31:*.tbz=01;31:*.tbz2=01;31:*.bz=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.jpg=01;35:*.jpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.axv=01;35:*.anx=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=01;36:*.au=01;36:*.flac=01;36:*.mid=01;36:*.midi=01;36:*.mka=01;36:*.mp3=01;36:*.mpc=01;36:*.ogg=01;36:*.ra=01;36:*.wav=01;36:*.axa=01;36:*.oga=01;36:*.spx=01;36:*.xspf=01;36:'
+MACHINE=mips
+MACHTYPE=i386-redhat-linux-gnu
+MACH_DIR=.
+MAIL=/var/spool/mail/root
+MAKEARCH='make ARCH=mips CROSS_COMPILE="/opt/buildroot-gcc342/bin"/mipsel-linux-uclibc-'
+MAKEARCH_KERNEL='make  ARCH=mips CROSS_COMPILE="/opt/buildroot-gcc342/bin"/mipsel-linux-uclibc-'
+MAKEFILE_LIST=' Makefile'
+MAKEFLAGS='w -- ARCH=mips CROSS_COMPILE=/opt/buildroot-gcc342/bin/mipsel-linux-uclibc-'
+MAKELEVEL=5
+MAKEOVERRIDES='${-*-command-variables-*-}'
+MFLAGS=-w
+MODEL_NAME=RT-N56U
+MODULES_CONFIG=/root/RT-N56U/source/modules/.config
+MUXER_LIST='ac3_muxer
+adts_muxer
+aiff_muxer
+amr_muxer
+asf_muxer
+ass_muxer
+asf_stream_muxer
+au_muxer
+avi_muxer
+avm2_muxer
+crc_muxer
+daud_muxer
+dirac_muxer
+dnxhd_muxer
+dts_muxer
+dv_muxer
+eac3_muxer
+ffm_muxer
+filmstrip_muxer
+flac_muxer
+flv_muxer
+framecrc_muxer
+gif_muxer
+gxf_muxer
+h261_muxer
+h263_muxer
+h264_muxer
+image2_muxer
+image2pipe_muxer
+ipod_muxer
+m4v_muxer
+matroska_muxer
+matroska_audio_muxer
+mjpeg_muxer
+mlp_muxer
+mmf_muxer
+mov_muxer
+mp2_muxer
+mp3_muxer
+mp4_muxer
+mpeg1system_muxer
+mpeg1vcd_muxer
+mpeg1video_muxer
+mpeg2dvd_muxer
+mpeg2svcd_muxer
+mpeg2video_muxer
+mpeg2vob_muxer
+mpegts_muxer
+mpjpeg_muxer
+mxf_muxer
+mxf_d10_muxer
+null_muxer
+nut_muxer
+ogg_muxer
+pcm_alaw_muxer
+pcm_mulaw_muxer
+pcm_f64be_muxer
+pcm_f64le_muxer
+pcm_f32be_muxer
+pcm_f32le_muxer
+pcm_s32be_muxer
+pcm_s32le_muxer
+pcm_s24be_muxer
+pcm_s24le_muxer
+pcm_s16be_muxer
+pcm_s16le_muxer
+pcm_s8_muxer
+pcm_u32be_muxer
+pcm_u32le_muxer
+pcm_u24be_muxer
+pcm_u24le_muxer
+pcm_u16be_muxer
+pcm_u16le_muxer
+pcm_u8_muxer
+psp_muxer
+rawvideo_muxer
+rm_muxer
+roq_muxer
+rtp_muxer
+rtsp_muxer
+sox_muxer
+spdif_muxer
+swf_muxer
+tg2_muxer
+tgp_muxer
+truehd_muxer
+vc1t_muxer
+voc_muxer
+wav_muxer
+webm_muxer
+yuv4mpegpipe_muxer
+libnut_muxer'
+OBJCOPY=/opt/buildroot-gcc342/bin/mipsel-linux-uclibc-objcopy
+OPTERR=1
+OPTIND=1
+ORBIT_SOCKETDIR=/tmp/orbit-root
+OSTYPE=linux-gnu
+OUTDEV_LIST='alsa_outdev
+audio_beos_outdev
+oss_outdev'
+PARSER_LIST='aac_parser
+ac3_parser
+cavsvideo_parser
+dca_parser
+dirac_parser
+dnxhd_parser
+dvbsub_parser
+dvdsub_parser
+h261_parser
+h263_parser
+h264_parser
+mjpeg_parser
+mlp_parser
+mpeg4video_parser
+mpegaudio_parser
+mpegvideo_parser
+pnm_parser
+vc1_parser
+vp3_parser'
+PATH=/usr/lib/qt-3.3/bin:/usr/kerberos/sbin:/usr/kerberos/bin:/usr/lib/ccache:/opt/buildroot-gdb/bin:/usr/local/sbin:/usr/sbin:/sbin:/usr/local/bin:/usr/bin:/bin:/root/bin:/root/RT-N56U/source/tools
+PATHS_LIST='
+    bindir
+    datadir
+    incdir
+    libdir
+    mandir
+    prefix
+    shlibdir
+'
+PIPESTATUS=([0]="0")
+POSIXLY_CORRECT=y
+PPID=24042
+PRODUCT=
+PROTOCOL_LIST='file_protocol
+gopher_protocol
+http_protocol
+pipe_protocol
+rtmp_protocol
+rtmpt_protocol
+rtmpe_protocol
+rtmpte_protocol
+rtmps_protocol
+rtp_protocol
+tcp_protocol
+udp_protocol
+concat_protocol'
+PS4='+ '
+PWD=/root/RT-N56U/source/user/ffmpeg-0.6.1/source
+QTDIR=/usr/lib/qt-3.3
+QTINC=/usr/lib/qt-3.3/include
+QTLIB=/usr/lib/qt-3.3/lib
+QT_IM_MODULE=xim
+RANLIB=/opt/buildroot-gcc342/bin/mipsel-linux-uclibc-ranlib
+RELFILES='boot/boot.bin boot/boot.elf images/image.bin images/flash.bin linux-2.6.21.x/linux'
+ROMFSDIR=/root/RT-N56U/source/romfs
+ROMFSINST=romfs-inst.sh
+ROOTDIR=/root/RT-N56U/source
+SCRIPTSDIR=/root/RT-N56U/source/config/scripts
+SESSION_MANAGER=local/unix:@/tmp/.ICE-unix/1691,unix/unix:/tmp/.ICE-unix/1691
+SHELL=/bin/bash
+SHELLOPTS=braceexpand:hashall:interactive-comments:posix
+SHFLAGS='-shared -Wl,-soname,$$(@F)'
+SHLVL=8
+SH_LDFLAGS='-Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src  -nodefaultlibs'
+SH_LDLIBS='-lc -lgcc '
+SLIBAES=-laes
+SLIBATM=-latm
+SLIBC=-lc
+SLIBCRYPT='-Wl,-Bstatic -Wl,-Bstatic -lcrypt'
+SLIBCRYPTO=-lcrypto
+SLIBDES=-ldes
+SLIBEXPAT=-lexpat
+SLIBFLEX=-lfl
+SLIBIXML=-lixml
+SLIBJPEG=-ljpeg
+SLIBM=-lm
+SLIBNAME='$(SLIBPREF)$(FULLNAME)$(SLIBSUF)'
+SLIBNAME_WITH_MAJOR='$(SLIBNAME).$(LIBMAJOR)'
+SLIBNAME_WITH_VERSION='$(SLIBNAME).$(LIBVERSION)'
+SLIBNETOLD=-lnetold
+SLIBPCAP=-lpcap
+SLIBPNG=-lpng
+SLIBPREF=lib
+SLIBPTHREAD=-lpthread
+SLIBSSL=-lssl
+SLIBSTDCPP='-Wl,-Bstatic -lstdc++ -Wl,-Bdynamic'
+SLIBSUF=.so
+SLIBTHREADUTIL=-lthreadutil
+SLIBUPNP=-lupnp
+SLIBZ=-lz
+SSH_ASKPASS=/usr/libexec/openssh/gnome-ssh-askpass
+STL_INCDIR=/root/RT-N56U/source/include/STLport
+STL_LIBDIR=/root/RT-N56U/source/lib/STLport/lib
+STRIP=/opt/buildroot-gcc342/bin/mipsel-linux-uclibc-strip
+STRIPTOOL=/opt/buildroot-gcc342/bin/mipsel-linux-uclibc-strip
+TERM=xterm
+TFTPDIR=/tftpboot
+THREADS_LIST='
+    beosthreads
+    os2threads
+    pthreads
+    w32threads
+'
+UCLINUX_BUILD_SET=1
+UCLINUX_BUILD_USER=1
+UCLINUX_COMMON_LIB=1
+UID=0
+USER=root
+USERNAME=root
+VEND=/root/RT-N56U/source/vendors
+VENDOR=
+VENDOR_CFLAGS=
+VERSIONPKG=3.2.0
+VERSIONSTR='Ralink/RT3883 Version 3.2.0'
+WINDOWID=33554435
+WINDOWPATH=1
+XAUTHORITY=/var/run/gdm/auth-for-root-rOLVqG/database
+XDG_SESSION_COOKIE=5b29ef13e925d6cebc1e72210000001e-1295830107.679778-1312092821
+XMODIFIERS=@im=none
+_='# ./configure --cross-prefix=mipsel-linux- --enable-cross-compile --arch=mips --target-os=linux --prefix=/root/RT-N56U/source/user/ffmpeg-0.6.1/source/../install --enable-pthreads --disable-avdevice --disable-swscale --disable-ffmpeg --disable-ffplay --disable-ffprobe --disable-ffserver --disable-swscale-alpha --disable-encoders --disable-decoders --disable-bsfs --disable-indevs --disable-outdevs --disable-devices --disable-filters --disable-muxers --disable-parsers --disable-protocols --enable-protocol=file --disable-aandct --disable-dct --disable-fft --disable-golomb --disable-lpc --disable-mdct --disable-rdft --disable-vaapi --disable-vdpau --disable-dxva2'
+aac_adtstoasc_bsf_select=aac_parser
+aac_decoder_select='mdct rdft aac_parser'
+aac_demuxer=yes
+aac_encoder_select=mdct
+aandct=no
+ac3_decoder_select='mdct ac3_parser'
+ac3_demuxer=yes
+ac3_demuxer_deps=ac3_parser
+action=disable
+aea_demuxer=yes
+aiff_demuxer=yes
+alac_encoder_select=lpc
+alsa_indev=no
+alsa_indev_deps='alsa_asoundlib_h snd_pcm_htimestamp'
+alsa_indev_extralibs=-lasound
+alsa_outdev=no
+alsa_outdev_deps=alsa_asoundlib_h
+alsa_outdev_extralibs=-lasound
+altivec=yes
+altivec_deps=ppc
+amd3dnow=yes
+amd3dnow_deps=mmx
+amd3dnowext=yes
+amd3dnowext_deps=amd3dnow
+amr_demuxer=yes
+amrnb_decoder_select=lsp
+anm_demuxer=yes
+apc_demuxer=yes
+ape_demuxer=yes
+ar_default=ar
+arch=mips
+arch_default=i686
+armv5te=yes
+armv5te_deps=arm
+armv6=yes
+armv6_deps=arm
+armv6t2=yes
+armv6t2_deps=arm
+armvfp=yes
+armvfp_deps=arm
+asf_demuxer=yes
+asf_stream_muxer_select=asf_muxer
+asm=yes
+ass_demuxer=yes
+atrac1_decoder_select=mdct
+atrac3_decoder_select=mdct
+au_demuxer=yes
+audio_beos_indev=no
+audio_beos_indev_deps=audio_beos
+audio_beos_indev_extralibs='-lmedia -lbe'
+audio_beos_outdev=no
+audio_beos_outdev_deps=audio_beos
+audio_beos_outdev_extralibs='-lmedia -lbe'
+avcodec=yes
+avdevice=no
+avdevice_deps='avcodec avformat'
+avfilter_lavf_deps=avformat
+avformat=yes
+avformat_deps=avcodec
+avi_demuxer=yes
+avisynth_demuxer=yes
+avisynth_demuxer_deps=avisynth
+avs_demuxer=yes
+avutil=yes
+bethsoftvid_demuxer=yes
+bfi_demuxer=yes
+bindir_default='${prefix}/bin'
+bink_demuxer=yes
+binkaudio_dct_decoder_select='mdct rdft dct'
+binkaudio_rdft_decoder_select='mdct rdft'
+bktr_indev=no
+bktr_indev_deps_any='dev_bktr_ioctl_bt848_h machine_ioctl_bt848_h dev_video_bktr_ioctl_bt848_h dev_ic_bt8xx_h'
+bsfs_if_any='aac_adtstoasc_bsf
+dump_extradata_bsf
+h264_mp4toannexb_bsf
+imx_dump_header_bsf
+mjpega_dump_header_bsf
+mp3_header_compress_bsf
+mp3_header_decompress_bsf
+mov2textsub_bsf
+noise_bsf
+remove_extradata_bsf
+text2movsub_bsf'
+c93_demuxer=yes
+caf_demuxer=yes
+cavs_decoder_select=golomb
+cavsvideo_demuxer=yes
+cc_default=gcc
+cc_version='"unknown"'
+cdg_demuxer=yes
+cook_decoder_select=mdct
+cpu=generic
+cross_compile=yes
+cross_prefix=mipsel-linux-
+cscd_decoder_suggest=zlib
+datadir_default='${prefix}/share/ffmpeg'
+daud_demuxer=yes
+dca_decoder_select=mdct
+dct=no
+debug=yes
+decoders_if_any='aasc_decoder
+amv_decoder
+anm_decoder
+asv1_decoder
+asv2_decoder
+aura_decoder
+aura2_decoder
+avs_decoder
+bethsoftvid_decoder
+bfi_decoder
+bink_decoder
+bmp_decoder
+c93_decoder
+cavs_decoder
+cdgraphics_decoder
+cinepak_decoder
+cljr_decoder
+cscd_decoder
+cyuv_decoder
+dnxhd_decoder
+dpx_decoder
+dsicinvideo_decoder
+dvvideo_decoder
+dxa_decoder
+eacmv_decoder
+eamad_decoder
+eatgq_decoder
+eatgv_decoder
+eatqi_decoder
+eightbps_decoder
+eightsvx_exp_decoder
+eightsvx_fib_decoder
+escape124_decoder
+ffv1_decoder
+ffvhuff_decoder
+flashsv_decoder
+flic_decoder
+flv_decoder
+fourxm_decoder
+fraps_decoder
+frwu_decoder
+gif_decoder
+h261_decoder
+h263_decoder
+h263i_decoder
+h264_decoder
+h264_vdpau_decoder
+huffyuv_decoder
+idcin_decoder
+iff_byterun1_decoder
+iff_ilbm_decoder
+indeo2_decoder
+indeo3_decoder
+indeo5_decoder
+interplay_video_decoder
+jpegls_decoder
+kgv1_decoder
+kmvc_decoder
+loco_decoder
+mdec_decoder
+mimic_decoder
+mjpeg_decoder
+mjpegb_decoder
+mmvideo_decoder
+motionpixels_decoder
+mpeg_xvmc_decoder
+mpeg1video_decoder
+mpeg2video_decoder
+mpeg4_decoder
+mpeg4_vdpau_decoder
+mpegvideo_decoder
+mpeg_vdpau_decoder
+mpeg1_vdpau_decoder
+msmpeg4v1_decoder
+msmpeg4v2_decoder
+msmpeg4v3_decoder
+msrle_decoder
+msvideo1_decoder
+mszh_decoder
+nuv_decoder
+pam_decoder
+pbm_decoder
+pcx_decoder
+pgm_decoder
+pgmyuv_decoder
+png_decoder
+ppm_decoder
+ptx_decoder
+qdraw_decoder
+qpeg_decoder
+qtrle_decoder
+r210_decoder
+rawvideo_decoder
+rl2_decoder
+roq_decoder
+rpza_decoder
+rv10_decoder
+rv20_decoder
+rv30_decoder
+rv40_decoder
+sgi_decoder
+smacker_decoder
+smc_decoder
+snow_decoder
+sp5x_decoder
+sunrast_decoder
+svq1_decoder
+svq3_decoder
+targa_decoder
+theora_decoder
+thp_decoder
+tiertexseqvideo_decoder
+tiff_decoder
+tmv_decoder
+truemotion1_decoder
+truemotion2_decoder
+tscc_decoder
+txd_decoder
+ulti_decoder
+v210_decoder
+v210x_decoder
+vb_decoder
+vc1_decoder
+vc1_vdpau_decoder
+vcr1_decoder
+vmdvideo_decoder
+vmnc_decoder
+vp3_decoder
+vp5_decoder
+vp6_decoder
+vp6a_decoder
+vp6f_decoder
+vqa_decoder
+wmv1_decoder
+wmv2_decoder
+wmv3_decoder
+wmv3_vdpau_decoder
+wnv1_decoder
+xan_wc3_decoder
+xl_decoder
+yop_decoder
+zlib_decoder
+zmbv_decoder
+aac_decoder
+ac3_decoder
+alac_decoder
+als_decoder
+amrnb_decoder
+ape_decoder
+atrac1_decoder
+atrac3_decoder
+binkaudio_dct_decoder
+binkaudio_rdft_decoder
+cook_decoder
+dca_decoder
+dsicinaudio_decoder
+eac3_decoder
+flac_decoder
+imc_decoder
+mace3_decoder
+mace6_decoder
+mlp_decoder
+mp1_decoder
+mp2_decoder
+mp3_decoder
+mp3adu_decoder
+mp3on4_decoder
+mpc7_decoder
+mpc8_decoder
+nellymoser_decoder
+qcelp_decoder
+qdm2_decoder
+ra_144_decoder
+ra_288_decoder
+shorten_decoder
+sipr_decoder
+smackaud_decoder
+sonic_decoder
+truehd_decoder
+truespeech_decoder
+tta_decoder
+twinvq_decoder
+vmdaudio_decoder
+vorbis_decoder
+wavpack_decoder
+wmapro_decoder
+wmav1_decoder
+wmav2_decoder
+wmavoice_decoder
+ws_snd1_decoder
+pcm_alaw_decoder
+pcm_bluray_decoder
+pcm_dvd_decoder
+pcm_f32be_decoder
+pcm_f32le_decoder
+pcm_f64be_decoder
+pcm_f64le_decoder
+pcm_mulaw_decoder
+pcm_s8_decoder
+pcm_s16be_decoder
+pcm_s16le_decoder
+pcm_s16le_planar_decoder
+pcm_s24be_decoder
+pcm_s24daud_decoder
+pcm_s24le_decoder
+pcm_s32be_decoder
+pcm_s32le_decoder
+pcm_u8_decoder
+pcm_u16be_decoder
+pcm_u16le_decoder
+pcm_u24be_decoder
+pcm_u24le_decoder
+pcm_u32be_decoder
+pcm_u32le_decoder
+pcm_zork_decoder
+interplay_dpcm_decoder
+roq_dpcm_decoder
+sol_dpcm_decoder
+xan_dpcm_decoder
+adpcm_4xm_decoder
+adpcm_adx_decoder
+adpcm_ct_decoder
+adpcm_ea_decoder
+adpcm_ea_maxis_xa_decoder
+adpcm_ea_r1_decoder
+adpcm_ea_r2_decoder
+adpcm_ea_r3_decoder
+adpcm_ea_xas_decoder
+adpcm_g726_decoder
+adpcm_ima_amv_decoder
+adpcm_ima_dk3_decoder
+adpcm_ima_dk4_decoder
+adpcm_ima_ea_eacs_decoder
+adpcm_ima_ea_sead_decoder
+adpcm_ima_iss_decoder
+adpcm_ima_qt_decoder
+adpcm_ima_smjpeg_decoder
+adpcm_ima_wav_decoder
+adpcm_ima_ws_decoder
+adpcm_ms_decoder
+adpcm_sbpro_2_decoder
+adpcm_sbpro_3_decoder
+adpcm_sbpro_4_decoder
+adpcm_swf_decoder
+adpcm_thp_decoder
+adpcm_xa_decoder
+adpcm_yamaha_decoder
+dvbsub_decoder
+dvdsub_decoder
+pgssub_decoder
+xsub_decoder
+libdirac_decoder
+libfaad_decoder
+libgsm_decoder
+libgsm_ms_decoder
+libopencore_amrnb_decoder
+libopencore_amrwb_decoder
+libopenjpeg_decoder
+libschroedinger_decoder
+libspeex_decoder
+libvpx_decoder'
+demuxers_if_any='aac_demuxer
+ac3_demuxer
+aea_demuxer
+aiff_demuxer
+amr_demuxer
+anm_demuxer
+apc_demuxer
+ape_demuxer
+asf_demuxer
+ass_demuxer
+au_demuxer
+avi_demuxer
+avisynth_demuxer
+avs_demuxer
+bethsoftvid_demuxer
+bfi_demuxer
+bink_demuxer
+c93_demuxer
+caf_demuxer
+cavsvideo_demuxer
+cdg_demuxer
+daud_demuxer
+dirac_demuxer
+dnxhd_demuxer
+dsicin_demuxer
+dts_demuxer
+dv_demuxer
+dxa_demuxer
+ea_demuxer
+ea_cdata_demuxer
+eac3_demuxer
+ffm_demuxer
+filmstrip_demuxer
+flac_demuxer
+flic_demuxer
+flv_demuxer
+fourxm_demuxer
+gsm_demuxer
+gxf_demuxer
+h261_demuxer
+h263_demuxer
+h264_demuxer
+idcin_demuxer
+iff_demuxer
+image2_demuxer
+image2pipe_demuxer
+ingenient_demuxer
+ipmovie_demuxer
+iss_demuxer
+iv8_demuxer
+lmlm4_demuxer
+m4v_demuxer
+matroska_demuxer
+mjpeg_demuxer
+mlp_demuxer
+mm_demuxer
+mmf_demuxer
+mov_demuxer
+mp3_demuxer
+mpc_demuxer
+mpc8_demuxer
+mpegps_demuxer
+mpegts_demuxer
+mpegtsraw_demuxer
+mpegvideo_demuxer
+msnwc_tcp_demuxer
+mtv_demuxer
+mvi_demuxer
+mxf_demuxer
+nc_demuxer
+nsv_demuxer
+nut_demuxer
+nuv_demuxer
+ogg_demuxer
+oma_demuxer
+pcm_alaw_demuxer
+pcm_mulaw_demuxer
+pcm_f64be_demuxer
+pcm_f64le_demuxer
+pcm_f32be_demuxer
+pcm_f32le_demuxer
+pcm_s32be_demuxer
+pcm_s32le_demuxer
+pcm_s24be_demuxer
+pcm_s24le_demuxer
+pcm_s16be_demuxer
+pcm_s16le_demuxer
+pcm_s8_demuxer
+pcm_u32be_demuxer
+pcm_u32le_demuxer
+pcm_u24be_demuxer
+pcm_u24le_demuxer
+pcm_u16be_demuxer
+pcm_u16le_demuxer
+pcm_u8_demuxer
+pva_demuxer
+qcp_demuxer
+r3d_demuxer
+rawvideo_demuxer
+rl2_demuxer
+rm_demuxer
+roq_demuxer
+rpl_demuxer
+rtsp_demuxer
+sdp_demuxer
+segafilm_demuxer
+shorten_demuxer
+siff_demuxer
+smacker_demuxer
+sol_demuxer
+sox_demuxer
+str_demuxer
+swf_demuxer
+thp_demuxer
+tiertexseq_demuxer
+tmv_demuxer
+truehd_demuxer
+tta_demuxer
+txd_demuxer
+vc1_demuxer
+vc1t_demuxer
+vmd_demuxer
+voc_demuxer
+vqf_demuxer
+w64_demuxer
+wav_demuxer
+wc3_demuxer
+wsaud_demuxer
+wsvqa_demuxer
+wv_demuxer
+xa_demuxer
+yop_demuxer
+yuv4mpegpipe_demuxer
+libnut_demuxer'
+dir_=' rt61apd bigpond bonnie++ bt-utils ctorrent-dnh3.2 dhcp6 dhrystone dhcpforwarder dnsmasq-2.40 disktype-9 ethtool gdbserver gdbserver matrixssl-1.8.3 goahead iptables ixia_endpoint inadyn lmbench3 lsusb miniupnpd-1.1 mtd-utils mpstat-0.1.1 netcat netstat-nat ntpclient ntpclient ntfs-3g ntfsprogs openssl-0.9.8e portmap ppp-2.4.1/pppoecd ppp-2.4.2 ppp-2.4.2 ppp-2.4.2 pciutils-3.0.0 pciutils-3.0.0 p910nd-0.91 proftpd radvd-1.6 ralinkiappd rp-pppoe-3.8 rp-pppoe-3.8 strace stupid-ftpd snort-2.8.5.2 totd-1.5 tcpdump uvc_stream watchdog-5.6 wpa_supplicant-0.5.7 ethtool zebra-0.95a_ripd snmpd hello_world'
+dir_n=
+dir_p=/root/RT-N56U/source/prop
+dir_v=/root/RT-N56U/source/vendors/Ralink/RT3883/.
+dir_y=' 802.1x bridge-utils busybox mt-daapd-0.2.4.2 mDNSResponder-214.3.2 iptables shared netconf rc nvram libdisk detectWAN httpd www pppd pppoe-relay bpalogin dproxy udhcpd infosvr ntpclient.asus ez-ipupdate wanduck network_map LPRng u2ec vsftpd attr acl samba igmpproxy iproute2-2.6.24-rc7 lldt mtd_write rt2880_app rp-l2tp linux-igd wireless_tools wsc_upnp extra_bin udpxy rstats tcpcheck e2fsprogs dosfstools-3.0.10 ffmpeg-0.6.1 sqlite-autoconf-3070400 libexif-0.6.20 jpeg-8b libogg-1.2.2 libvorbis-1.3.2 flac-1.2.1 minidlna'
+dirac_demuxer=yes
+dirac_demuxer_deps=dirac_parser
+dnxhd_demuxer=yes
+dnxhd_encoder_select=aandct
+doc=yes
+doc_deps=texi2html
+dsicin_demuxer=yes
+dts_demuxer=yes
+dv1394_indev=no
+dv1394_indev_deps='dv1394 dv_demuxer'
+dv_demuxer=yes
+dxa_decoder_select=zlib
+dxa_demuxer=yes
+dxva2=no
+ea_cdata_demuxer=yes
+ea_demuxer=yes
+eac3_decoder_select=ac3_decoder
+eac3_demuxer=yes
+eac3_demuxer_select=ac3_parser
+eamad_decoder_select=aandct
+eatgq_decoder_select=aandct
+eatqi_decoder_select=aandct
+encoders_if_any='asv1_encoder
+asv2_encoder
+bmp_encoder
+dnxhd_encoder
+dvvideo_encoder
+ffv1_encoder
+ffvhuff_encoder
+flashsv_encoder
+flv_encoder
+gif_encoder
+h261_encoder
+h263_encoder
+h263p_encoder
+huffyuv_encoder
+jpegls_encoder
+ljpeg_encoder
+mjpeg_encoder
+mpeg1video_encoder
+mpeg2video_encoder
+mpeg4_encoder
+msmpeg4v1_encoder
+msmpeg4v2_encoder
+msmpeg4v3_encoder
+pam_encoder
+pbm_encoder
+pcx_encoder
+pgm_encoder
+pgmyuv_encoder
+png_encoder
+ppm_encoder
+qtrle_encoder
+rawvideo_encoder
+roq_encoder
+rv10_encoder
+rv20_encoder
+sgi_encoder
+snow_encoder
+svq1_encoder
+targa_encoder
+tiff_encoder
+v210_encoder
+wmv1_encoder
+wmv2_encoder
+zlib_encoder
+zmbv_encoder
+aac_encoder
+ac3_encoder
+alac_encoder
+flac_encoder
+mp2_encoder
+nellymoser_encoder
+sonic_encoder
+sonic_ls_encoder
+wmav1_encoder
+wmav2_encoder
+pcm_alaw_encoder
+pcm_f32be_encoder
+pcm_f32le_encoder
+pcm_f64be_encoder
+pcm_f64le_encoder
+pcm_mulaw_encoder
+pcm_s8_encoder
+pcm_s16be_encoder
+pcm_s16le_encoder
+pcm_s24be_encoder
+pcm_s24daud_encoder
+pcm_s24le_encoder
+pcm_s32be_encoder
+pcm_s32le_encoder
+pcm_u8_encoder
+pcm_u16be_encoder
+pcm_u16le_encoder
+pcm_u24be_encoder
+pcm_u24le_encoder
+pcm_u32be_encoder
+pcm_u32le_encoder
+pcm_zork_encoder
+roq_dpcm_encoder
+adpcm_adx_encoder
+adpcm_g726_encoder
+adpcm_ima_qt_encoder
+adpcm_ima_wav_encoder
+adpcm_ms_encoder
+adpcm_swf_encoder
+adpcm_yamaha_encoder
+dvbsub_encoder
+dvdsub_encoder
+xsub_encoder
+libdirac_encoder
+libfaac_encoder
+libgsm_encoder
+libgsm_ms_encoder
+libmp3lame_encoder
+libopencore_amrnb_encoder
+libschroedinger_encoder
+libtheora_encoder
+libvorbis_encoder
+libvpx_encoder
+libx264_encoder
+libxvid_encoder'
+fast_64bit_if_any='alpha ia64 mips64 parisc64 ppc64 sparc64 x86_64'
+fast_clz_if_any='alpha armv5te avr32 mips ppc x86'
+fast_unaligned_if_any='armv6 ppc x86'
+fastdiv=yes
+ffm_demuxer=yes
+ffmpeg=no
+ffmpeg_deps='avcodec avformat swscale'
+ffplay=no
+ffplay_deps='avcodec avformat swscale sdl'
+ffplay_select=rdft
+ffprobe=no
+ffprobe_deps='avcodec avformat'
+ffserver=no
+ffserver_deps='avformat ffm_muxer rtp_protocol rtsp_demuxer'
+ffserver_extralibs='$ldl'
+fft=no
+ffv1_decoder_select=golomb
+file_protocol=yes
+filmstrip_demuxer=yes
+filters_if_any='aspect_filter
+crop_filter
+format_filter
+noformat_filter
+null_filter
+pixelaspect_filter
+scale_filter
+slicify_filter
+unsharp_filter
+vflip_filter
+nullsrc_filter
+nullsink_filter'
+flac_decoder_select=golomb
+flac_demuxer=yes
+flac_encoder_select='golomb lpc'
+flashsv_decoder_select=zlib
+flashsv_encoder_select=zlib
+flic_demuxer=yes
+flv_decoder_select=h263_decoder
+flv_demuxer=yes
+flv_encoder_select=h263_encoder
+fourxm_demuxer=yes
+golomb=no
+gopher_protocol_deps=network
+gsm_demuxer=yes
+gxf_demuxer=yes
+h261_demuxer=yes
+h261_encoder_select=aandct
+h263_decoder_select=h263_parser
+h263_demuxer=yes
+h263_encoder_select=aandct
+h263_vaapi_hwaccel=yes
+h263_vaapi_hwaccel_select='vaapi h263_decoder'
+h263i_decoder_select=h263_decoder
+h263p_encoder_select=h263_encoder
+h264_decoder_select='golomb h264dsp'
+h264_demuxer=yes
+h264_dxva2_hwaccel=yes
+h264_dxva2_hwaccel_deps=dxva2api_h
+h264_dxva2_hwaccel_select='dxva2 h264_decoder'
+h264_parser_select='golomb h264dsp'
+h264_vaapi_hwaccel=yes
+h264_vaapi_hwaccel_select=vaapi
+h264_vdpau_decoder_select='vdpau h264_decoder'
+host_cc_default=gcc
+host_cflags='-D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -O3 -g -Wall'
+host_libs=-lm
+host_os=linux
+http_protocol_deps=network
+http_protocol_select=tcp_protocol
+hwaccels_if_any='h263_vaapi_hwaccel
+h264_dxva2_hwaccel
+h264_vaapi_hwaccel
+mpeg2_vaapi_hwaccel
+mpeg4_vaapi_hwaccel
+vc1_dxva2_hwaccel
+vc1_vaapi_hwaccel
+wmv3_dxva2_hwaccel
+wmv3_vaapi_hwaccel'
+idcin_demuxer=yes
+iff_demuxer=yes
+image2_demuxer=yes
+image2pipe_demuxer=yes
+imc_decoder_select='fft mdct'
+incdir_default='${prefix}/include'
+indevs_if_any='alsa_indev
+audio_beos_indev
+bktr_indev
+dv1394_indev
+jack_indev
+oss_indev
+v4l2_indev
+v4l_indev
+vfwcap_indev
+x11_grab_device_indev
+libdc1394_indev'
+ingenient_demuxer=yes
+inline_asm_deps='!tms470'
+ipmovie_demuxer=yes
+ipod_muxer_select=mov_muxer
+iss_demuxer=yes
+iv8_demuxer=yes
+iwmmxt=yes
+iwmmxt_deps=arm
+jack_indev=no
+jack_indev_deps=jack_jack_h
+jack_indev_extralibs=-ljack
+jpegls_decoder_select=golomb
+jpegls_encoder_select=golomb
+l=
+libdc1394_indev=no
+libdc1394_indev_deps=libdc1394
+libdir_default='${prefix}/lib'
+libdirac_decoder_deps='libdirac !libschroedinger'
+libdirac_encoder_deps=libdirac
+libfaac_encoder_deps=libfaac
+libfaad_decoder_deps=libfaad
+libfaadbin_extralibs='$ldl'
+libgsm_decoder_deps=libgsm
+libgsm_encoder_deps=libgsm
+libgsm_ms_decoder_deps=libgsm
+libgsm_ms_encoder_deps=libgsm
+libmp3lame_encoder_deps=libmp3lame
+libnut_demuxer=yes
+libnut_demuxer_deps=libnut
+libnut_muxer_deps=libnut
+libopencore_amrnb_decoder_deps=libopencore_amrnb
+libopencore_amrnb_encoder_deps=libopencore_amrnb
+libopencore_amrwb_decoder_deps=libopencore_amrwb
+libopenjpeg_decoder_deps=libopenjpeg
+libschroedinger_decoder_deps=libschroedinger
+libschroedinger_encoder_deps=libschroedinger
+libspeex_decoder_deps=libspeex
+libtheora_encoder_deps=libtheora
+libvorbis_encoder_deps=libvorbis
+libvpx_decoder_deps=libvpx
+libvpx_encoder_deps=libvpx
+libx264_encoder_deps=libx264
+libxvid_encoder_deps=libxvid
+list='file_protocol
+gopher_protocol
+http_protocol
+pipe_protocol
+rtmp_protocol
+rtmpt_protocol
+rtmpe_protocol
+rtmpte_protocol
+rtmps_protocol
+rtp_protocol
+tcp_protocol
+udp_protocol
+concat_protocol'
+ljpeg_encoder_select=aandct
+lmlm4_demuxer=yes
+ln_s='ln -sf'
+loco_decoder_select=golomb
+logfile=config.err
+lpc=no
+m4v_demuxer=yes
+mandir_default='${prefix}/share/man'
+matroska_audio_muxer_select=matroska_muxer
+matroska_demuxer=yes
+matroska_demuxer_suggest='zlib bzlib'
+mdct=no
+mdct_select=fft
+mjpeg_demuxer=yes
+mjpeg_encoder_select=aandct
+mlp_decoder_select=mlp_parser
+mlp_demuxer=yes
+mm_demuxer=yes
+mmf_demuxer=yes
+mmi=yes
+mmi_deps=mips
+mmx=yes
+mmx2=yes
+mmx2_deps=mmx
+mmx_deps=x86
+mov_demuxer=yes
+mov_demuxer_suggest=zlib
+movie_filter_deps=avfilter_lavf
+mp3_demuxer=yes
+mp3_demuxer_deps=mpegaudio_parser
+mp4_muxer_select=mov_muxer
+mpc8_demuxer=yes
+mpc_demuxer=yes
+mpeg1_vdpau_decoder_select='vdpau mpeg1video_decoder'
+mpeg1video_encoder_select=aandct
+mpeg2_vaapi_hwaccel=yes
+mpeg2_vaapi_hwaccel_select='vaapi mpeg2video_decoder'
+mpeg2video_encoder_select=aandct
+mpeg4_decoder_select='h263_decoder mpeg4video_parser'
+mpeg4_encoder_select=h263_encoder
+mpeg4_vaapi_hwaccel=yes
+mpeg4_vaapi_hwaccel_select='vaapi mpeg4_decoder'
+mpeg4_vdpau_decoder_select='vdpau mpeg4_decoder'
+mpeg_vdpau_decoder_select='vdpau mpegvideo_decoder'
+mpeg_xvmc_decoder_deps=X11_extensions_XvMClib_h
+mpeg_xvmc_decoder_select=mpegvideo_decoder
+mpegaudio_hp=yes
+mpegps_demuxer=yes
+mpegts_demuxer=yes
+mpegtsraw_demuxer=yes
+mpegtsraw_demuxer_select=mpegts_demuxer
+mpegvideo_demuxer=yes
+msmpeg4v1_decoder_select=h263_decoder
+msmpeg4v1_encoder_select=h263_encoder
+msmpeg4v2_decoder_select=h263_decoder
+msmpeg4v2_encoder_select=h263_encoder
+msmpeg4v3_decoder_select=h263_decoder
+msmpeg4v3_encoder_select=h263_encoder
+msnwc_tcp_demuxer=yes
+mtv_demuxer=yes
+muxers_if_any='ac3_muxer
+adts_muxer
+aiff_muxer
+amr_muxer
+asf_muxer
+ass_muxer
+asf_stream_muxer
+au_muxer
+avi_muxer
+avm2_muxer
+crc_muxer
+daud_muxer
+dirac_muxer
+dnxhd_muxer
+dts_muxer
+dv_muxer
+eac3_muxer
+ffm_muxer
+filmstrip_muxer
+flac_muxer
+flv_muxer
+framecrc_muxer
+gif_muxer
+gxf_muxer
+h261_muxer
+h263_muxer
+h264_muxer
+image2_muxer
+image2pipe_muxer
+ipod_muxer
+m4v_muxer
+matroska_muxer
+matroska_audio_muxer
+mjpeg_muxer
+mlp_muxer
+mmf_muxer
+mov_muxer
+mp2_muxer
+mp3_muxer
+mp4_muxer
+mpeg1system_muxer
+mpeg1vcd_muxer
+mpeg1video_muxer
+mpeg2dvd_muxer
+mpeg2svcd_muxer
+mpeg2video_muxer
+mpeg2vob_muxer
+mpegts_muxer
+mpjpeg_muxer
+mxf_muxer
+mxf_d10_muxer
+null_muxer
+nut_muxer
+ogg_muxer
+pcm_alaw_muxer
+pcm_mulaw_muxer
+pcm_f64be_muxer
+pcm_f64le_muxer
+pcm_f32be_muxer
+pcm_f32le_muxer
+pcm_s32be_muxer
+pcm_s32le_muxer
+pcm_s24be_muxer
+pcm_s24le_muxer
+pcm_s16be_muxer
+pcm_s16le_muxer
+pcm_s8_muxer
+pcm_u32be_muxer
+pcm_u32le_muxer
+pcm_u24be_muxer
+pcm_u24le_muxer
+pcm_u16be_muxer
+pcm_u16le_muxer
+pcm_u8_muxer
+psp_muxer
+rawvideo_muxer
+rm_muxer
+roq_muxer
+rtp_muxer
+rtsp_muxer
+sox_muxer
+spdif_muxer
+swf_muxer
+tg2_muxer
+tgp_muxer
+truehd_muxer
+vc1t_muxer
+voc_muxer
+wav_muxer
+webm_muxer
+yuv4mpegpipe_muxer
+libnut_muxer'
+mvi_demuxer=yes
+mxf_d10_muxer_select=mxf_muxer
+mxf_demuxer=yes
+n=protocols
+name=file_protocol
+nc_demuxer=yes
+need_memalign='altivec neon sse'
+nellymoser_decoder_select=mdct
+nellymoser_encoder_select=mdct
+neon=yes
+neon_deps=arm
+network=yes
+nm_default=nm
+nm_opts=-g
+nsv_demuxer=yes
+nut_demuxer=yes
+nuv_demuxer=yes
+objformat=elf
+ogg_demuxer=yes
+ogg_demuxer_select=golomb
+oma_demuxer=yes
+op==
+opt=--disable-dxva2
+optimizations=yes
+option=dxva2
+optname=prefix
+optval=--disable-dxva2
+oss_indev=no
+oss_indev_deps_any='soundcard_h sys_soundcard_h'
+oss_outdev=no
+oss_outdev_deps_any='soundcard_h sys_soundcard_h'
+outdevs_if_any='alsa_outdev
+audio_beos_outdev
+oss_outdev'
+parsers_if_any='aac_parser
+ac3_parser
+cavsvideo_parser
+dca_parser
+dirac_parser
+dnxhd_parser
+dvbsub_parser
+dvdsub_parser
+h261_parser
+h263_parser
+h264_parser
+mjpeg_parser
+mlp_parser
+mpeg4video_parser
+mpegaudio_parser
+mpegvideo_parser
+pnm_parser
+vc1_parser
+vp3_parser'
+pcm_alaw_demuxer=yes
+pcm_f32be_demuxer=yes
+pcm_f32le_demuxer=yes
+pcm_f64be_demuxer=yes
+pcm_f64le_demuxer=yes
+pcm_mulaw_demuxer=yes
+pcm_s16be_demuxer=yes
+pcm_s16le_demuxer=yes
+pcm_s24be_demuxer=yes
+pcm_s24le_demuxer=yes
+pcm_s32be_demuxer=yes
+pcm_s32le_demuxer=yes
+pcm_s8_demuxer=yes
+pcm_u16be_demuxer=yes
+pcm_u16le_demuxer=yes
+pcm_u24be_demuxer=yes
+pcm_u24le_demuxer=yes
+pcm_u32be_demuxer=yes
+pcm_u32le_demuxer=yes
+pcm_u8_demuxer=yes
+png_decoder_select=zlib
+png_encoder_select=zlib
+ppc4xx=yes
+ppc4xx_deps=ppc
+prefix=/root/RT-N56U/source/user/ffmpeg-0.6.1/source/../install
+prefix_default=/usr/local
+protocols=yes
+protocols_if_any='file_protocol
+gopher_protocol
+http_protocol
+pipe_protocol
+rtmp_protocol
+rtmpt_protocol
+rtmpe_protocol
+rtmpte_protocol
+rtmps_protocol
+rtp_protocol
+tcp_protocol
+udp_protocol
+concat_protocol'
+psp_muxer_select=mov_muxer
+pthreads=yes
+pva_demuxer=yes
+qcelp_decoder_select=lsp
+qcp_demuxer=yes
+qdm2_decoder_select='mdct rdft'
+quotes='""'
+r=--disable-dxva2
+r3d_demuxer=yes
+ranlib=ranlib
+rawvideo_demuxer=yes
+rdft=no
+rdft_select=fft
+rl2_demuxer=yes
+rm_demuxer=yes
+roq_demuxer=yes
+rpl_demuxer=yes
+rtmp_protocol_deps=tcp_protocol
+rtp_protocol_deps=udp_protocol
+rtsp_demuxer=yes
+rtsp_demuxer_deps=sdp_demuxer
+rtsp_muxer_deps=sdp_demuxer
+rtsp_muxer_select=rtp_muxer
+rv10_decoder_select=h263_decoder
+rv10_encoder_select=h263_encoder
+rv20_decoder_select=h263_decoder
+rv20_encoder_select=h263_encoder
+rv30_decoder_select='golomb h264dsp'
+rv40_decoder_select='golomb h264dsp'
+sdp_demuxer=yes
+sdp_demuxer_deps='rtp_protocol mpegts_demuxer'
+sdp_demuxer_select='asf_demuxer rm_demuxer'
+segafilm_demuxer=yes
+shlibdir_default='${prefix}/lib'
+shorten_decoder_select=golomb
+shorten_demuxer=yes
+siff_demuxer=yes
+sipr_decoder_select=lsp
+smacker_demuxer=yes
+snow_decoder_select=dwt
+snow_encoder_select='aandct dwt'
+sol_demuxer=yes
+sonic_decoder_select=golomb
+sonic_encoder_select=golomb
+sonic_ls_encoder_select=golomb
+source_path=/root/RT-N56U/source/user/ffmpeg-0.6.1/source
+source_path_used=no
+sox_demuxer=yes
+spdif_muxer_select=aac_parser
+sse=yes
+sse_deps=mmx
+ssse3=yes
+ssse3_deps=sse
+static=yes
+str_demuxer=yes
+strip_default=strip
+stripping=yes
+svq1_encoder_select=aandct
+svq3_decoder_select='golomb h264dsp'
+svq3_decoder_suggest=zlib
+swf_demuxer=yes
+swscale=no
+swscale_alpha=no
+symver_if_any='symver_asm_label symver_gnu_asm'
+target_os=linux
+target_os_default=linux
+target_path='$(CURDIR)'
+tcp_protocol_deps=network
+tg2_muxer_select=mov_muxer
+tgp_muxer_select=mov_muxer
+theora_decoder_select=vp3_decoder
+thing=protocol
+thp_demuxer=yes
+tiertexseq_demuxer=yes
+tiff_decoder_suggest=zlib
+tiff_encoder_suggest=zlib
+tmv_demuxer=yes
+truehd_decoder_select=mlp_decoder
+truehd_demuxer=yes
+tscc_decoder_select=zlib
+tta_demuxer=yes
+twinvq_decoder_select='mdct lsp'
+txd_demuxer=yes
+udp_protocol_deps=network
+v=PROTOCOL_LIST
+v4l2_indev=no
+v4l2_indev_deps_any='linux_videodev2_h sys_videoio_h'
+v4l_indev=no
+v4l_indev_deps=linux_videodev_h
+vaapi=no
+vaapi_deps=va_va_h
+value=no
+var=dxva2
+vc1_decoder_select=h263_decoder
+vc1_demuxer=yes
+vc1_dxva2_hwaccel=yes
+vc1_dxva2_hwaccel_deps='dxva2api_h DXVA_PictureParameters_wDecodedPictureIndex'
+vc1_dxva2_hwaccel_select='dxva2 vc1_decoder'
+vc1_vaapi_hwaccel=yes
+vc1_vaapi_hwaccel_select='vaapi vc1_decoder'
+vc1_vdpau_decoder_select='vdpau vc1_decoder'
+vc1t_demuxer=yes
+vdpau=no
+vdpau_deps='vdpau_vdpau_h vdpau_vdpau_x11_h'
+vfwcap_indev=no
+vfwcap_indev_deps=capCreateCaptureWindow
+vfwcap_indev_extralibs=-lavicap32
+vis=yes
+vis_deps=sparc
+vmd_demuxer=yes
+voc_demuxer=yes
+vorbis_decoder_select=mdct
+vorbis_encoder_select=mdct
+vp6a_decoder_select=vp6_decoder
+vp6f_decoder_select=vp6_decoder
+vqf_demuxer=yes
+w64_demuxer=yes
+w64_demuxer_deps=wav_demuxer
+wav_demuxer=yes
+wc3_demuxer=yes
+wmapro_decoder_select=mdct
+wmav1_decoder_select=mdct
+wmav1_encoder_select=mdct
+wmav2_decoder_select=mdct
+wmav2_encoder_select=mdct
+wmavoice_decoder_select='lsp rdft dct'
+wmv1_decoder_select=h263_decoder
+wmv1_encoder_select=h263_encoder
+wmv2_decoder_select=h263_decoder
+wmv2_encoder_select=h263_encoder
+wmv3_decoder_select=vc1_decoder
+wmv3_dxva2_hwaccel=yes
+wmv3_dxva2_hwaccel_select=vc1_dxva2_hwaccel
+wmv3_vaapi_hwaccel=yes
+wmv3_vaapi_hwaccel_select=vc1_vaapi_hwaccel
+wmv3_vdpau_decoder_select=vc1_vdpau_decoder
+wsaud_demuxer=yes
+wsvqa_demuxer=yes
+wv_demuxer=yes
+x11_grab_device_indev=no
+x11_grab_device_indev_deps='x11grab XShmCreateImage'
+x11_grab_device_indev_extralibs='-lX11 -lXext -lXfixes'
+x86_64_suggest='cmov fast_cmov'
+xa_demuxer=yes
+yasmexe=yasm
+yop_demuxer=yes
+yuv4mpegpipe_demuxer=yes
+zlib_decoder_select=zlib
+zlib_encoder_select=zlib
+zmbv_decoder_select=zlib
+zmbv_encoder_select=zlib
+type mktemp
+mktemp is /bin/mktemp
+check_ld
+check_cc
+BEGIN /tmp/ffconf.ERx5dseQ.c
+    1	int main(void){ return 0; }
+END /tmp/ffconf.ERx5dseQ.c
+mipsel-linux-gcc -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -c -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
+mipsel-linux-gcc -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -o /tmp/ffconf.sAoH9i2C /tmp/ffconf.hyh2rGhV.o
+check_cflags -std=c99
+check_cc -std=c99
+BEGIN /tmp/ffconf.ERx5dseQ.c
+    1	int x;
+END /tmp/ffconf.ERx5dseQ.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -c -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
+check_cc -D_FILE_OFFSET_BITS=64
+BEGIN /tmp/ffconf.ERx5dseQ.c
+    1	#include <stdlib.h>
+END /tmp/ffconf.ERx5dseQ.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -D_FILE_OFFSET_BITS=64 -c -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
+check_cc -D_LARGEFILE_SOURCE
+BEGIN /tmp/ffconf.ERx5dseQ.c
+    1	#include <stdlib.h>
+END /tmp/ffconf.ERx5dseQ.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -D_LARGEFILE_SOURCE -c -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
+check_host_cflags -std=c99
+check_host_cc -std=c99
+BEGIN /tmp/ffconf.ERx5dseQ.c
+    1	int x;
+END /tmp/ffconf.ERx5dseQ.c
+gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -O3 -g -Wall -std=c99 -c -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
+check_cpp_condition stdlib.h defined(__PIC__) || defined(__pic__) || defined(PIC)
+check_cpp
+BEGIN /tmp/ffconf.ERx5dseQ.c
+    1	#include <stdlib.h>
+    2	#if !(defined(__PIC__) || defined(__pic__) || defined(PIC))
+    3	#error "unsatisfied condition: defined(__PIC__) || defined(__pic__) || defined(PIC)"
+    4	#endif
+END /tmp/ffconf.ERx5dseQ.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -E -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
+check_cflags -fomit-frame-pointer
+check_cc -fomit-frame-pointer
+BEGIN /tmp/ffconf.ERx5dseQ.c
+    1	int x;
+END /tmp/ffconf.ERx5dseQ.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -c -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
+check_cc
+BEGIN /tmp/ffconf.ERx5dseQ.c
+    1	int ff_extern;
+END /tmp/ffconf.ERx5dseQ.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -c -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
+check_cc
+BEGIN /tmp/ffconf.ERx5dseQ.c
+    1	void foo(void) { __asm__ volatile ("" ::); }
+END /tmp/ffconf.ERx5dseQ.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -c -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
+check_cc
+BEGIN /tmp/ffconf.ERx5dseQ.c
+    1	void foo(char * restrict p);
+END /tmp/ffconf.ERx5dseQ.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -c -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
+check_cc
+BEGIN /tmp/ffconf.ERx5dseQ.c
+    1	struct { int x; } __attribute__((packed)) x;
+END /tmp/ffconf.ERx5dseQ.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -c -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
+check_cc
+BEGIN /tmp/ffconf.ERx5dseQ.c
+    1	union { int x; } __attribute__((may_alias)) x;
+END /tmp/ffconf.ERx5dseQ.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -c -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
+check_cc
+BEGIN /tmp/ffconf.ERx5dseQ.c
+    1	unsigned int endian = 'B' << 24 | 'I' << 16 | 'G' << 8 | 'E';
+END /tmp/ffconf.ERx5dseQ.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -c -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
+check_asm loongson "dmult.g $1, $2, $3"
+check_as
+BEGIN /tmp/ffconf.ERx5dseQ.c
+    1	void foo(void){ __asm__ volatile("dmult.g $1, $2, $3"); }
+END /tmp/ffconf.ERx5dseQ.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -fPIC -c -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
+/tmp/cccw2DqZ.s: Assembler messages:
+/tmp/cccw2DqZ.s:21: Error: opcode not supported on this processor: mips1 (mips1) `dmult g $1,$2,$3'
+check_asm mmi "lq $2, 0($2)"
+check_as
+BEGIN /tmp/ffconf.ERx5dseQ.c
+    1	void foo(void){ __asm__ volatile("lq $2, 0($2)"); }
+END /tmp/ffconf.ERx5dseQ.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -fPIC -c -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
+/tmp/ccxFWN21.s: Assembler messages:
+/tmp/ccxFWN21.s:21: Error: unrecognized opcode `lq $2,0($2)'
+check_func dlopen
+check_ld
+check_cc
+BEGIN /tmp/ffconf.ERx5dseQ.c
+    1	extern int dlopen();
+    2	int main(void){ dlopen(); }
+END /tmp/ffconf.ERx5dseQ.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -c -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
+mipsel-linux-gcc -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -o /tmp/ffconf.sAoH9i2C /tmp/ffconf.hyh2rGhV.o
+/tmp/ffconf.hyh2rGhV.o: In function `main':ffconf.ERx5dseQ.c:(.text+0x18): undefined reference to `dlopen'
+collect2: ld returned 1 exit status
+check_func dlopen -ldl
+check_ld -ldl
+check_cc
+BEGIN /tmp/ffconf.ERx5dseQ.c
+    1	extern int dlopen();
+    2	int main(void){ dlopen(); }
+END /tmp/ffconf.ERx5dseQ.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -c -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
+mipsel-linux-gcc -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -o /tmp/ffconf.sAoH9i2C /tmp/ffconf.hyh2rGhV.o -ldl
+check_func nanosleep
+check_ld
+check_cc
+BEGIN /tmp/ffconf.ERx5dseQ.c
+    1	extern int nanosleep();
+    2	int main(void){ nanosleep(); }
+END /tmp/ffconf.ERx5dseQ.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -c -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
+mipsel-linux-gcc -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -o /tmp/ffconf.sAoH9i2C /tmp/ffconf.hyh2rGhV.o
+check_func fork
+check_ld
+check_cc
+BEGIN /tmp/ffconf.ERx5dseQ.c
+    1	extern int fork();
+    2	int main(void){ fork(); }
+END /tmp/ffconf.ERx5dseQ.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -c -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
+mipsel-linux-gcc -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -o /tmp/ffconf.sAoH9i2C /tmp/ffconf.hyh2rGhV.o
+check_func getaddrinfo
+check_ld
+check_cc
+BEGIN /tmp/ffconf.ERx5dseQ.c
+    1	extern int getaddrinfo();
+    2	int main(void){ getaddrinfo(); }
+END /tmp/ffconf.ERx5dseQ.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -c -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
+mipsel-linux-gcc -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -o /tmp/ffconf.sAoH9i2C /tmp/ffconf.hyh2rGhV.o
+check_func gethrtime
+check_ld
+check_cc
+BEGIN /tmp/ffconf.ERx5dseQ.c
+    1	extern int gethrtime();
+    2	int main(void){ gethrtime(); }
+END /tmp/ffconf.ERx5dseQ.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -c -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
+mipsel-linux-gcc -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -o /tmp/ffconf.sAoH9i2C /tmp/ffconf.hyh2rGhV.o
+/tmp/ffconf.hyh2rGhV.o: In function `main':ffconf.ERx5dseQ.c:(.text+0x18): undefined reference to `gethrtime'
+collect2: ld returned 1 exit status
+check_func getrusage
+check_ld
+check_cc
+BEGIN /tmp/ffconf.ERx5dseQ.c
+    1	extern int getrusage();
+    2	int main(void){ getrusage(); }
+END /tmp/ffconf.ERx5dseQ.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -c -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
+mipsel-linux-gcc -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -o /tmp/ffconf.sAoH9i2C /tmp/ffconf.hyh2rGhV.o
+check_type sys/time.h sys/resource.h struct rusage ru_maxrss
+check_cc
+BEGIN /tmp/ffconf.ERx5dseQ.c
+    1	
+    2	#include <sys/time.h>
+    3	#include <sys/resource.h>
+    4	const void *p = &((struct rusage *)0)->ru_maxrss;
+END /tmp/ffconf.ERx5dseQ.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -c -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
+check_func inet_aton
+check_ld
+check_cc
+BEGIN /tmp/ffconf.ERx5dseQ.c
+    1	extern int inet_aton();
+    2	int main(void){ inet_aton(); }
+END /tmp/ffconf.ERx5dseQ.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -c -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
+mipsel-linux-gcc -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -o /tmp/ffconf.sAoH9i2C /tmp/ffconf.hyh2rGhV.o
+check_func isatty
+check_ld
+check_cc
+BEGIN /tmp/ffconf.ERx5dseQ.c
+    1	extern int isatty();
+    2	int main(void){ isatty(); }
+END /tmp/ffconf.ERx5dseQ.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -c -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
+mipsel-linux-gcc -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -o /tmp/ffconf.sAoH9i2C /tmp/ffconf.hyh2rGhV.o
+check_func memalign
+check_ld
+check_cc
+BEGIN /tmp/ffconf.ERx5dseQ.c
+    1	extern int memalign();
+    2	int main(void){ memalign(); }
+END /tmp/ffconf.ERx5dseQ.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -c -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
+mipsel-linux-gcc -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -o /tmp/ffconf.sAoH9i2C /tmp/ffconf.hyh2rGhV.o
+check_func mkstemp
+check_ld
+check_cc
+BEGIN /tmp/ffconf.ERx5dseQ.c
+    1	extern int mkstemp();
+    2	int main(void){ mkstemp(); }
+END /tmp/ffconf.ERx5dseQ.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -c -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
+mipsel-linux-gcc -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -o /tmp/ffconf.sAoH9i2C /tmp/ffconf.hyh2rGhV.o
+check_func posix_memalign
+check_ld
+check_cc
+BEGIN /tmp/ffconf.ERx5dseQ.c
+    1	extern int posix_memalign();
+    2	int main(void){ posix_memalign(); }
+END /tmp/ffconf.ERx5dseQ.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -c -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
+mipsel-linux-gcc -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -o /tmp/ffconf.sAoH9i2C /tmp/ffconf.hyh2rGhV.o
+/tmp/ffconf.hyh2rGhV.o: In function `main':ffconf.ERx5dseQ.c:(.text+0x18): undefined reference to `posix_memalign'
+collect2: ld returned 1 exit status
+check_func setrlimit
+check_ld
+check_cc
+BEGIN /tmp/ffconf.ERx5dseQ.c
+    1	extern int setrlimit();
+    2	int main(void){ setrlimit(); }
+END /tmp/ffconf.ERx5dseQ.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -c -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
+mipsel-linux-gcc -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -o /tmp/ffconf.sAoH9i2C /tmp/ffconf.hyh2rGhV.o
+check_func strerror_r
+check_ld
+check_cc
+BEGIN /tmp/ffconf.ERx5dseQ.c
+    1	extern int strerror_r();
+    2	int main(void){ strerror_r(); }
+END /tmp/ffconf.ERx5dseQ.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -c -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
+mipsel-linux-gcc -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -o /tmp/ffconf.sAoH9i2C /tmp/ffconf.hyh2rGhV.o
+/tmp/ffconf.hyh2rGhV.o: In function `main':ffconf.ERx5dseQ.c:(.text+0x18): undefined reference to `strerror_r'
+collect2: ld returned 1 exit status
+check_func_headers io.h setmode
+check_ld
+check_cc
+BEGIN /tmp/ffconf.ERx5dseQ.c
+    1	
+    2	#include <io.h>
+    3	int main(int argc, char **argv){
+    4	    return (long) setmode;
+    5	}
+END /tmp/ffconf.ERx5dseQ.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -c -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
+/tmp/ffconf.ERx5dseQ.c:2:16: io.h: No such file or directory
+/tmp/ffconf.ERx5dseQ.c: In function `main':
+/tmp/ffconf.ERx5dseQ.c:4: error: `setmode' undeclared (first use in this function)
+/tmp/ffconf.ERx5dseQ.c:4: error: (Each undeclared identifier is reported only once
+/tmp/ffconf.ERx5dseQ.c:4: error: for each function it appears in.)
+check_func_headers lzo/lzo1x.h lzo1x_999_compress
+check_ld
+check_cc
+BEGIN /tmp/ffconf.ERx5dseQ.c
+    1	
+    2	#include <lzo/lzo1x.h>
+    3	int main(int argc, char **argv){
+    4	    return (long) lzo1x_999_compress;
+    5	}
+END /tmp/ffconf.ERx5dseQ.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -c -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
+/tmp/ffconf.ERx5dseQ.c:2:23: lzo/lzo1x.h: No such file or directory
+/tmp/ffconf.ERx5dseQ.c: In function `main':
+/tmp/ffconf.ERx5dseQ.c:4: error: `lzo1x_999_compress' undeclared (first use in this function)
+/tmp/ffconf.ERx5dseQ.c:4: error: (Each undeclared identifier is reported only once
+/tmp/ffconf.ERx5dseQ.c:4: error: for each function it appears in.)
+check_lib2 windows.h psapi.h GetProcessMemoryInfo -lpsapi
+check_func_headers windows.h psapi.h GetProcessMemoryInfo -lpsapi
+check_ld -lpsapi
+check_cc
+BEGIN /tmp/ffconf.ERx5dseQ.c
+    1	
+    2	#include <windows.h>
+    3	#include <psapi.h>
+    4	int main(int argc, char **argv){
+    5	    return (long) GetProcessMemoryInfo;
+    6	}
+END /tmp/ffconf.ERx5dseQ.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -c -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
+/tmp/ffconf.ERx5dseQ.c:2:21: windows.h: No such file or directory
+/tmp/ffconf.ERx5dseQ.c:3:19: psapi.h: No such file or directory
+/tmp/ffconf.ERx5dseQ.c: In function `main':
+/tmp/ffconf.ERx5dseQ.c:5: error: `GetProcessMemoryInfo' undeclared (first use in this function)
+/tmp/ffconf.ERx5dseQ.c:5: error: (Each undeclared identifier is reported only once
+/tmp/ffconf.ERx5dseQ.c:5: error: for each function it appears in.)
+check_func_headers windows.h GetProcessTimes
+check_ld
+check_cc
+BEGIN /tmp/ffconf.ERx5dseQ.c
+    1	
+    2	#include <windows.h>
+    3	int main(int argc, char **argv){
+    4	    return (long) GetProcessTimes;
+    5	}
+END /tmp/ffconf.ERx5dseQ.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -c -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
+/tmp/ffconf.ERx5dseQ.c:2:21: windows.h: No such file or directory
+/tmp/ffconf.ERx5dseQ.c: In function `main':
+/tmp/ffconf.ERx5dseQ.c:4: error: `GetProcessTimes' undeclared (first use in this function)
+/tmp/ffconf.ERx5dseQ.c:4: error: (Each undeclared identifier is reported only once
+/tmp/ffconf.ERx5dseQ.c:4: error: for each function it appears in.)
+check_func_headers windows.h VirtualAlloc
+check_ld
+check_cc
+BEGIN /tmp/ffconf.ERx5dseQ.c
+    1	
+    2	#include <windows.h>
+    3	int main(int argc, char **argv){
+    4	    return (long) VirtualAlloc;
+    5	}
+END /tmp/ffconf.ERx5dseQ.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -c -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
+/tmp/ffconf.ERx5dseQ.c:2:21: windows.h: No such file or directory
+/tmp/ffconf.ERx5dseQ.c: In function `main':
+/tmp/ffconf.ERx5dseQ.c:4: error: `VirtualAlloc' undeclared (first use in this function)
+/tmp/ffconf.ERx5dseQ.c:4: error: (Each undeclared identifier is reported only once
+/tmp/ffconf.ERx5dseQ.c:4: error: for each function it appears in.)
+check_header conio.h
+check_cpp
+BEGIN /tmp/ffconf.ERx5dseQ.c
+    1	#include <conio.h>
+    2	int x;
+END /tmp/ffconf.ERx5dseQ.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -E -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
+/tmp/ffconf.ERx5dseQ.c:1:19: conio.h: No such file or directory
+check_header dlfcn.h
+check_cpp
+BEGIN /tmp/ffconf.ERx5dseQ.c
+    1	#include <dlfcn.h>
+    2	int x;
+END /tmp/ffconf.ERx5dseQ.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -E -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
+check_header dxva2api.h
+check_cpp
+BEGIN /tmp/ffconf.ERx5dseQ.c
+    1	#include <dxva2api.h>
+    2	int x;
+END /tmp/ffconf.ERx5dseQ.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -E -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
+/tmp/ffconf.ERx5dseQ.c:1:22: dxva2api.h: No such file or directory
+check_header malloc.h
+check_cpp
+BEGIN /tmp/ffconf.ERx5dseQ.c
+    1	#include <malloc.h>
+    2	int x;
+END /tmp/ffconf.ERx5dseQ.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -E -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
+check_header poll.h
+check_cpp
+BEGIN /tmp/ffconf.ERx5dseQ.c
+    1	#include <poll.h>
+    2	int x;
+END /tmp/ffconf.ERx5dseQ.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -E -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
+check_header sys/mman.h
+check_cpp
+BEGIN /tmp/ffconf.ERx5dseQ.c
+    1	#include <sys/mman.h>
+    2	int x;
+END /tmp/ffconf.ERx5dseQ.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -E -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
+check_header sys/resource.h
+check_cpp
+BEGIN /tmp/ffconf.ERx5dseQ.c
+    1	#include <sys/resource.h>
+    2	int x;
+END /tmp/ffconf.ERx5dseQ.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -E -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
+check_header sys/select.h
+check_cpp
+BEGIN /tmp/ffconf.ERx5dseQ.c
+    1	#include <sys/select.h>
+    2	int x;
+END /tmp/ffconf.ERx5dseQ.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -E -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
+check_header termios.h
+check_cpp
+BEGIN /tmp/ffconf.ERx5dseQ.c
+    1	#include <termios.h>
+    2	int x;
+END /tmp/ffconf.ERx5dseQ.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -E -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
+check_header vdpau/vdpau.h
+check_cpp
+BEGIN /tmp/ffconf.ERx5dseQ.c
+    1	#include <vdpau/vdpau.h>
+    2	int x;
+END /tmp/ffconf.ERx5dseQ.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -E -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
+/tmp/ffconf.ERx5dseQ.c:1:25: vdpau/vdpau.h: No such file or directory
+check_header vdpau/vdpau_x11.h
+check_cpp
+BEGIN /tmp/ffconf.ERx5dseQ.c
+    1	#include <vdpau/vdpau_x11.h>
+    2	int x;
+END /tmp/ffconf.ERx5dseQ.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -E -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
+/tmp/ffconf.ERx5dseQ.c:1:29: vdpau/vdpau_x11.h: No such file or directory
+check_header X11/extensions/XvMClib.h
+check_cpp
+BEGIN /tmp/ffconf.ERx5dseQ.c
+    1	#include <X11/extensions/XvMClib.h>
+    2	int x;
+END /tmp/ffconf.ERx5dseQ.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -E -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
+/tmp/ffconf.ERx5dseQ.c:1:36: X11/extensions/XvMClib.h: No such file or directory
+check_type dxva2api.h DXVA_PictureParameters wDecodedPictureIndex
+check_cc
+BEGIN /tmp/ffconf.ERx5dseQ.c
+    1	
+    2	#include <dxva2api.h>
+    3	const void *p = &((DXVA_PictureParameters *)0)->wDecodedPictureIndex;
+END /tmp/ffconf.ERx5dseQ.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -c -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
+/tmp/ffconf.ERx5dseQ.c:2:22: dxva2api.h: No such file or directory
+/tmp/ffconf.ERx5dseQ.c:3: error: `DXVA_PictureParameters' undeclared here (not in a function)
+/tmp/ffconf.ERx5dseQ.c:3: error: parse error before ')' token
+check_lib zlib.h zlibVersion -lz
+check_header zlib.h
+check_cpp
+BEGIN /tmp/ffconf.ERx5dseQ.c
+    1	#include <zlib.h>
+    2	int x;
+END /tmp/ffconf.ERx5dseQ.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -E -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
+check_func zlibVersion
+check_ld
+check_cc
+BEGIN /tmp/ffconf.ERx5dseQ.c
+    1	extern int zlibVersion();
+    2	int main(void){ zlibVersion(); }
+END /tmp/ffconf.ERx5dseQ.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -c -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
+mipsel-linux-gcc -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -o /tmp/ffconf.sAoH9i2C /tmp/ffconf.hyh2rGhV.o -lz
+check_lib2 bzlib.h BZ2_bzlibVersion -lbz2
+check_func_headers bzlib.h BZ2_bzlibVersion -lbz2
+check_ld -lbz2
+check_cc
+BEGIN /tmp/ffconf.ERx5dseQ.c
+    1	
+    2	#include <bzlib.h>
+    3	int main(int argc, char **argv){
+    4	    return (long) BZ2_bzlibVersion;
+    5	}
+END /tmp/ffconf.ERx5dseQ.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -c -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
+/tmp/ffconf.ERx5dseQ.c:2:19: bzlib.h: No such file or directory
+/tmp/ffconf.ERx5dseQ.c: In function `main':
+/tmp/ffconf.ERx5dseQ.c:4: error: `BZ2_bzlibVersion' undeclared (first use in this function)
+/tmp/ffconf.ERx5dseQ.c:4: error: (Each undeclared identifier is reported only once
+/tmp/ffconf.ERx5dseQ.c:4: error: for each function it appears in.)
+check_func pthread_create
+check_ld
+check_cc
+BEGIN /tmp/ffconf.ERx5dseQ.c
+    1	extern int pthread_create();
+    2	int main(void){ pthread_create(); }
+END /tmp/ffconf.ERx5dseQ.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -c -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
+mipsel-linux-gcc -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -o /tmp/ffconf.sAoH9i2C /tmp/ffconf.hyh2rGhV.o -lz
+/tmp/ffconf.hyh2rGhV.o: In function `main':ffconf.ERx5dseQ.c:(.text+0x18): undefined reference to `pthread_create'
+collect2: ld returned 1 exit status
+check_func pthread_create -pthread
+check_ld -pthread
+check_cc -pthread
+BEGIN /tmp/ffconf.ERx5dseQ.c
+    1	extern int pthread_create();
+    2	int main(void){ pthread_create(); }
+END /tmp/ffconf.ERx5dseQ.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -pthread -c -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
+mipsel-linux-gcc -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -pthread -o /tmp/ffconf.sAoH9i2C /tmp/ffconf.hyh2rGhV.o -lz
+check_lib math.h sin -lm
+check_header math.h
+check_cpp
+BEGIN /tmp/ffconf.ERx5dseQ.c
+    1	#include <math.h>
+    2	int x;
+END /tmp/ffconf.ERx5dseQ.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -pthread -E -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
+check_func sin
+check_ld
+check_cc
+BEGIN /tmp/ffconf.ERx5dseQ.c
+    1	extern int sin();
+    2	int main(void){ sin(); }
+END /tmp/ffconf.ERx5dseQ.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -pthread -c -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
+/tmp/ffconf.ERx5dseQ.c:1: warning: conflicting types for built-in function 'sin'
+mipsel-linux-gcc -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -o /tmp/ffconf.sAoH9i2C /tmp/ffconf.hyh2rGhV.o -lz -pthread -lm
+check_lib va/va.h vaInitialize -lva
+check_header va/va.h
+check_cpp
+BEGIN /tmp/ffconf.ERx5dseQ.c
+    1	#include <va/va.h>
+    2	int x;
+END /tmp/ffconf.ERx5dseQ.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -pthread -E -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
+/tmp/ffconf.ERx5dseQ.c:1:19: va/va.h: No such file or directory
+check_mathfunc exp2
+check_ld
+check_cc
+BEGIN /tmp/ffconf.ERx5dseQ.c
+    1	#include <math.h>
+    2	float foo(float f) { return exp2(f); }
+    3	int main(void){ return 0; }
+END /tmp/ffconf.ERx5dseQ.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -pthread -c -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
+mipsel-linux-gcc -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -o /tmp/ffconf.sAoH9i2C /tmp/ffconf.hyh2rGhV.o -lz -pthread -lm
+/tmp/ffconf.hyh2rGhV.o: In function `foo':ffconf.ERx5dseQ.c:(.text+0x18): undefined reference to `exp2'
+collect2: ld returned 1 exit status
+check_mathfunc exp2f
+check_ld
+check_cc
+BEGIN /tmp/ffconf.ERx5dseQ.c
+    1	#include <math.h>
+    2	float foo(float f) { return exp2f(f); }
+    3	int main(void){ return 0; }
+END /tmp/ffconf.ERx5dseQ.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -pthread -c -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
+mipsel-linux-gcc -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -o /tmp/ffconf.sAoH9i2C /tmp/ffconf.hyh2rGhV.o -lz -pthread -lm
+/tmp/ffconf.hyh2rGhV.o: In function `foo':ffconf.ERx5dseQ.c:(.text+0xc): undefined reference to `exp2f'
+collect2: ld returned 1 exit status
+check_mathfunc llrint
+check_ld
+check_cc
+BEGIN /tmp/ffconf.ERx5dseQ.c
+    1	#include <math.h>
+    2	float foo(float f) { return llrint(f); }
+    3	int main(void){ return 0; }
+END /tmp/ffconf.ERx5dseQ.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -pthread -c -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
+mipsel-linux-gcc -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -o /tmp/ffconf.sAoH9i2C /tmp/ffconf.hyh2rGhV.o -lz -pthread -lm
+/tmp/ffconf.hyh2rGhV.o: In function `foo':ffconf.ERx5dseQ.c:(.text+0x18): undefined reference to `llrint'
+collect2: ld returned 1 exit status
+check_mathfunc llrintf
+check_ld
+check_cc
+BEGIN /tmp/ffconf.ERx5dseQ.c
+    1	#include <math.h>
+    2	float foo(float f) { return llrintf(f); }
+    3	int main(void){ return 0; }
+END /tmp/ffconf.ERx5dseQ.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -pthread -c -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
+mipsel-linux-gcc -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -o /tmp/ffconf.sAoH9i2C /tmp/ffconf.hyh2rGhV.o -lz -pthread -lm
+/tmp/ffconf.hyh2rGhV.o: In function `foo':ffconf.ERx5dseQ.c:(.text+0x18): undefined reference to `llrintf'
+collect2: ld returned 1 exit status
+check_mathfunc log2
+check_ld
+check_cc
+BEGIN /tmp/ffconf.ERx5dseQ.c
+    1	#include <math.h>
+    2	float foo(float f) { return log2(f); }
+    3	int main(void){ return 0; }
+END /tmp/ffconf.ERx5dseQ.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -pthread -c -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
+mipsel-linux-gcc -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -o /tmp/ffconf.sAoH9i2C /tmp/ffconf.hyh2rGhV.o -lz -pthread -lm
+/tmp/ffconf.hyh2rGhV.o: In function `foo':ffconf.ERx5dseQ.c:(.text+0x18): undefined reference to `log2'
+collect2: ld returned 1 exit status
+check_mathfunc log2f
+check_ld
+check_cc
+BEGIN /tmp/ffconf.ERx5dseQ.c
+    1	#include <math.h>
+    2	float foo(float f) { return log2f(f); }
+    3	int main(void){ return 0; }
+END /tmp/ffconf.ERx5dseQ.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -pthread -c -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
+mipsel-linux-gcc -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -o /tmp/ffconf.sAoH9i2C /tmp/ffconf.hyh2rGhV.o -lz -pthread -lm
+/tmp/ffconf.hyh2rGhV.o: In function `foo':ffconf.ERx5dseQ.c:(.text+0xc): undefined reference to `log2f'
+collect2: ld returned 1 exit status
+check_mathfunc lrint
+check_ld
+check_cc
+BEGIN /tmp/ffconf.ERx5dseQ.c
+    1	#include <math.h>
+    2	float foo(float f) { return lrint(f); }
+    3	int main(void){ return 0; }
+END /tmp/ffconf.ERx5dseQ.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -pthread -c -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
+mipsel-linux-gcc -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -o /tmp/ffconf.sAoH9i2C /tmp/ffconf.hyh2rGhV.o -lz -pthread -lm
+/tmp/ffconf.hyh2rGhV.o: In function `foo':ffconf.ERx5dseQ.c:(.text+0x18): undefined reference to `lrint'
+collect2: ld returned 1 exit status
+check_mathfunc lrintf
+check_ld
+check_cc
+BEGIN /tmp/ffconf.ERx5dseQ.c
+    1	#include <math.h>
+    2	float foo(float f) { return lrintf(f); }
+    3	int main(void){ return 0; }
+END /tmp/ffconf.ERx5dseQ.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -pthread -c -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
+mipsel-linux-gcc -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -o /tmp/ffconf.sAoH9i2C /tmp/ffconf.hyh2rGhV.o -lz -pthread -lm
+/tmp/ffconf.hyh2rGhV.o: In function `foo':ffconf.ERx5dseQ.c:(.text+0x18): undefined reference to `lrintf'
+collect2: ld returned 1 exit status
+check_mathfunc round
+check_ld
+check_cc
+BEGIN /tmp/ffconf.ERx5dseQ.c
+    1	#include <math.h>
+    2	float foo(float f) { return round(f); }
+    3	int main(void){ return 0; }
+END /tmp/ffconf.ERx5dseQ.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -pthread -c -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
+mipsel-linux-gcc -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -o /tmp/ffconf.sAoH9i2C /tmp/ffconf.hyh2rGhV.o -lz -pthread -lm
+/tmp/ffconf.hyh2rGhV.o: In function `foo':ffconf.ERx5dseQ.c:(.text+0xc): undefined reference to `roundf'
+collect2: ld returned 1 exit status
+check_mathfunc roundf
+check_ld
+check_cc
+BEGIN /tmp/ffconf.ERx5dseQ.c
+    1	#include <math.h>
+    2	float foo(float f) { return roundf(f); }
+    3	int main(void){ return 0; }
+END /tmp/ffconf.ERx5dseQ.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -pthread -c -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
+mipsel-linux-gcc -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -o /tmp/ffconf.sAoH9i2C /tmp/ffconf.hyh2rGhV.o -lz -pthread -lm
+/tmp/ffconf.hyh2rGhV.o: In function `foo':ffconf.ERx5dseQ.c:(.text+0xc): undefined reference to `roundf'
+collect2: ld returned 1 exit status
+check_mathfunc truncf
+check_ld
+check_cc
+BEGIN /tmp/ffconf.ERx5dseQ.c
+    1	#include <math.h>
+    2	float foo(float f) { return truncf(f); }
+    3	int main(void){ return 0; }
+END /tmp/ffconf.ERx5dseQ.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -pthread -c -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
+mipsel-linux-gcc -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -o /tmp/ffconf.sAoH9i2C /tmp/ffconf.hyh2rGhV.o -lz -pthread -lm
+/tmp/ffconf.hyh2rGhV.o: In function `foo':ffconf.ERx5dseQ.c:(.text+0xc): undefined reference to `truncf'
+collect2: ld returned 1 exit status
+check_type sys/types.h sys/socket.h socklen_t
+check_cc
+BEGIN /tmp/ffconf.ERx5dseQ.c
+    1	
+    2	#include <sys/types.h>
+    3	#include <sys/socket.h>
+    4	socklen_t v;
+END /tmp/ffconf.ERx5dseQ.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -pthread -c -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
+check_type netdb.h struct addrinfo
+check_cc
+BEGIN /tmp/ffconf.ERx5dseQ.c
+    1	
+    2	#include <netdb.h>
+    3	struct addrinfo v;
+END /tmp/ffconf.ERx5dseQ.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -pthread -c -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
+check_type netinet/in.h struct ipv6_mreq
+check_cc
+BEGIN /tmp/ffconf.ERx5dseQ.c
+    1	
+    2	#include <netinet/in.h>
+    3	struct ipv6_mreq v;
+END /tmp/ffconf.ERx5dseQ.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -pthread -c -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
+check_type netinet/in.h struct sockaddr_in6
+check_cc
+BEGIN /tmp/ffconf.ERx5dseQ.c
+    1	
+    2	#include <netinet/in.h>
+    3	struct sockaddr_in6 v;
+END /tmp/ffconf.ERx5dseQ.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -pthread -c -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
+check_type sys/types.h sys/socket.h struct sockaddr_storage
+check_cc
+BEGIN /tmp/ffconf.ERx5dseQ.c
+    1	
+    2	#include <sys/types.h>
+    3	#include <sys/socket.h>
+    4	struct sockaddr_storage v;
+END /tmp/ffconf.ERx5dseQ.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -pthread -c -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
+check_type sys/types.h sys/socket.h struct sockaddr sa_len
+check_cc
+BEGIN /tmp/ffconf.ERx5dseQ.c
+    1	
+    2	#include <sys/types.h>
+    3	#include <sys/socket.h>
+    4	const void *p = &((struct sockaddr *)0)->sa_len;
+END /tmp/ffconf.ERx5dseQ.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -pthread -c -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
+/tmp/ffconf.ERx5dseQ.c:4: error: structure has no member named `sa_len'
+check_header arpa/inet.h
+check_cpp
+BEGIN /tmp/ffconf.ERx5dseQ.c
+    1	#include <arpa/inet.h>
+    2	int x;
+END /tmp/ffconf.ERx5dseQ.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -pthread -E -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
+check_func closesocket
+check_ld
+check_cc
+BEGIN /tmp/ffconf.ERx5dseQ.c
+    1	extern int closesocket();
+    2	int main(void){ closesocket(); }
+END /tmp/ffconf.ERx5dseQ.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -pthread -c -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
+mipsel-linux-gcc -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -o /tmp/ffconf.sAoH9i2C /tmp/ffconf.hyh2rGhV.o -lz -pthread -lm
+/tmp/ffconf.hyh2rGhV.o: In function `main':ffconf.ERx5dseQ.c:(.text+0x18): undefined reference to `closesocket'
+collect2: ld returned 1 exit status
+check_header linux/videodev.h
+check_cpp
+BEGIN /tmp/ffconf.ERx5dseQ.c
+    1	#include <linux/videodev.h>
+    2	int x;
+END /tmp/ffconf.ERx5dseQ.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -pthread -E -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
+check_header linux/videodev2.h
+check_cpp
+BEGIN /tmp/ffconf.ERx5dseQ.c
+    1	#include <linux/videodev2.h>
+    2	int x;
+END /tmp/ffconf.ERx5dseQ.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -pthread -E -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
+check_header sys/videoio.h
+check_cpp
+BEGIN /tmp/ffconf.ERx5dseQ.c
+    1	#include <sys/videoio.h>
+    2	int x;
+END /tmp/ffconf.ERx5dseQ.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -pthread -E -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
+/tmp/ffconf.ERx5dseQ.c:1:25: sys/videoio.h: No such file or directory
+check_func_headers windows.h vfw.h capCreateCaptureWindow -lavicap32
+check_ld -lavicap32
+check_cc
+BEGIN /tmp/ffconf.ERx5dseQ.c
+    1	
+    2	#include <windows.h>
+    3	#include <vfw.h>
+    4	int main(int argc, char **argv){
+    5	    return (long) capCreateCaptureWindow;
+    6	}
+END /tmp/ffconf.ERx5dseQ.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -pthread -c -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
+/tmp/ffconf.ERx5dseQ.c:2:21: windows.h: No such file or directory
+/tmp/ffconf.ERx5dseQ.c:3:17: vfw.h: No such file or directory
+/tmp/ffconf.ERx5dseQ.c: In function `main':
+/tmp/ffconf.ERx5dseQ.c:5: error: `capCreateCaptureWindow' undeclared (first use in this function)
+/tmp/ffconf.ERx5dseQ.c:5: error: (Each undeclared identifier is reported only once
+/tmp/ffconf.ERx5dseQ.c:5: error: for each function it appears in.)
+check_header dev/bktr/ioctl_meteor.h
+check_cpp
+BEGIN /tmp/ffconf.ERx5dseQ.c
+    1	#include <dev/bktr/ioctl_meteor.h>
+    2	int x;
+END /tmp/ffconf.ERx5dseQ.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -pthread -E -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
+/tmp/ffconf.ERx5dseQ.c:1:35: dev/bktr/ioctl_meteor.h: No such file or directory
+check_header machine/ioctl_meteor.h
+check_cpp
+BEGIN /tmp/ffconf.ERx5dseQ.c
+    1	#include <machine/ioctl_meteor.h>
+    2	int x;
+END /tmp/ffconf.ERx5dseQ.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -pthread -E -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
+/tmp/ffconf.ERx5dseQ.c:1:34: machine/ioctl_meteor.h: No such file or directory
+check_header dev/video/meteor/ioctl_meteor.h
+check_cpp
+BEGIN /tmp/ffconf.ERx5dseQ.c
+    1	#include <dev/video/meteor/ioctl_meteor.h>
+    2	int x;
+END /tmp/ffconf.ERx5dseQ.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -pthread -E -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
+/tmp/ffconf.ERx5dseQ.c:1:43: dev/video/meteor/ioctl_meteor.h: No such file or directory
+check_header dev/ic/bt8xx.h
+check_cpp
+BEGIN /tmp/ffconf.ERx5dseQ.c
+    1	#include <dev/ic/bt8xx.h>
+    2	int x;
+END /tmp/ffconf.ERx5dseQ.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -pthread -E -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
+/tmp/ffconf.ERx5dseQ.c:1:26: dev/ic/bt8xx.h: No such file or directory
+check_header sys/soundcard.h
+check_cpp
+BEGIN /tmp/ffconf.ERx5dseQ.c
+    1	#include <sys/soundcard.h>
+    2	int x;
+END /tmp/ffconf.ERx5dseQ.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -pthread -E -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
+check_header soundcard.h
+check_cpp
+BEGIN /tmp/ffconf.ERx5dseQ.c
+    1	#include <soundcard.h>
+    2	int x;
+END /tmp/ffconf.ERx5dseQ.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -pthread -E -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
+/tmp/ffconf.ERx5dseQ.c:1:23: soundcard.h: No such file or directory
+check_cflags -Wdeclaration-after-statement
+check_cc -Wdeclaration-after-statement
+BEGIN /tmp/ffconf.ERx5dseQ.c
+    1	int x;
+END /tmp/ffconf.ERx5dseQ.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -pthread -g -Wdeclaration-after-statement -c -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
+check_cflags -Wall
+check_cc -Wall
+BEGIN /tmp/ffconf.ERx5dseQ.c
+    1	int x;
+END /tmp/ffconf.ERx5dseQ.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -pthread -g -Wdeclaration-after-statement -Wall -c -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
+check_cflags -Wno-switch
+check_cc -Wno-switch
+BEGIN /tmp/ffconf.ERx5dseQ.c
+    1	int x;
+END /tmp/ffconf.ERx5dseQ.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -pthread -g -Wdeclaration-after-statement -Wall -Wno-switch -c -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
+check_cflags -Wdisabled-optimization
+check_cc -Wdisabled-optimization
+BEGIN /tmp/ffconf.ERx5dseQ.c
+    1	int x;
+END /tmp/ffconf.ERx5dseQ.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -pthread -g -Wdeclaration-after-statement -Wall -Wno-switch -Wdisabled-optimization -c -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
+check_cflags -Wpointer-arith
+check_cc -Wpointer-arith
+BEGIN /tmp/ffconf.ERx5dseQ.c
+    1	int x;
+END /tmp/ffconf.ERx5dseQ.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -pthread -g -Wdeclaration-after-statement -Wall -Wno-switch -Wdisabled-optimization -Wpointer-arith -c -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
+check_cflags -Wredundant-decls
+check_cc -Wredundant-decls
+BEGIN /tmp/ffconf.ERx5dseQ.c
+    1	int x;
+END /tmp/ffconf.ERx5dseQ.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -pthread -g -Wdeclaration-after-statement -Wall -Wno-switch -Wdisabled-optimization -Wpointer-arith -Wredundant-decls -c -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
+check_cflags -Wno-pointer-sign
+check_cc -Wno-pointer-sign
+BEGIN /tmp/ffconf.ERx5dseQ.c
+    1	int x;
+END /tmp/ffconf.ERx5dseQ.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -pthread -g -Wdeclaration-after-statement -Wall -Wno-switch -Wdisabled-optimization -Wpointer-arith -Wredundant-decls -Wno-pointer-sign -c -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
+cc1: error: unrecognized command line option "-Wno-pointer-sign"
+check_cflags -Wcast-qual
+check_cc -Wcast-qual
+BEGIN /tmp/ffconf.ERx5dseQ.c
+    1	int x;
+END /tmp/ffconf.ERx5dseQ.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -pthread -g -Wdeclaration-after-statement -Wall -Wno-switch -Wdisabled-optimization -Wpointer-arith -Wredundant-decls -Wcast-qual -c -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
+check_cflags -Wwrite-strings
+check_cc -Wwrite-strings
+BEGIN /tmp/ffconf.ERx5dseQ.c
+    1	int x;
+END /tmp/ffconf.ERx5dseQ.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -pthread -g -Wdeclaration-after-statement -Wall -Wno-switch -Wdisabled-optimization -Wpointer-arith -Wredundant-decls -Wcast-qual -Wwrite-strings -c -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
+check_cflags -Wtype-limits
+check_cc -Wtype-limits
+BEGIN /tmp/ffconf.ERx5dseQ.c
+    1	int x;
+END /tmp/ffconf.ERx5dseQ.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -pthread -g -Wdeclaration-after-statement -Wall -Wno-switch -Wdisabled-optimization -Wpointer-arith -Wredundant-decls -Wcast-qual -Wwrite-strings -Wtype-limits -c -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
+cc1: error: unrecognized command line option "-Wtype-limits"
+check_cflags -Wundef
+check_cc -Wundef
+BEGIN /tmp/ffconf.ERx5dseQ.c
+    1	int x;
+END /tmp/ffconf.ERx5dseQ.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -pthread -g -Wdeclaration-after-statement -Wall -Wno-switch -Wdisabled-optimization -Wpointer-arith -Wredundant-decls -Wcast-qual -Wwrite-strings -Wundef -c -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
+check_cflags -Wmissing-prototypes
+check_cc -Wmissing-prototypes
+BEGIN /tmp/ffconf.ERx5dseQ.c
+    1	int x;
+END /tmp/ffconf.ERx5dseQ.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -pthread -g -Wdeclaration-after-statement -Wall -Wno-switch -Wdisabled-optimization -Wpointer-arith -Wredundant-decls -Wcast-qual -Wwrite-strings -Wundef -Wmissing-prototypes -c -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
+check_ldflags -Wl,--warn-common
+test_ldflags -Wl,--warn-common
+check_ld -Wl,--warn-common
+check_cc -Wl,--warn-common
+BEGIN /tmp/ffconf.ERx5dseQ.c
+    1	int main(void){ return 0; }
+END /tmp/ffconf.ERx5dseQ.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -pthread -g -Wdeclaration-after-statement -Wall -Wno-switch -Wdisabled-optimization -Wpointer-arith -Wredundant-decls -Wcast-qual -Wwrite-strings -Wundef -Wmissing-prototypes -Wl,--warn-common -c -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
+mipsel-linux-gcc: --warn-common: linker input file unused because linking not done
+mipsel-linux-gcc -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -Wl,--warn-common -o /tmp/ffconf.sAoH9i2C /tmp/ffconf.hyh2rGhV.o -lz -pthread -lm
+check_ldflags -Wl,--as-needed
+test_ldflags -Wl,--as-needed
+check_ld -Wl,--as-needed
+check_cc -Wl,--as-needed
+BEGIN /tmp/ffconf.ERx5dseQ.c
+    1	int main(void){ return 0; }
+END /tmp/ffconf.ERx5dseQ.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -pthread -g -Wdeclaration-after-statement -Wall -Wno-switch -Wdisabled-optimization -Wpointer-arith -Wredundant-decls -Wcast-qual -Wwrite-strings -Wundef -Wmissing-prototypes -Wl,--as-needed -c -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
+mipsel-linux-gcc: --as-needed: linker input file unused because linking not done
+mipsel-linux-gcc -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -Wl,--warn-common -Wl,--as-needed -o /tmp/ffconf.sAoH9i2C /tmp/ffconf.hyh2rGhV.o -lz -pthread -lm
+check_ldflags -Wl,-rpath-link,\$(BUILD_ROOT)/libpostproc -Wl,-rpath-link,\$(BUILD_ROOT)/libswscale -Wl,-rpath-link,\$(BUILD_ROOT)/libavfilter -Wl,-rpath-link,\$(BUILD_ROOT)/libavdevice -Wl,-rpath-link,\$(BUILD_ROOT)/libavformat -Wl,-rpath-link,\$(BUILD_ROOT)/libavcodec -Wl,-rpath-link,\$(BUILD_ROOT)/libavutil
+test_ldflags -Wl,-rpath-link,\$(BUILD_ROOT)/libpostproc -Wl,-rpath-link,\$(BUILD_ROOT)/libswscale -Wl,-rpath-link,\$(BUILD_ROOT)/libavfilter -Wl,-rpath-link,\$(BUILD_ROOT)/libavdevice -Wl,-rpath-link,\$(BUILD_ROOT)/libavformat -Wl,-rpath-link,\$(BUILD_ROOT)/libavcodec -Wl,-rpath-link,\$(BUILD_ROOT)/libavutil
+check_ld -Wl,-rpath-link,\$(BUILD_ROOT)/libpostproc -Wl,-rpath-link,\$(BUILD_ROOT)/libswscale -Wl,-rpath-link,\$(BUILD_ROOT)/libavfilter -Wl,-rpath-link,\$(BUILD_ROOT)/libavdevice -Wl,-rpath-link,\$(BUILD_ROOT)/libavformat -Wl,-rpath-link,\$(BUILD_ROOT)/libavcodec -Wl,-rpath-link,\$(BUILD_ROOT)/libavutil
+check_cc -Wl,-rpath-link,\$(BUILD_ROOT)/libpostproc -Wl,-rpath-link,\$(BUILD_ROOT)/libswscale -Wl,-rpath-link,\$(BUILD_ROOT)/libavfilter -Wl,-rpath-link,\$(BUILD_ROOT)/libavdevice -Wl,-rpath-link,\$(BUILD_ROOT)/libavformat -Wl,-rpath-link,\$(BUILD_ROOT)/libavcodec -Wl,-rpath-link,\$(BUILD_ROOT)/libavutil
+BEGIN /tmp/ffconf.ERx5dseQ.c
+    1	int main(void){ return 0; }
+END /tmp/ffconf.ERx5dseQ.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -pthread -g -Wdeclaration-after-statement -Wall -Wno-switch -Wdisabled-optimization -Wpointer-arith -Wredundant-decls -Wcast-qual -Wwrite-strings -Wundef -Wmissing-prototypes -Wl,-rpath-link,\$(BUILD_ROOT)/libpostproc -Wl,-rpath-link,\$(BUILD_ROOT)/libswscale -Wl,-rpath-link,\$(BUILD_ROOT)/libavfilter -Wl,-rpath-link,\$(BUILD_ROOT)/libavdevice -Wl,-rpath-link,\$(BUILD_ROOT)/libavformat -Wl,-rpath-link,\$(BUILD_ROOT)/libavcodec -Wl,-rpath-link,\$(BUILD_ROOT)/libavutil -c -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
+mipsel-linux-gcc: -rpath-link: linker input file unused because linking not done
+mipsel-linux-gcc: \$(BUILD_ROOT)/libpostproc: linker input file unused because linking not done
+mipsel-linux-gcc: -rpath-link: linker input file unused because linking not done
+mipsel-linux-gcc: \$(BUILD_ROOT)/libswscale: linker input file unused because linking not done
+mipsel-linux-gcc: -rpath-link: linker input file unused because linking not done
+mipsel-linux-gcc: \$(BUILD_ROOT)/libavfilter: linker input file unused because linking not done
+mipsel-linux-gcc: -rpath-link: linker input file unused because linking not done
+mipsel-linux-gcc: \$(BUILD_ROOT)/libavdevice: linker input file unused because linking not done
+mipsel-linux-gcc: -rpath-link: linker input file unused because linking not done
+mipsel-linux-gcc: \$(BUILD_ROOT)/libavformat: linker input file unused because linking not done
+mipsel-linux-gcc: -rpath-link: linker input file unused because linking not done
+mipsel-linux-gcc: \$(BUILD_ROOT)/libavcodec: linker input file unused because linking not done
+mipsel-linux-gcc: -rpath-link: linker input file unused because linking not done
+mipsel-linux-gcc: \$(BUILD_ROOT)/libavutil: linker input file unused because linking not done
+mipsel-linux-gcc -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -Wl,--warn-common -Wl,--as-needed -Wl,-rpath-link,\$(BUILD_ROOT)/libpostproc -Wl,-rpath-link,\$(BUILD_ROOT)/libswscale -Wl,-rpath-link,\$(BUILD_ROOT)/libavfilter -Wl,-rpath-link,\$(BUILD_ROOT)/libavdevice -Wl,-rpath-link,\$(BUILD_ROOT)/libavformat -Wl,-rpath-link,\$(BUILD_ROOT)/libavcodec -Wl,-rpath-link,\$(BUILD_ROOT)/libavutil -o /tmp/ffconf.sAoH9i2C /tmp/ffconf.hyh2rGhV.o -lz -pthread -lm
+check_ldflags -Wl,-Bsymbolic
+test_ldflags -Wl,-Bsymbolic
+check_ld -Wl,-Bsymbolic
+check_cc -Wl,-Bsymbolic
+BEGIN /tmp/ffconf.ERx5dseQ.c
+    1	int main(void){ return 0; }
+END /tmp/ffconf.ERx5dseQ.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -pthread -g -Wdeclaration-after-statement -Wall -Wno-switch -Wdisabled-optimization -Wpointer-arith -Wredundant-decls -Wcast-qual -Wwrite-strings -Wundef -Wmissing-prototypes -Wl,-Bsymbolic -c -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
+mipsel-linux-gcc: -Bsymbolic: linker input file unused because linking not done
+mipsel-linux-gcc -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -Wl,--warn-common -Wl,--as-needed -Wl,-rpath-link,$(BUILD_ROOT)/libpostproc -Wl,-rpath-link,$(BUILD_ROOT)/libswscale -Wl,-rpath-link,$(BUILD_ROOT)/libavfilter -Wl,-rpath-link,$(BUILD_ROOT)/libavdevice -Wl,-rpath-link,$(BUILD_ROOT)/libavformat -Wl,-rpath-link,$(BUILD_ROOT)/libavcodec -Wl,-rpath-link,$(BUILD_ROOT)/libavutil -Wl,-Bsymbolic -o /tmp/ffconf.sAoH9i2C /tmp/ffconf.hyh2rGhV.o -lz -pthread -lm
+test_ldflags -Wl,--version-script,/tmp/ffconf.J0t6KttF.ver
+check_ld -Wl,--version-script,/tmp/ffconf.J0t6KttF.ver
+check_cc -Wl,--version-script,/tmp/ffconf.J0t6KttF.ver
+BEGIN /tmp/ffconf.ERx5dseQ.c
+    1	int main(void){ return 0; }
+END /tmp/ffconf.ERx5dseQ.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -pthread -g -Wdeclaration-after-statement -Wall -Wno-switch -Wdisabled-optimization -Wpointer-arith -Wredundant-decls -Wcast-qual -Wwrite-strings -Wundef -Wmissing-prototypes -Wl,--version-script,/tmp/ffconf.J0t6KttF.ver -c -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
+mipsel-linux-gcc: --version-script: linker input file unused because linking not done
+mipsel-linux-gcc: /tmp/ffconf.J0t6KttF.ver: linker input file unused because linking not done
+mipsel-linux-gcc -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -Wl,--warn-common -Wl,--as-needed -Wl,-rpath-link,$(BUILD_ROOT)/libpostproc -Wl,-rpath-link,$(BUILD_ROOT)/libswscale -Wl,-rpath-link,$(BUILD_ROOT)/libavfilter -Wl,-rpath-link,$(BUILD_ROOT)/libavdevice -Wl,-rpath-link,$(BUILD_ROOT)/libavformat -Wl,-rpath-link,$(BUILD_ROOT)/libavcodec -Wl,-rpath-link,$(BUILD_ROOT)/libavutil -Wl,-Bsymbolic -Wl,--version-script,/tmp/ffconf.J0t6KttF.ver -o /tmp/ffconf.sAoH9i2C /tmp/ffconf.hyh2rGhV.o -lz -pthread -lm
+check_cc
+BEGIN /tmp/ffconf.ERx5dseQ.c
+    1	void ff_foo(void) __asm__ ("av_foo@VERSION");
+    2	void ff_foo(void) { __asm__(""); }
+END /tmp/ffconf.ERx5dseQ.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -pthread -g -Wdeclaration-after-statement -Wall -Wno-switch -Wdisabled-optimization -Wpointer-arith -Wredundant-decls -Wcast-qual -Wwrite-strings -Wundef -Wmissing-prototypes -c -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
+{standard input}: Assembler messages:
+{standard input}:13: Error: : no such section
+{standard input}:13: Error: junk at end of line, first unrecognized character is `@'
+{standard input}:14: Error: junk at end of line, first unrecognized character is `@'
+{standard input}:15: Error: unrecognized symbol type "VERSION"
+{standard input}:15: Error: junk at end of line, first unrecognized character is `,'
+{standard input}:16: Error: unrecognized opcode `av_foo@VERSION:'
+{standard input}:26: Error: junk at end of line, first unrecognized character is `@'
+check_cc
+BEGIN /tmp/ffconf.ERx5dseQ.c
+    1	__asm__(".symver ff_foo,av_foo@VERSION");
+    2	void ff_foo(void) {}
+END /tmp/ffconf.ERx5dseQ.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -pthread -g -Wdeclaration-after-statement -Wall -Wno-switch -Wdisabled-optimization -Wpointer-arith -Wredundant-decls -Wcast-qual -Wwrite-strings -Wundef -Wmissing-prototypes -c -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
+/tmp/ffconf.ERx5dseQ.c:2: warning: no previous prototype for 'ff_foo'
+check_cflags -fno-math-errno
+check_cc -fno-math-errno
+BEGIN /tmp/ffconf.ERx5dseQ.c
+    1	int x;
+END /tmp/ffconf.ERx5dseQ.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -pthread -g -Wdeclaration-after-statement -Wall -Wno-switch -Wdisabled-optimization -Wpointer-arith -Wredundant-decls -Wcast-qual -Wwrite-strings -Wundef -Wmissing-prototypes -O3 -fno-math-errno -c -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
+check_cflags -fno-signed-zeros
+check_cc -fno-signed-zeros
+BEGIN /tmp/ffconf.ERx5dseQ.c
+    1	int x;
+END /tmp/ffconf.ERx5dseQ.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -pthread -g -Wdeclaration-after-statement -Wall -Wno-switch -Wdisabled-optimization -Wpointer-arith -Wredundant-decls -Wcast-qual -Wwrite-strings -Wundef -Wmissing-prototypes -O3 -fno-math-errno -fno-signed-zeros -c -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
+cc1: error: unrecognized command line option "-fno-signed-zeros"
+check_cflags -fno-tree-vectorize
+check_cc -fno-tree-vectorize
+BEGIN /tmp/ffconf.ERx5dseQ.c
+    1	int x;
+END /tmp/ffconf.ERx5dseQ.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -pthread -g -Wdeclaration-after-statement -Wall -Wno-switch -Wdisabled-optimization -Wpointer-arith -Wredundant-decls -Wcast-qual -Wwrite-strings -Wundef -Wmissing-prototypes -O3 -fno-math-errno -fno-tree-vectorize -c -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
+cc1: error: unrecognized command line option "-fno-tree-vectorize"
+check_cflags -Werror=implicit
+check_cc -Werror=implicit
+BEGIN /tmp/ffconf.ERx5dseQ.c
+    1	int x;
+END /tmp/ffconf.ERx5dseQ.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -pthread -g -Wdeclaration-after-statement -Wall -Wno-switch -Wdisabled-optimization -Wpointer-arith -Wredundant-decls -Wcast-qual -Wwrite-strings -Wundef -Wmissing-prototypes -O3 -fno-math-errno -Werror=implicit -c -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
+cc1: error: unrecognized command line option "-Werror=implicit"
+check_cflags -Werror=missing-prototypes
+check_cc -Werror=missing-prototypes
+BEGIN /tmp/ffconf.ERx5dseQ.c
+    1	int x;
+END /tmp/ffconf.ERx5dseQ.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -pthread -g -Wdeclaration-after-statement -Wall -Wno-switch -Wdisabled-optimization -Wpointer-arith -Wredundant-decls -Wcast-qual -Wwrite-strings -Wundef -Wmissing-prototypes -O3 -fno-math-errno -Werror=missing-prototypes -c -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
+cc1: error: unrecognized command line option "-Werror=missing-prototypes"
+check_asm asmalign_pot ".align 3"
+check_as
+BEGIN /tmp/ffconf.ERx5dseQ.c
+    1	void foo(void){ __asm__ volatile(".align 3"); }
+END /tmp/ffconf.ERx5dseQ.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -fPIC -g -c -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c

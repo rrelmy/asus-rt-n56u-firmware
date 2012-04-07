@@ -1,0 +1,109 @@
+utf8.lo utf8.o: utf8.c ../../../config.h \
+  /root/RT-N56U/source/lib/include/stdlib.h \
+  /root/RT-N56U/source/lib/include/features.h \
+  /root/RT-N56U/source/lib/include/bits/uClibc_config.h \
+  /root/RT-N56U/source/lib/include/sys/cdefs.h \
+  /opt/buildroot-gcc342/bin/../lib/gcc/mipsel-linux-uclibc/3.4.2/include/stddef.h \
+  /root/RT-N56U/source/lib/include/sys/types.h \
+  /root/RT-N56U/source/lib/include/bits/types.h \
+  /root/RT-N56U/source/lib/include/bits/kernel_types.h \
+  /root/RT-N56U/source/lib/include/bits/wordsize.h \
+  /root/RT-N56U/source/lib/include/bits/pthreadtypes.h \
+  /root/RT-N56U/source/lib/include/bits/sched.h \
+  /root/RT-N56U/source/lib/include/time.h \
+  /root/RT-N56U/source/lib/include/endian.h \
+  /root/RT-N56U/source/lib/include/bits/endian.h \
+  /root/RT-N56U/source/lib/include/sys/select.h \
+  /root/RT-N56U/source/lib/include/bits/select.h \
+  /root/RT-N56U/source/lib/include/bits/sigset.h \
+  /root/RT-N56U/source/lib/include/bits/time.h \
+  /root/RT-N56U/source/lib/include/sys/sysmacros.h \
+  /root/RT-N56U/source/lib/include/alloca.h \
+  /root/RT-N56U/source/lib/include/string.h \
+  ../../../include/share/alloc.h \
+  /root/RT-N56U/source/lib/include/limits.h \
+  /opt/buildroot-gcc342/bin/../lib/gcc/mipsel-linux-uclibc/3.4.2/include/limits.h \
+  /root/RT-N56U/source/lib/include/bits/posix1_lim.h \
+  /root/RT-N56U/source/lib/include/bits/local_lim.h \
+  /root/RT-N56U/source/lib/include/linux/limits.h \
+  /root/RT-N56U/source/lib/include/bits/posix2_lim.h \
+  /root/RT-N56U/source/lib/include/stdint.h \
+  /root/RT-N56U/source/lib/include/bits/wchar.h \
+  ../../../include/share/utf8.h charset.h \
+  /root/RT-N56U/source/lib/include/langinfo.h \
+  /root/RT-N56U/source/lib/include/nl_types.h \
+  /root/RT-N56U/source/lib/include/bits/uClibc_locale.h iconvert.h
+
+../../../config.h:
+
+/root/RT-N56U/source/lib/include/stdlib.h:
+
+/root/RT-N56U/source/lib/include/features.h:
+
+/root/RT-N56U/source/lib/include/bits/uClibc_config.h:
+
+/root/RT-N56U/source/lib/include/sys/cdefs.h:
+
+/opt/buildroot-gcc342/bin/../lib/gcc/mipsel-linux-uclibc/3.4.2/include/stddef.h:
+
+/root/RT-N56U/source/lib/include/sys/types.h:
+
+/root/RT-N56U/source/lib/include/bits/types.h:
+
+/root/RT-N56U/source/lib/include/bits/kernel_types.h:
+
+/root/RT-N56U/source/lib/include/bits/wordsize.h:
+
+/root/RT-N56U/source/lib/include/bits/pthreadtypes.h:
+
+/root/RT-N56U/source/lib/include/bits/sched.h:
+
+/root/RT-N56U/source/lib/include/time.h:
+
+/root/RT-N56U/source/lib/include/endian.h:
+
+/root/RT-N56U/source/lib/include/bits/endian.h:
+
+/root/RT-N56U/source/lib/include/sys/select.h:
+
+/root/RT-N56U/source/lib/include/bits/select.h:
+
+/root/RT-N56U/source/lib/include/bits/sigset.h:
+
+/root/RT-N56U/source/lib/include/bits/time.h:
+
+/root/RT-N56U/source/lib/include/sys/sysmacros.h:
+
+/root/RT-N56U/source/lib/include/alloca.h:
+
+/root/RT-N56U/source/lib/include/string.h:
+
+../../../include/share/alloc.h:
+
+/root/RT-N56U/source/lib/include/limits.h:
+
+/opt/buildroot-gcc342/bin/../lib/gcc/mipsel-linux-uclibc/3.4.2/include/limits.h:
+
+/root/RT-N56U/source/lib/include/bits/posix1_lim.h:
+
+/root/RT-N56U/source/lib/include/bits/local_lim.h:
+
+/root/RT-N56U/source/lib/include/linux/limits.h:
+
+/root/RT-N56U/source/lib/include/bits/posix2_lim.h:
+
+/root/RT-N56U/source/lib/include/stdint.h:
+
+/root/RT-N56U/source/lib/include/bits/wchar.h:
+
+../../../include/share/utf8.h:
+
+charset.h:
+
+/root/RT-N56U/source/lib/include/langinfo.h:
+
+/root/RT-N56U/source/lib/include/nl_types.h:
+
+/root/RT-N56U/source/lib/include/bits/uClibc_locale.h:
+
+iconvert.h:

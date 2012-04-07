@@ -73,8 +73,11 @@ typedef unsigned char bool;
 
 static int ddns_timer = 1;
 static int ushare_timer = 0;
+static int nm_timer = 0;
+static int cpu_timer = 0;
 static int mem_timer = -1;
-static int int_IP_Routed = 0;
+static int httpd_timer = 0;
+static int u2ec_timer = 0;
 
 struct itimerval itv;
 int watchdog_period = 0;
@@ -100,7 +103,6 @@ int cdma_connect = 0;
 #endif
 
 int reboot_count = 0;
-static int no_need_to_start_wps = 0;
 static int count_to_stop_wps = 0;
 extern int g_wsc_configured;
 extern int g_isEnrollee;
@@ -110,7 +112,7 @@ static int WscStatus_old_2g = -1;
 void 
 sys_exit()
 {
-	printf("[watchdog] sysexit");
+	printf("[watchdog] sys_exit");
 /*
 	if (nvram_match("wan0_proto", "3g") && strlen(nvram_safe_get("usb_path1")) > 0)
 	{
@@ -186,6 +188,114 @@ httpd_check()
 #endif
 }
 
+int check_count_down = 3;
+time_t wget_timestamp;
+char wget_timestampstr[32];
+
+int
+httpd_check_v2()
+{
+#if (!defined(W7_LOGO) && !defined(WIFI_LOGO))
+	time_t now = uptime();
+
+//	if (!nvram_match("wan_route_x", "IP_Routed"))
+//		return 1;
+
+	if (check_count_down)
+	{
+		check_count_down--;
+		httpd_error_count = 0;
+		return 1;
+	}
+
+        httpd_timer = (httpd_timer + 1) % 2;
+        if (httpd_timer) return 1;
+
+	if (nvram_match("v2_debug", "1"))
+		fprintf(stderr, "uptime: %d\n", now);
+
+	if (nvram_get("login_timestamp") && ((unsigned long)(now - strtoul(nvram_safe_get("login_timestamp"), NULL, 10)) < 60))
+	{
+		if (nvram_match("v2_debug", "1"))
+			fprintf(stderr, "user login within 1 minutu: %d\n", (unsigned long)(now - strtoul(nvram_safe_get("login_timestamp"), NULL, 10)));
+
+		httpd_error_count = 0;
+		return 1;
+	}
+
+	int ret = 0;
+	FILE *fp = NULL;
+	char line[80], cmd[128], url[80];
+
+	sprintf(url, "http://%s/httpd_check.htm", get_lan_ipaddr());
+	remove(DETECT_HTTPD_FILE);
+
+	wget_timestamp = uptime();
+	memset(wget_timestampstr, 0, 32);
+	sprintf(wget_timestampstr, "%lu", wget_timestamp);
+	nvram_set("wget_timestamp", wget_timestampstr);
+/*
+	if (nvram_get("login_timestamp") && !nvram_match("login_timestamp", ""))
+	{
+		httpd_error_count = 0;
+		return 1;
+	}
+	else
+*/
+		eval("wget", "-q", url, "-O", DETECT_HTTPD_FILE, "&");
+
+	if ((fp = fopen(DETECT_HTTPD_FILE, "r")) != NULL)
+	{
+		if ( fgets(line, sizeof(line), fp) != NULL )
+		{
+			if (strstr(line, "ASUSTeK"))
+			{
+				if (nvram_match("v2_debug", "1"))
+					fprintf(stderr, "httpd is alive!\n");
+
+				ret = 1;
+			}
+		}
+
+		fclose(fp);
+	}
+	else
+	{
+		if (nvram_match("v2_debug", "1"))
+			fprintf(stderr, "fopen %s error!\n", DETECT_HTTPD_FILE);
+
+		if (pids("wget"))
+			system("killall wget");
+	}
+
+	nvram_unset("wget_timestamp");
+
+	if (!ret)
+	{
+		if (nvram_match("v2_debug", "1"))
+			fprintf(stderr, "httpd no response!\n");
+
+		httpd_error_count++;
+	}
+	else
+		httpd_error_count = 0;
+
+	if (nvram_match("v2_debug", "1"))
+		fprintf(stderr, "httpd_error_count: %d\n", httpd_error_count);
+
+	if (httpd_error_count > 2)
+	{
+		fprintf(stderr, "httpd is so dead!!!\n");
+		httpd_error_count = 0;
+		return 0;
+	}
+	else
+		return 1;
+#else
+	return 1;
+#endif
+}
+
 void 
 ra_gpio_init()
 {
@@ -206,6 +316,50 @@ alarmtimer(unsigned long sec, unsigned long usec)
 	itv.it_value.tv_usec = usec;
 	itv.it_interval = itv.it_value;
 	setitimer(ITIMER_REAL, &itv, NULL);
+}
+
+int no_need_to_start_wps(int wps_mode)
+{
+	if (wps_mode)	// PIN
+	{
+		if (nvram_match("wps_band", "0"))
+		{
+			if (	nvram_match("wl_auth_mode", "shared") ||
+				nvram_match("wl_auth_mode", "wpa") ||
+				nvram_match("wl_auth_mode", "wpa2") ||
+				nvram_match("wl_auth_mode", "radius") ||
+				nvram_match("wl_radio_x", "0") ||
+				nvram_match("sw_mode_ex", "3")	)
+				return 1;
+		}
+		else
+		{
+			if (	nvram_match("rt_auth_mode", "shared") ||
+				nvram_match("rt_auth_mode", "wpa") ||
+				nvram_match("rt_auth_mode", "wpa2") ||
+				nvram_match("rt_auth_mode", "radius") ||
+				nvram_match("rt_radio_x", "0") ||
+				nvram_match("sw_mode_ex", "3")	)
+				return 1;
+		}
+	}
+	else
+	{
+		if (	nvram_match("wl_auth_mode", "shared") ||
+			nvram_match("wl_auth_mode", "wpa") ||
+			nvram_match("wl_auth_mode", "wpa2") ||
+			nvram_match("wl_auth_mode", "radius") ||
+			nvram_match("wl_radio_x", "0") ||
+			nvram_match("rt_auth_mode", "shared") ||
+			nvram_match("rt_auth_mode", "wpa") ||
+			nvram_match("rt_auth_mode", "wpa2") ||
+			nvram_match("rt_auth_mode", "radius") ||
+			nvram_match("rt_radio_x", "0") ||
+			nvram_match("sw_mode_ex", "3")	)
+			return 1;
+	}
+
+	return 0;
 }
 
 void btn_check(void)
@@ -279,7 +433,7 @@ void btn_check(void)
 
 	if (btn_pressed_setup < BTNSETUP_START)
 	{
-		if (!no_need_to_start_wps && !ralink_gpio_read_bit(BTN_WPS))
+		if (!ralink_gpio_read_bit(BTN_WPS) && !no_need_to_start_wps(0))
 		{
 			/* Add BTN_EZ MFG test */
 			if (!nvram_match("asus_mfg", "0"))
@@ -333,7 +487,7 @@ void btn_check(void)
 	}
 	else 
 	{
-		if (!no_need_to_start_wps && !ralink_gpio_read_bit(BTN_WPS))
+		if (!ralink_gpio_read_bit(BTN_WPS) && !no_need_to_start_wps(0))
 		{
 			/* Whenever it is pushed steady, again... */
 			if (++btn_count_setup_second > SETUP_WAIT_COUNT)
@@ -448,7 +602,7 @@ void btn_check(void)
 			}
 		}
 
-		if (!no_need_to_start_wps && (int_stop_wps_led || --wsc_timeout == 0))
+		if (int_stop_wps_led || --wsc_timeout == 0)
 		{
 			if(!nvram_match("sw_mode_ex", "3"))	// not AP mode
 			{
@@ -487,11 +641,8 @@ void btn_check(void)
 
 void refresh_ntpc(void)
 {
-	if (	nvram_match("wan_route_x", "IP_Routed") &&
-		(!has_wan_ip() || !found_default_route())	)
-	{
+	if (nvram_match("wan_route_x", "IP_Routed") && (!has_wan_ip() || !found_default_route()))
 		return;
-	}
 
 	setenv("TZ", nvram_safe_get("time_zone_x"), 1);
 	
@@ -610,7 +761,7 @@ int timecheck_item(char *activeDate, char *activeTime)
 		}
 	}
 
-//	fprintf(stderr, "[wd] time check: %2d:%2d, active: %d\n", tm->tm_hour, tm->tm_min, active);
+//	fprintf(stderr, "[watchdog] time check: %2d:%2d, active: %d\n", tm->tm_hour, tm->tm_min, active);
 
 	return active;
 }
@@ -632,7 +783,7 @@ int svc_timecheck(void)
 			activeNow = timecheck_item(nvram_safe_get("url_date_x"), nvram_safe_get("url_time_x"));
 			if (activeNow != svcStatus[URLACTIVE])
 			{
-				fprintf(stderr, "[wd] url filter 0: %s\n", activeNow ? "Enabled": "Disabled");
+				fprintf(stderr, "[watchdog] url filter 0: %s\n", activeNow ? "Enabled": "Disabled");
 				svcStatus[URLACTIVE] = activeNow;
 				stop_dns();
 				start_dns();
@@ -645,7 +796,7 @@ int svc_timecheck(void)
 
 			if (activeNow != svcStatus[URLACTIVE1])
 			{
-				fprintf(stderr, "[wd] url filter 1: %s\n", activeNow ? "Enabled": "Disabled");
+				fprintf(stderr, "[watchdog] url filter 1: %s\n", activeNow ? "Enabled": "Disabled");
 				svcStatus[URLACTIVE1] = activeNow;
 				stop_dns();
 				start_dns();
@@ -705,7 +856,7 @@ int svc_timecheck(void)
 }
 
 /* Sometimes, httpd becomes inaccessible, try to re-run it */
-http_processcheck(void)
+httpd_processcheck(void)
 {
 	int httpd_is_missing = !pids("httpd");
 
@@ -713,10 +864,10 @@ http_processcheck(void)
 		printf("## httpd is gone! ##\n");
 
 #ifndef ASUS_DDNS
-	if (httpd_is_missing || !httpd_check())
+	if (httpd_is_missing || !httpd_check_v2())
 #else	// 2007.03.27 Yau add for prevent httpd die when doing hostname check
-	if (    httpd_is_missing ||
-		(/*!nvram_match("httpd_check_ddns", "1") && J++ */!httpd_check())
+	if (	httpd_is_missing ||
+		(/*!nvram_match("httpd_check_ddns", "1") && J++ */!httpd_check_v2())
 	)
 #endif
 	{
@@ -730,16 +881,19 @@ http_processcheck(void)
 
 		stop_httpd();
 		sleep(1);
-		if (pids("tcpcheck"))
-			system("killall -SIGTERM tcpcheck");
-		remove("/tmp/tcpcheck_result");
+		if (pids("httpdcheck"))
+			system("killall -SIGTERM httpdcheck");
+		remove(DETECT_HTTPD_FILE);
 		start_httpd();
 	}
 }
 
 void u2ec_processcheck(void)
 {
-	if (!pids("u2ec"))
+        u2ec_timer = (u2ec_timer + 1) % 2;
+        if (u2ec_timer) return 1;
+
+	if (nvram_match("apps_u2ec_ex", "1") && !pids("u2ec"))
 	{
 		stop_u2ec();
 		stop_lpd();
@@ -752,15 +906,37 @@ void ushare_processcheck(void)
 {
 	ushare_timer = (ushare_timer + 1) % 6;
 
-	if (!ushare_timer && pids("ushare"))
-		kill_pidfile_s("/var/run/ushare.pid", SIGHUP);
+	if (!ushare_timer)
+	{
+		if (nvram_match("apps_ushare_ex", "1") && pids("ushare"))
+		{
+			if (nvram_match("ushare_debug", "1"))
+			{
+				system("date");
+				fprintf(stderr, "ushare reloading media content...\n");
+			}
+
+			kill_pidfile_s("/var/run/ushare.pid", SIGHUP);
+		}
+
+		if (	nvram_match("wan_route_x", "IP_Routed") &&
+			nvram_match("apps_itunes_ex", "1") &&
+			pids("mt-daapd") &&
+			!pids("mDNSResponder")	)
+		{
+			if (pids("mDNSResponder"))
+				system("killall mDNSResponder");
+
+			doSystem("mDNSResponder %s thehost %s _daap._tcp. 3689 &", nvram_safe_get("lan_ipaddr_t"), nvram_safe_get("computer_name"));
+		}
+	}
 }
 
 int samba_error_count = 0;
 
 void samba_processcheck(void)
 {
-	if (!nvram_match("enable_samba", "1"))
+	if (!nvram_match("enable_samba", "1") || nvram_match("apps_smb_ex", "0"))
 		return;
 
 	if (pids("smbd") && !pids("nmbd"))
@@ -768,11 +944,82 @@ void samba_processcheck(void)
 
         if (samba_error_count > 3)
         {
-                fprintf(stderr, "nmbd is so dead!!!\n");
+//		fprintf(stderr, "nmbd is so dead!!!\n");
                 samba_error_count = 0;
 
-		system("nmbd -D -s /etc/smb.conf");
+		eval("/sbin/nmbd", "-D", "-s", "/etc/smb.conf");
         }
+}
+
+void nm_processcheck(void)
+{
+	nm_timer = (nm_timer + 1) % 12;
+
+	if (nm_timer) return;
+
+	time_t now = uptime();
+/*
+	if (1)
+	{
+		fprintf(stderr, "fullscan_timestamp: %s\n", nvram_safe_get("fullscan_timestamp"));
+		fprintf(stderr, "timeout: %d\n", (unsigned long)(now - strtoul(nvram_safe_get("fullscan_timestamp"), NULL, 10)));
+	}
+*/
+	if (nvram_match("networkmap_fullscan", "1") && ((unsigned long)(now - strtoul(nvram_safe_get("fullscan_timestamp"), NULL, 10)) > 360))
+	{
+//		fprintf(stderr, "networkmap is busy looping!\n");
+		stop_networkmap();
+		nvram_set("networkmap_fullscan", "0");
+	}
+}
+
+unsigned int
+get_cpu_usage()
+{
+	FILE *fp;
+	unsigned int usage, ret = 0;
+	char buf[256], cpu[32];
+	int i;
+
+	doSystem("/usr/bin/top -n 1 > %s", "/tmp/result_top");
+        
+	if (fp = fopen("/tmp/result_top", "r"))
+	{
+		while (fgets(buf, sizeof(buf), fp) != NULL)
+		{
+			i = sscanf(buf, "%32s %d ", cpu, &usage);
+                        
+			if (i && !strncmp(cpu, "CPU", 3))
+			{
+				ret = usage;
+				break;
+			}
+		}
+                
+		fclose(fp);
+		return ret;
+	}
+
+	return 0;
+}
+
+int high_cpu_usage_count = 0;
+
+void
+cpu_usage_minotor()
+{
+	cpu_timer = (cpu_timer + 1) % 6;
+	if (cpu_timer) return;
+
+	unsigned int usage = get_cpu_usage();
+
+	if (usage >= 95)
+		high_cpu_usage_count++;
+	else
+		high_cpu_usage_count = 0;
+
+	if (high_cpu_usage_count >= 5)
+		sys_exit();
 }
 
 static void catch_sig(int sig)
@@ -1012,7 +1259,7 @@ int chk_dns = 0;
  *
  * check in each NORAML_PERIOD*10
  *
- *      1. ntptime, 
+ *      1. ntptime 
  *      2. time-dependent service
  *      3. http-process
  *      4. usb hotplug status
@@ -1029,13 +1276,15 @@ void watchdog(void)
 	{
 		system("rmmod hw_nat");
 		if (pids("ntp"))
-			system("killall ntp");
+			system("killall -SIGTERM ntp");
 		if (pids("ntpclient"))
 			system("killall ntpclient");
 		if (pids("udhcpc"))
 			system("killall -SIGTERM udhcpc");
+#if (!defined(W7_LOGO) && !defined(WIFI_LOGO))
 		if (pids("ots"))
 			system("killall ots");
+#endif
 		stop_wanduck();
 		stop_logger();
 		stop_upnp();	// it may cause upnp cannot run
@@ -1060,6 +1309,8 @@ void watchdog(void)
 #endif
 		if (pids("tcpcheck"))
 			system("killall -SIGTERM tcpcheck");
+		if (pids("httpdcheck"))
+			system("killall -SIGTERM httpdcheck");
 		if (pids("traceroute"))
 			system("killall traceroute");
 		if (pids("usbled"))
@@ -1094,7 +1345,7 @@ void watchdog(void)
 #endif
 
 #if (!defined(W7_LOGO) && !defined(WIFI_LOGO))
-	if (!no_need_to_start_wps && (count_to_stop_wps > 0))
+	if (count_to_stop_wps > 0)
 	{
 		count_to_stop_wps--;
 
@@ -1112,39 +1363,43 @@ void watchdog(void)
 	if (nvram_match("asus_debug", "1"))
 		mem_timer = (mem_timer + 1) % 180;
 
-	if (	(watchdog_count == 1) &&
-		!nvram_match("router_disable", "1") &&
-		nvram_match("upnp_enable_ex", "1") && 
-		nvram_match("ntp_restart_upnp", "0")	)
+	if (!watchdog_count)
+		watchdog_count++;
+	else if (watchdog_count == 1)
 	{
 		watchdog_count++;
 
-		fprintf(stderr, "[wd] starting upnp...\n");
-
-		if (nvram_match("upnp_started", "0"))
-			nvram_set("upnp_started", "1");
-
-		if (has_wan_ip())
+		if (	nvram_match("router_disable", "0") &&
+			nvram_match("upnp_enable_ex", "1") && 
+			nvram_match("upnp_started", "0")	)
 		{
-			stop_upnp();
-			start_upnp();
+//			if (has_wan_ip())
+			{
+				fprintf(stderr, "[watchdog] starting upnp...\n");
+				stop_upnp();
+				start_upnp();
+			}
+
+			nvram_set("upnp_started", "1");	
 		}
 	}
-
-	if (!watchdog_count)
-		watchdog_count++;
 
 	/* check for time-dependent services */
 	svc_timecheck();
 
 	/* http server check */
-	http_processcheck();
+	httpd_processcheck();
 
 	u2ec_processcheck();
 
 	ushare_processcheck();
 
 	samba_processcheck();
+
+	if (nvram_match("wan_route_x", "IP_Routed"))
+		nm_processcheck();
+
+	cpu_usage_minotor();
 
 	dm_block_chk();
 
@@ -1154,6 +1409,7 @@ void watchdog(void)
 		fprintf(stderr, "Hardware NAT: %s\n", is_hwnat_loaded() ? "Enabled": "Disabled");
 		fprintf(stderr, "Software QoS: %s\n", nvram_match("qos_enable", "1") ? "Enabled": "Disabled");
 		fprintf(stderr, "pppd running: %s\n", pids("pppd") ? "Yes": "No");
+		fprintf(stderr, "CPU usage: %d\n", get_cpu_usage());
 		system("free");
 		system("date");
 	}
@@ -1200,7 +1456,7 @@ void watchdog(void)
 	}
 #endif
 
-	if (int_IP_Routed)
+	if (nvram_match("wan_route_x", "IP_Routed"))
 	{
 		if (!is_phyconnected() || !has_wan_ip())
 			return;
@@ -1290,40 +1546,16 @@ watchdog_main(int argc, char *argv[])
 
 	nvram_set("btn_rst", "0");
 	nvram_set("btn_ez", "0");
-
-	if (nvram_match("wps_band", "0"))
-	{
-		if (	nvram_match("wl_auth_mode", "shared") ||
-			nvram_match("wl_auth_mode", "wpa") ||
-			nvram_match("wl_auth_mode", "wpa2") ||
-			nvram_match("wl_auth_mode", "radius") ||
-			nvram_match("wl_radio_x", "0") ||
-			nvram_match("sw_mode_ex", "3")	)
-			no_need_to_start_wps = 1;
-	}
-	else
-	{
-		if (	nvram_match("rt_auth_mode", "shared") ||
-			nvram_match("rt_auth_mode", "wpa") ||
-			nvram_match("rt_auth_mode", "wpa2") ||
-			nvram_match("rt_auth_mode", "radius") ||
-			nvram_match("rt_radio_x", "0") ||
-			nvram_match("sw_mode_ex", "3")	)
-			no_need_to_start_wps = 1;
-	}
-
+#if (!defined(W7_LOGO) && !defined(WIFI_LOGO))
 	if (!pids("ots"))
 		start_ots();
-
+#endif
 	setenv("TZ", nvram_safe_get("time_zone_x"), 1);
 
 	/* set timer */
 	alarmtimer(NORMAL_PERIOD, 0);
 
-	if (nvram_match("wan_route_x", "IP_Routed"))
-		int_IP_Routed = 1;
-
-	if (	int_IP_Routed &&
+	if (	nvram_match("wan_route_x", "IP_Routed") &&
 		(nvram_match("wan0_proto", "pppoe") || nvram_match("wan0_proto", "pptp") || nvram_match("wan0_proto", "l2tp"))
 	)
 	{

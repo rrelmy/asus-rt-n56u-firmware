@@ -8,6 +8,7 @@
 <meta HTTP-EQUIV="Expires" CONTENT="-1">
 <link rel="shortcut icon" href="images/favicon.png">
 <link rel="icon" href="images/favicon.png">
+<link href="images/map-iconRouter_iphone.png" rel="apple-touch-icon" />
 <title>ASUS Wireless Router <#Web_Title#> - <#menu1#></title>
 <link rel="stylesheet" type="text/css" href="index_style.css">
 <link rel="stylesheet" type="text/css" href="form_style.css">
@@ -143,17 +144,13 @@ function show_middle_status(){
 	
 	//$("SSID").value = ssid2;
 	
-	var auth_mode = document.form.wl_auth_mode.value;
-	var wpa_mode = document.form.wl_wpa_mode.value;
-	var wl_wep_x = parseInt(document.form.wl_wep_x.value);
+	var auth_mode = document.form.rt_auth_mode.value;
+	var wpa_mode = document.form.rt_wpa_mode.value;
+	var wl_wep_x = parseInt(document.form.rt_wep_x.value);
 	var security_mode;
 	
-	if(auth_mode == "open"){
+	if(auth_mode == "open")
 		security_mode = "Open System";
-		
-		if(wl_wep_x == 0)
-			$("iflock").style.background = 'url(images/unlock_icon.gif) no-repeat';
-	}
 	else if(auth_mode == "shared")
 		security_mode = "Shared Key";
 	else if(auth_mode == "psk"){
@@ -181,9 +178,14 @@ function show_middle_status(){
 	else
 		alert("System error for showing auth_mode!");
 	$("wl_securitylevel_span").innerHTML = security_mode;
-	
+
+	/*if(auth_mode == "open" && wl_wep_x == 0)
+		parent.$("iflock").style.background = 'url(images/unlock_icon.gif) no-repeat';
+	else
+		parent.$("iflock").style.background = 'url(images/lock_icon.gif) no-repeat';
+
 	$("iflock").style.display = "block";
-	
+	*/
 	// clients
 	show_client_status();			
 }
@@ -365,21 +367,24 @@ var lastName;
 function clickEvent(obj){
 	var icon;
 	var ContainerWidth;
+	var Containerpadding;
 	var stitle;
-	
+
 	if(obj.id == "iflock"){
 		obj = $("iconRouter");
-	}
-	
+	}	
+
 	if(obj.id.indexOf("Internet") > 0){
 		icon = "iconInternet";
 		ContainerWidth = "300px";
+		Containerpadding = "5px";
 		stitle = "<#statusTitle_Internet#>";
 		$("statusframe").src = "/device-map/internet.asp";
 	}
 	else if(obj.id.indexOf("Router") > 0){
 		icon = "iconRouter";
 		ContainerWidth = "320px";
+		Containerpadding = "4px";
 		stitle = "<#statusTitle_System#>";
 	}
 	else if(obj.id.indexOf("Client") > 0){
@@ -388,28 +393,33 @@ function clickEvent(obj){
 		
 		icon = "iconClient";
 		ContainerWidth = "396px";
+		Containerpadding = "0px";
 		stitle = "<#statusTitle_Client#>";
 	}
 	else if(obj.id.indexOf("USBdisk") > 0){
 		icon = "iconUSBdisk";
 		ContainerWidth = "300px";
+		Containerpadding = "5px";
 		stitle = "<#statusTitle_USB_Disk#>";
 		$("statusframe").src = "/device-map/disk.asp";
 	}
 	else if(obj.id.indexOf("HSDPA") > 0){
 		icon = "iconHSDPA";
 		ContainerWidth = "300px";
+		Containerpadding = "5px";
 		stitle = "<#menu5_4_4#>";
 		$("statusframe").src = "/device-map/hsdpa.asp";
 	}
 	else if(obj.id.indexOf("Printer") > 0){
 		icon = "iconPrinter";
 		ContainerWidth = "300px";
+		Containerpadding = "5px";
 		stitle = "<#statusTitle_Printer#>";
 	}
 	else if(obj.id.indexOf("Remote") > 0){
 		icon = "iconRemote";
 		ContainerWidth = "300px";
+		Containerpadding = "5px";
 		stitle = "<#statusTitle_AP#>";
 		$("statusframe").src = "/device-map/remote.asp";
 		//alert($("statusframe").src);
@@ -422,6 +432,8 @@ function clickEvent(obj){
 		alert("mouse over on wrong place!");
 	
 	$('statusContainer').style.width = ContainerWidth;
+	$('statusContainer').style.paddingRight = Containerpadding;
+
 	if(lastClicked){
 		lastClicked.style.background = 'url(images/map-'+lastName+'.gif) no-repeat';
 	}
@@ -529,6 +541,9 @@ function MapUnderAPmode(){// if under AP mode, disable the Internet icon and sho
 <input type="hidden" name="wl_auth_mode" value="<% nvram_get_x("",  "wl_auth_mode"); %>">
 <input type="hidden" name="wl_wpa_mode" value="<% nvram_get_x("",  "wl_wpa_mode"); %>">
 <input type="hidden" name="wl_wep_x" value="<% nvram_get_x("",  "wl_wep_x"); %>">
+<input type="hidden" name="rt_auth_mode" value="<% nvram_get_x("",  "rt_auth_mode"); %>">
+<input type="hidden" name="rt_wpa_mode" value="<% nvram_get_x("",  "rt_wpa_mode"); %>">
+<input type="hidden" name="rt_wep_x" value="<% nvram_get_x("",  "rt_wep_x"); %>">
 </form>
 
 <form name="rt_form">
@@ -610,11 +625,11 @@ function MapUnderAPmode(){// if under AP mode, disable the Internet icon and sho
 				<div class="ifconnect" id="ifconnect"></div>
 			</td>
           </tr>
-          <tr>
-            <td colspan="2">
+      <tr>
+      <td colspan="2">
 			<table class="NMitem" border="0" cellspacing="0" cellpadding="0" style="margin-left:100px; height:77px;">
-              <tr>
-                <td width="95" align="left">
+        <tr>
+        <td width="95" align="left">
 					<a href="device-map/router2g.asp" target="statusframe">						
 						<div id="iconRouter" onclick="clickEvent(this);"></div>
 					</a>
@@ -626,18 +641,19 @@ function MapUnderAPmode(){// if under AP mode, disable the Internet icon and sho
 						<a href="#"><div><input type="radio" name="qmode" />Client</div></a>
 					</div-->
 				</td>
-                <td class="NMdesp">
+        <td class="NMdesp">
 					<a href="device-map/router2g.asp" target="statusframe"><div id="iflock" onclick="clickEvent(this);"></div></a>
 					<strong><#statusTitle_System#></strong><br/>
 					<!--strong>SSID</strong>: <input id="SSID" class="map_ssid" readonly=readonly onmouseover="return overlib(decodeURIComponent(document.form.wl_ssid2.value), RIGHT);" onmouseout="return nd();"><br-->
 					<!--strong>SSID</strong>: <input id="SSID" class="map_ssid" readonly=readonly onmouseover="writetxt(decodeURIComponent(document.form.wl_ssid2.value));" onmouseout="writetxt(0);"><br-->
 					<strong><#Security_Level#></strong>: <span id="wl_securitylevel_span"></span>
 				</td>
-              </tr>
-            </table>
+        </tr>
+      </table>
 			</td>
-          </tr>
-          <tr>
+      </tr>
+      
+			<tr>
             <td colspan="2" style="background:url(images/map-icon-arror1.gif) no-repeat 80px;">&nbsp;</td>
           </tr>
           <tr>

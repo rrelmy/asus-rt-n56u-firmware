@@ -65,7 +65,7 @@
  */
 
 //@{
-#define JOBS_PER_THREAD 10
+#define JOBS_PER_THREAD 1						// ASUS EXT
 //@}
 
 /** @name MIN_THREADS
@@ -93,7 +93,7 @@
  */
 
 //@{
-#define MAX_THREADS 12 
+#define MAX_THREADS 16							// ASUS EXT
 //@}
 
 /** @name MAX_JOBS_TOTAL
@@ -140,7 +140,7 @@
  * webserver.  The default value is 1MB.
  */
 //@{
-#define WEB_SERVER_BUF_SIZE  (2*1024*1024)				// ASUS EXT
+#define WEB_SERVER_BUF_SIZE  (512*1024)					// ASUS EXT
 //@}
 
 /** @name AUTO_RENEW_TIME

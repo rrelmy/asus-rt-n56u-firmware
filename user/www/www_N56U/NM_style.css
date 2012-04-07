@@ -41,14 +41,13 @@
 #iconRouter{ background:url(images/map-iconRouter.gif) no-repeat;	width:87px;	height:77px; cursor:pointer; margin:0px 0px 0px 0px;}
 
 #iflock{ 
-	background:url(images/lock_icon.gif) no-repeat; 
 	width:27px; 
 	height:27px; 
 	cursor:pointer; 
 	margin-left:-38px; 
-	margin-top:5px; 
-	position: absolute;
-	display:none;
+	margin-top:-12px; 
+//	position: absolute;
+//	display:none;
 }
 
 .iconUSBdisk{ background:url(images/map-iconUSBdisk.gif) no-repeat;	width:87px;	height:77px; cursor:pointer;}

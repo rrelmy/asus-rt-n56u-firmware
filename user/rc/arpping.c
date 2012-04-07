@@ -57,15 +57,6 @@ int setsockopt_broadcast(int fd)
     return setsockopt(fd, SOL_SOCKET, SO_BROADCAST, &one, sizeof(one));
 }
 
-#include <sys/sysinfo.h>
-
-long uptime(void)
-{
-    struct sysinfo info;
-    sysinfo(&info);
-    return info.uptime;
-}
-
 /* FIXME: match response against chaddr */
 int arpping(/*uint32_t yiaddr, uint32_t ip, uint8_t *mac, char *interface*/)
 {

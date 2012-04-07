@@ -48,10 +48,6 @@ int mkdir_if_none(char *dir);				// oleg patch
 extern int is_ap_mode();
 void redirect_setting();
 
-//2008.10 magic for url_filter{
-int web_filter();
-//2008.10 magic }
-
 char *g_buf;
 char g_buf_pool[1024];
 
@@ -1243,6 +1239,181 @@ err:
 /* url filter corss midnight patch end */
 #endif
 
+#ifdef CONTENTFILTER
+int makeTimestr_content(char *tf)
+{
+#if 0
+	char *keyword_time = nvram_get("keyword_time_x");
+	char *keyword_date = nvram_get("keyword_date_x");
+#else
+	char *keyword_time = nvram_get("url_time_x");
+	char *keyword_date = nvram_get("url_date_x");
+#endif
+	static const char *days[7] = { "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" };
+	int i, comma = 0;
+
+	memset(tf, 0, 256);
+
+#if 0
+	if (!nvram_match("keyword_enable_x", "1"))
+#else
+	if (!nvram_match("url_enable_x", "1"))
+#endif
+		return -1;
+
+	if ((!keyword_date) || strlen(keyword_date) != 7 || !strcmp(keyword_date, "0000000"))
+	{
+		printf("content filter get time fail\n");
+		return -1;
+	}
+
+	sprintf(tf, "-m time --timestart %c%c:%c%c:00 --timestop %c%c:%c%c:59 --days ", keyword_time[0], keyword_time[1], keyword_time[2], keyword_time[3], keyword_time[4], keyword_time[5], keyword_time[6], keyword_time[7]);
+
+	for (i=0; i<7; ++i)
+	{
+		if (keyword_date[i] == '1')
+		{
+			if (comma == 1)
+				strncat(tf, ",", 1);
+
+			strncat(tf, days[i], 3);
+			comma = 1;
+		}
+	}
+
+	printf("# content filter time module str is [%s]\n", tf);	// tmp test
+	return 0;
+}
+
+int makeTimestr2_content(char *tf)
+{
+#if 0
+	char *keyword_time = nvram_get("keyword_time_x_1");
+	char *keyword_date = nvram_get("keyword_date_x");
+#else
+	char *keyword_time = nvram_get("url_time_x_1");
+	char *keyword_date = nvram_get("url_date_x");
+#endif
+	static const char *days[7] = { "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" };
+	int i, comma = 0;
+
+	memset(tf, 0, 256);
+
+#if 0
+	if (!nvram_match("keyword_enable_x_1", "1"))
+#else
+	if (!nvram_match("url_enable_x_1", "1"))
+#endif		
+		return -1;
+
+	if ((!keyword_date) || strlen(keyword_date) != 7 || !strcmp(keyword_date, "0000000"))
+	{
+		printf("content filter get time fail\n");
+		return -1;
+	}
+
+	sprintf(tf, "-m time --timestart %c%c:%c%c:00 --timestop %c%c:%c%c:59 --days ", keyword_time[0], keyword_time[1], keyword_time[2], keyword_time[3], keyword_time[4], keyword_time[5], keyword_time[6], keyword_time[7]);
+
+	for (i=0; i<7; ++i)
+	{
+		if (keyword_date[i] == '1')
+		{
+			if (comma == 1)
+				strncat(tf, ",", 1);
+
+			strncat(tf, days[i], 3);
+			comma = 1;
+		}
+	}
+
+	printf("# content filter time module str is [%s]\n", tf);	// tmp test
+	return 0;
+}
+
+int
+valid_keyword_filter_time()
+{
+#if 0
+	char *keyword_time1 = nvram_get("keyword_time_x");
+	char *keyword_time2 = nvram_get("keyword_time_x_1");
+#else
+	char *keyword_time1 = nvram_get("url_time_x");
+	char *keyword_time2 = nvram_get("url_time_x_1");
+#endif
+	char starttime1[5], endtime1[5];
+	char starttime2[5], endtime2[5];
+
+	memset(starttime1, 0, 5);
+	memset(endtime1, 0, 5);
+	memset(starttime2, 0, 5);
+	memset(endtime2, 0, 5);
+
+#if 0
+	if (!nvram_match("keyword_enable_x", "1") && !nvram_match("keyword_enable_x_1", "1"))
+#else
+	if (!nvram_match("url_enable_x", "1") && !nvram_match("url_enable_x_1", "1"))
+#endif
+		return 0;
+
+#if 0
+	if (nvram_match("keyword_enable_x", "1"))
+#else
+	if (nvram_match("url_enable_x", "1"))
+#endif
+	{
+		if ((!keyword_time1) || strlen(keyword_time1) != 8)
+			goto err;
+
+		strncpy(starttime1, keyword_time1, 4);
+		strncpy(endtime1, keyword_time1 + 4, 4);
+		printf("starttime1: %s\n", starttime1);
+		printf("endtime1: %s\n", endtime1);
+
+		if (atoi(starttime1) > atoi(endtime1))
+			goto err;
+	}
+
+#if 0
+	if (nvram_match("keyword_enable_x_1", "1"))
+#else
+	if (nvram_match("url_enable_x_1", "1"))
+#endif
+	{
+		if ((!keyword_time2) || strlen(keyword_time2) != 8)
+			goto err;
+
+		strncpy(starttime2, keyword_time2, 4);
+		strncpy(endtime2, keyword_time2 + 4, 4);
+		printf("starttime2: %s\n", starttime2);
+		printf("endtime2: %s\n", endtime2);
+
+		if (atoi(starttime2) > atoi(endtime2))
+			goto err;
+	}
+
+#if 0
+	if (nvram_match("keyword_enable_x", "1") && nvram_match("keyword_enable_x_1", "1"))
+#else
+	if (nvram_match("url_enable_x", "1") && nvram_match("url_enable_x_1", "1"))
+#endif
+	{
+		if ((atoi(starttime1) > atoi(starttime2)) && 
+			((atoi(starttime2) > atoi(endtime1)) || (atoi(endtime2) > atoi(endtime1))))
+			goto err;
+
+		if ((atoi(starttime2) > atoi(starttime1)) && 
+			((atoi(starttime1) > atoi(endtime2)) || (atoi(endtime1) > atoi(endtime2))))
+			goto err;
+	}
+
+	return 1;
+
+err:
+	printf("invalid content filter time setting!\n");
+	return 0;
+}
+#endif
+
 int
 filter_setting(char *wan_if, char *wan_ip, char *lan_if, char *lan_ip, char *logaccept, char *logdrop)
 {
@@ -1813,6 +1984,49 @@ filter_setting(char *wan_if, char *wan_ip, char *lan_if, char *lan_ip, char *log
 			}
 	}
 /* url filter corss midnight patch end */
+#endif
+
+#ifdef CONTENTFILTER
+	if (valid_keyword_filter_time())
+	{
+		if (!makeTimestr_content(timef))
+#if 0
+			for (i=0; i<atoi(nvram_safe_get("keyword_num_x")); i++)
+#else
+			for (i=0; i<atoi(nvram_safe_get("url_num_x")); i++)
+#endif
+			{
+				memset(nvname, 0, 36);
+#if 0
+				sprintf(nvname, "keyword_keyword_x%d", i);
+#else
+				sprintf(nvname, "url_keyword_x%d", i);
+#endif
+				filterstr =  nvram_safe_get(nvname);
+
+				if (strcmp(filterstr, ""))
+					fprintf(fp,"-I FORWARD -p tcp --sport 80 %s -m string --string \"%s\" --algo bm -j DROP\n", timef, filterstr);
+			}
+
+		if (!makeTimestr2_content(timef2))
+#if 0
+			for (i=0; i<atoi(nvram_safe_get("keyword_num_x")); i++)
+#else
+			for (i=0; i<atoi(nvram_safe_get("url_num_x")); i++)
+#endif
+			{
+				memset(nvname, 0, 36);
+#if 0
+				sprintf(nvname, "keyword_keyword_x%d", i);
+#else
+				sprintf(nvname, "url_keyword_x%d", i);
+#endif
+				filterstr =  nvram_safe_get(nvname);
+
+				if (strcmp(filterstr, ""))
+					fprintf(fp,"-I FORWARD -p tcp --sport 80 %s -m string --string \"%s\" --algo bm -j DROP\n", timef2, filterstr);
+			}
+	}
 #endif
 
 	fprintf(fp, "COMMIT\n\n");

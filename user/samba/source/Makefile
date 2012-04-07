@@ -20,13 +20,13 @@ smbtorture4_path=
 LIBS=-lcrypt -lresolv -ldl
 CC=mipsel-linux-gcc
 SHLD=${CC} ${CFLAGS}
-CFLAGS= -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/temp/source/lib/include -I/root/temp/source/uClibc++/include -I/root/temp/source -fno-builtin -fno-builtin -D_SAMBA_BUILD_=3 -O2
+CFLAGS= -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -fno-builtin -fno-builtin -D_SAMBA_BUILD_=3 -O2
 CPPFLAGS=-DHAVE_CONFIG_H 
 EXEEXT=
 AR=/opt/buildroot-gcc342/bin/mipsel-linux-uclibc-ar
-LDSHFLAGS=-shared -Wl,-Bsymbolic -Wl,--fatal-warnings -L/root/temp/source/lib/lib -L/root/temp/source/uClibc++/src -Wl,--fatal-warnings -L/root/temp/source/lib/lib -L/root/temp/source/uClibc++/src
-WINBIND_NSS_LDSHFLAGS=-shared -Wl,-Bsymbolic -Wl,--fatal-warnings -L/root/temp/source/lib/lib -L/root/temp/source/uClibc++/src -Wl,--fatal-warnings -L/root/temp/source/lib/lib -L/root/temp/source/uClibc++/src
-LDFLAGS= -Wl,--fatal-warnings -L/root/temp/source/lib/lib -L/root/temp/source/uClibc++/src -Wl,--fatal-warnings -L/root/temp/source/lib/lib -L/root/temp/source/uClibc++/src
+LDSHFLAGS=-shared -Wl,-Bsymbolic -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src
+WINBIND_NSS_LDSHFLAGS=-shared -Wl,-Bsymbolic -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src
+LDFLAGS= -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src
 AWK=gawk
 PICFLAG=-fPIC
 DYNEXP=-Wl,--export-dynamic
@@ -52,8 +52,8 @@ UNINSTALLLIBCMD_SH=rm -f
 UNINSTALLLIBCMD_A=:
 
 
-srcdir=/root/temp/source/user/samba/source
-builddir=/root/temp/source/user/samba/source
+srcdir=/root/RT-N56U/source/user/samba/source
+builddir=/root/RT-N56U/source/user/samba/source
 SHELL=/bin/sh
 DESTDIR=/
 

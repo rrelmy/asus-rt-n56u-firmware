@@ -24,6 +24,13 @@ wan_route_x = '<% nvram_get_x("IPConnection", "wan_route_x"); %>';
 wan_nat_x = '<% nvram_get_x("IPConnection", "wan_nat_x"); %>';
 wan_proto = '<% nvram_get_x("Layer3Forwarding",  "wan_proto"); %>';
 
+var auth_mode = '<% nvram_get_x("", "wl_auth_mode"); %>';
+var wep_x = '<% nvram_get_x("", "wl_wep_x"); %>';
+var auth_mode2 = '<% nvram_get_x("", "rt_auth_mode"); %>';
+var wep_x2 = '<% nvram_get_x("", "rt_wep_x"); %>';
+var ssid_2g = '<% nvram_char_to_ascii("WLANConfig11b", "rt_ssid"); %>';
+var ssid_5g = '<% nvram_char_to_ascii("WLANConfig11b", "wl_ssid"); %>';
+
 <% login_state_hook(); %>
 var wireless = [<% wl_auth_list(); %>];	// [[MAC, associated, authorized], ...]
 
@@ -53,21 +60,27 @@ function saveMode(){
 	}
 	
 	if(document.form.sw_mode[0].checked == true){
-		//document.form.flag.value = 'router_mode';
 		document.form.action="/start_apply.htm";
 		document.form.target="hidden_frame";
 		document.form.current_page.value = "Advanced_OperationMode_Content.asp";
 		document.form.action_mode.value = " Apply ";
 	}
 	else if(document.form.sw_mode[1].checked == true){
-		//document.form.flag.value = 'router_mode';
 		document.form.action="/start_apply.htm";
 		document.form.target="hidden_frame";
 		document.form.current_page.value = "Advanced_OperationMode_Content.asp";
 		document.form.action_mode.value = " Apply ";
 	}
 	else if(document.form.sw_mode[2].checked == true){
-		document.form.flag.value = 'adv_ap_mode';
+		if(ssid_2g == "ASUS" && ssid_5g == "ASUS_5G" && auth_mode == "open" && wep_x == "0" && auth_mode2 == "open" && wep_x2 == "0")
+			document.form.flag.value = 'adv_ap_mode';
+		else{
+			document.form.flag.value = 'ap_mode_AOC';
+			document.form.action="/start_apply2.htm";
+			document.form.target="hidden_frame";
+			document.form.current_page.value = "Advanced_OperationMode_Content.asp";
+			document.form.action_mode.value = " Apply ";
+		}
 	}
 	
 	document.form.submit();

@@ -96,8 +96,8 @@ static int local_logging = FALSE;
 #endif
 
 /* Add by Joey */
-/* To limit log in local up to two 8192-lines files */
-#define MAX_LOGFILE_LINES 8192
+/* To limit log in local up to two 4096-lines files */
+#define MAX_LOGFILE_LINES 4096
 static char logFilePathBackup[64];
 static int  logFileCount=MAX_LOGFILE_LINES;
 

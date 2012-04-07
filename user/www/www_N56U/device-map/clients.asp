@@ -57,7 +57,10 @@ function isFullscanDone(){
 	}
 	else{
 		$("LoadingBar").style.display = "block";
-		setTimeout("location.href='clients.asp';",clients.length*500);
+		if(clients.length < 20)
+			setTimeout("location.href='clients.asp';",5000);
+		else
+			setTimeout("location.href='clients.asp';",clients.length*500);
 		$("refresh_list").disabled = true;
 	}
 }
@@ -146,7 +149,14 @@ function set_client_is_blocked(){
 		}
 		$("alert_block").style.display = "block";
 	}
-	else{                  // when MAC filter is in "Reject mode" or disabled.
+	else if(list_type == '0'){                  // when MAC filter is disabled.  2010.12 jerry5 modified.
+		for(var i = 0; i < clients.length; ++i){
+			clients[i][9] = "u";
+			unblocked_clients[i] = i;
+		}
+		$("alert_block").style.display = "none";
+	}
+	else{                  // when MAC filter is in "Reject mode".  2010.12 jerry5 modified.
 		for(var i = 0; i < clients.length; ++i){
 			if(!checkDuplicateName(clients[i][2], list_of_BlockedClient)){
 				clients[i][9] = "u";
@@ -178,9 +188,7 @@ var DEVICE_TYPE = ["", "<#Device_type_01_PC#>", "<#Device_type_02_RT#>", "<#Devi
 var shown_client_name = "";
 
 function show_clients(){
-	
 
-	
 	var addClient, clientType, clientName, clientIP, clientPriority, clientBlock;		
 	
 	for(var j=0, i=0, k=0; j < clients.length; j++){
@@ -366,7 +374,6 @@ function set_filter_rule(action){
 function done_validating(action, group_id){
 	$("applyFrame").src = "";
 	page_modified = 1;
-	
 	if(group_id == "MFList"){
 		if(action == " Add ")
 			refreshpage();

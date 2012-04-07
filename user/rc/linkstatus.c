@@ -4,7 +4,7 @@
 #include <unistd.h>
 #include <nvram/bcmnvram.h>
 #include <rtxxxx.h>
-//#include <time.h>
+#include <time.h>
 
 void conntrack_and_dns_cache_cleanup()
 {
@@ -63,6 +63,7 @@ static unsigned int linkspeed_wan = 0;
 char str_linkspeed_wan[2];
 
 static unsigned int timer_speed = -1;
+static unsigned int timer_wget = 0;
 
 struct itimerval itv;
 
@@ -86,23 +87,17 @@ usb_status()
 		return 0;
 }
 
+#define DETECT_HTTPD_FILE "/tmp/httpd_check_result"
+
 void catch_sig_linkstatus(int sig)
 {
-//	time_t now;
+	time_t now;
+	char *p_wget_timestamp;
 
 	if (sig == SIGALRM)
 	{
-/*
-		if (nvram_match("no_internet_detect", "1"))
-		{
-			now = time((time_t *)0);
-
-			if (	((unsigned long)(now - strtoul(nvram_safe_get("detect_timestamp_wan"), NULL, 10)) > 5) &&
-				pids("traceroute")	)
-				system("killall traceroute");
-		}
-*/
 		timer_speed = (timer_speed + 1) % 8;
+		timer_wget = (timer_wget + 1) % 6;
 
 		if (nvram_match("wan_route_x", "IP_Routed"))
 			linkstatus_wan_old = linkstatus_wan;
@@ -126,6 +121,31 @@ void catch_sig_linkstatus(int sig)
 //		fprintf(stderr, "linkstatus_wan: %d\n", linkstatus_wan);
 //		fprintf(stderr, "linkstatus_lan: %d\n", linkstatus_lan);
 
+		if (!timer_wget && (p_wget_timestamp = nvram_get("wget_timestamp")))
+		{
+			now = uptime();
+
+//			fprintf(stderr, "wget_timestamp: %s\n", p_wget_timestamp);
+//			fprintf(stderr, "wget timeout: %d\n", (unsigned long)(now - strtoul(p_wget_timestamp, NULL, 10)));
+/*
+			if (nvram_get("login_timestamp") && !nvram_match("login_timestamp", ""))
+			{
+				fprintf(stderr, "user login! no detect!\n");
+
+				remove(DETECT_HTTPD_FILE);
+				if (pids("wget"))
+					system("killall wget");
+			}
+			else */if ((unsigned long)(now - strtoul(p_wget_timestamp, NULL, 10)) > 4)
+			{
+				fprintf(stderr, "wget no response for more than 4 seconds!\n");
+
+				remove(DETECT_HTTPD_FILE);
+				if (pids("wget"))
+					system("killall wget");
+			}
+		}
+
 		if (nvram_match("wan_route_x", "IP_Routed") && (linkstatus_wan != linkstatus_wan_old))
 		{
 			if (linkstatus_wan)
@@ -140,17 +160,28 @@ void catch_sig_linkstatus(int sig)
 			else
 			{
 				nvram_set("link_wan", "0");
+				nvram_set("link_internet", "0");
 				LED_CONTROL(LED_WAN, LED_OFF);
 
-				if (pids("udhcpc"))
+				if (pids("udhcpc") && nvram_match("dhcp_renew", "0"))
 				{
-//					if (strcasecmp(nvram_safe_get("wl_country_code"), "US"))
-					{
-						logmessage("linkstatus", "perform DHCP release");
-						system("killall -SIGUSR2 udhcpc");
+					nvram_set("dhcp_renew", "1");	// for detectWAN
+/*
+					time_t renew_timestamp;
+					char renew_timestampstr[32];
+					renew_timestamp = uptime();
+					memset(renew_timestampstr, 0, 32);
+					sprintf(renew_timestampstr, "%lu", renew_timestamp);
+					nvram_set("renew_timestamp", renew_timestampstr);
+*/
+					logmessage("linkstatus", "perform DHCP release");
+					system("killall -SIGUSR2 udhcpc");
 
-						conntrack_and_dns_cache_cleanup();
-					}
+//					conntrack_and_dns_cache_cleanup();
+					sleep(1);
+//					fprintf(stderr, "[linkstatus] wan_ipaddr_t: %s, wan_gateway_t: %s\n", nvram_safe_get("wan_ipaddr_t"), nvram_safe_get("wan_gateway_t"));
+					kill_pidfile_s("/var/run/wanduck.pid", SIGUSR1);
+					kill_pidfile_s("/var/run/wanduck.pid", SIGUSR2);
 
 					logmessage("linkstatus", "perform DHCP renew");
 					system("killall -SIGUSR1 udhcpc");
@@ -243,6 +274,7 @@ linkstatus_monitor(int argc, char *argv[])
 	nvram_set("link_wan", "0");
 	nvram_set("link_lan", "0");
 	nvram_set("link_spd_wan", "0");
+	nvram_unset("wget_timestamp");
 #ifdef SR3
 	system("8367m 11");	// for SR3 LAN LED
 #endif

@@ -14,7 +14,34 @@ LANG_FR=Français
 LANG_TR=Türkçe
 LANG_TH=ไทย
 LANG_MS=Malaysia
-[Untranslated]
+[untranslate]
+LANHostConfig_x_TimeZone_itemhint_2=Penghala mengesan bahawa zon masa NTP adalah berbeza daripada seting masa semasa penghala anda. Adakah anda mahu menggunakan zon masa NTP sebagai zon masa penghala anda?RouterConfig_GWMulticast_Multicast_all_itemdesc=Dayakan ciri ini untuk mengawal trafik rangkaian dan elakkan ribut siaran, yang akan menyebabkan rangkaian menjadi lambat atau tidak boleh digunakan. Julat untuk medan ini adalah 1 hingga 1024.  Masukkan 0 (sifar) untuk menyahdayakan ciri ini.
+RouterConfig_GWMulticast_unknownUni_itemname=Kawalan ribut siaran tunggal(Mbps) tidak diketahui:
+RouterConfig_GWMulticast_unknownMul_itemname=Kawalan ribut berbilang siaran(Mbps) tidak diketahui:
+RouterConfig_GWMulticast_Multicast_itemname=Kawalan ribut berbilang siaran(Mbps):
+RouterConfig_GWMulticast_Broadcast_itemname=Kawalan ribut siaran(Mbps):
+[keyword_filter]
+menu5_5_5=Penapis Kata kunci
+FirewallConfig_KeywordFilterEnable_sectiondesc=Penapis Kata kunci membolehkan ana menyekat akses pelanggan kepada halaman web yang mengandungi kata kunci yang ditetapkan.
+FirewallConfig_KeywordFilterEnable_itemname=Dayakan Penapis Kata kunci
+FirewallConfig_KeywordActiveDate_itemname=Bila:
+FirewallConfig_KeywordActiveTime_itemname=Masa:
+FirewallConfig_KeywordList_groupitemname=Senarai Penapis Kata kunci:
+FirewallConfig_KeywordList_groupitemdesc=Had Kata kunci: 20
+[New translated]
+JS_field_wanip_rule3=Sila input nilai di antara 1 hingga 2592000(saat).
+FirewallConfig_Port80_itemdesc=Apabila tembok api rangkaian anda dinyahdayakan dan anda menetapkan 80 sebagai julat port pelayan HTTP untuk persediaan WAN anda, maka pelayan http/pelayan web akan berkonflik dengan antara muka pengguna web RT-N56U.
+FirewallConfig_FTPPrompt_itemdesc=Apabila anda menetapkan 20:21 sebagai julat port pelayan FTP anda untuk persediaan WAN anda, maka pelayan FTP anda akan berkonflik dengan pelayan FTP natif RT-N56U.
+PrinterStatus_x_Monopoly_itemdesc=Jika pencetak anda tidak membolehkan sokongan perkongsian berbilang pengguna, klik Monopoly mode (mod Monopoli) pada antara muka pengguna penghala anda untuk menetapkan secara manual pencetak anda bagi membolehkan perkongsian pencetak anda. Jangan lakukan ini semasa pencetak anda sibuk.
+Switch_band=Frekuensi switching
+Current_band=Lancar frekuensi
+LANHostConfig_DomainName_itemdesc2=hanya boleh mengandungi aksara abjad angka dan simbol sengkang.
+qis_ssid_desc=Salin tetapan 2.4GHz ke 5GHz.
+RouterConfig_IPTV_itemname=IPTV UDP Berbilangcast kepada Port Proksi HTTP
+RHELP_desc9=Masukkan 0 (sifar) untuk menyahdayakan fungsi ini.
+WLANConfig11b_TxPower_itemname=Pelarasan Kuasa Tx
+WLANConfig11b_TxPower_itemdesc=Melaraskan nisbah kuasa isyarat.
+[translated]
 WLANConfig11b_Wireless_Speed_itemname_3=menggunakan jalur lebar uses 40MHz wujud bersama untuk memaksimumkan truput wayarles. Jika anda mengalami isu dengan kestabilan wayarles, sila pilih mod lalai.
 hwnat_desc=Enable Hardware NAT to offer internet speed with maximum throughput over 900Mbps when appropriately supported by you internet service provider. But please note that enabling Hardware NAT may conflict with QoS related functions.
 [error_page.htm]
@@ -77,8 +104,6 @@ Uplink=uplink
 LAN_IP_changed_suggedtion1=IP LAN lalai bagi RT-N56U adalah
 LAN_IP_changed_suggedtion2=.Jika anda tidak boleh setkan kembali halaman kemudian, sila perbaharui konfigurasi IP bagi komputer anda.
 BasicConfig_HWNAT_suggestion=Fungsi Perkakasan NAT mempunyai konflik dengan seting semasa penghala anda. Adakah anda pasti mahu menyahdayakan HW NAT?
-WLANConfig11b_TxPower_itemname=Tx Power adjustment
-WLANConfig11b_TxPower_itemdesc=Adjust antenna power to enhance the quality of trasmittion.  
 WLANConfig11b_x_Mode11g_5_itemdesc=Item ini membenarkan anda memilih sebarang pilihan ini untuk Mod Wayarles  antara muka 802.11n anda. <p>[Auto]: Benarkan pelanggan 802.11n, 802.11a untuk menyambung ke RT-N56U.</p><p>[n Sahaja]: Prestasi maksimum, tetapi tidak membenarkan pelanggan 802.11a menyambung ke peranti anda.</p>
 WLANConfig11b_x_WPSband_itemname=Current Band
 WLANConfig11b_x_WPSband_itemdesc=Pilih jalur pengendalian (2.4GHz atau 5GHz) sebelum menggunakan  fungsi WPS (Wi-Fi Protected Setup – Persediaan Terlindung Wi-Fi).
@@ -693,7 +718,7 @@ QKSet_finish_desc=Seting sambungan internet telah selesai.
 [QIS_internet_type.js]
 QKSet_type_head=Jenis sambungan WAN Internet
 QKSet_type_desc=Sila Pilih jenis sambungan WAN yang diberikan oleh ISP anda.
-BOP_ctype_title1=IP Dinamik
+BOP_ctype_title1=IP Automatik
 BOP_ctype_item1=Jenis ini membenarkan PC anda mendapatkan alamat IP secara automatik. Jenis sambungan ini biasanya digunakan oleh pembekal khidmat modem kabel.
 BOP_ctype_item2=ADSL atau sambungan lain yang memerlukan nama pengguna dan kata laluan. Ia juga dikenali sebagai PPPoE.
 BOP_ctype_item3=ADSL atau sambungan lain yang memerlukan nama pengguna, kata laluan dan alamat IP. Ia juga dikenali sebagai PPTP.
@@ -815,7 +840,7 @@ Setting_save_upload_desc=Fungsi ini membenarkan anda menyimpan seting semasa bag
 Setting_factorydefault_itemname=Lalai kilang:
 Setting_save_itemname=Simpan seting:
 Setting_upload_itemname=Menyimpan semula seting:
-Setting_factorydefault_itemdesc=Klik [Lalai kilang] untuk menyimpan semula penghala kepada seting lalai kilang dan padam semua seting semasa. Tunggu sebentar sehingga penghalaan mengebut semula.
+Setting_factorydefault_itemdesc=Klik [Simpan Semula] untuk menyimpan semula penghala kepada seting lalai kilang dan padam semua seting semasa. Tunggu sebentar sehingga penghalaan mengebut semula.
 Setting_save_itemdesc=Klik butang [Simpan] untuk menyimpan seting RT-N56U ke dalam fail. (Nota: Apabila anda menyimpan seting semasa kepada fail, ia juga akan disimpan pada denyar.)
 Setting_upload_itemdesc=Tentukan laluan dan nama fail seting. Kemudian, klik [Muat naik] untuk menulis fail kepada RT-N56U. Sila tunggu selama 60 saat sehingga RT-N56U mengebut semula.
 Setting_upload_hint=Format atau laluan fail tidak sah!
@@ -873,7 +898,7 @@ t2DStatus=Pajakan DHCP
 t2PortStatus=Port Pengiriman
 t2RouteStatus=Jadual Penghalaan
 t2Log=Log Sistem
-General_x_SystemTime_itemname=Masa Sistem:
+General_x_SystemTime_itemname=Masa Sistem
 General_x_SystemUpTime_itemname=Masa but:
 General_x_SystemUpTime_itemdesc=Masa bertindih sejah but sistem
 General_x_FirmwareVersion_itemname=Versi Perisian Tegar:
@@ -1227,7 +1252,7 @@ Select_menu_default=Sila pilih
 IPConnection_VSList_Norule=Tiada data di dalam jadual.
 IPConnection_TriggerList_groupitemdesc=Senarai Port Pencetus
 FirewallConfig_LWFilterList_groupitemdesc=Jadual Penapis LAN ke WAN
-FirewallConfig_UrlList_groupitemdesc=Senarai Kata kunci URL
+FirewallConfig_UrlList_groupitemdesc=Senarai Penapis URL:
 RouterConfig_GWStatic_groupitemdesc=Senarai Penghala Statik
 WLANConfig11b_RBRList_groupitemdesc=Senarai Penghubung Jauh
 IPConnection_TriggerList_widzarddesc=Aplikasi Yang Diketahui:

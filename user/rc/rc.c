@@ -473,33 +473,21 @@ start_detect_internet()
 }
 
 int
-stop_usbled()
-{
-	if (pids("usbled"))
-	{
-		nvram_set("no_usb_led", "1");
-		system("killall -SIGALRM usbled");
-	}
-
-	return 0;
-}
-
-int
 start_usbled()
 {
 	char *usbled_argv[] = {"usbled", NULL};
 	pid_t whpid;
 
-	nvram_set("no_usb_led", "0");
-
-	if (pids("usbled"))
-	{
-		nvram_set("no_usb_led", "0");
-		system("killall -SIGALRM usbled");
-		return 0;
-	}
-
 	return _eval(usbled_argv, NULL, 0, &whpid);
+}
+
+int
+stop_usbled()
+{
+	if (pids("usbled"))
+		system("killall -SIGTERM usbled");
+
+	return 0;
 }
 
 #if 0
@@ -663,8 +651,8 @@ void restart_qos()
 		}
 
 		if (	nvram_match("sw_mode_ex", "1") &&
-			!nvram_match("wan0_proto", "pptp") &&
-			!nvram_match("wan0_proto", "l2tp") &&
+			//!nvram_match("wan0_proto", "pptp") &&
+			//!nvram_match("wan0_proto", "l2tp") &&
 			is_hwnat_loaded() 
 		)
 			system("rmmod hw_nat");
@@ -710,8 +698,8 @@ Speedtest_Init_failed:
 //			nvram_match("mr_enable_x", "0") &&
 			(nvram_match("wl_radio_x", "0") || nvram_match("wl_mrate", "0")) &&
 			(nvram_match("rt_radio_x", "0") || nvram_match("rt_mrate", "0")) &&
-			!nvram_match("wan0_proto", "pptp") &&
-			!nvram_match("wan0_proto", "l2tp") &&
+			//!nvram_match("wan0_proto", "pptp") &&
+			//!nvram_match("wan0_proto", "l2tp") &&
 			!is_hwnat_loaded() 
 		)
 			system("insmod -q hw_nat.ko");
@@ -762,6 +750,9 @@ static void handle_notifications(void) {
 		if (strcmp(entry->d_name, "restart_reboot") == 0)
 		{
 			fprintf(stderr, "rc rebooting the system.\n");
+
+			nvram_set("reboot", "1");
+/*
 //			if (nvram_match("wan0_proto", "3g") && (strlen(nvram_safe_get("usb_path1")) > 0))
 			if (strlen(nvram_safe_get("usb_path1")) > 0)
 			{
@@ -775,7 +766,9 @@ static void handle_notifications(void) {
 			else
 				sleep(1);	// wait httpd sends the page to the browser.
 
+			nvram_set("reboot", "1");
 			system("reboot");
+*/
 			return;
 		}
 		else if (strcmp(entry->d_name, "restart_networking") == 0)
@@ -839,6 +832,7 @@ static void handle_notifications(void) {
 			fprintf(stderr, "rc restarting HTTPD.\n");
 			stop_httpd();
 			nvram_unset("login_ip");
+			nvram_unset("login_ip_str");
 			nvram_unset("login_timestamp");
 			start_httpd();
 		}
@@ -1194,6 +1188,8 @@ get_usb_path2_info()
 		puts("");
 }
 
+int pending_hotplug_usb = 0;
+
 /* Main loop */
 static void
 main_loop(void)
@@ -1351,10 +1347,13 @@ main_loop(void)
 				printf("#[rc] USB PLUG ON\n");			// tmp test
 				if (strcmp(usb_cur_state, "on") == 0)		// ignore extra SIGTTIN 
 				{
+					if (!pending_hotplug_usb)
+						pending_hotplug_usb = 1;
+
 					printf("ignore SIGTTIN (on)\n");	// tmp test
 					break;
 				}
-
+USB_PLUG_ON_START:
 				memset(product_id, 0, sizeof(product_id));
 				printf("chk bus_plugged\n");			// tmp test
 				bus_plugged = get_dev_info(&dev_class, productID, veid, prid);
@@ -1385,6 +1384,12 @@ main_loop(void)
 				nvram_set("usb_dev_state", "on");
 				hotplug_usb();
 				stop_usbled();
+				if (pending_hotplug_usb)
+				{
+					pending_hotplug_usb = 0;
+					printf("#[rc] USB PLUG ON handle pending usb hotplug event!!!\n");
+					goto USB_PLUG_ON_START;
+				}
 				nvram_set("usb_dev_state", "off");
 				break;
 			case USB_PLUG_OFF:
@@ -1552,10 +1557,15 @@ main_loop(void)
 //			goto RC_END;
 
 			start_lan();
-			default_filter_setting();
+
+			if (nvram_match("wan_route_x", "IP_Routed"))
+				default_filter_setting();
+
 #if (!defined(W7_LOGO) && !defined(WIFI_LOGO))
 #ifdef WEB_REDIRECT
-			if (!nvram_match("wanduck_down", "1") && nvram_match("wan_nat_x", "1")/* && !nvram_match("wan0_proto", "static")*/)
+        		if (	nvram_match("wan_route_x", "IP_Routed") &&
+				nvram_match("wan_nat_x", "1") &&
+				nvram_match("wan_pppoe_relay_x", "0")	)
 			{
 				printf("--- START: Wait to start wanduck ---\n");
 				redirect_setting();
@@ -1572,18 +1582,17 @@ main_loop(void)
 				sleep(5);
 
 			start_services();
-
+#if 0
 #if (!defined(W7_LOGO) && !defined(WIFI_LOGO))
-			if (nvram_match("wan_route_x", "IP_Bridged"))	/* 0712 ASUS */
+			if (nvram_match("wan_route_x", "IP_Bridged"))
 			{
 				sleep(1);
-				printf("start detectWan\n");	// tmp test
+				printf("start detectWan\n");
 				system("detectWan &");
 			}
 #endif
+#endif
 
-//			if (nvram_match("wan_route_x", "IP_Routed") && nvram_match("wan0_proto", "dhcp"))
-//				system("start_mac_clone &");
 RC_END:
 			/* Fall through */
 		case TIMER:
@@ -1948,6 +1957,13 @@ main(int argc, char **argv)
 		get_usb_path2_info();
 		return 0;
 	}
+	else if (!strcmp(base, "ATE_Get_FwReadyStatus")) {
+		if (nvram_match("asus_mfg", "2") && nvram_match("success_start_service", "1"))
+			puts("1");
+		else
+			puts("0");
+		return 0;
+	}
 	else if (!strcmp(base, "getSSID")) {
 		return getSSID();
 	}
@@ -2126,6 +2142,11 @@ main(int argc, char **argv)
 		start_telnetd();
 		return 0;
 	}
+	else if (!strcmp(base, "run_telnetd"))
+	{
+		run_telnetd();
+		return 0;
+	}
 	else if (!strcmp(base, "start_ots"))
 	{
 		start_ots();
@@ -2204,6 +2225,13 @@ main(int argc, char **argv)
 		config8367m(argv[1], argv[2]);
 		return 0;
 	}
+	else if (!strcmp(base, "umount_dev_all"))
+	{
+		if (argc == 2)
+			umount_dev_all(argv[1]);
+
+                return 0;
+	}
 	else if (!strcmp(base, "dumparptable"))
 	{
 		dumparptable();
@@ -2268,6 +2296,9 @@ main(int argc, char **argv)
         }
 	else if (!strcmp(base, "rtl8367m_AllPort_linkDown")) {
 		return rtl8367m_AllPort_linkDown();
+	}
+	else if (!strcmp(base, "rtl8367m_Reset_Storm_Control")) {
+		return rtl8367m_Reset_Storm_Control();
 	}
 	else if (!strcmp(base, "print_num_of_connections")) {
 		print_num_of_connections();

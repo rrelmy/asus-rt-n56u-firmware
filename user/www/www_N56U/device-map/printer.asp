@@ -10,7 +10,7 @@
 <title>Untitled Document</title>
 <link href="../NM_style.css" rel="stylesheet" type="text/css">
 <link rel="stylesheet" type="text/css" href="../form_style.css">
-
+<script type="text/javascript" src="/help.js"></script>
 <script type="text/javascript" src="/state.js"></script>
 <script>
 var printer_manufacturer_array = parent.printer_manufacturers();
@@ -64,10 +64,17 @@ function cleanTask(){
 		<td><span id="printerStatus"></span></td>
 	</tr>
 	<tr>
+		<!--th><a class="hintstyle"  href="javascript:void(0);" onClick="parent.showHelpofDrSurf(12, 5);"><#Printing_button_item#></a></th-->
 		<th><#Printing_button_item#></th>
 		<td><input type="button" class="button" value="<#btn_Enable#>" onclick="cleanTask();"></td>
 	</tr>
 </table>
+
+<div style="padding:5px 0px 5px 25px;">
+<ul style="font-size:11px; font-family:Arial; padding:0px; margin:0px; list-style:outside; line-height:150%;">
+	<li><#PrinterStatus_x_Monopoly_itemdesc#></li>
+</ul>
+</div>
 </form>
 </body>
 </html>
