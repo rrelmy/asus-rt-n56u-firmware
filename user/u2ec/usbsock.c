@@ -2949,10 +2949,10 @@ int usb_connection(int sockfd)
 				time_monopoly = time((time_t*)NULL);
 				if (conn_busy != conn_curt)
 				{
+					nvram_set("u2ec_busyip", inet_ntoa(conn_curt->ip));
 					last_busy_conn = conn_curt;
 					conn_busy->busy = CONN_IS_IDLE;
 					conn_curt->busy = CONN_IS_BUSY;
-					nvram_set("u2ec_busyip", inet_ntoa(conn_curt->ip));
 					conn_busy = conn_curt;
 				}
 			}
@@ -2989,8 +2989,8 @@ int usb_connection(int sockfd)
 			except_flag = 0;
 
 		conn_curt->time = time((time_t*)NULL);
-		bin_sem_wait();
 		if (conn_busy != conn_curt) {
+			bin_sem_wait();
 			if ((i = MFP_state(MFP_GET_STATE))) {
 				bin_sem_post();
 				if (i == MFP_IN_LPRNG)
@@ -3004,20 +3004,24 @@ int usb_connection(int sockfd)
 					conn_curt->busy = CONN_IS_WAITING;
 				return 0;
 			} else {
+				nvram_set("u2ec_busyip", inet_ntoa(conn_curt->ip));
+				bin_sem_post();
 				last_busy_conn = conn_curt;
 				conn_curt->busy = CONN_IS_BUSY;
-				nvram_set("u2ec_busyip", inet_ntoa(conn_curt->ip));
 				if ((struct u2ec_list_head*)conn_busy != &conn_info_list)
 					conn_busy->busy = CONN_IS_IDLE;
 			}
 		}
+		bin_sem_wait();
 		if (!MFP_state(MFP_GET_STATE) && pirp_save->Irp > 0) {
 			if (!except_flag_1client)
 			{				
 				MFP_state(MFP_IN_U2EC);
 				nvram_set("u2ec_busyip", inet_ntoa(conn_curt->ip));
+				bin_sem_post();
 			}
-			bin_sem_post();
+			else
+				bin_sem_post();
 			alarm(1);
 		} else if (MFP_state(MFP_GET_STATE) == MFP_IN_U2EC && except_flag_1client) {
 			MFP_state(MFP_IS_IDLE);
@@ -3519,6 +3523,7 @@ static int handle_fifo(int *fd, fd_set *pfds, int *pfdm, int conn_fd)
 		MFP_state(MFP_IS_IDLE);
 		nvram_set("u2ec_busyip", "");
 		update_device();
+		bin_sem_post();
 		FD_SET(conn_fd, pfds);
 		*pfdm = conn_fd > *pfdm ? conn_fd : *pfdm;
 		rtvl = 1;
@@ -3537,6 +3542,7 @@ static int handle_fifo(int *fd, fd_set *pfds, int *pfdm, int conn_fd)
 		MFP_state(MFP_IS_IDLE);
 		nvram_set("u2ec_busyip", "");
 		update_device();
+		bin_sem_post();
 		if (!dev)
 		{
 			PDEBUG("\nReset connection for removing\n");
@@ -3557,11 +3563,13 @@ static int handle_fifo(int *fd, fd_set *pfds, int *pfdm, int conn_fd)
 	else if (c == 'c') {	// connect reset.
 		switch(MFP_state(MFP_GET_STATE)) {
 		case MFP_IN_LPRNG:
+			bin_sem_post();
 			alarm(1);
 			break;
 		case MFP_IN_U2EC:
 			MFP_state(MFP_IS_IDLE);
 			nvram_set("u2ec_busyip", "");
+			bin_sem_post();
 			u2ec_list_for_each(pos, &conn_info_list) {
 				if (((PCONNECTION_INFO)pos)->busy == CONN_IS_BUSY)
 					((PCONNECTION_INFO)pos)->busy = CONN_IS_IDLE;
@@ -3569,12 +3577,14 @@ static int handle_fifo(int *fd, fd_set *pfds, int *pfdm, int conn_fd)
 		case MFP_IS_IDLE:
 			u2ec_list_for_each_safe(pos, tmp, &conn_info_list) {
 				if (((PCONNECTION_INFO)pos)->busy == CONN_IS_RETRY) {
+					nvram_set("u2ec_busyip", inet_ntoa(((PCONNECTION_INFO)pos)->ip));
+					bin_sem_post();
 					last_busy_conn = (PCONNECTION_INFO)pos;
 					((PCONNECTION_INFO)pos)->busy = CONN_IS_BUSY;
-					nvram_set("u2ec_busyip", inet_ntoa(((PCONNECTION_INFO)pos)->ip));
 					break;
 				}
 				else if (((PCONNECTION_INFO)pos)->busy == CONN_IS_WAITING) {
+					bin_sem_post();
 					PDEBUG("\nReset connection.\n");
 					count_bulk_read = 0;
 					count_bulk_write = 0;
@@ -3596,6 +3606,7 @@ static int handle_fifo(int *fd, fd_set *pfds, int *pfdm, int conn_fd)
 					break;
 				}
 			}
+			bin_sem_post();
 		}
 
 		u2ec_list_for_each_safe(pos, tmp, &conn_info_list) {
@@ -3696,7 +3707,7 @@ static int handle_fifo(int *fd, fd_set *pfds, int *pfdm, int conn_fd)
 			MFP_state(MFP_IS_IDLE);
 			nvram_set("u2ec_busyip", "");
 		}
-
+		bin_sem_post();
 		alarm(0);
 
 		u2ec_list_for_each_safe(pos, tmp, &conn_info_list) 
@@ -3724,8 +3735,6 @@ static int handle_fifo(int *fd, fd_set *pfds, int *pfdm, int conn_fd)
 	}
 CANCEL:
 #endif
-	bin_sem_post();
-
 	*fd = open(U2EC_FIFO, O_RDONLY|O_NONBLOCK);
 	FD_SET(*fd, pfds);
 	*pfdm = *fd > *pfdm ? *fd : *pfdm;
@@ -3743,6 +3752,7 @@ int main(int argc, char *argv[])
 	int		fdmax;			// maximum file descriptor number
 	int		index, rtvl;
 	FILE		*fp;
+	sigset_t sigs_to_catch;
 
 #if defined(U2EC_DEBUG) && defined(U2EC_ONPC)
 	/* Decode packets. */
@@ -3763,12 +3773,12 @@ int main(int argc, char *argv[])
 
 	printf("U2EC starting ...\n");
 
-	nvram_set("u2ec_device", "");
-	nvram_set("u2ec_busyip", "");
 	bin_sem_init();
 #ifdef	SUPPORT_LPRng
 	bin_sem_wait();
 	nvram_set("MFP_busy", "0");
+	nvram_set("u2ec_device", "");
+	nvram_set("u2ec_busyip", "");
 #if __BYTE_ORDER == __BIG_ENDIAN
 	nvram_commit();
 #endif
@@ -3779,6 +3789,10 @@ int main(int argc, char *argv[])
 
 	hotplug_debug("u2ec self updating...\n");
 	update_device();
+
+	sigemptyset(&sigs_to_catch);
+	sigaddset(&sigs_to_catch, SIGALRM);
+	sigprocmask(SIG_UNBLOCK, &sigs_to_catch, NULL);
 
 	signal(SIGALRM, multi_client);
 

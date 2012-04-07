@@ -56,6 +56,11 @@ function initial(){
 		$("isp_sect").style.display = "none";
 		$("wan_stb_x").style.display = "none";
 	}*/
+
+	if(document.form.unifi_malaysia.value == "1")//Cherry Cho added in 2011/6/13.
+		document.form.unifi_malaysia_radio[0].checked=1;
+	else if(document.form.unifi_malaysia.value == "0")
+		document.form.unifi_malaysia_radio[1].checked=1;
 }
 
 function applyRule(){
@@ -177,6 +182,10 @@ function change_wan_type(wan_type, flag){
 		change_wan_dhcp_enable(1);
 	
 	if(wan_type == "pppoe"){
+		//Cherry Cho added in 2011/6/13.
+		inputCtrl(document.form.unifi_malaysia_radio[0], 1);
+		inputCtrl(document.form.unifi_malaysia_radio[1], 1);
+		
 		inputCtrl(document.form.wan_dnsenable_x[0], 1);
 		inputCtrl(document.form.wan_dnsenable_x[1], 1);
 		
@@ -196,6 +205,10 @@ function change_wan_type(wan_type, flag){
 		inputRCtrl1(document.form.wan_pppoe_relay_x, 1);
 	}
 	else if(wan_type == "pptp"){
+		//Cherry Cho added in 2011/6/13.
+		inputCtrl(document.form.unifi_malaysia_radio[0], 1);
+		inputCtrl(document.form.unifi_malaysia_radio[1], 1);		
+		
 		inputCtrl(document.form.wan_dnsenable_x[0], 1);
 		inputCtrl(document.form.wan_dnsenable_x[1], 1);
 		
@@ -216,6 +229,10 @@ function change_wan_type(wan_type, flag){
 		inputRCtrl1(document.form.wan_pppoe_relay_x, 1);
 	}
 	else if(wan_type == "l2tp"){
+		//Cherry Cho added in 2011/6/13.
+		inputCtrl(document.form.unifi_malaysia_radio[0], 1);
+		inputCtrl(document.form.unifi_malaysia_radio[1], 1);
+		
 		inputCtrl(document.form.wan_dnsenable_x[0], 1);
 		inputCtrl(document.form.wan_dnsenable_x[1], 1);
 		
@@ -236,6 +253,10 @@ function change_wan_type(wan_type, flag){
 		inputRCtrl1(document.form.wan_pppoe_relay_x, 1);
 	}
 	else if(wan_type == "static"){
+		//Cherry Cho added in 2011/6/13.
+		inputCtrl(document.form.unifi_malaysia_radio[0], 1);
+		inputCtrl(document.form.unifi_malaysia_radio[1], 1);		
+		
 		inputCtrl(document.form.wan_dnsenable_x[0], 0);
 		inputCtrl(document.form.wan_dnsenable_x[1], 0);
 		
@@ -256,6 +277,10 @@ function change_wan_type(wan_type, flag){
 		inputRCtrl1(document.form.wan_pppoe_relay_x, 1);
 	}
 	else{	// Automatic IP
+		//Cherry Cho added in 2011/6/13.
+		inputCtrl(document.form.unifi_malaysia_radio[0], 1);
+		inputCtrl(document.form.unifi_malaysia_radio[1], 1);		
+		
 		inputCtrl(document.form.wan_dnsenable_x[0], 1);
 		inputCtrl(document.form.wan_dnsenable_x[1], 1);
 		
@@ -299,7 +324,7 @@ function fixed_change_wan_type(wan_type){
 			document.form.wan_dnsenable_x[1].checked = !original_dnsenable;
 			change_common_radio(document.form.wan_dnsenable_x, 'IPConnection', 'wan_dnsenable_x', original_dnsenable);
 			
-			if(flag == true && document.form.wan_dns1_x.value.length == 0)
+			if(flag == true && document.form.wan_dns1_x.value.length == 0 && document.form.wan_dnsenable_x[1].checked == 1)
 				document.form.wan_dns1_x.focus();
 		}
 		else{
@@ -486,6 +511,8 @@ function hsdpa_disable(){
 <input type="hidden" name="lan_ipaddr" value="<% nvram_get_x("LANHostConfig", "lan_ipaddr"); %>" />
 <input type="hidden" name="lan_netmask" value="<% nvram_get_x("LANHostConfig", "lan_netmask"); %>" />
 
+<input type="hidden" name="unifi_malaysia" value="<% nvram_get_x("Layer3Forwarding", "unifi_malaysia"); %>">
+
 <table border="0" class="content" align="center" cellpadding="0" cellspacing="0">
   <tr>
 	<td width="23">&nbsp;</td>
@@ -548,22 +575,22 @@ function hsdpa_disable(){
 							<tr>
 								<th width="30%"><#BasicConfig_EnableMediaServer_itemname#></th>                 
 								<td style="font-weight:normal;" align="left">
-									<input type="radio" name="upnp_enable"  class="input" value="1" onclick="return change_common_radio(this, 'LANHostConfig', 'upnp_enable', '1')" <% nvram_match_x("LANHostConfig","upnp_enable", "1", "checked"); %>>Yes
-									<input type="radio" name="upnp_enable"  class="input" value="0" onclick="return change_common_radio(this, 'LANHostConfig', 'upnp_enable', '0')" <% nvram_match_x("LANHostConfig","upnp_enable", "0", "checked"); %>>No
+									<input type="radio" name="upnp_enable"  class="input" value="1" onclick="return change_common_radio(this, 'LANHostConfig', 'upnp_enable', '1')" <% nvram_match_x("LANHostConfig","upnp_enable", "1", "checked"); %>><#checkbox_Yes#>
+									<input type="radio" name="upnp_enable"  class="input" value="0" onclick="return change_common_radio(this, 'LANHostConfig', 'upnp_enable', '0')" <% nvram_match_x("LANHostConfig","upnp_enable", "0", "checked"); %>><#checkbox_No#>
 								</td>
 							</tr>
 							<tr>
   	            <th><a class="hintstyle" href="javascript:void(0);" onClick="openHint(7,11);"><#PPPConnection_x_PPPoERelay_itemname#></a></th>
     	          <td style="font-weight:normal;" align="left">
-      	        	<input type="radio" value="1" name="wan_pppoe_relay_x" class="input" onclick="return change_common_radio(this, 'PPPConnection', 'wan_pppoe_relay_x', '1')" <% nvram_match_x("PPPConnection","wan_pppoe_relay_x", "1", "checked"); %> />Yes
-        	        <input type="radio" value="0" name="wan_pppoe_relay_x" class="input" onclick="return change_common_radio(this, 'PPPConnection', 'wan_pppoe_relay_x', '0')" <% nvram_match_x("PPPConnection","wan_pppoe_relay_x", "0", "checked"); %> />No
+      	        	<input type="radio" value="1" name="wan_pppoe_relay_x" class="input" onclick="return change_common_radio(this, 'PPPConnection', 'wan_pppoe_relay_x', '1')" <% nvram_match_x("PPPConnection","wan_pppoe_relay_x", "1", "checked"); %> /><#checkbox_Yes#>
+        	        <input type="radio" value="0" name="wan_pppoe_relay_x" class="input" onclick="return change_common_radio(this, 'PPPConnection', 'wan_pppoe_relay_x', '0')" <% nvram_match_x("PPPConnection","wan_pppoe_relay_x", "0", "checked"); %> /><#checkbox_No#>
           	    </td>
             	</tr>
 
 							<!--tr>
 								<th width="30%"><a class="hintstyle" href="javascript:void(0);" onClick="openHint(7,22);"><#BasicConfig_HWNAT_itemname#></th>                 
 								<td style="font-weight:normal;" align="left">
-									<input type="radio" name="hwnat" class="input" value="1" <% nvram_match_x("PrinterStatus","hwnat", "1", "checked"); %>>Yes
+									<input type="radio" name="hwnat" class="input" value="1" <% nvram_match_x("PrinterStatus","hwnat", "1", "checked"); %>><#checkbox_Yes#>
 									<input type="radio" name="hwnat" class="input" value="0" <% nvram_match_x("PrinterStatus","hwnat", "0", "checked"); %>>No
 								</td>
 							</tr-->
@@ -584,8 +611,8 @@ function hsdpa_disable(){
 							<tr>
 								<th width="30%"><#Layer3Forwarding_x_DHCPClient_itemname#></th>
 								<td>
-									<input type="radio" name="x_DHCPClient" class="input" value="1" onclick="change_wan_dhcp_enable(0);" <% nvram_match_x("Layer3Forwarding", "x_DHCPClient", "1", "checked"); %>>Yes
-									<input type="radio" name="x_DHCPClient" class="input" value="0" onclick="change_wan_dhcp_enable(0);" <% nvram_match_x("Layer3Forwarding", "x_DHCPClient", "0", "checked"); %>>No
+									<input type="radio" name="x_DHCPClient" class="input" value="1" onclick="change_wan_dhcp_enable(0);" <% nvram_match_x("Layer3Forwarding", "x_DHCPClient", "1", "checked"); %>><#checkbox_Yes#>
+									<input type="radio" name="x_DHCPClient" class="input" value="0" onclick="change_wan_dhcp_enable(0);" <% nvram_match_x("Layer3Forwarding", "x_DHCPClient", "0", "checked"); %>><#checkbox_No#>
 								</td>
 							</tr>
 							
@@ -617,8 +644,8 @@ function hsdpa_disable(){
          			<tr>
             		<th width="30%"><a class="hintstyle" href="javascript:void(0);" onClick="openHint(7,12);"><#IPConnection_x_DNSServerEnable_itemname#></a></th>
 								<td>
-			  					<input type="radio" name="wan_dnsenable_x" value="1" onclick="return change_common_radio(this, 'IPConnection', 'wan_dnsenable_x', 1)" <% nvram_match_x("IPConnection", "wan_dnsenable_x", "1", "checked"); %> />Yes
-			  					<input type="radio" name="wan_dnsenable_x" value="0" onclick="return change_common_radio(this, 'IPConnection', 'wan_dnsenable_x', 0)" <% nvram_match_x("IPConnection", "wan_dnsenable_x", "0", "checked"); %> />No
+			  					<input type="radio" name="wan_dnsenable_x" value="1" onclick="return change_common_radio(this, 'IPConnection', 'wan_dnsenable_x', 1)" <% nvram_match_x("IPConnection", "wan_dnsenable_x", "1", "checked"); %> /><#checkbox_Yes#>
+			  					<input type="radio" name="wan_dnsenable_x" value="0" onclick="return change_common_radio(this, 'IPConnection', 'wan_dnsenable_x', 0)" <% nvram_match_x("IPConnection", "wan_dnsenable_x", "0", "checked"); %> /><#checkbox_No#>
 								</td>
           		</tr>
           		<tr>
@@ -706,7 +733,16 @@ function hsdpa_disable(){
 		</thead>
 				
 				<tr>
-          <th width="30%"><a class="hintstyle" href="javascript:void(0);" onClick="openHint(7,19);"><#PPPConnection_x_HeartBeat_itemname#></a></th>
+	   	<th width="30%"><a class="hintstyle" href="javascript:void(0);" onClick="openHint(7,26);"><#PPPConnection_x_Unifi#></a></th>	
+	   	<td>
+			<!-- 2011/6/13 Cherry Cho added for Unifi issues { -->
+			<input type="radio" name="unifi_malaysia_radio" value="1" onClick="return change_common(this, 'Layer3Forwarding', 'unifi_malaysia_radio', '1')"/><#checkbox_Yes#>
+			<input type="radio" name="unifi_malaysia_radio" value="0" onClick="return change_common(this, 'Layer3Forwarding', 'unifi_malaysia_radio', '0')"/><#checkbox_No#>
+			<!-- 2011/6/13 Cherry Cho added for Unifi issues } -->		
+		</td>		
+	   </tr>	
+	   <tr>
+          <th><a class="hintstyle" href="javascript:void(0);" onClick="openHint(7,19);"><#PPPConnection_x_HeartBeat_itemname#></a></th>
           <td>
           	<!-- 2008.03 James. patch for Oleg's patch. { -->
           	<input type="text" name="wan_heartbeat_x" class="input" maxlength="256" size="32" value="<% nvram_get_x("PPPConnection","wan_heartbeat_x"); %>" onKeyPress="return is_string(this)"></td>

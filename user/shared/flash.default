@@ -332,17 +332,10 @@
 {"rstats_sshut", "1", 0 },
 {"rstats_bak", "0", 0   },
 {"http_id", "TIDe855a6487043d70a", 0 },
-#if (!defined(W7_LOGO) && !defined(WIFI_LOGO))
-{"controlrate_unknown_unicast", "16", 0 },
-{"controlrate_unknown_multicast", "20", 0 },
-{"controlrate_multicast", "20", 0 },
-{"controlrate_broadcast", "16", 0 },
-#else
 {"controlrate_unknown_unicast", "0", 0 },
 {"controlrate_unknown_multicast", "0", 0 },
 {"controlrate_multicast", "0", 0 },
 {"controlrate_broadcast", "0", 0 },
-#endif
 {"asus_debug", "0", 0 },
 {"di_debug", "0", 0 },
 {"dw_debug", "0", 0 },
@@ -355,3 +348,12 @@
 
 //{"usb_vid_allow", "0", 0 },
 {"port_ftp", "2021", 0 },
+
+{"fw_pt_pptp", "1", 0 },
+{"fw_pt_l2tp", "0", 0 },
+{"fw_pt_ipsec", "0", 0 },
+
+{"dm_delay", "6", 0},
+
+{ "unifi_malaysia", "0", 0},/* 1: For Malaysia Unifi *///Cherry added in 2011/6/13.*/
+{ "pppoe_dhcp_route", "0", 0},

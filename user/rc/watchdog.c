@@ -71,7 +71,7 @@ typedef unsigned char bool;
 #define SETUP_TIMEOUT_COUNT	SETUP_TIMEOUT * 10 /* 60 times a second */
 #endif // BTN_SETUP
 
-static int ddns_timer = 1;
+int ddns_timer = 1;
 static int media_timer = 0;
 static int nm_timer = 0;
 static int cpu_timer = 0;
@@ -114,16 +114,6 @@ void
 sys_exit()
 {
 	printf("[watchdog] sys_exit");
-/*
-	if (nvram_match("wan0_proto", "3g") && strlen(nvram_safe_get("usb_path1")) > 0)
-	{
-		system("ejusb");
-		if (nvram_match("wan0_proto", "3g"))
-			sleep(10);
-		else
-			sleep(3);
-	}
-*/
 
 	kill(1, SIGTERM);
 }
@@ -349,6 +339,7 @@ int no_need_to_start_wps(int wps_mode)
 	}
 	else
 	{
+#if 0
 		if (	nvram_match("wl_auth_mode", "shared") ||
 			nvram_match("wl_auth_mode", "wpa") ||
 			nvram_match("wl_auth_mode", "wpa2") ||
@@ -361,6 +352,15 @@ int no_need_to_start_wps(int wps_mode)
 			nvram_match("rt_radio_x", "0") ||
 			nvram_match("sw_mode_ex", "3")	)
 			return 1;
+#else
+		if (    nvram_match("rt_auth_mode", "shared") ||
+			nvram_match("rt_auth_mode", "wpa") ||
+			nvram_match("rt_auth_mode", "wpa2") ||
+			nvram_match("rt_auth_mode", "radius") ||
+			nvram_match("rt_radio_x", "0") ||
+			nvram_match("sw_mode_ex", "3")  )
+			return 1;
+#endif
 	}
 
 	return 0;
@@ -471,7 +471,12 @@ void btn_check(void)
 							else
 								start_wsc_pbc_2g();
 #else
+#if 0
 							start_wsc_pbc_both();
+#else
+							nvram_set("wps_band", "1");
+							start_wsc_pbc_2g();
+#endif
 #endif
 							WscStatus_old = -1;
 							WscStatus_old_2g = -1;
@@ -510,7 +515,12 @@ void btn_check(void)
 					else
 						start_wsc_pbc_2g();
 #else
+#if 0
 					start_wsc_pbc_both();
+#else
+					nvram_set("wps_band", "1");
+					start_wsc_pbc_2g();
+#endif
 #endif
 					WscStatus_old = -1;
 					WscStatus_old_2g = -1;
@@ -677,7 +687,7 @@ int ntp_timesync(void)
 		{
 			ntp_first_refresh = 1;
 
-			if (nvram_match("ddns_updated", "0"))
+			if (!nvram_match("ddns_updated", "1"))
 				start_ddns();
 
 			sync_interval = 4320;
@@ -907,12 +917,6 @@ httpd_processcheck(void)
 	{
 		printf("## restart httpd ##\n");
 
-		if (nvram_match("httpd_die_reboot", "1"))
-		{
-			nvram_set("httpd_die_reboot", "");
-			sys_exit();
-		}
-
 		stop_httpd();
 		sleep(1);
 #ifdef HTTPD_CHECK
@@ -964,7 +968,10 @@ void media_processcheck(void)
 			if (pids("mDNSResponder"))
 				system("killall mDNSResponder");
 
-			doSystem("mDNSResponder %s thehost %s _daap._tcp. 3689 &", nvram_safe_get("lan_ipaddr_t"), nvram_safe_get("computer_name"));
+			if (!nvram_match("computer_name", "") && is_valid_hostname(nvram_safe_get("computer_name")))
+				doSystem("mDNSResponder %s thehost %s _daap._tcp. 3689 &", nvram_safe_get("lan_ipaddr_t"), nvram_safe_get("computer_name"));
+			else
+				doSystem("mDNSResponder %s thehost %s _daap._tcp. 3689 &", nvram_safe_get("lan_ipaddr_t"), nvram_safe_get("productid"));
 		}
 	}
 }
@@ -1034,7 +1041,7 @@ void pppd_processcheck()
 			logmessage("watchdog", "restart pppd");
 	}
 }
-
+#if 0
 unsigned int
 get_cpu_usage()
 {
@@ -1064,7 +1071,7 @@ get_cpu_usage()
 
 	return 0;
 }
-
+#endif
 int high_cpu_usage_count = 0;
 
 void
@@ -1072,16 +1079,23 @@ cpu_usage_minotor()
 {
 	cpu_timer = (cpu_timer + 1) % 6;
 	if (cpu_timer) return;
-
+#if 0
 	unsigned int usage = get_cpu_usage();
-
-	if (usage >= 95)
+#else
+	unsigned int usage = cpu_main(0, NULL, 0);
+#endif
+	if (usage > 99)
 		high_cpu_usage_count++;
 	else
 		high_cpu_usage_count = 0;
 
-	if (high_cpu_usage_count >= 5)
-		sys_exit();
+	if (high_cpu_usage_count > 5)
+	{
+		dbG("reboot for high CPU load !!!\n");
+		dbG("reboot for high CPU load !!!\n");
+		dbG("reboot for high CPU load !!!\n");
+		sys_exit();	
+	}
 }
 
 static void catch_sig(int sig)
@@ -1108,7 +1122,11 @@ static void catch_sig(int sig)
 				if (nvram_match("rt_radio_x", "0"))
 					return;
 #else
+#if 0
 			if (nvram_match("wl_radio_x", "0") || nvram_match("rt_radio_x", "0"))
+#else
+			if (nvram_match("wl_radio_x", "0") && nvram_match("rt_radio_x", "0"))
+#endif
 				return;
 #endif
 #if (!defined(W7_LOGO) && !defined(WIFI_LOGO))
@@ -1143,7 +1161,11 @@ static void catch_sig(int sig)
 				if (nvram_match("rt_radio_x", "0"))
 					return;
 #else
+#if 0
 			if (nvram_match("wl_radio_x", "0") || nvram_match("rt_radio_x", "0"))
+#else
+			if (nvram_match("wl_radio_x", "0") && nvram_match("rt_radio_x", "0"))
+#endif
 				return;
 #endif
 #if (!defined(W7_LOGO) && !defined(WIFI_LOGO))
@@ -1161,7 +1183,12 @@ static void catch_sig(int sig)
 			else
 				start_wsc_pbc_2g();
 #else
+#if 0
 			start_wsc_pbc_both();
+#else
+			nvram_set("wps_band", "1");
+			start_wsc_pbc_2g();
+#endif
 #endif
 			WscStatus_old = -1;
 			WscStatus_old_2g = -1;
@@ -1235,7 +1262,11 @@ static void catch_sig(int sig)
 					if (nvram_match("rt_radio_x", "0"))
 						return;
 #else
+#if 0
 				if (nvram_match("wl_radio_x", "0") || nvram_match("rt_radio_x", "0"))
+#else
+				if (nvram_match("wl_radio_x", "0") && nvram_match("rt_radio_x", "0"))
+#endif
 					return;
 #endif
 			}
@@ -1282,7 +1313,12 @@ static void catch_sig(int sig)
 				else
 					wps_pbc_2g();
 #else
+#if 0
 				wps_pbc_both();
+#else
+				nvram_set("wps_band", "1");
+				wps_pbc_2g();
+#endif
 #endif
 			}
 
@@ -1385,18 +1421,24 @@ void watchdog(void)
 		nvram_set("asus_mfg", "2");
 	}
 
+#if 0
 	// reboot signal checking
 	if (nvram_match("reboot", "1"))
 	{
 		printf("[watchdog] nvram match reboot\n");
+
 		reboot_count++;
 		if (reboot_count >= 2) 
 		{
 //			kill(1, SIGTERM);
 			sys_exit();
 		}
+
+		return;
 	}
-	else if (nvram_match("reboot", "0")) return;
+	else
+#endif
+	if (nvram_match("reboot", "0")) return;
 
 	if (stop_service_type_99) return;
 
@@ -1478,7 +1520,11 @@ void watchdog(void)
 		dbg("Hardware NAT: %s\n", is_hwnat_loaded() ? "Enabled": "Disabled");
 		dbg("Software QoS: %s\n", nvram_match("qos_enable", "1") ? "Enabled": "Disabled");
 		dbg("pppd running: %s\n", pids("pppd") ? "Yes": "No");
-		dbg("CPU usage: %d\n", get_cpu_usage());
+#if 0
+		dbg("CPU usage: %d%%\n", get_cpu_usage());
+#else
+		dbg("CPU usage: %d%%\n", cpu_main(0, NULL, 0));
+#endif
 		system("free");
 		system("date");
 		print_uptime();
@@ -1532,6 +1578,7 @@ void watchdog(void)
 			return;
 
 		/* dns chk */
+#if 0
 		if (nvram_match("wan_dnsenable_x", "1") && !chk_dns)
 		{
 			char *dns_list = nvram_get("wan_dns_t");
@@ -1545,7 +1592,7 @@ void watchdog(void)
 				update_resolvconf();
 			}
 		}
-
+#endif
 		/* sync time to ntp server if necessary */
 		if (!nvram_match("wan_dns_t", "") && !nvram_match("wan_gateway_t", ""))
 		{
@@ -1553,7 +1600,7 @@ void watchdog(void)
 		}
 
 		if (	nvram_match("ddns_enable_x", "1") && 
-			(nvram_match("ddns_updated", "0") || !ddns_timer)
+			(!nvram_match("ddns_updated", "1") || !ddns_timer)
 		)
 		{
 			start_ddns();

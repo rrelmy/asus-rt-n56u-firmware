@@ -148,6 +148,8 @@ int is_apps_running()
 		return 0;
 }
 
+#define MINSWAPSIZE	104857600	// 1024*1024*100 = 100M
+
 int
 getStorageStatus(STORAGE_INFO_T *st)
 {
@@ -201,25 +203,32 @@ getStorageStatus(STORAGE_INFO_T *st)
 	{
 		apps_status|=APPS_STATUS_FS_NTFS;
 	}
-	if(strcmp(nvram_safe_get("mnt_type"), "fat32") == 0)
+	if (strcmp(nvram_safe_get("mnt_type"), "fat32") == 0)
 	{
 		apps_status|=APPS_STATUS_FS_FAT;
 	}
-	if(strcmp(nvram_safe_get("dmrd"), "1") == 0)     
+	if (strcmp(nvram_safe_get("dmrd"), "1") == 0)     
 	{
 		apps_status|=APPS_STATUS_READONLY;
 	}
-	if(strcmp(nvram_safe_get("dm_block"), "1") == 0)
+	if (strcmp(nvram_safe_get("dm_block"), "1") == 0)
 	{
 		apps_status|=APPS_STATUS_BLOCKED;
 	}
-	if(!strcmp(nvram_safe_get("st_samba_mode"), "2") || !strcmp(nvram_safe_get("st_samba_mode"), "4"))
+	if (!strcmp(nvram_safe_get("st_samba_mode"), "2") || !strcmp(nvram_safe_get("st_samba_mode"), "4"))
 	{
 		apps_status|=APPS_STATUS_SMBUSER;
 	}
-	if(strcmp(nvram_safe_get("slow_disk"), "1") == 0)
+//	if (strcmp(nvram_safe_get("slow_disk"), "1") == 0)
+	//if (swap_check() < 1024*1024*128)
+	if (	(apps_status & APPS_STATUS_SWAP == APPS_STATUS_SWAP) &&
+		(swap_check() < MINSWAPSIZE))
 	{
 		apps_status|=APPS_SLOW_DISK;
+	}
+	if (atoi(nvram_safe_get("usb_mnt_first_path_port")) > 0)
+	{
+		apps_status|=APPS_STATUS_DMPORT;
 	}
 	st->AppsStatus=apps_status;	// disable for tmp
 

@@ -1,4 +1,4 @@
-﻿[Language type]
+[Language type]
 CHAR_set=UTF-8
 PASS_LANG=lisan:
 LANG_select=Dili seçin
@@ -18,8 +18,38 @@ LANG_FI=Finsk
 LANG_DA=Dansk
 LANG_SV=Svensk
 LANG_BR=Brazil
+LANG_JP=日本語
+[Malaysia Unifi]
+PPPConnection_x_Unifi=Unifi Support :
+PPPConnection_x_Unifi_Describe=Select 'Yes' to support Malaysia Unifi services.
+[VPN Passthrough]
+VPN_PPTP_Passthrough=VPN PPTP Düz geçiş
+VPN_L2TP_Passthrough=VPN L2TP Düz geçiş
+VPN_IPSec_Passthrough=VPN IPSec Düz geçiş
+vpn_passthrough_itemname=VPN Düz geçiş
+vpn_passthrough_desc=Sanal Özel Ağ (VPN) bağlantısının yönlendiriciden doğrudan ağ istemcilerine geçmesi için VPN Düz Geçiş'i etkinleştirin.
+[AiDisk account alert]
+enable_noaccount_alert=Herhangi bir hesap var biri değilse Etkinleştirildiğinde, Samba sunucu ve Download Master bağlantı sorunu ne olacak.
 [iTunes]
 iTunesMediaServer=iTunes Medya Sunucusu
+[opmode strings]
+BasicConfig_EnableiTunesServer_itemname=iTunes Server etkinleştirilsin mi?
+OP_switch_button_hint1=İşlem modu anahtarı RT-N56U’nun alt paneline yerleştirilmiştir.
+OP_switch_button_hint2=Görüntülemek için buraya tıklayın
+OP_GW_item=IP Paylaşım modu(Varsayılan)
+OP_GW_desc1=Geniş bant paylaşım modunda, RT-N56U internete PPPoE, Otomatik IP, PPTP, L2TP veya Statik IP ile bağlanır.
+OP_GW_desc2=Size kablosuz radyo sinyali sağlar. LAN istemcileri için NAT, güvenlik duvarı ve geniş bant paylaşım hizmetleri desteklenir. Ayrıca SOHO veya ev kullanı cıları için UPnP ve Dinamik DNS'yi desteklemektedir.
+OP_RT_item=Kablosuz Yönlendirici / IP paylaşım modu
+OP_RT_desc1=Yönlendirici modunda/ IP paylaşım modunda, RT-N56U internete PPPoE, DHCP, PPTP, L2TP veya Statik IP aracılığıyla bağlanır ve kablosuz ağı LAN istemci aygıtları ile paylaşır. Bu modda iken NAT, güvenlik duvarı ve DHCP sunucusu varsayılan olarak etkinleştirilmiştir. UPnP ve Dinamik DNS SOHO ve ev kullanıcıları için desteklenir. 
+OP_RT_desc2=İlk kez kullanan bir kullanıcı iseniz ya da şu anda herhangi bir kablolu/kablosuz yönlendirici kullanmıyorsanız bu modu seçin.
+OP_RE_item=Yineleyici modu
+OP_RE_desc1=Yineleyici modunda RT-N56U mevcut bir kablosuz sinyale bağlanır ve daha geniş bir kablosuz kapsama alanına ve daha iyi kablosuz sinyal kalitesine sahip olmak için bu sinyali genişletir.
+OP_AP_item=Erişim Noktası (AP) modu
+OP_AP_desc1=Erişim Noktası (AP) modunda RT-N56U kablosuz sinyal kapsama alanını ağdaki diğer istemcilere genişletmek için bir Ethernet kablosu aracılığıyla kablosuz bir ağa bağlanır. Bu modda güvenlik duvarı, IP paylaşımı ve NAT işlevleri varsayılan olarak engellenmiştir.  
+OP_AP_desc2= Kablosuz yönlendirici bir Ağ Adresi Çevirisi (NAT) ve IP paylaşım işlevi sunar ve kablosuz bir yönlendirici ile bir erişim noktası arasındaki farkı anlayan ileri bir kullanıcı iseniz bu modu seçin. 
+OP_Modem=Modem
+OP_WirelessClient=Kablosuz İstemci
+OP_WirelessSignal=Mevcut kablosuz sinyal
 [untranslate]
 IPConnection_VSList_ftpport=FTP Server Port:
 Adm_System_telnetd=Enable Telnet Server?
@@ -54,7 +84,6 @@ RouterConfig_IPTV_itemname=HTTP Proxy Bağlantı noktasında IPTV UDP Çoklu yay
 RHELP_desc9=Bu işlevi engellemek için 0 (sıfır) grin.
 WLANConfig11b_TxPower_itemname=Tx Güç ayarı
 WLANConfig11b_TxPower_itemdesc=Sinyal güç oranını ayarlayın.
-[translated]
 WLANConfig11b_Wireless_Speed_itemname_3=40MHz ortak mevcut bant genişliğini kullanarak kablosuz çıkışı en üst düzeye çıkarmaktadır. Eğer kablosuz kullanım ile ilgili konularda, lütfen varsayılan modu seçin.
 hwnat_desc=Enable Hardware NAT to offer internet speed with maximum throughput over 900Mbps when appropriately supported by you internet service provider. But please note that enabling Hardware NAT may conflict with QoS related functions.
 [error_page.htm]
@@ -95,7 +124,7 @@ QIS_resetModem_desc1=Lütfen güç kablosunun fişini modemden çekin.
 QIS_resetModem_desc2=Modemi sıfırlayın
 QIS_resetModem_desc3=İki dakika sonra güç kablosunu fişe yakın ve fişten çekin.
 QIS_resetModem2_desc1=Güç kablosunu modeminize tekrar takın ve yaklaşık bir dakika bekleyin. Detect connection (Bağlantıyı sapta)’ya tıklayın.
-QIS_wireless_desc1=8 ve 63 karakter arasında bir ağ anahtarı girin (harf, sayı veya her ikisi). Eğer ağ güvenliğini ayarlamak istemiyorsanız, ağ anahtarı alanını boş bırakın. <span style='font-weight:bolder;'>Varsayılan kablosuz güvenlik WPA-Auto-Personal - AES + TKIP’dir.</span>
+QIS_wireless_desc1=8 ve 63 karakter arasında bir ağ anahtarı girin (harf, sayı veya her ikisi) veya 64 onaltılık rakam. Eğer ağ güvenliğini ayarlamak istemiyorsanız, ağ anahtarı alanını boş bırakın. <span style='font-weight:bolder;'>Varsayılan kablosuz güvenlik WPA-Auto-Personal - AES + TKIP’dir.</span>
 [Traffic Monitor]
 Date=tarihi
 Scale=ölçek
@@ -153,10 +182,10 @@ ShareNode_Seeding_itemdesc=Tohumlama fonksiyonunu etkinleştirmenize veya devre 
 ShareNode_MaxUpload_itemname=Maksimum Yükleme Hızı
 ShareNode_MaxUpload_itemdesc=0 ila 999 arasında bir değer girin. Varsayılan değer herhangi bir yükleme sınırı olmadığını gösteren 0’dır.
 [New item]
-HSDPAConfig_hsdpa_enable_hint1=HSDPA etkinleştirildikten sonra, orijinal WAN ayarlarınız devreden çıkarılacaktır.
-HSDPAConfig_hsdpa_enable_hint2=Bağlantı türünü değiştirmek isterseniz, lütfen 3G/3.5G adaptörünü devreden çıkarmak için <a href="/Advanced_HSDPA_others.asp">HSDPA</a>’ya gidin.
-HSDPAConfig_USBAdapter_itemname=3G/3.5G USB Adaptör
-HSDPAConfig_USBAdapter_itemdesc=HDSPA etkinleştirildikten sonra, RT-N56U’nin desteklediği adaptörü seçin.
+HSDPAConfig_hsdpa_enable_hint1=USB Modem etkinleştirildikten sonra, orijinal WAN ayarlarınız devreden çıkarılacaktır.
+HSDPAConfig_hsdpa_enable_hint2=Bağlantı türünü değiştirmek isterseniz, lütfen USB adaptörünü devreden çıkarmak için <a href="/Advanced_Modem_others.asp">USB Modem</a>’ya gidin.
+HSDPAConfig_USBAdapter_itemname=USB Adaptör
+HSDPAConfig_USBAdapter_itemdesc=USB Modem etkinleştirildikten sonra, RT-N56U’nin desteklediği adaptörü seçin.
 APSurvey_msg_connected=Bu erişim noktasına zaten bağlısınız.
 APSurvey_msg_connect_suggest1=Daha istikrarlı bir bağlantı elde etmek amacıyla, RT-N56U’ya bağlanmak için bir Ethernet kablosu kullanın.
 APSurvey_msg_connect_suggest2=Ayarları yapılandırmaya devam etmek için [Tamam]’a tıklayın, yapılandırma işlemi sırasında bilgisayarınızın RT-N56U bağlantısı geçici olarak kesilebilir.
@@ -200,17 +229,6 @@ AP_fail_get_IPaddr=IP bilgileri alınamadı.
 AP_Remote_IP=AP IP adresi
 AP_survey=AP Araştırma
 statusTitle_AP=Erişim Noktası durumu
-OP_switch_button_hint1=İşlem modu anahtarı RT-N56U’nun alt paneline yerleştirilmiştir.
-OP_switch_button_hint2=Görüntülemek için buraya tıklayın
-OP_GW_item=IP Paylaşım modu(Varsayılan)
-OP_GW_desc1=Geniş bant paylaşım modunda, RT-N56U internete PPPoE, Otomatik IP, PPTP, L2TP veya Statik IP ile bağlanır.
-OP_GW_desc2=Size kablosuz radyo sinyali sağlar. LAN istemcileri için NAT, güvenlik duvarı ve geniş bant paylaşım hizmetleri desteklenir. Ayrıca SOHO veya ev kullanı cıları için UPnP ve Dinamik DNS'yi desteklemektedir.
-OP_RT_item=Yönlendirici (NAT'ı Devre Dışı Bırak)
-OP_RT_desc1=Yönlendirici modunda, RT-N56U'yu bilgisayarınıza bağlamak için bir Ethernet kablosu kullanın ve kablosuz ağ bağlantısı yaratın, bunu yaptıktan sonra kablosuz ağ bağlantınız için ayarları seçin.
-OP_RT_desc2= RT-N56U kablosuz ağ kapsamınızı genişletir ve statik yönlendirme protokolünü yapılandırmanıza izin verir. LAN ve WAN istemcileri arasında iletişim ve paylaşım hizmetlerini mümkün kılmak için NAT (Ağ Adresi Çevirisi)'ni devre dışı bırakır. Not: Ana yönlendiricideki yönlendirme kurallarını belirlemeniz gerekmektedir.
-OP_AP_item=Erişim Noktası modu
-OP_AP_desc1=AP (Erişim Noktası) modunda, RT-N56U'yu LAN'ınınıza bağlamak için bir Ethernet kablosu kullanın,bu yapıldığında bilgisayarınız RT-N56U için bir kablosuz ağ bağlantısı oluşturabilir. Bütün ağ istemcileri birbirine köprülenecektir.
-OP_AP_desc2=Bu mod ağ istemcileri için internet bağlantısı sağlar, ancak güvenlik duvarı, IP paylaşımı ve NAT işlemlerini devre dışı bırakır.
 [USB Application - HSDPA]
 HSDPAConfig_connection=Bağlantı ayarı
 HSDPAConfig_pin_code_itemdesc=Lütfen SIM kartınızın PIN kodunu girin. Uzunluğu 3 rakamdan fazla ve 8 rakamdan az olan bir sayı olmalıdır. PIN kodunuzu bilmiyorsanız, lütfen ISS’nız ile irtibata geçin.
@@ -226,13 +244,13 @@ HSDPAConfig_ConnectionTime_itemname=Bağlantı Zamanı
 HSDPAConfig_TransDataSize_itemname=Gönderilen Veri Boyutu
 HSDPAConfig_ReceviedDataSize_itemname=Alınan Veri Boyutu
 HSDPAConfig_TotalDataSize_itemname=Toplam Veri Boyutu
-HSDPAConfig_MTU_itemdesc=HSDPA paketinin En Yüksek Aktarım Birimi (MTU) demektir.
-HSDPAConfig_MRU_itemdesc=HSDPA paketinin En Yüksek Alma Birimi (MRU) demektir.
+HSDPAConfig_MTU_itemdesc=USB Modem paketinin En Yüksek Aktarım Birimi (MTU) demektir.
+HSDPAConfig_MRU_itemdesc=USB Modem paketinin En Yüksek Alma Birimi (MRU) demektir.
 checkbox_Yes=Evet
 checkbox_No=Hayır
 HSDPAConfig_basic=Temel ayar
-HSDPAConfig_hsdpa_enable_itemname=HSDPA etkinleştirilsin mi?
-HSDPAConfig_hsdpa_mode_itemname=HSDPA modu
+HSDPAConfig_hsdpa_enable_itemname=USB Modem etkinleştirilsin mi?
+HSDPAConfig_hsdpa_mode_itemname=USB Modem modu
 HSDPAConfig_pin_code_enable_itemname=PIN kodu etkinleştirilsin mi?
 HSDPAConfig_pin_code_itemname=PIN kodu
 HSDPAConfig_enable_apn_itemname=APN hizmetini etkinleştir:
@@ -276,7 +294,7 @@ Device_service_Printer=Yazıcı Hizmeti:
 Device_service_Wireless=Kablosuz:
 DrSurf_Alert21=RT-N56U yönlendiricisindeki disk takılı ve erişilebilir.
 ddnsname_computername=Ayar uygulandıktan sonra, aynı zamanda Device Name (Aygıt Adı) da değiştirilir. Devam ediyor musunuz?
-JS_storageright=RT-N56U yönlendiricisinin adıdır ve standart giriş karakterlerine harfler(A-Z,a-z), rakamlar(0-9), boşluklar, alt çizgiler(_) ve tireler(-) dahildir. İlk ve son karakterler boşluk olmamalı. Standart olmayan ad kullanıldığında diğer kullanıcılar bilgisayarınızı ağda bulamaz.<br>Kayıtlıysanız ve ASUS DDNS hizmetini açarsanız, alanlar otomatik olarak güncelleştirilir.
+JS_storageright=RT-N56U yönlendiricisinin adıdır ve standart giriş karakterlerine harfler(A-Z,a-z), rakamlar(0-9), boşluklar, alt çizgiler(_) ve tireler(-) dahildir. İlk ve son karakterler boşluk olmamalı. Standart olmayan ad kullanıldığında diğer kullanıcılar bilgisayarınızı ağda bulamaz.
 not_support_script=Tarayıcınız JavaScript’i desteklemiyor. JavaScript’i destekleyen bir tarayıcı seçin veya çok işlevli ASUS RT-N56U yönlendiricisini kullanmak üzere etkinleştirin.
 [Advanced_AiDisk_others.asp]
 Help_of_Workgroup=Ağ Komşularında RT-N56U yönlendiricisinin grup adıdır ve standart giriş karakterlerine harfler(A-Z,a-z), rakamlar(0-9), boşluklar, alt çizgiler(_) ve tireler(-) dahildir. İlk ve son karakterde boşluk olmamalıdır. Standart olmayan karakterler kullanıldığında diğer kullanıcılar bilgisayarınızı yerel ağda bulamaz.
@@ -399,7 +417,7 @@ menu5_3_6=DDNS
 menu5_4_1=Ağ Komşuları Paylaşımı
 menu5_4_2=FTP Paylaşımı
 menu5_4_3=Çeşitli ayarlar
-menu5_4_4=HSDPA
+menu5_4_4=USB Modem
 menu5_5_1=Genel
 menu5_5_2=URL Filtresi
 menu5_5_3=MAC Filtresi
@@ -612,7 +630,7 @@ DiskStatus_refresh1=USB diski taktım,
 DiskStatus_refresh2=sistem durumunu 
 DiskStatus_refresh3= yenile.
 EZQoS=EZQoS Bant Genişliği Yönetimi
-footer_copyright_desc=2011 ASUSTek Computer Inc. Tüm hakları saklıdır.
+footer_copyright_desc=2011 ASUSTeK Computer Inc. Tüm hakları saklıdır.
 Help_button_default_hint=Yardım’ı açmak için tıklatın.
 Help_init_word1=Yardım, yönlendirici işlevlerini kullanmayla ilgili size rehberlik ve bilgi sağlar.  Yardım almak
 Help_init_word2=için sarı ve mavi altı çizili köprü bağlantılı sözcükleri
@@ -680,7 +698,7 @@ QKSet_finishpre_rebootnow=Son
 QKSet_account_webtitle=ISS Hesap Ayarı
 QKSet_ISP_head=ISS Bilgileri Ayarı
 QKSet_ISP_desc=Lütfen ISS ayarınıza bakın ve ilgili bilgileri girin.
-PPPConnection_UserName_itemdesc=Bu alan sadece WAN Bağlantı Türü olarak HSDPA, PPPoE, PPTP veya L2TP’yi ayarladığınızda kullanılabilir.
+PPPConnection_UserName_itemdesc=Bu alan sadece WAN Bağlantı Türü olarak USB Modem, PPPoE, PPTP veya L2TP’yi ayarladığınızda kullanılabilir.
 BOP_account_user_item=Kullanıcı Adı:
 BOP_account_pass_item=Parola:
 QKSet_account_passwd=Bu kullanıcı hesabının Parolası.
@@ -742,7 +760,7 @@ QKSet_type_rechoice=Lütfen WAN türünü seçin
 QKSet_wireless_webtitle=Kablosuz Ayarı
 WLANConfig11b_SSID_itemdesc=Kablosuz bağlantınız için 32 karaktere kadar kimlik dizesi atayın.
 WLANConfig11b_SSID_itemname=SSID:
-WLANConfig11b_x_PSKKey_itemdesc=Bu alan, şifreleme işleminin başlatılması için 8- 63 karakterlik bir parola gerektirir. Bu alanı boş bırakıtsanız, parolanız varsayılan [00000000] olarak atanır.
+WLANConfig11b_x_PSKKey_itemdesc=Bu alan, şifreleme işleminin başlatılması için 8- 63 karakterlik bir parola gerektirir(harf, sayı veya her ikisi) veya 64 onaltılık rakam. Bu alanı boş bırakıtsanız, parolanız varsayılan [00000000] olarak atanır.
 WLANConfig11b_x_PSKKey_itemname=WPA Ön Paylaşımlı Anahtarı:
 WLANConfig11b_WEPDefaultKey_itemdesc=Kablosuz ağınızda veri göndermek için WEP anahtarınız ayarlayın.
 WLANConfig11b_WEPDefaultKey_itemname=Anahtar Dizini:
@@ -987,8 +1005,6 @@ FirewallConfig_UrlFilterEnable_itemname=URL Filtresi Etkinleştirilsin mi
 FirewallConfig_URLActiveDate_itemname=URL Filtresini Etkinleştirme Tarihi:
 FirewallConfig_URLActiveDate_itemdesc=Bu alanda URL filtresinin etkinleştirileceği tarihler tanımlanır.
 FirewallConfig_URLActiveTime_itemname=URL Filtresinin Etkinleştirileceği Zaman
-FirewallConfig_URLActiveTime_itemdesc2=Bu alanda URL filtresinin etkinleştirileceği zaman aralığı tanımlanır. Lütfen farklı başlangıç ve bitiş zamanı girin. Başlangıç zamanı bitiş zamanında sonra olursa, işlev gece yarısını geçerek çalışır.
-FirewallConfig_URLActiveTime_itemhint3=Başlangıç zamanı bitiş zamanından sonra. Bu işlev gece yarısını geçerek çalışacak.\n Devam etmek istediğinizden emin misiniz?
 FirewallConfig_URLActiveTime_itemhint2=Geçersiz zaman dönemi.
 FirewallConfig_UrlFilterDefaultAct_itemname=Tanımlanan anahtar sözcükleri içeren URL:
 FirewallConfig_UrlFilterDefaultAct_itemdesc=BIRAK seçerseniz, tabloda tanımlanan anahtar sözcükleri içeren URL’ler bırakılır ya da erişilemez. KABUL ET seçerseniz, tanımlanan anahtar sözcükleri içeren URL’lere erişilebilir.
@@ -1140,7 +1156,7 @@ LANHostConfig_x_DDNSStatus_itemname=El İle Güncelleştirme:
 LANHostConfig_x_DDNSStatus_itemdesc=Bu düğme DDNS veritabanını el ile güncelleştirmenizi sağlar. Yalnızca otomatik DDNS güncelleştirmesi başarısız olduğunda kullanılabilir. O anki DDNS güncelleştirmesi durumunu Sistem Günlüğünden alabilirsiniz.
 LANHostConfig_ReservedAddresses_itemname=IP Adresi:
 DeviceSecurity11a_display1_sectiondesc=Kablosuz MAC filtresi, Kablosuz Yerel Ağınızda belirtilen MAC adresine sahip aygıtlardan gelen paketleri denetlemenizi sağlar.
-WLANAuthentication11a_display1_sectiondesc=Bu kısımda, RADIUS sunucusu üzerinden kablosuz istemcilerin kimliklerini doğrulamak için ek parametreler ayarlamanız sağlanır. \"Kablosuz - Genel\"de \"Kimlik Doğrulama Yöntemi\"ni \"WPA-ENTERPRISE/WPA2-ENTERPRISE\" veya \"802.1x ile Radius\" olarak seçtiğinizde gereklidir.
+WLANAuthentication11a_display1_sectiondesc=Bu kısımda, RADIUS sunucusu üzerinden kablosuz istemcilerin kimliklerini doğrulamak için ek parametreler ayarlamanız sağlanır. "Kablosuz - Genel"de "Kimlik Doğrulama Yöntemi"ni "WPA-ENTERPRISE/WPA2-ENTERPRISE" veya "802.1x ile Radius" olarak seçtiğinizde gereklidir.
 WLANAuthentication11a_ExAuthDBIPAddr_itemname=Sunucu IP Adresi:
 WLANAuthentication11a_ExAuthDBIPAddr_itemdesc=802.1x kablosuz kimlik doğrulaması ve dinamik WEP anahtarı türetme için RADIUS sunucusu IP adresi.
 WLANAuthentication11a_ExAuthDBPortNumber_itemname=Sunucu Bağlantı Noktası:
@@ -1420,14 +1436,17 @@ HSDPAConfig_country_itemdesc=Lütfen ISP'nizin yerini seçiniz.
 HSDPAConfig_dialnum_itemdesc=Lütfen arayacağınız numarayı giriniz.
 HSDPAConfig_username_itemdesc=Lütfen kullanıcı adınızı giriniz.
 HSDPAConfig_password_itemdesc=Lütfen şifrenizi giriniz.
-HSDPAConfig_usbadaptor_itemdesc=Lütfen 3G/3.5G usb adaptörünüzü seçiniz.
+HSDPAConfig_usbadaptor_itemdesc=Lütfen usb adaptörünüzü seçiniz.
 confirm_disableftp_dm=Ağ Komşu Paylaşımının engellenmesi Download Master'ı engelleyecektir.
 LANHostConfig_IPRouters_itemdesc=RT-N56U Yerel Ağ IP’si. Varsayılan değer 192.168.1.1’dir. LAN IP adresi aralığı: 192.168.0.1 - 192.168.255.254, 172.16.0.1 – 172.31.255.254, 10.0.0.1 – 10.255.255.254
-HSDPAConfig_hsdpa_mode_itemdesc=Gereksinim ve koşullarınıza uygun olarak HSDPA modunu seçin. Aşağıda size dört mod sunuyoruz: Backup (Yedekleme), Equal weight (Eşit ağırlık), Always high (Daima yüksek) ve Always low (Daima düşük). HSDPA adaptörünü güvenilir bir şekilde çıkarmak için lütfen <a href='/index.asp'>Endeks</a>'e gidin ve adaptör düğmesine tıklayın.
+HSDPAConfig_hsdpa_mode_itemdesc=Gereksinim ve koşullarınıza uygun olarak USB Modem modunu seçin. Aşağıda size dört mod sunuyoruz: Backup (Yedekleme), Equal weight (Eşit ağırlık), Always high (Daima yüksek) ve Always low (Daima düşük). USB Modem adaptörünü güvenilir bir şekilde çıkarmak için lütfen <a href='/index.asp'>Endeks</a>'e gidin ve adaptör düğmesine tıklayın.
 Not_authpage_login_again=Tekrar oturum açmak isterseniz, lütfen ilk önce bu pencereyi kapatın.  
-GO_HSDPA_SETTING=HSDPA Ayarlara Git
+GO_HSDPA_SETTING=USB Modem Ayarlara Git
+HSDPA_disable=If you want to change connection type，please refer to <a href="/Advanced_Modem_others.asp"><#GO_HSDPA_SETTING#></a>to disable adaptor.
 [new strings - translated]
 GO_2G=2.4GHz Ayarlara Git
 GO_5G=5GHz Ayarlara Git
 [new strings - untranslate]
 UPnPMediaServerType=Server Type
+HSDPA_LANtoWAN=After enabling USB Modem connection, the WAN port will change to LAN port, please remove the original cable.
+HSDPA_enable_confirm=Lütfen ayarlarınızın doğru olup olmadığını kontrol edin.

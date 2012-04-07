@@ -1,4 +1,4 @@
-﻿[Language type]
+[Language type]
 CHAR_set=UTF-8
 PASS_LANG=Jazyk:
 LANG_select=Zvolte Jazyk:
@@ -18,8 +18,38 @@ LANG_FI=Finsk
 LANG_DA=Dansk
 LANG_SV=Svensk
 LANG_BR=Brazil
+LANG_JP=日本語
+[Malaysia Unifi]
+PPPConnection_x_Unifi=Unifi Support :
+PPPConnection_x_Unifi_Describe=Select 'Yes' to support Malaysia Unifi services.
+[VPN Passthrough]
+VPN_PPTP_Passthrough=Průchod VPN PPTP
+VPN_L2TP_Passthrough=Průchod VPN L2TP
+VPN_IPSec_Passthrough=Průchod VPN IPSec
+vpn_passthrough_itemname=Průchod VPN
+vpn_passthrough_desc=Aktivací průchodu VPN umožníte průchod připojení virtuální privátní sítě (VPN) směšovačem k síťovým klientům.
+[AiDisk account alert]
+enable_noaccount_alert=Pokud je povoleno, bude to stalo problém s připojením k serveru Samba a Download Master je-li neexistuje nějaký účet.
 [iTunes]
 iTunesMediaServer=iTunes Media Server
+[opmode strings]
+BasicConfig_EnableiTunesServer_itemname=Povolit iTunes Server?
+OP_switch_button_hint1=Přepínač operačního režimu se nachází na dolním panelu RT-N56U.
+OP_switch_button_hint2=Klepnutím zde zobrazíte
+OP_GW_item=Režim sdílení IP(Výchozí)
+OP_GW_desc1=V režimu sdílení šířky pásma se RT-N56U připojuje k Internetu prostřednictvím PPPoE, automatické IP, PPTP, L2TP, nebo statické IP.
+OP_GW_desc2=Poskytuje vám bezdrátový rádiový signál. Služby NAT, brána firewall a sdílení služeb šířky pásma pro klienty místní sítě LAN jsou aktivovány. Rovněž podporuje UPnP a dynamický DNS pro SOHO nebo domácího uživatele.
+OP_RT_item=Bezdrátový směrovač / režim sdílení adresy IP
+OP_RT_desc1=V režimu směrovače/ režimu sdílení adresy IP se zařízení RT-N56U připojuje k Internetu prostřednictvím PPPoE, DHCP, PPTP, L2TP nebo statické adresy IP a sdílí bezdrátovou síť pro klientská zařízení místní sítě LAN.  V tomto režimu jsou NAT, brána firewall a server DHCP aktivovány jako výchozí. UPnP a dynamický server DNS jsou podporovány pro uživatele SOHO a domácí uživatele. 
+OP_RT_desc2=Vyberte tento režim, pokud jste noví uživatelé nebo pokud aktuálně nepoužíváte žádné pevné/bezdrátové směrovače.
+OP_RE_item=Režim regenerativního zesilovače
+OP_RE_desc1=V režimu regenerativního zesilovače se zařízení RT-N56U připojuje k existujícímu bezdrátovému signálu a prodlužuje tento signál pro dosažení širšího pokrytí bezdrátové sítě a lepší kvality bezdrátového signálu.
+OP_AP_item=Režim přístupového bodu (AP)
+OP_AP_desc1=V režimu přístupového bodu (AP) se zařízení RT-N56U připojuje k bezdrátovému směrovači prostřednictvím kabelu Ethernet pro rozšíření pokrytí bezdrátovým signálem dalším síťovým klientům. V tomto režimu jsou funkce brány firewall, sdílení IP a NAT ve výchozí konfiguraci deaktivovány. 
+OP_AP_desc2=Vyberte tento režim, pokud jste pokročilí síťoví uživatelé, kteří chápou rozdíl mezi bezdrátovým směrovačem a přístupovým bodem, tzn. bezdrátový směrovač poskytuje funkce Převod síťových adres (NAT) a sdílení IP. 
+OP_Modem=Modem
+OP_WirelessClient=Bezdrátový klient
+OP_WirelessSignal=Stávající bezdrátový signál
 [untranslate]
 IPConnection_VSList_ftpport=FTP Server Port:
 Adm_System_telnetd=Enable Telnet Server?
@@ -54,7 +84,6 @@ RouterConfig_IPTV_itemname=Vícesměnové vysílání IPTV UDP na port HTTP Prox
 RHELP_desc9=Zadáním 0 (nula) deaktivujete tuto funkci.
 WLANConfig11b_TxPower_itemname=Úprava výkonu Tx
 WLANConfig11b_TxPower_itemdesc=Upravuje poměr výkonu signálu. 
-[translated]
 WLANConfig11b_Wireless_Speed_itemname_3=využívá koexistentní šířku pásma 40 MHz pro maximalizaci propustnosti bezdrátové sítě. Pokud se setkáte s problémy se stabilitou bezdrátové sítě, zvolte výchozí režim.
 hwnat_desc=Enable Hardware NAT to offer internet speed with maximum throughput over 900Mbps when appropriately supported by you internet service provider. But please note that enabling Hardware NAT may conflict with QoS related functions.
 [error_page.htm]
@@ -95,7 +124,7 @@ QIS_resetModem_desc1=Odpojte napájecí kabel od modemu.
 QIS_resetModem_desc2=Resetujte modem
 QIS_resetModem_desc3=Odpojte a znovu připojte napájecí kabel po dvou minutách.
 QIS_resetModem2_desc1=Připojte napájecí kabel zpět k modemu a počkejte přibližně jednu minutu. Klepněte na tlačítko Detect connection (Rozpoznat připojení).
-QIS_wireless_desc1=Zadejte síťový klíč mezi 8 a 63 znaky (písmena, číslice nebo kombinace). Nechcete-li nastavit zabezpečení sítě, ponechte políčko síťového klíče prázdné. <span style='font-weight:bolder;'>Výchozí zabezpečení bezdrátové sítě je WPA-Auto-Personal - AES + TKIP.</span>
+QIS_wireless_desc1=Zadejte síťový klíč mezi 8 a 63 znaky (písmena, číslice nebo kombinace) nebo 64 hexadecimálních číslic. Nechcete-li nastavit zabezpečení sítě, ponechte políčko síťového klíče prázdné. <span style='font-weight:bolder;'>Výchozí zabezpečení bezdrátové sítě je WPA-Auto-Personal - AES + TKIP.</span>
 [Traffic Monitor]
 Date=datum
 Scale=měřítko
@@ -153,10 +182,10 @@ ShareNode_Seeding_itemdesc=Umožňuje povolit nebo zakázat funkci ohlašování
 ShareNode_MaxUpload_itemname=Maximální rychlost ukládání
 ShareNode_MaxUpload_itemdesc=Zadejte hodnotu mezi 0 až 999. Výchozí hodnota je 0, což označuje, že není žádné omezení ukládání.
 [New item]
-HSDPAConfig_hsdpa_enable_hint1=Po aktivaci HSDPA budou deaktivovány vaše původní nastavení WAN.
-HSDPAConfig_hsdpa_enable_hint2=Chcete-li změnit typ připojení, přejděte na <a href="/Advanced_HSDPA_others.asp">HSDPA</a> a deaktivujte adaptér 3G/3.5G.
-HSDPAConfig_USBAdapter_itemname=3G/3.5G USB adaptér
-HSDPAConfig_USBAdapter_itemdesc=Po aktivaci HDSPA, vyberte adaptér, který RT-N56U podporuje.
+HSDPAConfig_hsdpa_enable_hint1=Po aktivaci USB Modem budou deaktivovány vaše původní nastavení WAN.
+HSDPAConfig_hsdpa_enable_hint2=Chcete-li změnit typ připojení, přejděte na <a href="/Advanced_Modem_others.asp">USB Modem</a> a deaktivujte adaptér.
+HSDPAConfig_USBAdapter_itemname=USB adaptér
+HSDPAConfig_USBAdapter_itemdesc=Po aktivaci USB Modem, vyberte adaptér, který RT-N56U podporuje.
 APSurvey_msg_connected=Již jste připojeni k tomuto přístupovému bodu.
 APSurvey_msg_connect_suggest1=Pro stabilnější připojení použijte pro připojení k RT-N56U ethernetový kabel.
 APSurvey_msg_connect_suggest2=Klepnutím na [<span style="font-weight:bold; font-size:16px;">OK</span>] pokračujte v konfigurování nastavení. Během procesu konfigurace může být počítač dočasně odpojen od RT-N56U.
@@ -200,17 +229,6 @@ AP_fail_get_IPaddr=Informace IP se nepodařilo získat.
 AP_Remote_IP=Adresa IP AP
 AP_survey=Průzkum AP
 statusTitle_AP=Stav přístupového bodu
-OP_switch_button_hint1=Přepínač operačního režimu se nachází na dolním panelu RT-N56U.
-OP_switch_button_hint2=Klepnutím zde zobrazíte
-OP_GW_item=Režim sdílení IP(Výchozí)
-OP_GW_desc1=V režimu sdílení šířky pásma se RT-N56U připojuje k Internetu prostřednictvím PPPoE, automatické IP, PPTP, L2TP, nebo statické IP.
-OP_GW_desc2=Poskytuje vám bezdrátový rádiový signál. Služby NAT, brána firewall a sdílení služeb šířky pásma pro klienty místní sítě LAN jsou aktivovány. Rovněž podporuje UPnP a dynamický DNS pro SOHO nebo domácího uživatele.
-OP_RT_item=Router(Disable NAT)
-OP_RT_desc1=V režimu směrovače připojte RT-N56U k počítači ethernetovým kabelem a vytvořte bezdrátové síťové připojení, potom vyberte nastavení pro vaše bezdrátové síťové připojení. 
-OP_RT_desc2=RT-N56U rozšiřuje pokrytí vaší bezdrátové sítě a umožňuje vám konfigurovat statický směrovací protokol. Deaktivuje NAT (převod síťových adres), aby byly umožněny služby komunikace a sdílení mezi klienty LAN a WAN. Poznámka: Je třeba specifikovat pravidla směrování v hostitelském směrovači.
-OP_AP_item=Přístupový bod
-OP_AP_desc1=V režimu AP připojte RT-N56U ethernetovým kabelem k místní síti LAN; potom může váš počítač vytvořit bezdrátové síťové připojení k RT-N56U. Všichni síťový klienti budou spojeni mostem.
-OP_AP_desc2=Tento režim poskytuje internetové připojení pro síťové klienty, ale deaktivuje funkce brány firewall, sdílení IP a NAT.
 [USB Application - HSDPA]
 HSDPAConfig_connection=Nastavení připojení
 HSDPAConfig_pin_code_itemdesc=Zadejte kód PIN vaší karty SIM. Musí se jednat o číslo delší než 3 a menší než 8. Pokud kód PIN neznáte, kontaktujte vašeho poskytovatele internetových služeb.
@@ -226,13 +244,13 @@ HSDPAConfig_ConnectionTime_itemname=Connection Time
 HSDPAConfig_TransDataSize_itemname=Transmitted Data Size
 HSDPAConfig_ReceviedDataSize_itemname=Recevied Data Size
 HSDPAConfig_TotalDataSize_itemname=Total Data Size
-HSDPAConfig_MTU_itemdesc=Toto znamená maximální počet vysílaných jednotek (MTU) HSDPA paketu.
-HSDPAConfig_MRU_itemdesc=Toto znamená maximální počet přijatých jednotek (MRU) HSDPA paketu.
+HSDPAConfig_MTU_itemdesc=Toto znamená maximální počet vysílaných jednotek (MTU) USB Modem paketu.
+HSDPAConfig_MRU_itemdesc=Toto znamená maximální počet přijatých jednotek (MRU) USB Modem paketu.
 checkbox_Yes=ANO
 checkbox_No=No
 HSDPAConfig_basic=Základní nastavení
-HSDPAConfig_hsdpa_enable_itemname=Povolit HSDPA?
-HSDPAConfig_hsdpa_mode_itemname=režim HSDPA
+HSDPAConfig_hsdpa_enable_itemname=Povolit USB Modem?
+HSDPAConfig_hsdpa_mode_itemname=režim USB Modem
 HSDPAConfig_pin_code_enable_itemname=Povolit kód PIN?
 HSDPAConfig_pin_code_itemname=kód PIN
 HSDPAConfig_enable_apn_itemname=Povolit služby APN?
@@ -276,7 +294,7 @@ Device_service_Printer=Služba tiskárny:
 Device_service_Wireless=Služba bezdrátového zařízení:
 DrSurf_Alert21=Disk ve RT-N56U je připojený a přístupný.
 ddnsname_computername=Po změně nastavení se změní také jméno zařízení. Chcete pokračovat?
-JS_storageright=Představuje jméno RT-N56U, běžné vstupní znaky zahrnují písmena (A–Z, a–z), čísla (0–9), mezery, podtržítka (_) a pomlčky (-). První ani poslední znak nesmí obsahovat mezeru. Použití nestandardního jména zabrání ostatním uživatelům najít Váš počítač nebo síť. <br>Pokud jste se zaregistrovali a otevřeli službu ASUS DDNS, je toto pole aktualizováno automaticky.
+JS_storageright=Představuje jméno RT-N56U, běžné vstupní znaky zahrnují písmena (A–Z, a–z), čísla (0–9), mezery, podtržítka (_) a pomlčky (-). První ani poslední znak nesmí obsahovat mezeru. Použití nestandardního jména zabrání ostatním uživatelům najít Váš počítač nebo síť.
 not_support_script=Váš prohlížeč nepodporuje JavaScript. Použijte prosím prohlížeč, který podporuje JavaScript, nebo jej povolte pro použití multifunkčního routeru ASUS RT-N56U.
 [Advanced_AiDisk_others.asp]
 Help_of_Workgroup=Představuje jméno skupiny RT-N56U v místní síti, běžné vstupní znaky zahrnují písmena (A–Z,a–z), čísla (0–9), mezery, podtržítka (_) a pomlčky (-). První ani poslední znak nesmí obsahovat mezeru. Použití nestandardního jména zabrání ostatním uživatelům najít Váš počítač v místní síti.
@@ -399,7 +417,7 @@ menu5_3_6=DDNS
 menu5_4_1=Sdílený obsah v Síti
 menu5_4_2=Sdílený obsah v FTP
 menu5_4_3=Další nastavení
-menu5_4_4=HSDPA
+menu5_4_4=USB Modem
 menu5_5_1=Obecné
 menu5_5_2=URL Filtr
 menu5_5_3=MAC Filtr
@@ -483,9 +501,9 @@ macfilter_alert_str1=bylo změněno na „Přijmout“. Pokud chcete „blokovat
 Modelname=Název modelu
 Totalspace=Celkové místo
 Availablespace=Dostupné místo
-AiDiskWizard=Průvodce AiDisk
 UPnPMediaServer=UPnP Media Server
 UPnPMediaServer_Help=RT-N56U podporuje standard UPnP. Můžete jej povolit a umožnit jiným UPnP zařízením, jako je PS3 nebo digitální přehrávač, přístup k multimediálním souborům na USB disku.
+AiDiskWizard=Průvodce AiDisk
 Safelyremovedisk_title=Bezpečně odpojte disk
 Safelyremovedisk=Nyní lze disk bezpečně odpojit
 btn_remove=Odpojit
@@ -612,7 +630,7 @@ DiskStatus_refresh1=Disk USB byl zapojen,
 DiskStatus_refresh2=obnovit
 DiskStatus_refresh3=stav systému.
 EZQoS=Správa EZQoS připojení
-footer_copyright_desc=2011 ASUSTek Computer Inc. Všechna práva vyhrazena.
+footer_copyright_desc=2011 ASUSTeK Computer Inc. Všechna práva vyhrazena.
 Help_button_default_hint=Kliknutím otevřete nápovědu.
 Help_init_word1=Nápověda nabízí příručky a informace o využití funkcí routeru. Klikněte na
 Help_init_word2=žlutě a modře podtržený hypertextový odkaz.
@@ -680,7 +698,7 @@ QKSet_finishpre_rebootnow=Ukončit
 QKSet_account_webtitle=Nastavení účtu ISP
 QKSet_ISP_head=Nastavení informací ISP
 QKSet_ISP_desc=Prosím přejděte na nastavení ISP a zadejte potřebné informace.
-PPPConnection_UserName_itemdesc=Toto pole je k dispozici pouze, když nastavíte typ připojení WAN HSDPA, PPPoE, PPTP nebo L2TP.
+PPPConnection_UserName_itemdesc=Toto pole je k dispozici pouze, když nastavíte typ připojení WAN USB Modem, PPPoE, PPTP nebo L2TP.
 BOP_account_user_item=Uživatelské jméno:
 BOP_account_pass_item=Heslo:
 QKSet_account_passwd=Heslo k tomuto uživatelskému účtu.
@@ -742,7 +760,7 @@ QKSet_type_rechoice=Prosím vyberte typ WAN
 QKSet_wireless_webtitle=Nastavení bezdrátového připojení
 WLANConfig11b_SSID_itemdesc=Pro bezdrátové připojení nastavte identifikační řetězec o délce až 32 znaků.
 WLANConfig11b_SSID_itemname=SSID:
-WLANConfig11b_x_PSKKey_itemdesc=Toto pole vyžaduje heslo o 8 až 63 znacích, aby byl spuštěn šifrovací proces. Pokud zanecháte toto pole prázdné, původní hodnota [00000000] bude použita jako vaše heslo.
+WLANConfig11b_x_PSKKey_itemdesc=Toto pole vyžaduje heslo o 8 a 63 znaky (písmena, číslice nebo kombinace) nebo 64 hexadecimálních číslic, aby byl spuštěn šifrovací proces. Pokud zanecháte toto pole prázdné, původní hodnota [00000000] bude použita jako vaše heslo.
 WLANConfig11b_x_PSKKey_itemname=Předsdílený WPA klíč:
 WLANConfig11b_WEPDefaultKey_itemdesc=Nastavte klíč WEP pro vysílání dat do vaší bezdrátové sítě.
 WLANConfig11b_WEPDefaultKey_itemname=Index Klíče:
@@ -987,7 +1005,6 @@ FirewallConfig_UrlFilterEnable_itemname=Povolit filtr URL
 FirewallConfig_URLActiveDate_itemname=Datum povolení filtru URL:
 FirewallConfig_URLActiveDate_itemdesc=Toto pole vymezuje datum, kdy bude URL filtr povolen.
 FirewallConfig_URLActiveTime_itemdesc=Toto pole definuje časový interval, kdy bude filtr URL povolen.
-FirewallConfig_URLActiveTime_itemhint3=Čas zahájení je pozdější, než čas ukončení. Tato funkce bude fungovat přes půlnoc.\n Opravdu chcete pokračovat?
 FirewallConfig_URLActiveTime_itemhint2=Neplatné časové období.
 FirewallConfig_UrlFilterDefaultAct_itemname=URL obsahující definovaná slova bude:
 FirewallConfig_UrlFilterDefaultAct_itemdesc=Pokud zvolíte ZAHODIT, URL obsahující definovaná slova v tabulce budou zahozené, nebo nedostupné. Pokud zvolíte PŘIJMOUT, pak pouze ty URL, které obsahují definovaná slova, budou dostupné.
@@ -1419,14 +1436,17 @@ HSDPAConfig_country_itemdesc=Vyberte umístění vašeho ISP.
 HSDPAConfig_dialnum_itemdesc=Zadejte číslo, které chcete vytočit.
 HSDPAConfig_username_itemdesc=Zadejte vaše uživatelské jméno.
 HSDPAConfig_password_itemdesc=Zadejte vaše heslo.
-HSDPAConfig_usbadaptor_itemdesc=Vyberte váš 3G/3.5G usb adaptér.
+HSDPAConfig_usbadaptor_itemdesc=Vyberte váš usb adaptér.
 confirm_disableftp_dm=Deaktivací položky sdílené okolními počítači bude deaktivován správce stahování.
 LANHostConfig_IPRouters_itemdesc=IP adresa LAN RT-N56U. Původní hodnota je 192.168.1.1. Rozsah adres IP místní sítě LAN: 192.168.0.1 - 192.168.255.254, 172.16.0.1 – 172.31.255.254, 10.0.0.1 – 10.255.255.254
-HSDPAConfig_hsdpa_mode_itemdesc=Choose the HSDPA mode according by your requirements and enviroments. We provide four mode below: Backup, Equal weight, Always high and Always low. Chcete-li bezpečně odebrat HSDPA adaptér, viz <a href='/index.asp'>Rejstřík</a> a klepněte na tlačítko adaptéru.
+HSDPAConfig_hsdpa_mode_itemdesc=Choose the USB Modem mode according by your requirements and enviroments. We provide four mode below: Backup, Equal weight, Always high and Always low. Chcete-li bezpečně odebrat USB Modem adaptér, viz <a href='/index.asp'>Rejstřík</a> a klepněte na tlačítko adaptéru.
 Not_authpage_login_again=Chcete-li se znovu přihlásit, nejdříve zavřete toto okno.
-GO_HSDPA_SETTING=Přejít na HSDPA nastavení
+GO_HSDPA_SETTING=Přejít na USB Modem nastavení
+HSDPA_disable=Pokud chcete změnit typ připojení, pleasw naleznete <a href="/Advanced_Modem_others.asp"> <# # GO_HSDPA_SETTING> </ a> vypnout adaptér
 [new strings - translated]
 GO_2G=Přejít na 2.4GHz nastavení
 GO_5G=Přejít na 5GHz nastavení
 [new strings]
 UPnPMediaServerType=Server Type
+HSDPA_LANtoWAN=After enabling USB Modem connection, the WAN port will change to LAN port, please remove the original cable.
+HSDPA_enable_confirm=Prosím ověřte, zda jsou vaše nastavení správná.

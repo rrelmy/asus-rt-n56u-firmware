@@ -65,14 +65,26 @@ static void dump_packet(const struct nf_loginfo *info,
 	}
 
 	/* Max length: 88 "SRC=0000.0000.0000.0000.0000.0000.0000.0000 DST=0000.0000.0000.0000.0000.0000.0000.0000 " */
+#if 0
 	printk("SRC=" NIP6_FMT " DST=" NIP6_FMT " ", NIP6(ih->saddr), NIP6(ih->daddr));
+#else	/* syslog packet */
+	printk(KERN_ALERT "SRC=" NIP6_FMT " DST=" NIP6_FMT " ", NIP6(ih->saddr), NIP6(ih->daddr));
+#endif
 
 	/* Max length: 44 "LEN=65535 TC=255 HOPLIMIT=255 FLOWLBL=FFFFF " */
+#if 0
 	printk("LEN=%Zu TC=%u HOPLIMIT=%u FLOWLBL=%u ",
 	       ntohs(ih->payload_len) + sizeof(struct ipv6hdr),
 	       (ntohl(*(__be32 *)ih) & 0x0ff00000) >> 20,
 	       ih->hop_limit,
 	       (ntohl(*(__be32 *)ih) & 0x000fffff));
+#else	/* syslog packet */
+	printk(KERN_ALERT "LEN=%Zu TC=%u HOPLIMIT=%u FLOWLBL=%u ",
+	       ntohs(ih->payload_len) + sizeof(struct ipv6hdr),
+	       (ntohl(*(__be32 *)ih) & 0x0ff00000) >> 20,
+	       ih->hop_limit,
+               (ntohl(*(__be32 *)ih) & 0x000fffff));
+#endif
 
 	fragment = 0;
 	ptr = ip6hoff + sizeof(struct ipv6hdr);
@@ -218,8 +230,12 @@ static void dump_packet(const struct nf_loginfo *info,
 		}
 
 		/* Max length: 20 "SPT=65535 DPT=65535 " */
+#if 0
 		printk("SPT=%u DPT=%u ",
 		       ntohs(th->source), ntohs(th->dest));
+#else		/* syslog packet */
+		printk(KERN_ALERT "SPT=%u DPT=%u ", ntohs(th->source), ntohs(th->dest));
+#endif
 		/* Max length: 30 "SEQ=4294967295 ACK=4294967295 " */
 		if (logflags & IP6T_LOG_TCPSEQ)
 			printk("SEQ=%u ACK=%u ",
@@ -292,9 +308,15 @@ static void dump_packet(const struct nf_loginfo *info,
 		}
 
 		/* Max length: 20 "SPT=65535 DPT=65535 " */
+#if 0
 		printk("SPT=%u DPT=%u LEN=%u ",
 		       ntohs(uh->source), ntohs(uh->dest),
 		       ntohs(uh->len));
+#else		/* syslog packet */
+		printk(KERN_ALERT "SPT=%u DPT=%u LEN=%u ",
+		       ntohs(uh->source), ntohs(uh->dest),
+		       ntohs(uh->len));
+#endif
 		break;
 	}
 	case IPPROTO_ICMPV6: {
@@ -387,6 +409,8 @@ ip6t_log_packet(unsigned int pf,
 		loginfo = &default_loginfo;
 
 	spin_lock_bh(&log_lock);
+	/* syslog packet */
+	printk(KERN_ALERT "%s ", prefix);
 	printk("<%d>%sIN=%s OUT=%s ", loginfo->u.log.level,
 		prefix,
 		in ? in->name : "",

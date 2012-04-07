@@ -148,9 +148,18 @@ char *mac_conv2(char *mac_name, int idx, char *buf)
 }
 // 2010.09 James. }
 
+int valid_subver(char subfs)
+{
+	printf("validate subfs: %c\n", subfs);	// tmp test
+	if(((subfs >= 'a') && (subfs <= 'z' )) || ((subfs >= 'A') && (subfs <= 'Z' )))
+		return 1;
+	else
+		return 0;
+}
+
 void getsyspara(void)
 {
-	unsigned char buffer[16];
+	unsigned char buffer[32];
 	unsigned int *src;
 	unsigned int *dst;
 	unsigned int bytes;
@@ -162,7 +171,7 @@ void getsyspara(void)
 	char country_code[3];
 	char pin[9];
 	char productid[13];
-	char fwver[8];
+	char fwver[8], fwver_sub[8];
 	char blver[20];
 	unsigned char txbf_para[33];
 
@@ -174,6 +183,7 @@ void getsyspara(void)
 	memset(pin, 0, sizeof(pin));
 	memset(productid, 0, sizeof(productid));
 	memset(fwver, 0, sizeof(fwver));
+	memset(fwver_sub, 0, sizeof(fwver_sub));
 	memset(txbf_para, 0, sizeof(txbf_para));
 
 	if (FRead(dst, OFFSET_MAC_ADDR, bytes)<0)
@@ -248,7 +258,8 @@ void getsyspara(void)
 
 	src = 0x50020;  /* /dev/mtd/3, firmware, starts from 0x50000 */
 	dst = (unsigned int *)buffer;
-	bytes = 16;
+	bytes = sizeof(buffer);
+	printf("Fread %d bytes \n", bytes);	// tmp test
 	if (FRead(dst, src, bytes)<0)
 	{
 		dbg("READ firmware header: Out of scope\n");
@@ -259,9 +270,15 @@ void getsyspara(void)
 	{
 		strncpy(productid, buffer + 4, 12);
 		productid[12] = 0;
+		if(valid_subver(buffer[27]))
+			sprintf(fwver_sub, "%d.%d.%d.%d%c", buffer[0], buffer[1], buffer[2], buffer[3], buffer[27]);
+		else
+			sprintf(fwver_sub, "%d.%d.%d.%d", buffer[0], buffer[1], buffer[2], buffer[3]);
+		
 		sprintf(fwver, "%d.%d.%d.%d", buffer[0], buffer[1], buffer[2], buffer[3]);
 		nvram_set("productid", trim_r(productid));
 		nvram_set("firmver", trim_r(fwver));
+		nvram_set("firmver_sub", trim_r(fwver_sub));
 	}
 
         memset(buffer, 0, sizeof(buffer));
@@ -1051,6 +1068,13 @@ void convert_asus_values(int skipflag)
 
 	if (!nvram_get("hwnat"))
 		nvram_set("hwnat", "1");
+
+	nvram_unset("reboot_timestamp");
+
+	nvram_unset("ddns_cache");
+	nvram_unset("ddns_ipaddr");
+	nvram_unset("ddns_status");
+	nvram_unset("ddns_updated");
 
 	}
 }

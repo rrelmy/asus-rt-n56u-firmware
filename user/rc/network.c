@@ -456,11 +456,10 @@ vconfig()
 	doSystem("ifconfig eth2 hw ether %s", nvram_safe_get("lan_hwaddr"));
 	ifconfig("eth2", IFUP, NULL, NULL);
 
-		if (!nvram_match("wan_hwaddr", ""))
-			doSystem("ifconfig eth3 hw ether %s", nvram_safe_get("wan_hwaddr"));
-		else
-			doSystem("ifconfig eth3 hw ether %s", nvram_safe_get("lan_hwaddr"));
-//	}
+	if (!nvram_match("wan_hwaddr", ""))
+		doSystem("ifconfig eth3 hw ether %s", nvram_safe_get("wan_hwaddr"));
+	else
+		doSystem("ifconfig eth3 hw ether %s", nvram_safe_get("lan_hwaddr"));
 	ifconfig("eth3", IFUP, NULL, NULL);
 
 	ifconfig(WIF, IFUP, NULL, NULL);
@@ -539,29 +538,59 @@ vconfig()
 		if (stbport < 0 || stbport > 6)
 			stbport = 0;
 
-		switch(stbport)
+		if(!strcmp(nvram_safe_get("unifi_malaysia"), "1"))/*Added for Unifi. Cherry Cho added in 2011/6/20.*/
 		{
-			case 1:	// LLLWW
-				system("8367m 8 1");
-				break;
-			case 2:	// LLWLW
-				system("8367m 8 2");
-				break;
-			case 3:	// LWLLW
-				system("8367m 8 3");
-				break;
-			case 4:	// WLLLW
-				system("8367m 8 4");
-				break;
-			case 5:	// WWLLW
-				system("8367m 8 5");
-				break;
-			case 6: // LLWWW
-				system("8367m 8 6");
-				break;
-			default:// LLLLW
-//				system("8367m 8 0");
-				break;
+			switch(stbport)
+			{
+				case 1:	// LLLTW
+					system("8367m 26 1");
+					break;
+				case 2:	// LLTLW
+					system("8367m 26 2");
+					break;
+				case 3:	// LTLLW
+					system("8367m 26 3");
+					break;
+				case 4:	// TLLLW
+					system("8367m 26 4");
+					break;
+				case 5:	// TTLLW
+					system("8367m 26 5");
+					break;
+				case 6: // LLTTW
+					system("8367m 26 6");
+					break;
+				default:// LLLLW
+					system("8367m 26 0");
+					break;
+			}			
+		}
+		else
+		{
+			switch(stbport)
+			{
+				case 1:	// LLLWW
+					system("8367m 8 1");
+					break;
+				case 2:	// LLWLW
+					system("8367m 8 2");
+					break;
+				case 3:	// LWLLW
+					system("8367m 8 3");
+					break;
+				case 4:	// WLLLW
+					system("8367m 8 4");
+					break;
+				case 5:	// WWLLW
+					system("8367m 8 5");
+					break;
+				case 6: // LLWWW
+					system("8367m 8 6");
+					break;
+				default:// LLLLW
+	//				system("8367m 8 0");
+					break;
+			}
 		}
 
 		system("brctl addif br0 eth2");
@@ -574,45 +603,53 @@ vconfig()
 
 	if (!is_ap_mode())
 	{
-	/* unknown unicast storm control */
-	if (!nvram_get("controlrate_unknown_unicast"))
-		controlrate_unknown_unicast = 16;
-	else
-		controlrate_unknown_unicast = atoi(nvram_get("controlrate_unknown_unicast"));
-	if (controlrate_unknown_unicast < 0 || controlrate_unknown_unicast > 1024)
-		controlrate_unknown_unicast = 0;
-	if (controlrate_unknown_unicast)
-		doSystem("8367m 22 %d", controlrate_unknown_unicast);
+		/* unknown unicast storm control */
+		if (!nvram_get("controlrate_unknown_unicast"))
+			controlrate_unknown_unicast = 0;
+		else
+			controlrate_unknown_unicast = atoi(nvram_get("controlrate_unknown_unicast"));
+		if (controlrate_unknown_unicast < 0 || controlrate_unknown_unicast > 1024)
+			controlrate_unknown_unicast = 0;
+		if (controlrate_unknown_unicast)
+			doSystem("8367m 22 %d", controlrate_unknown_unicast);
+//		else
+//			logmessage("rtl8367m", "skip setting unknown unicast strom control rate");
 
-	/* unknown multicast storm control */
-	if (!nvram_get("controlrate_unknown_multicast"))
-		controlrate_unknown_multicast = 20;
-	else
-		controlrate_unknown_multicast = atoi(nvram_get("controlrate_unknown_multicast"));
-	if (controlrate_unknown_multicast < 0 || controlrate_unknown_multicast > 1024)
-		controlrate_unknown_multicast = 0;
-	if (controlrate_unknown_multicast)
-		doSystem("8367m 23 %d", controlrate_unknown_multicast);
+		/* unknown multicast storm control */
+		if (!nvram_get("controlrate_unknown_multicast"))
+			controlrate_unknown_multicast = 0;
+		else
+			controlrate_unknown_multicast = atoi(nvram_get("controlrate_unknown_multicast"));
+		if (controlrate_unknown_multicast < 0 || controlrate_unknown_multicast > 1024)
+			controlrate_unknown_multicast = 0;
+		if (controlrate_unknown_multicast)
+			doSystem("8367m 23 %d", controlrate_unknown_multicast);
+//		else
+//			logmessage("rtl8367m", "skip setting unknown multicast strom control rate");
 
-	/* multicast storm control */
-	if (!nvram_get("controlrate_multicast"))
-		controlrate_multicast = 20;
-	else
-		controlrate_multicast = atoi(nvram_get("controlrate_multicast"));
-	if (controlrate_multicast < 0 || controlrate_multicast > 1024)
-		controlrate_multicast = 0;
-	if (controlrate_multicast)
-		doSystem("8367m 24 %d", controlrate_multicast);
+		/* multicast storm control */
+		if (!nvram_get("controlrate_multicast"))
+			controlrate_multicast = 0;
+		else
+			controlrate_multicast = atoi(nvram_get("controlrate_multicast"));
+		if (controlrate_multicast < 0 || controlrate_multicast > 1024)
+			controlrate_multicast = 0;
+		if (controlrate_multicast)
+			doSystem("8367m 24 %d", controlrate_multicast);
+//		else
+//			logmessage("rtl8367m", "skip setting multicast strom control rate");
 
-	/* broadcast storm control */
-	if (!nvram_get("controlrate_broadcast"))
-		controlrate_broadcast = 16;
-	else
-		controlrate_broadcast = atoi(nvram_get("controlrate_broadcast"));
-	if (controlrate_broadcast < 0 || controlrate_broadcast > 1024)
-		controlrate_broadcast = 0;
-	if (controlrate_broadcast)
-		doSystem("8367m 25 %d", controlrate_broadcast);
+		/* broadcast storm control */
+		if (!nvram_get("controlrate_broadcast"))
+			controlrate_broadcast = 0;
+		else
+			controlrate_broadcast = atoi(nvram_get("controlrate_broadcast"));
+		if (controlrate_broadcast < 0 || controlrate_broadcast > 1024)
+			controlrate_broadcast = 0;
+		if (controlrate_broadcast)
+			doSystem("8367m 25 %d", controlrate_broadcast);
+//		else
+//			logmessage("rtl8367m", "skip setting broadcast strom control rate");
 	}
 
 	rtl8367m_AllPort_linkUp();
@@ -664,6 +701,66 @@ vconfig()
 
 	/* clean up... */
 	nvram_unset("wan0_hwaddr_x");
+}
+
+void
+restart_switch_config()
+{
+	int controlrate_unknown_unicast;
+	int controlrate_unknown_multicast;
+	int controlrate_multicast;
+	int controlrate_broadcast;
+
+	if (is_ap_mode())
+		return;
+
+	/* unknown unicast storm control */
+	if (!nvram_get("controlrate_unknown_unicast"))
+		controlrate_unknown_unicast = 0;
+	else
+		controlrate_unknown_unicast = atoi(nvram_get("controlrate_unknown_unicast"));
+	if (controlrate_unknown_unicast <= 0 || controlrate_unknown_unicast > 1024)
+		controlrate_unknown_unicast = 1024;
+	if (controlrate_unknown_unicast)
+		doSystem("8367m 22 %d", controlrate_unknown_unicast);
+	else
+		logmessage("rtl8367m", "skip setting unknown unicast strom control rate");
+
+	/* unknown multicast storm control */
+	if (!nvram_get("controlrate_unknown_multicast"))
+		controlrate_unknown_multicast = 0;
+	else
+		controlrate_unknown_multicast = atoi(nvram_get("controlrate_unknown_multicast"));
+	if (controlrate_unknown_multicast <= 0 || controlrate_unknown_multicast > 1024)
+		controlrate_unknown_multicast = 1024;
+	if (controlrate_unknown_multicast)
+		doSystem("8367m 23 %d", controlrate_unknown_multicast);
+	else
+		logmessage("rtl8367m", "skip setting unknown multicast strom control rate");
+
+	/* multicast storm control */
+	if (!nvram_get("controlrate_multicast"))
+		controlrate_multicast = 0;
+	else
+		controlrate_multicast = atoi(nvram_get("controlrate_multicast"));
+	if (controlrate_multicast <= 0 || controlrate_multicast > 1024)
+		controlrate_multicast = 1024;
+	if (controlrate_multicast)
+		doSystem("8367m 24 %d", controlrate_multicast);
+	else
+		logmessage("rtl8367m", "skip setting multicast strom control rate");
+
+	/* broadcast storm control */
+	if (!nvram_get("controlrate_broadcast"))
+		controlrate_broadcast = 0;
+	else
+		controlrate_broadcast = atoi(nvram_get("controlrate_broadcast"));
+	if (controlrate_broadcast <= 0 || controlrate_broadcast > 1024)
+		controlrate_broadcast = 1024;
+	if (controlrate_broadcast)
+		doSystem("8367m 25 %d", controlrate_broadcast);
+	else
+		logmessage("rtl8367m", "skip setting broadcast strom control rate");
 }
 
 void
@@ -1045,7 +1142,7 @@ stop_3g()
 }
 #endif
 
-static int enable_qos()
+int enable_qos()
 {
 #if defined (W7_LOGO) || defined (WIFI_LOGO)
 	return 0;
@@ -1146,7 +1243,7 @@ start_wan(void)
 		!is_hwnat_loaded()
 	)
 	{
-		if (nvram_match("hwnat", "1"))
+		if (nvram_match("hwnat", "1") && nvram_match("fw_pt_l2tp", "0") && nvram_match("fw_pt_ipsec", "0"))
 			system("insmod -q hw_nat.ko");
 	}
 #ifdef ASUS_EXT
@@ -1336,8 +1433,9 @@ start_wan(void)
 				nvram_safe_get(strcat_r(prefix, "pppoe_ipaddr", tmp)),
 				nvram_safe_get(strcat_r(prefix, "pppoe_netmask", tmp)));
 
-//			if (strcmp(wan_proto, "pppoe") != 0)	/* pptp, l2tp, pppoe too */
-//			{
+			if (strcmp(wan_proto, "pppoe") || (!strcmp(wan_proto, "pppoe") && nvram_match("pppoe_dhcp_route", "1")))
+			/* pptp, l2tp */ /* PPPoE doesn't need to run udhcpc. Cherry Cho modified in 2011/6/13. */
+			{
 				/* launch dhcp client and wait for lease forawhile */
 				if (nvram_match(strcat_r(prefix, "pppoe_ipaddr", tmp), "0.0.0.0")) 
 				{
@@ -1371,7 +1469,7 @@ start_wan(void)
 					/* start multicast router */
 					start_igmpproxy(wan_ifname);
 				}
-//			}
+			}
 // ~ oleg patch
 
 			/* launch pppoe client daemon */
@@ -1433,7 +1531,7 @@ start_wan(void)
 		) {
 //			char *wan_hostname = nvram_safe_get(strcat_r(prefix, "hostname", tmp));
 			char *wan_hostname;
-			if (!nvram_match("computer_name", ""))
+			if (!nvram_match("computer_name", "") && is_valid_hostname(nvram_safe_get("computer_name")))
 				wan_hostname = nvram_safe_get("computer_name");
 			else
 				wan_hostname = nvram_safe_get("productid");
@@ -1671,6 +1769,11 @@ update_resolvconf(void)
 {
 	FILE *fp;
 	char word[256], *next;
+	int auto_set = 0;
+	int auto_set2 = 0;
+
+	nvram_set("auto_dhcp_dns", "");
+	nvram_set("auto_dhcp_dns2", "");
 
 	while (strcmp(nvram_safe_get("update_resolv"), "used") == 0)
 		continue;
@@ -1689,10 +1792,20 @@ update_resolvconf(void)
 
 	/* Write resolv.conf with upstream nameservers */
 	//foreach(word, ((strlen(nvram_safe_get("wan_dns_t")) > 0) ? nvram_safe_get("wan_dns_t"):
-	foreach(word, (*nvram_safe_get("wan0_dns") ? nvram_safe_get("wan0_dns") :
+	foreach(word, (strlen(nvram_safe_get("wan0_dns")) ? nvram_safe_get("wan0_dns") :
                 nvram_safe_get("wanx_dns")), next)
         {
                 fprintf(fp, "nameserver %s\n", word);
+                if(!auto_set)
+                {
+                        nvram_set("auto_dhcp_dns", word);
+                        ++auto_set;
+                }
+		else if(!auto_set2)
+		{
+			nvram_set("auto_dhcp_dns2", word);
+			++auto_set2;
+		}
         }
         fclose(fp);
 
@@ -1757,6 +1870,8 @@ wan_up(char *wan_ifname)	// oleg patch, replace
 		start_igmpproxy(wan_ifname);
 //#endif
 		update_resolvconf();
+		if (strcmp(wan_proto, "static"))
+		restart_dhcpd();
 
 //		nvram_set("wanup_mem_cric", "0");
 		return;
@@ -1804,6 +1919,8 @@ wan_up(char *wan_ifname)	// oleg patch, replace
 
 	/* Add dns servers to resolv.conf */
 	update_resolvconf();
+	if (strcmp(wan_proto, "static"))
+	restart_dhcpd();
 
 	/* Sync time */
 #ifdef ASUS_EXT
@@ -1951,10 +2068,13 @@ Speedtest_Init_failed_wan_up:
 			!is_hwnat_loaded()
 		)
 		{
-			if (nvram_match("hwnat", "1"))
+			if (nvram_match("hwnat", "1") && nvram_match("fw_pt_l2tp", "0") && nvram_match("fw_pt_ipsec", "0"))
 				system("insmod -q hw_nat.ko");
 		}
 	}
+
+	logmessage("RT-N56U", "Hardware NAT: %s", is_hwnat_loaded() ? "Enabled": "Disabled");
+	logmessage("RT-N56U", "Software QoS: %s", nvram_match("qos_enable", "1") ? "Enabled": "Disabled");
 #endif
 //2008.10 magic}
 
@@ -2373,35 +2493,9 @@ has_wan_ip()
 		return 0;
 }
 
-// 2010.09 James modified. {
 int
 got_wan_ip()
 {
-	/*int s;
-	struct ifreq ifr;
-	struct in_addr in_addr;
-
-	if (nvram_match("wan_route_x", "IP_Bridged"))
-		return 0;
-
-	// Retrieve IP info
-	if ((s = socket(AF_INET, SOCK_RAW, IPPROTO_RAW)) < 0)
-		return 0;
-
-	if (nvram_match("wan0_proto", "dhcp") || nvram_match("wan0_proto", "static"))
-		strncpy(ifr.ifr_name, "eth3", IFNAMSIZ);
-	else
-		strncpy(ifr.ifr_name, "ppp0", IFNAMSIZ);
-	inet_aton("0.0.0.0", &in_addr);
-	sin_addr(&ifr.ifr_addr).s_addr = in_addr.s_addr;
-
-	// Get IP address
-	ioctl(s, SIOCGIFADDR, &ifr);
-	close(s);
-
-//	dbg("current WAN IP address: %s\n", inet_ntoa(sin_addr(&ifr.ifr_addr)));
-
-	if ((strcmp("0.0.0.0", inet_ntoa(sin_addr(&ifr.ifr_addr)))))//*/
 	char *wan_ip = nvram_safe_get("wan_ipaddr_t");
 	if (strcmp("", wan_ip) && strcmp("0.0.0.0", wan_ip))
 		return 1;
@@ -2541,7 +2635,7 @@ void print_num_of_connections()
 
         fp = fopen("/proc/sys/net/nf_conntrack_max", "r");
         if (!fp) {
-                fprintf(stderr, "connection max: ?!\n");
+		fprintf(stderr, "connection max: ?!\n");
 		dbg("connection max: ?!\n");
                 return;
         }
@@ -2553,7 +2647,7 @@ void print_num_of_connections()
         sscanf(buf, "%s", entries);
         num_of_entries = strtoul(entries, NULL, 10);
 
-        fprintf(stderr, "connection max: %ld\n", num_of_entries);
+	fprintf(stderr, "connection max: %ld\n", num_of_entries);
 	dbg("connection max: %ld\n", num_of_entries);
 }
 
@@ -2585,7 +2679,7 @@ print_uptime(void)
 
         FILE *fp = fopen("/proc/uptime", "r");
         if (!fp) {
-                fprintf(stderr, "fopen error!\n");
+		fprintf(stderr, "fopen error!\n");
 		dbg("fopen error!\n");
                 return;
         }
@@ -2595,7 +2689,7 @@ print_uptime(void)
 
         secs = atof(buf);
         reltime((unsigned long) secs, buf);
-        fprintf(stderr, "uptime: %s\n\n", buf);
+	fprintf(stderr, "uptime: %s\n\n", buf);
 	dbg("uptime: %s\n\n", buf);
 }
 

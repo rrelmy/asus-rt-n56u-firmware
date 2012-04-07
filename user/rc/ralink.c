@@ -53,6 +53,47 @@ typedef u_int8_t u8;
 int g_wsc_configured = 0;
 int g_isEnrollee = 0;
 
+#define IMG_SIZE        8388608
+
+int
+getIMG()
+{
+        unsigned char buffer[2000];
+        memset(buffer, 0, sizeof(buffer));
+        int fd, offs, len;
+
+        printf("getIMG...\n");  // tmp test
+
+        if(((fd = open("/tmp/img.trx", O_RDWR|O_CREAT)) < 0))
+        {
+                perror("open tmp img err");
+                return -1;
+        }
+        offs = 0;
+        while(offs < IMG_SIZE)
+        {
+                memset(buffer, 0, sizeof(buffer));
+                if((len = IMG_SIZE - offs) > 2000)
+                        len = 2000;
+
+                if(FRead((unsigned int *)buffer, offs, len) < 0)
+                {
+                        fprintf(stderr, "READ IMG error: Out of scope\n");
+                        break;
+                }
+                else
+                {
+                        printf("## write img from  %x to  %x\n", offs, offs+len);
+                        offs+=len;
+                        write(fd, buffer, len);
+                }
+        }
+        close(fd);
+
+        printf("\ndone.\n");
+        return 0;
+}
+
 int
 getMAC()
 {
@@ -1098,12 +1139,12 @@ int gen_ralink_config()
 	sprintf(list, "wl_key%s", nvram_safe_get("wl_key"));
 	if ((strlen(nvram_safe_get(list)) == 5) || (strlen(nvram_safe_get(list)) == 13))
 	{
-		nvram_set("rt_key_type", "1");
+		nvram_set("wl_key_type", "1");
 		warning = 261;
 	}
 	else if ((strlen(nvram_safe_get(list)) == 10) || (strlen(nvram_safe_get(list)) == 26))
 	{
-		nvram_set("rt_key_type", "0");
+		nvram_set("wl_key_type", "0");
 		warning = 262;
 	}
 	else if ((strlen(nvram_safe_get(list)) != 0))

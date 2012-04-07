@@ -157,7 +157,6 @@ dir_$(CONFIG_USER_SNMPD) 		    += snmpd
 dir_$(CONFIG_USER_HELLO_WORLD)		    += hello_world
 #--
 
-dir_y						+= wanduck
 dir_y						+= extra_bin
 #dir_y						+= xfr_test
 #dir_y						+= libmplus

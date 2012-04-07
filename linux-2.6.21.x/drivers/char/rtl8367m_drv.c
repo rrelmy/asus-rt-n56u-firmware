@@ -703,6 +703,358 @@ void LANWANPartition_adv(int wan_stb_x)
 	}
 }
 
+void LANWANPartition_unifi(int wan_stb_x)//Cherry Cho added for Malaysia Unifi issues in 2011/6/17.
+{
+	rtk_portmask_t portmask, mbrmsk, untagmsk;
+
+	rtk_vlan_init();
+	
+        /* set VLAN filtering for each LAN port */
+	rtk_vlan_portIgrFilterEnable_set(0, ENABLED);
+	rtk_vlan_portIgrFilterEnable_set(1, ENABLED);
+	rtk_vlan_portIgrFilterEnable_set(2, ENABLED);
+	rtk_vlan_portIgrFilterEnable_set(3, ENABLED);
+	rtk_vlan_portIgrFilterEnable_set(4, ENABLED);
+	rtk_vlan_portIgrFilterEnable_set(8, ENABLED);
+	rtk_vlan_portIgrFilterEnable_set(9, ENABLED);
+
+
+	switch(wan_stb_x)
+	{
+		case 1: /* STB Port: P3  LAN: P0,P1,P2  WAN: P4   LAN_PORT_1 = P3 */
+			printk("Unifi - STB Port:P3 LAN:P0,P1,P2\n");
+			/* LAN */
+    			portmask.bits[0] = 0x107;
+			rtk_port_isolation_set(0, portmask);
+			rtk_port_isolation_set(1, portmask);
+			rtk_port_isolation_set(2, portmask);
+			rtk_port_isolation_set(8, portmask);
+ 
+			/* WAN */
+			portmask.bits[0] = 0x210;
+			rtk_port_isolation_set(9, portmask);
+			portmask.bits[0] = 0x218;
+			rtk_port_isolation_set(4, portmask);
+			portmask.bits[0] = 0x018;
+			rtk_port_isolation_set(3, portmask);
+    
+ 
+			/* EFID setting LAN */
+			rtk_port_efid_set(0, 0);
+			rtk_port_efid_set(1, 0);
+			rtk_port_efid_set(2, 0);
+			rtk_port_efid_set(8, 0);
+ 
+			/* EFID setting WAN */
+			rtk_port_efid_set(3, 1);    
+			rtk_port_efid_set(4, 1);
+			rtk_port_efid_set(9, 1);
+
+
+           		//default VLAN 1: VID = 500 
+			mbrmsk.bits[0] = 0x0317;  //exclude P3
+			untagmsk.bits[0] = 0x0307;
+			rtk_vlan_set(500,mbrmsk, untagmsk, 0);
+
+			/* set PVID for P0 P1 P2 P4 P8 P9 */
+			rtk_vlan_portPvid_set (0, 500, 0);
+			rtk_vlan_portPvid_set (1, 500, 0);
+			rtk_vlan_portPvid_set (2, 500, 0);
+			rtk_vlan_portPvid_set (4, 500, 0);
+			rtk_vlan_portPvid_set (8, 500, 0);
+			rtk_vlan_portPvid_set (9, 500, 0);
+
+			/* VLAN 2: VID = 600 */
+		        mbrmsk.bits[0] = 0x0018;
+            		untagmsk.bits[0] = 0x0008;
+			rtk_vlan_set(600,mbrmsk, untagmsk, 0);
+
+           		/* set PVID for P3 */
+			rtk_vlan_portPvid_set (3, 600, 0);
+			break;
+
+		case 2:/* STB Port:P2 LAN:P0,P1,P3  LAN_PORT_2 = P2 */
+			printk("Unifi - STB Port:P2 LAN:P0,P1,P3\n");
+			/* LAN */
+ 			portmask.bits[0] = 0x10B;
+			rtk_port_isolation_set(0, portmask);
+			rtk_port_isolation_set(1, portmask);
+			rtk_port_isolation_set(3, portmask);
+			rtk_port_isolation_set(8, portmask);
+ 
+			/* WAN */
+			portmask.bits[0] = 0x210;
+			rtk_port_isolation_set(9, portmask);
+			portmask.bits[0] = 0x214;
+			rtk_port_isolation_set(4, portmask);
+			portmask.bits[0] = 0x014;
+			rtk_port_isolation_set(2, portmask);
+    
+ 
+			/* EFID setting LAN */
+			rtk_port_efid_set(0, 0);
+			rtk_port_efid_set(1, 0);
+			rtk_port_efid_set(3, 0);
+			rtk_port_efid_set(8, 0);
+ 
+			/* EFID setting WAN */
+			rtk_port_efid_set(2, 1);    
+			rtk_port_efid_set(4, 1);
+			rtk_port_efid_set(9, 1);
+
+
+         		//default VLAN 1: VID = 500 
+			mbrmsk.bits[0] = 0x031B;  //exclude P2
+			untagmsk.bits[0] = 0x030B;
+			rtk_vlan_set(500,mbrmsk, untagmsk, 0);
+
+			/* set PVID for P0 P1 P3 P4 P8 P9 */
+			rtk_vlan_portPvid_set (0, 500, 0);
+			rtk_vlan_portPvid_set (1, 500, 0);
+			rtk_vlan_portPvid_set (3, 500, 0);
+			rtk_vlan_portPvid_set (4, 500, 0);
+			rtk_vlan_portPvid_set (8, 500, 0);
+			rtk_vlan_portPvid_set (9, 500, 0);
+
+			/* VLAN 2: VID = 600 */
+		        mbrmsk.bits[0] = 0x0014;
+            		untagmsk.bits[0] = 0x0004;
+			rtk_vlan_set(600,mbrmsk, untagmsk, 0);
+
+           		/* set PVID for P2 */
+			rtk_vlan_portPvid_set (2, 600, 0);
+			break;
+
+		case 3:/* STB Port:P1 LAN:P0 P2 P3  LAN_PORT_3 = P1 */
+			printk("Unifi - STB Port:P1 LAN:P0,P2,P3\n");	
+			/* LAN */
+ 			portmask.bits[0] = 0x10D;
+			rtk_port_isolation_set(0, portmask);
+			rtk_port_isolation_set(2, portmask);
+			rtk_port_isolation_set(3, portmask);
+			rtk_port_isolation_set(8, portmask);
+ 
+			/* WAN */
+			portmask.bits[0] = 0x210;
+			rtk_port_isolation_set(9, portmask);
+			portmask.bits[0] = 0x212;
+			rtk_port_isolation_set(4, portmask);
+			portmask.bits[0] = 0x012;
+			rtk_port_isolation_set(1, portmask);
+    
+ 
+			/* EFID setting LAN */
+			rtk_port_efid_set(0, 0);
+			rtk_port_efid_set(2, 0);
+			rtk_port_efid_set(3, 0);
+			rtk_port_efid_set(8, 0);
+ 
+			/* EFID setting WAN */
+			rtk_port_efid_set(1, 1);    
+			rtk_port_efid_set(4, 1);
+			rtk_port_efid_set(9, 1);
+
+
+         		//default VLAN 1: VID = 500 
+			mbrmsk.bits[0] = 0x031D;  //exclude P1
+			untagmsk.bits[0] = 0x030D;
+			rtk_vlan_set(500,mbrmsk, untagmsk, 0);
+
+			/* set PVID for P0 P2 P3 P4 P8 P9 */
+			rtk_vlan_portPvid_set (0, 500, 0);
+			rtk_vlan_portPvid_set (2, 500, 0);
+			rtk_vlan_portPvid_set (3, 500, 0);
+			rtk_vlan_portPvid_set (4, 500, 0);
+			rtk_vlan_portPvid_set (8, 500, 0);
+			rtk_vlan_portPvid_set (9, 500, 0);
+
+			/* VLAN 2: VID = 600 */
+		        mbrmsk.bits[0] = 0x0012;
+            		untagmsk.bits[0] = 0x0002;
+			rtk_vlan_set(600,mbrmsk, untagmsk, 0);
+
+           		/* set PVID for P1 */
+			rtk_vlan_portPvid_set (1, 600, 0);		
+			break;
+
+		case 4:/* STB Port:P0 LAN:P0 P2 P3  LAN_PORT_4 = P0 */
+			printk("Unifi - STB Port:P0 LAN:P1,P2,P3\n");	
+			/* LAN */
+ 			portmask.bits[0] = 0x10E;
+			rtk_port_isolation_set(1, portmask);
+			rtk_port_isolation_set(2, portmask);
+			rtk_port_isolation_set(3, portmask);
+			rtk_port_isolation_set(8, portmask);
+ 
+			/* WAN */
+			portmask.bits[0] = 0x210;
+			rtk_port_isolation_set(9, portmask);
+			portmask.bits[0] = 0x211;
+			rtk_port_isolation_set(4, portmask);
+			portmask.bits[0] = 0x011;
+			rtk_port_isolation_set(0, portmask);
+    
+ 
+			/* EFID setting LAN */
+			rtk_port_efid_set(1, 0);
+			rtk_port_efid_set(2, 0);
+			rtk_port_efid_set(3, 0);
+			rtk_port_efid_set(8, 0);
+ 
+			/* EFID setting WAN */
+			rtk_port_efid_set(0, 1);    
+			rtk_port_efid_set(4, 1);
+			rtk_port_efid_set(9, 1);
+
+
+         		//default VLAN 1: VID = 500 
+			mbrmsk.bits[0] = 0x031E;  //exclude P0
+			untagmsk.bits[0] = 0x030E;
+			rtk_vlan_set(500,mbrmsk, untagmsk, 0);
+
+			/* set PVID for P1 P2 P3 P4 P8 P9 */
+			rtk_vlan_portPvid_set (1, 500, 0);
+			rtk_vlan_portPvid_set (2, 500, 0);
+			rtk_vlan_portPvid_set (3, 500, 0);
+			rtk_vlan_portPvid_set (4, 500, 0);
+			rtk_vlan_portPvid_set (8, 500, 0);
+			rtk_vlan_portPvid_set (9, 500, 0);
+
+			/* VLAN 2: VID = 600 */
+		        mbrmsk.bits[0] = 0x0011;
+            		untagmsk.bits[0] = 0x0001;
+			rtk_vlan_set(600,mbrmsk, untagmsk, 0);
+
+           		/* set PVID for P0 */
+			rtk_vlan_portPvid_set (0, 600, 0);	
+			break;
+
+		case 5:
+			printk("Unifi - STB Port:P0,P1 LAN:P2,P3\n");	
+			/* LAN */
+ 			portmask.bits[0] = 0x10C;
+			rtk_port_isolation_set(2, portmask);
+			rtk_port_isolation_set(3, portmask);
+			rtk_port_isolation_set(8, portmask);
+ 
+			/* WAN */
+			portmask.bits[0] = 0x210;
+			rtk_port_isolation_set(9, portmask);
+			portmask.bits[0] = 0x213;
+			rtk_port_isolation_set(4, portmask);
+			portmask.bits[0] = 0x011;
+			rtk_port_isolation_set(0, portmask);
+			portmask.bits[0] = 0x012;
+			rtk_port_isolation_set(1, portmask);
+    
+ 
+			/* EFID setting LAN */
+			rtk_port_efid_set(2, 0);
+			rtk_port_efid_set(3, 0);
+			rtk_port_efid_set(8, 0);
+ 
+			/* EFID setting WAN */
+			rtk_port_efid_set(0, 1);    
+			rtk_port_efid_set(1, 1);    
+			rtk_port_efid_set(4, 1);
+			rtk_port_efid_set(9, 1);
+
+
+         		//default VLAN 1: VID = 500 
+			mbrmsk.bits[0] = 0x031C;  //exclude P0 P1
+			untagmsk.bits[0] = 0x030C;
+			rtk_vlan_set(500,mbrmsk, untagmsk, 0);
+
+			/* set PVID for P2 P3 P4 P8 P9 */
+			rtk_vlan_portPvid_set (2, 500, 0);
+			rtk_vlan_portPvid_set (3, 500, 0);
+			rtk_vlan_portPvid_set (4, 500, 0);
+			rtk_vlan_portPvid_set (8, 500, 0);
+			rtk_vlan_portPvid_set (9, 500, 0);
+
+			/* VLAN 2: VID = 600 */
+		        mbrmsk.bits[0] = 0x0013;
+            		untagmsk.bits[0] = 0x0003;
+			rtk_vlan_set(600,mbrmsk, untagmsk, 0);
+
+           		/* set PVID for P0 & P1*/
+			rtk_vlan_portPvid_set (0, 600, 0);	
+			rtk_vlan_portPvid_set (1, 600, 0);
+			break;
+
+		case 6:
+			printk("Unifi - STB Port:P2,P3 LAN:P0,P1\n");
+			/* LAN */
+ 			portmask.bits[0] = 0x103;
+			rtk_port_isolation_set(0, portmask);
+			rtk_port_isolation_set(1, portmask);
+			rtk_port_isolation_set(8, portmask);
+
+			/* WAN */
+			portmask.bits[0] = 0x210;
+			rtk_port_isolation_set(9, portmask);
+			portmask.bits[0] = 0x21C;
+			rtk_port_isolation_set(4, portmask);
+			portmask.bits[0] = 0x014;
+			rtk_port_isolation_set(2, portmask);
+			portmask.bits[0] = 0x018;
+			rtk_port_isolation_set(3, portmask);
+    
+ 
+			/* EFID setting LAN */
+			rtk_port_efid_set(0, 0);
+			rtk_port_efid_set(1, 0);
+			rtk_port_efid_set(8, 0);
+ 
+			/* EFID setting WAN */
+			rtk_port_efid_set(2, 1);    
+			rtk_port_efid_set(3, 1);    
+			rtk_port_efid_set(4, 1);
+			rtk_port_efid_set(9, 1);
+
+
+        		//default VLAN 1: VID = 500 
+			mbrmsk.bits[0] = 0x0313;  //exclude P3
+			untagmsk.bits[0] = 0x0303;
+			rtk_vlan_set(500,mbrmsk, untagmsk, 0);
+
+			/* set PVID for P0 P1 P4 P8 P9 */
+			rtk_vlan_portPvid_set (0, 500, 0);
+			rtk_vlan_portPvid_set (1, 500, 0);
+			rtk_vlan_portPvid_set (4, 500, 0);
+			rtk_vlan_portPvid_set (8, 500, 0);
+			rtk_vlan_portPvid_set (9, 500, 0);
+
+			/* VLAN 2: VID = 600 */
+		        mbrmsk.bits[0] = 0x001C;
+            		untagmsk.bits[0] = 0x000C;
+			rtk_vlan_set(600,mbrmsk, untagmsk, 0);
+
+           		/* set PVID for port3 */
+			rtk_vlan_portPvid_set (2, 600, 0);
+			rtk_vlan_portPvid_set (3, 600, 0);		
+			break;
+
+		default:
+			printk("LAN: P0,P1,P2,P3 WAN: P4\n");
+           		//default VLAN 1: VID = 500 
+			mbrmsk.bits[0] = 0x031F;
+			untagmsk.bits[0] = 0x030F;
+			rtk_vlan_set(500,mbrmsk, untagmsk, 0);
+
+			/* set PVID for P0 P1 P2 P3 P4 P8 P9 */
+			rtk_vlan_portPvid_set (0, 500, 0);
+			rtk_vlan_portPvid_set (1, 500, 0);
+			rtk_vlan_portPvid_set (2, 500, 0);
+			rtk_vlan_portPvid_set (3, 500, 0);
+			rtk_vlan_portPvid_set (4, 500, 0);
+			rtk_vlan_portPvid_set (8, 500, 0);
+			rtk_vlan_portPvid_set (9, 500, 0);
+			break;
+	}
+
+}
+
 rtk_api_ret_t rtk_port_linkStatus_get(rtk_port_t port, rtk_port_linkStatus_t *pLinkStatus)
 {
     rtk_api_ret_t retVal;
@@ -1702,7 +2054,7 @@ int rtl8367m_ioctl(struct inode *inode, struct file *file, unsigned int req,
 		copy_from_user(&control_rate, (unsigned int __user *)arg, sizeof(unsigned int));
 		if ((control_rate < 1) || (control_rate > 1024))
 			break;
-		printk("set unknown unicast strom control as: %d\n", control_rate);
+		printk("set unknown unicast strom control rate as: %d\n", control_rate);
 		rtk_storm_controlRate_set(0, STORM_GROUP_UNKNOWN_UNICAST, control_rate*1024, 1, 0);
 		rtk_storm_controlRate_set(1, STORM_GROUP_UNKNOWN_UNICAST, control_rate*1024, 1, 0);
 		rtk_storm_controlRate_set(2, STORM_GROUP_UNKNOWN_UNICAST, control_rate*1024, 1, 0);
@@ -1715,7 +2067,7 @@ int rtl8367m_ioctl(struct inode *inode, struct file *file, unsigned int req,
 		copy_from_user(&control_rate, (unsigned int __user *)arg, sizeof(unsigned int));
 		if ((control_rate < 1) || (control_rate > 1024))
 			break;
-		printk("set unknown multicast strom control as: %d\n", control_rate);
+		printk("set unknown multicast strom control rate as: %d\n", control_rate);
 		rtk_storm_controlRate_set(0, STORM_GROUP_UNKNOWN_MULTICAST, control_rate*1024, 1, 0);
 		rtk_storm_controlRate_set(1, STORM_GROUP_UNKNOWN_MULTICAST, control_rate*1024, 1, 0);
 		rtk_storm_controlRate_set(2, STORM_GROUP_UNKNOWN_MULTICAST, control_rate*1024, 1, 0);
@@ -1728,7 +2080,7 @@ int rtl8367m_ioctl(struct inode *inode, struct file *file, unsigned int req,
 		copy_from_user(&control_rate, (unsigned int __user *)arg, sizeof(unsigned int));
 		if ((control_rate < 1) || (control_rate > 1024))
 			break;
-		printk("set multicast strom control as: %d\n", control_rate);
+		printk("set multicast strom control rate as: %d\n", control_rate);
 		rtk_storm_controlRate_set(0, STORM_GROUP_MULTICAST, control_rate*1024, 1, 0);
 		rtk_storm_controlRate_set(1, STORM_GROUP_MULTICAST, control_rate*1024, 1, 0);
 		rtk_storm_controlRate_set(2, STORM_GROUP_MULTICAST, control_rate*1024, 1, 0);
@@ -1741,13 +2093,143 @@ int rtl8367m_ioctl(struct inode *inode, struct file *file, unsigned int req,
 		copy_from_user(&control_rate, (unsigned int __user *)arg, sizeof(unsigned int));
 		if ((control_rate < 1) || (control_rate > 1024))
 			break;
-		printk("set broadcast strom control as: %d\n", control_rate);
+		printk("set broadcast strom control rate as: %d\n", control_rate);
 		rtk_storm_controlRate_set(0, STORM_GROUP_BROADCAST, control_rate*1024, 1, 0);
 		rtk_storm_controlRate_set(1, STORM_GROUP_BROADCAST, control_rate*1024, 1, 0);
 		rtk_storm_controlRate_set(2, STORM_GROUP_BROADCAST, control_rate*1024, 1, 0);
 		rtk_storm_controlRate_set(3, STORM_GROUP_BROADCAST, control_rate*1024, 1, 0);
 		rtk_storm_controlRate_set(4, STORM_GROUP_BROADCAST, control_rate*1024, 1, 0);
 		
+		break;
+
+	case 26: //Malaysia Unifi support. Cherry Cho added in 2011/6/17.
+		printk("Malaysia Unifi support setting\n");
+		copy_from_user(&wan_stb_x, (int __user *)arg, sizeof(int));
+		wan_stb_g = wan_stb_x;
+		LANWANPartition_unifi(wan_stb_x);
+
+		break;
+
+	case 27:
+		printk("software reset RTL8367M...\n");
+		rtl8370_setAsicReg(0x1322, 1);	// software reset
+		msleep(1000);
+	
+		int retVal;
+		retVal = rtk_switch_init();
+		printk("rtk_switch_init() return %d\n", retVal);
+		if (retVal !=RT_ERR_OK) return retVal;
+	
+		rtk_port_mac_ability_t mac_cfg;
+		mac_cfg.forcemode	= MAC_FORCE;
+		mac_cfg.speed		= SPD_1000M;
+		mac_cfg.duplex		= FULL_DUPLEX;
+		mac_cfg.link		= 1;
+		mac_cfg.nway		= 0;
+		mac_cfg.rxpause		= 1;
+		mac_cfg.txpause		= 1;
+	
+		retVal = rtk_port_macForceLinkExt0_set(MODE_EXT_RGMII, &mac_cfg);	// WAN port
+		printk("rtk_port_macForceLinkExt0_set(): return %d\n", retVal);
+		if (retVal !=RT_ERR_OK) return retVal;
+		retVal = rtk_port_macForceLinkExt1_set(MODE_EXT_RGMII, &mac_cfg);	// LAN ports
+		printk("rtk_port_macForceLinkExt1_set(): return %d\n", retVal);
+		if (retVal !=RT_ERR_OK) return retVal;
+	
+		/* power down all ports */
+		rtk_port_phy_data_t pData;
+		printk("power down all ports\n");
+	
+		rtk_port_phyReg_get(LAN_PORT_4, PHY_CONTROL_REG, &pData);
+		pData |= CONTROL_REG_PORT_POWER_BIT;
+		rtk_port_phyReg_set(LAN_PORT_4, PHY_CONTROL_REG, pData);
+	
+		rtk_port_phyReg_get(LAN_PORT_3, PHY_CONTROL_REG, &pData);
+		pData |= CONTROL_REG_PORT_POWER_BIT;
+		rtk_port_phyReg_set(LAN_PORT_3, PHY_CONTROL_REG, pData);
+	
+		rtk_port_phyReg_get(LAN_PORT_2, PHY_CONTROL_REG, &pData);
+		pData |= CONTROL_REG_PORT_POWER_BIT;
+		rtk_port_phyReg_set(LAN_PORT_2, PHY_CONTROL_REG, pData);
+	
+		rtk_port_phyReg_get(LAN_PORT_1, PHY_CONTROL_REG, &pData);
+		pData |= CONTROL_REG_PORT_POWER_BIT;
+		rtk_port_phyReg_set(LAN_PORT_1, PHY_CONTROL_REG, pData);
+	
+		rtk_port_phyReg_get(4, PHY_CONTROL_REG, &pData);
+		pData |= CONTROL_REG_PORT_POWER_BIT;
+		rtk_port_phyReg_set(4, PHY_CONTROL_REG, pData);
+	
+		rtk_data_t txDelay_ro, rxDelay_ro;	
+		rtk_port_rgmiiDelayExt0_get(&txDelay_ro, &rxDelay_ro);
+		printk("org Ext0 txDelay: %d, rxDelay: %d\n", txDelay_ro, rxDelay_ro);
+		rtk_port_rgmiiDelayExt1_get(&txDelay_ro, &rxDelay_ro);
+		printk("org Ext1 txDelay: %d, rxDelay: %d\n", txDelay_ro, rxDelay_ro);
+	
+		rtk_data_t txDelay_ext0 = 1;
+#ifdef SR3
+		rtk_data_t rxDelay_ext0 = 0;
+#else
+		rtk_data_t rxDelay_ext0 = 3;
+#endif
+		printk("new Ext0 txDelay: %d, rxDelay: %d\n", txDelay_ext0, rxDelay_ext0);
+		retVal = rtk_port_rgmiiDelayExt0_set(txDelay_ext0, rxDelay_ext0);
+		printk("rtk_port_rgmiiDelayExt0_set(): return %d\n", retVal);
+		if (retVal !=RT_ERR_OK) return retVal;
+	
+		rtk_data_t txDelay_ext1 = 1;
+#ifdef SR3
+		rtk_data_t rxDelay_ext1 = 0;
+#else
+		rtk_data_t rxDelay_ext1 = 3;
+#endif
+		printk("new Ext1 txDelay: %d, rxDelay: %d\n", txDelay_ext1, rxDelay_ext1);
+		retVal = rtk_port_rgmiiDelayExt1_set(txDelay_ext1, rxDelay_ext1);
+		printk("rtk_port_rgmiiDelayExt1_set(): return %d\n", retVal);
+		if (retVal !=RT_ERR_OK) return retVal;
+	
+		rtk_portmask_t portmask;
+		portmask.bits[0] = 0x1F;
+	
+		retVal = rtk_led_enable_set(LED_GROUP_0, portmask);
+		printk("rtk_led_enable_set(LED_GROUP_0...): return %d\n", retVal);
+		retVal = rtk_led_enable_set(LED_GROUP_1, portmask);
+		printk("rtk_led_enable_set(LED_GROUP_1...): return %d\n", retVal);
+	
+		retVal = rtk_led_operation_set(LED_OP_PARALLEL);
+		printk("rtk_led_operation_set(): return %d\n", retVal);
+/*
+		retVal = rtk_led_mode_set(LED_MODE_1);
+		printk("rtk_led_mode_set(): return %d\n", retVal);
+	
+		retVal = rtk_led_blinkRate_set(LED_BLINKRATE_256MS);
+		printk("rtk_led_blinkRate_set(): return %d\n", retVal);
+*/
+		retVal = rtk_led_groupConfig_set(LED_GROUP_0, LED_CONFIG_SPD10010ACT);
+		printk("rtk_led_groupConfig_set(LED_GROUP_0...): return %d\n", retVal);
+		retVal = rtk_led_groupConfig_set(LED_GROUP_1, LED_CONFIG_SPD1000ACT);
+		printk("rtk_led_groupConfig_set(LED_GROUP_1...): return %d\n", retVal);
+	
+		rtk_data_t BlinkRate;
+		rtk_led_blinkRate_get(&BlinkRate);
+		printk("current led blinkRate: %d\n", BlinkRate);
+	
+		rtk_data_t pLen;
+		retVal = rtk_switch_maxPktLen_get(&pLen);
+		printk("rtk_switch_maxPktLen_get(): return %d\n", retVal);
+		printk("current rtk_switch_maxPktLen: %d\n", pLen);
+		retVal = rtk_switch_maxPktLen_set(MAXPKTLEN_16000B);
+		printk("rtk_switch_maxPktLen_set(): return %d\n", retVal);
+	
+		rtk_data_t pEnable;
+		retVal = rtk_switch_greenEthernet_get(&pEnable);
+		printk("rtk_switch_greenEthernet_get(): return %d\n", retVal);
+		printk("current rtk_switch_greenEthernet state: %d\n", pEnable);
+		retVal = rtk_switch_greenEthernet_set(ENABLED);
+		printk("rtk_switch_greenEthernet_set(): return %d\n", retVal);
+	
+		LANWANPartition();
+
 		break;
 
 	default:
@@ -1925,6 +2407,7 @@ int __init rtl8367m_init(void)
 	printk("rtk_switch_greenEthernet_get(): return %d\n", retVal);
 	printk("current rtk_switch_greenEthernet state: %d\n", pEnable);
 	retVal = rtk_switch_greenEthernet_set(ENABLED);
+//	retVal = rtk_switch_greenEthernet_set(DISABLED);
 	printk("rtk_switch_greenEthernet_set(): return %d\n", retVal);
 
 	/* Enable 802.3az Energy Efficient Ethernet */

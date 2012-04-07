@@ -597,7 +597,7 @@ int32_t PpeRxHandler(struct sk_buff * skb)
 					 
 	    FoeGetMacInfo(eth->h_dest, foe_entry->smac_hi);	 
 	    FoeGetMacInfo(eth->h_source, foe_entry->dmac_hi);
-#if ASUS_REMOVE
+#ifdef ASUS_REMOVE
 	    if(eth_type==ETH_P_8021Q) {
 		    vlan1_gap = VLAN_HLEN;
 		    vh = (struct vlan_hdr *) skb->data;

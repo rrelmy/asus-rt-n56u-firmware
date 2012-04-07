@@ -1,10 +1,11 @@
 ﻿//For operation mode;
 sw_mode = '<% nvram_get_x("IPConnection",  "sw_mode"); %>';
 productid = '<% nvram_get_f("general.log","productid"); %>';
+country_code='<% nvram_get_f("","wl_country_code"); %>'
 
 var uptimeStr = "<% uptime(); %>";
 var timezone = uptimeStr.substring(26,31);
-var boottime = parseInt(uptimeStr.substring(32,38));
+var boottime = parseInt(uptimeStr.substring(32,42));
 var newformat_systime = uptimeStr.substring(8,11) + " " + uptimeStr.substring(5,7) + " " + uptimeStr.substring(17,25) + " " + uptimeStr.substring(12,16);  //Ex format: Jun 23 10:33:31 2008
 var systime_millsec = Date.parse(newformat_systime); // millsec from system
 var JS_timeObj = new Date(); // 1970.1.1
@@ -62,7 +63,6 @@ function unload_body(){
 
 function enableCheckChangedStatus(flag){
 	var seconds = this.dr_surf_time_interval*1000;
-	
 	disableCheckChangedStatus();
 	
 	if(old_wan_link_str == ""){
@@ -99,8 +99,7 @@ function compareWirelessClient(target1, target2){
 
 function check_changed_status(flag){
 
-	if(this.test_page == 1
-			|| wan_route_x == "IP_Bridged")
+	if(this.test_page == 1)
 		return;
 	
 	if(flag == "initial"){
@@ -115,35 +114,7 @@ function check_changed_status(flag){
 			else
 				showMapWANStatus(0);
 		}
-		
-		// Dr. Surf -- stop crying.
-/*	if(old_ifWANConnect == 0) // WAN port is not plugged. 
-			parent.showDrSurf("1");
-		else if(old_qos_ready == 0)
-			parent.showDrSurf("40");
-		else if(old_wan_link_str == "Disconnected"){
-
-			// PPPoE, PPTP, L2TP
-			if(wan_proto != "dhcp" && wan_proto != "static"){
-				if(old_wan_status_log.indexOf("Failed to authenticate ourselves to peer") >= 0)
-					parent.showDrSurf("2_1");
-				else if(old_detect_dhcp_pppoe == "no-respond")
-					parent.showDrSurf("2_2");
-				else
-					parent.showDrSurf("5");
-			}
-			// dhcp, static
-			else{
-				parent.showDrSurf("5");
-			}
-		}
-		else if(old_detect_wan_conn != "1")
-			parent.showDrSurf("2_2");
-		else 
-			parent.showDrSurf("0_0"); // connection is ok.
-*/		
 		enableCheckChangedStatus();
-		
 		return;
 	}
 	
@@ -432,6 +403,11 @@ function showDrSurf(eventID, flag){
 	var seconds = this.show_hint_time_interval*1000;
 	var temp_eventID;
 	
+	if(wan_route_x == "IP_Bridged"){
+		if(eventID != "11" && eventID != "12" && eventID != "20" && eventID != "21" && eventID != "30")
+			return false;
+	}
+
 	// for test
 	if(this.testEventID != "")
 		eventID = this.testEventID;
@@ -611,12 +587,14 @@ function show_banner(L3){// L3 = The third Level of Menu
 	
 	show_loading_obj();
 	
-	if(location.pathname == "/" || location.pathname == "/index.asp"){
+	/*if(location.pathname == "/" || location.pathname == "/index.asp"){
 		if(wan_route_x != "IP_Bridged")
 			id_of_check_changed_status = setTimeout('hideLoading();', 3000);
 	}
 	else
-		id_of_check_changed_status = setTimeout('hideLoading();', 1);
+		id_of_check_changed_status = setTimeout('hideLoading();', 1);*/
+	
+	id_of_check_changed_status = setTimeout('hideLoading();', 3000);
 	
 	//show_time();
 	show_top_status();
@@ -771,8 +749,12 @@ function show_menu(L1, L2, L3){
 			$("tabMenu").innerHTML = tab_code;
 		}
 		else{
+			var tab_length=tabtitle[7].length;
+			if(country_code=="JP")
+				tab_length=tab_length-1;
+				
 			tab_code = '<table border="0" cellspacing="0" cellpadding="0"><tr>\n';
-			for(var i = 1; i < tabtitle[7].length; ++i){
+			for(var i = 1; i < tab_length; ++i){
 				if(tabtitle[7][i] == "")
 					continue;
 				else if(L3 == i)
@@ -836,8 +818,9 @@ var ssid2_2g = "";
 }*/
 
 function show_top_status(){
-	showtext($("firmver"), document.form.firmver.value);
-	
+	//Viz modify for "1.0.1.4j" showtext($("firmver"), document.form.firmver.value);
+	showtext($("firmver"), '<% nvram_get_x("",  "firmver_sub"); %>');
+		
 	if(sw_mode == "1")  // Show operation mode in banner, Lock add at 2009/02/19
 		$("sw_mode_span").innerHTML = "IP Sharing";
 	else if(sw_mode == "3")

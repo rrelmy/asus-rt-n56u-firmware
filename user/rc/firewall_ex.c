@@ -1858,6 +1858,24 @@ filter_setting(char *wan_if, char *wan_ip, char *lan_if, char *lan_ip, char *log
 	 	fprintf(fp, "-A MACS -i %s -o %s -j %s\n", lan_if, wan_if, logaccept);
 	}
 
+	// Block VPN traffic
+	if (nvram_match("fw_pt_pptp", "0"))
+		fprintf(fp, "-A %s -i %s -o %s -p tcp --dport %d -j %s\n", chain, lan_if, wan_if, 1723, "DROP");
+	if (nvram_match("fw_pt_l2tp", "0"))
+		fprintf(fp, "-A %s -i %s -o %s -p udp --dport %d -j %s\n", chain, lan_if, wan_if, 1701, "DROP");
+	if (nvram_match("fw_pt_ipsec", "0"))
+	{
+		fprintf(fp, "-A %s -i %s -o %s -p udp --dport %d -j %s\n", chain, lan_if, wan_if, 500, "DROP");
+		fprintf(fp, "-A %s -i %s -o %s -p udp --dport %d -j %s\n", chain, lan_if, wan_if, 4500, "DROP");
+	}
+	if (nvram_match("fw_pt_pptp", "0"))
+		fprintf(fp, "-A %s -i %s -o %s -p 47 -j %s\n", chain, lan_if, wan_if, "DROP");
+	if (nvram_match("fw_pt_ipsec", "0"))
+	{
+		fprintf(fp, "-A %s -i %s -o %s -p 50 -j %s\n", chain, lan_if, wan_if, "DROP");
+		fprintf(fp, "-A %s -i %s -o %s -p 51 -j %s\n", chain, lan_if, wan_if, "DROP");
+	}
+
 	// Filter from WAN to LAN
 	if (nvram_match("fw_wl_enable_x", "1"))
 	{

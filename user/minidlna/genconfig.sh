@@ -49,13 +49,13 @@ ${RM} ${CONFIGFILE}
 [ ! -e "/usr/include/vorbis/codec.h" ] && MISSING="libvorbis $MISSING"
 [ ! -e "/usr/include/FLAC/metadata.h" ] && MISSING="libflac $MISSING"
 [ ! -e "/usr/include/ffmpeg/avutil.h" -a \
-  ! -e "/usr/include/libavutil/avutil.h" -a \
+  ! -e "/usr/local/include/libavutil/avutil.h" -a \
   ! -e "/usr/include/ffmpeg/libavutil/avutil.h" ] && MISSING="libavutil $MISSING"
 [ ! -e "/usr/include/ffmpeg/avformat.h" -a \
-  ! -e "/usr/include/libavformat/avformat.h" -a \
+  ! -e "/usr/local/include/libavformat/avformat.h" -a \
   ! -e "/usr/include/ffmpeg/libavformat/avformat.h" ] && MISSING="libavformat $MISSING"
 [ ! -e "/usr/include/ffmpeg/avcodec.h" -a \
-  ! -e "/usr/include/libavcodec/avcodec.h" -a \
+  ! -e "/usr/local/include/libavcodec/avcodec.h" -a \
   ! -e "/usr/include/ffmpeg/libavcodec/avcodec.h" ] && MISSING="libavcodec $MISSING"
 if [ -n "$MISSING" ]; then
 	echo -e "\nERROR!  Cannot continue."

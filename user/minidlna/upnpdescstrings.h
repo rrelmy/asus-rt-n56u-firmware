@@ -42,12 +42,20 @@
  #else
   #define ROOTDEV_MODELDESCRIPTION	"ReadyDLNA"
  #endif
-#else	// ASUS EXT
+#else
+#if 0
+ #define ROOTDEV_MANUFACTURERURL	OS_URL
+ #define ROOTDEV_MANUFACTURER		"Justin Maggard"
+ #define ROOTDEV_MODELNAME		"Windows Media Connect compatible (MiniDLNA)"
+ #define ROOTDEV_MODELDESCRIPTION	"MiniDLNA on " OS_NAME
+ #define ROOTDEV_MODELURL		OS_URL
+#else	/* ASUS EXT */
  #define ROOTDEV_MANUFACTURERURL	"http://www.asus.com/"
  #define ROOTDEV_MANUFACTURER		"ASUSTeK"
  #define ROOTDEV_MODELNAME		"Windows Media Connect compatible"
  #define ROOTDEV_MODELDESCRIPTION	"RT-N56U"
  #define ROOTDEV_MODELURL		"http://www.asus.com/"
+#endif
 #endif
 
 #endif

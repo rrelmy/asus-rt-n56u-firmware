@@ -187,6 +187,23 @@ int rtl8367m_ioctl(int val, int val2)
                 }
                 break;
 
+        case 26:/*For Unifi. Cherry Cho added in 2011/6/20. */
+		value = val2;
+                if(ioctl(fd, 26, &value) < 0){
+                        perror("rtl8367m ioctl");
+                        close(fd);
+                        return -1;
+                }
+                break;
+
+	case 27:
+		if(ioctl(fd, 27, 0) < 0){
+			perror("rtl8367m ioctl");
+			close(fd);
+			return -1;
+		}
+                break;
+
 	default:
 		printf("wrong ioctl cmd: %d\n", val);
 	}

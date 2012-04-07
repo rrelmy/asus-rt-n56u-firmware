@@ -121,7 +121,8 @@ function initial(){
 			</tr>
 			<tr>
 				<th><#FW_item2#></th>
-				<td><input type="text" name="firmver" class="input" value="<% nvram_get_f("general.log","firmver"); %>" readonly="1"></td>
+				<td><input type="text" name="firmver" class="input" value="<% nvram_get_f("general.log","firmver"); %>" readonly="1"></td>>
+				<!-- Viz modify for "1.0.1.4j" for Brazil td><input type="text" name="firmver" class="input" value="<% nvram_get_x("","firmver_sub"); %>" readonly="1"></td-->
 			</tr>
 			<tr>
 				<th><#FW_item5#></th>

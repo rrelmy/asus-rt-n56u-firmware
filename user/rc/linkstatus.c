@@ -42,7 +42,7 @@ static unsigned int linkstatus_wan = 0;
 static unsigned int linkstatus_lan = 0;
 static unsigned int linkstatus_wan_old = 0;
 static unsigned int linkstatus_lan_old = 0;
-static int linkstatus_usb = 0;
+int linkstatus_usb = 0;
 static int linkstatus_usb_old = 0;
 static unsigned int linkspeed_wan = 0;
 char str_linkspeed_wan[2];
@@ -81,6 +81,7 @@ void catch_sig_linkstatus(int sig)
 	time_t now;
 #ifdef HTTPD_CHECK
 	char *p_wget_timestamp;
+	char *p_reboot_timestamp;
 #endif
 	int try_count;
 
@@ -112,28 +113,45 @@ void catch_sig_linkstatus(int sig)
 //		dbg("linkstatus_wan: %d\n", linkstatus_wan);
 //		dbg("linkstatus_lan: %d\n", linkstatus_lan);
 #ifdef HTTPD_CHECK
-		if (!timer_wget && (p_wget_timestamp = nvram_get("wget_timestamp")))
+		if (!timer_wget)
 		{
 			now = uptime();
 
-//			dbg("wget_timestamp: %s\n", p_wget_timestamp);
-//			dbg("wget timeout: %d\n", (unsigned long)(now - strtoul(p_wget_timestamp, NULL, 10)));
+			if (p_wget_timestamp = nvram_get("wget_timestamp"))
+			{
+//				dbg("wget_timestamp: %s\n", p_wget_timestamp);
+//				dbg("wget timeout: %d\n", (unsigned long)(now - strtoul(p_wget_timestamp, NULL, 10)));
 /*
-			if (nvram_get("login_timestamp") && !nvram_match("login_timestamp", ""))
-			{
-				dbg("user login! no detect!\n");
+				if (nvram_get("login_timestamp") && !nvram_match("login_timestamp", ""))
+				{
+					dbg("user login! no detect!\n");
 
-				remove(DETECT_HTTPD_FILE);
-				if (pids("wget"))
-					system("killall wget");
+					remove(DETECT_HTTPD_FILE);
+					if (pids("wget"))
+						system("killall wget");
+				}
+				else */if ((unsigned long)(now - strtoul(p_wget_timestamp, NULL, 10)) > 4)
+				{
+					dbg("wget no response for more than 4 seconds!\n");
+
+					remove(DETECT_HTTPD_FILE);
+					if (pids("wget"))
+						system("killall wget");
+				}
 			}
-			else */if ((unsigned long)(now - strtoul(p_wget_timestamp, NULL, 10)) > 4)
-			{
-				dbg("wget no response for more than 4 seconds!\n");
 
-				remove(DETECT_HTTPD_FILE);
-				if (pids("wget"))
-					system("killall wget");
+			if (p_reboot_timestamp = nvram_get("reboot_timestamp"))
+			{
+				if ((unsigned long)(now - strtoul(p_reboot_timestamp, NULL, 10)) > 15)
+				{
+					kill(-1, SIGTERM);
+					sleep(1);
+
+					kill(-1, SIGKILL);
+					sleep(1);
+
+					sync();
+				}
 			}
 		}
 #endif
@@ -188,7 +206,7 @@ void catch_sig_linkstatus(int sig)
 					system("killall -SIGUSR1 udhcpc");
 
 					try_count = 0;
-					while (!pids("wanduck") && (++try_count < 6))
+					while (!pids("wanduck") && (++try_count < 10))
 					{
 						sleep(3);
 						start_wanduck();

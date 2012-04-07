@@ -58,13 +58,23 @@ static void dump_packet(const struct nf_loginfo *info,
 	/* Important fields:
 	 * TOS, len, DF/MF, fragment offset, TTL, src, dst, options. */
 	/* Max length: 40 "SRC=255.255.255.255 DST=255.255.255.255 " */
+#if 0
 	printk("SRC=%u.%u.%u.%u DST=%u.%u.%u.%u ",
 	       NIPQUAD(ih->saddr), NIPQUAD(ih->daddr));
+#else	/* syslog packet */
+	printk(KERN_ALERT "SRC=%u.%u.%u.%u DST=%u.%u.%u.%u ", NIPQUAD(ih->saddr), NIPQUAD(ih->daddr));
+#endif
 
 	/* Max length: 46 "LEN=65535 TOS=0xFF PREC=0xFF TTL=255 ID=65535 " */
+#if 0
 	printk("LEN=%u TOS=0x%02X PREC=0x%02X TTL=%u ID=%u ",
 	       ntohs(ih->tot_len), ih->tos & IPTOS_TOS_MASK,
 	       ih->tos & IPTOS_PREC_MASK, ih->ttl, ntohs(ih->id));
+#else	/* syslog packet */
+	printk(KERN_ALERT "LEN=%u TOS=0x%02X PREC=0x%02X TTL=%u ID=%u ",
+	       ntohs(ih->tot_len), ih->tos & IPTOS_TOS_MASK,
+	       ih->tos & IPTOS_PREC_MASK, ih->ttl, ntohs(ih->id));
+#endif
 
 	/* Max length: 6 "CE DF MF " */
 	if (ntohs(ih->frag_off) & IP_CE)
@@ -118,8 +128,12 @@ static void dump_packet(const struct nf_loginfo *info,
 		}
 
 		/* Max length: 20 "SPT=65535 DPT=65535 " */
+#if 0
 		printk("SPT=%u DPT=%u ",
 		       ntohs(th->source), ntohs(th->dest));
+#else	/* syslog packet */
+		printk(KERN_ALERT "SPT=%u DPT=%u ", ntohs(th->source), ntohs(th->dest));
+#endif
 		/* Max length: 30 "SEQ=4294967295 ACK=4294967295 " */
 		if (logflags & IPT_LOG_TCPSEQ)
 			printk("SEQ=%u ACK=%u ",
@@ -194,9 +208,13 @@ static void dump_packet(const struct nf_loginfo *info,
 		}
 
 		/* Max length: 20 "SPT=65535 DPT=65535 " */
+#if 0
 		printk("SPT=%u DPT=%u LEN=%u ",
 		       ntohs(uh->source), ntohs(uh->dest),
 		       ntohs(uh->len));
+#else	/* syslog packet */
+		printk(KERN_ALERT "SPT=%u DPT=%u LEN=%u ", ntohs(uh->source), ntohs(uh->dest), ntohs(uh->len));
+#endif
 		break;
 	}
 	case IPPROTO_ICMP: {
@@ -379,6 +397,8 @@ ipt_log_packet(unsigned int pf,
 		loginfo = &default_loginfo;
 
 	spin_lock_bh(&log_lock);
+	/* syslog packet */
+	printk(KERN_ALERT "%s ", prefix);
 	printk("<%d>%sIN=%s OUT=%s ", loginfo->u.log.level,
 	       prefix,
 	       in ? in->name : "",

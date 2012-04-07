@@ -26,7 +26,7 @@ INSTALLDIR = $(ROOTDIR)/romfs
 CONF_H  = $(ROOTDIR)/$(LINUXDIR)/include/linux/autoconf.h
 UCONF_H = $(ROOTDIR)/config/autoconf.h
 
-CFLAGS += -s -DASUS_NVRAM -DRPPPPOE -DBTN_SETUP -DWL500GP -DDHCP_PPTP -DQOS -DASUS_EXT -DGPQOS -DASUS_DDNS -DWSC -DGUEST_ACCOUNT -DWEB_REDIRECT -DWEBSTRFILTER -DUSB_SUPPORT -DU2EC -DDLM -DPRINTER_SUPPORT -DCONTENTFILTER -DHTTPD_CHECK# -DUSBTPT
+CFLAGS += -s -DASUS_NVRAM -DRPPPPOE -DBTN_SETUP -DWL500GP -DDHCP_PPTP -DQOS -DASUS_EXT -DGPQOS -DASUS_DDNS -DWSC -DGUEST_ACCOUNT -DWEB_REDIRECT -DWEBSTRFILTER -DUSB_SUPPORT -DU2EC -DDLM -DPRINTER_SUPPORT -DCONTENTFILTER -DHTTPD_CHECK #-DUSB_MODEM# -DUSBTPT
 #CFLAGS += -I. -I$(SHDIR)/include -I$(ROOTDIR)/linux-2.6.21.x/include -I$(ROOTDIR)/linux-2.6.21.x/drivers/flash -I$(HTTPDIR)/ -I$(ROOTDIR)/linux-2.6.21.x/drivers/char -I$(ROOTDIR)/linux-2.6.21.x/drivers/net/raeth -I$(ROOTDIR)/linux-2.6.21.x/include/linux -I$(MTDDIR)
 CFLAGS += -I. -I$(SHDIR)/include -I$(ROOTDIR)/linux-2.6.21.x/include -I$(ROOTDIR)/linux-2.6.21.x/drivers/flash -I$(HTTPDIR)/ -I$(ROOTDIR)/linux-2.6.21.x/drivers/char -I$(ROOTDIR)/linux-2.6.21.x/drivers/net/raeth -I$(MTDDIR) -I$(ROOTDIR)/user/busybox/include -I$(SHDIR)
 
@@ -42,7 +42,7 @@ EXEC = rc
 
 #2008.10 magic add wanduck_main.o
 #OBJS = rc.o init.o mtd.o services.o watchdog.o network_ex.o manu_ex.o firewall_ex.o common_ex.o network.o services_ex.o bigpond.o ppp.o qosutils.o qos.o speedtest.o ntp.o udhcpc.o udhcpc_ex.o ralink.o rtl8366s.o btnsetup.o pspfix.o wanduck_main.o ../wireless_tools/iwlib.o monitor.o
-OBJS = rc.o init.o mtd.o services.o watchdog.o network_ex.o firewall_ex.o common_ex.o network.o services_ex.o bigpond.o ppp.o qosutils.o qos.o speedtest.o uploadspeed.o ntp.o udhcpc.o udhcpc_ex.o ralink.o rtl8367m.o btnsetup.o pspfix.o ../wireless_tools/iwlib.o linkstatus.o detect_internet.o xstart.o arpping.o usbled.o# usdsvr.o monitor.o ping.o manu_ex.o
+OBJS = rc.o init.o mtd.o services.o watchdog.o network_ex.o firewall_ex.o common_ex.o network.o services_ex.o bigpond.o ppp.o qosutils.o qos.o speedtest.o uploadspeed.o ntp.o udhcpc.o udhcpc_ex.o ralink.o rtl8367m.o btnsetup.o pspfix.o ../wireless_tools/iwlib.o linkstatus.o detect_internet.o xstart.o arpping.o usbled.o cpu.o# usdsvr.o monitor.o ping.o manu_ex.o
 
 OBJS += usb_devices.o wanduck.o
 
@@ -103,6 +103,8 @@ romfs:
 	cd $(INSTALLDIR)/sbin && ln -sf rc getBootV
 	cd $(INSTALLDIR)/sbin && ln -sf rc gen_ralink_config
 	cd $(INSTALLDIR)/sbin && ln -sf rc gen_ralink_config_rt
+	cd $(INSTALLDIR)/sbin && ln -sf rc getIMG
+	cd $(INSTALLDIR)/sbin && ln -sf rc slink
 	cd $(INSTALLDIR)/sbin && ln -sf rc getSSID
 	cd $(INSTALLDIR)/sbin && ln -sf rc getChannel
 	cd $(INSTALLDIR)/sbin && ln -sf rc getChannel_2g
@@ -118,6 +120,7 @@ romfs:
 	cd $(INSTALLDIR)/sbin && ln -sf rc getSiteSurvey
 	cd $(INSTALLDIR)/sbin && ln -sf rc getBSSID
 	cd $(INSTALLDIR)/sbin && ln -sf rc restart_dns
+	cd $(INSTALLDIR)/sbin && ln -sf rc restart_dhcpd
 # 2008.10 magic {
 	cd $(INSTALLDIR)/sbin && ln -sf rc speedtest
 	cd $(INSTALLDIR)/sbin && ln -sf rc restart_qos
@@ -207,6 +210,7 @@ romfs:
 	cd $(INSTALLDIR)/sbin && ln -sf rc ATE_Get_FwReadyStatus
 	cd $(INSTALLDIR)/sbin && ln -sf rc run_telnetd
 	cd $(INSTALLDIR)/sbin && ln -sf rc umount_dev_all
+	cd $(INSTALLDIR)/sbin && ln -sf rc cpu
 
 	cd $(INSTALLDIR)/sbin && ln -sf rc asus_lp
 	cd $(INSTALLDIR)/sbin && ln -sf rc asus_sr

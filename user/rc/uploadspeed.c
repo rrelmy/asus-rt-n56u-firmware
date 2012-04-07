@@ -228,11 +228,11 @@ int detect_upload_speed(double *upload_speed_p)
 			fprintf(stderr, "total payload: %8d bytes\n", PAYLOAD * valid_hop);
 
 			if ((double_delta_total > 0.000) && ((PAYLOAD * valid_hop) > 0))
-				upload_speed = ((PAYLOAD * valid_hop) / double_delta_total * 1000000 / 1024) * 0.900;
+				upload_speed = ((PAYLOAD * valid_hop) / double_delta_total * 1000000 / 1024) * 0.898;
 			else
 				upload_speed = 0.000;
 
-			fprintf(stderr, "upload speed:%10.3f kb/s (90.0%%)\n", upload_speed);
+			fprintf(stderr, "upload speed:%10.3f kb/s (89.8%%)\n", upload_speed);
 		}
 		else
 		{
@@ -241,6 +241,8 @@ END_calc:
 
 			fprintf(stderr, "upload speed:%10.3f kb/s\n", upload_speed);
 		}
+
+		logmessage("rc", "upload speed:%10.3f kb/s", upload_speed);
 	}
 	else
 	{

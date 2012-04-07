@@ -1,4 +1,4 @@
-﻿[Language type]
+[Language type]
 CHAR_set=UTF-8
 PASS_LANG=Sprache:
 LANG_select=Sprache wahlen
@@ -18,8 +18,38 @@ LANG_FI=Finsk
 LANG_DA=Dansk
 LANG_SV=Svensk
 LANG_BR=Brazil
+LANG_JP=日本語
+[Malaysia Unifi]
+PPPConnection_x_Unifi=Unifi Support :
+PPPConnection_x_Unifi_Describe=Select 'Yes' to support Malaysia Unifi services.
+[VPN Passthrough]
+VPN_PPTP_Passthrough=VPN PPTP Passthrough
+VPN_L2TP_Passthrough=VPN L2TP Passthrough
+VPN_IPSec_Passthrough=VPN IPSec Passthrough
+vpn_passthrough_itemname=VPN Passthrough
+vpn_passthrough_desc=Aktivieren Sie VPN Passthrough, damit eine Virtual Private Network (VPN)-Verbindung durch den Router an die Netzwerk-Clients weitergeleitet werden kann.
+[AiDisk account alert]
+enable_noaccount_alert=Wenn diese Funktion aktiviert, wird es geschehen Verbindung Problem zu Samba-Server und Herunterladen Master, wenn es nicht vorhanden ist jede verändern.
 [iTunes]
 iTunesMediaServer=iTunes-Medienserver
+[opmode strings]
+BasicConfig_EnableiTunesServer_itemname=iTunes Server aktivieren?
+OP_switch_button_hint1=Der Betriebsmodusumschalter ist auf der Unterseite des RT-N56U zu finden.
+OP_switch_button_hint2=Zum Anzeigen hier klicken
+OP_GW_item=IP-Sharing-Modus(Standard)
+OP_GW_desc1=Im Breitbandfreigabemodus verbindet sich der RT-N56U über PPPoE, automatische IP, PPTP, L2TP oder statische IP mit dem Internet.
+OP_GW_desc2=Er stellt Ihnen ein Wireless-Funksignal zur Verfügung. Die NAT, Firewall und die Breitbandfreigabedienste für LAN-Clients sind aktiviert. Es wird auch UPnP und dynamischer DNS für SOHO oder Heimnutzer unterstützt.
+OP_RT_item=Wireless Router / IP Sharing-Modus
+OP_RT_desc1=Im Wireless Router / IP Sharing-Modus wird RT-N56U sich über PPPoE, DHCP, PPTP, L2TP oder eine statische IP mit dem Internet verbinden und teilt sich das Drahtlosnetzwerk mit anderen Client-Geräten. In diesem Modus werden NAT, Firewall und DHCP-Server standardmäßig aktiviert. UPnP und Dynamic DNS werden bei SOHO- und Privatnutzern unterstützt. 
+OP_RT_desc2=Falls Sie ein unerfahrener Nutzer sind und keine anderen Kabel-/Wireless Router verwenden, wählen Sie bitte diesen Modus.
+OP_RE_item=Repeater-Modus
+OP_RE_desc1=Im Repeater-Modus empfängt RT-N56U ein bereits vorhandenes Funksignal und erweitert dieses Signal, um größere Netzwerkabdeckung und bessere Funksignalqualität zu erreichen.
+OP_AP_item=Access Point (AP)-Modus
+OP_AP_desc1=Im Access Point (AP)-Modus verbindet sich RT-N56U mit einem Wireless Router durch ein Ethernet-Kabel, um ein bereits vorhandenes Funksignal an andere Netzwerk-Clients zu erweitern. In diesem Modus werden Firewall, IP-Sharing und NAT-Funktionen standardmäßig deaktiviert.
+OP_AP_desc2=Falls Sie ein erfahrener Nutzer sind und den Unterschied zwischen Wireless Router und Access Point kennen (Wireless Router bietet Network Address Translation (NAT)- und IP Sharing-Funktionen), wählen Sie bitte diesen Modus.
+OP_Modem=Modem
+OP_WirelessClient=Wireless-Client
+OP_WirelessSignal=Vorhandenes Funksignal
 [untranslate]
 IPConnection_VSList_ftpport=FTP Server Port:
 Adm_System_telnetd=Enable Telnet Server?
@@ -54,7 +84,6 @@ RouterConfig_IPTV_itemname=IPTV-UDP-Multicast zu HTTP-Proxy-Port
 RHELP_desc9=Die Eingabe von 0 (Null) deaktiviert diese Funktion.
 WLANConfig11b_TxPower_itemname=Tx-Energieeinstellungen
 WLANConfig11b_TxPower_itemdesc=Regelt das Signal-Energie-Verhältnis. 
-[translated]
 WLANConfig11b_Wireless_Speed_itemname_3=Benutzt eine 40MHz gemeinsame Bandbreite, um den Wireless-Durchsatz zu maximieren. Wenn Sie mit der Wireless-Stabilität Probleme bekommen, wählen Sie bitte den Standardmodus.
 hwnat_desc=Enable Hardware NAT to offer internet speed with maximum throughput over 900Mbps when appropriately supported by you internet service provider. But please note that enabling Hardware NAT may conflict with QoS related functions.
 [error_page.htm]
@@ -95,7 +124,7 @@ QIS_resetModem_desc1=Trennen Sie bitte das Stromversorgungskabel vom Modem.
 QIS_resetModem_desc2=Setzen Sie das Modem zurück
 QIS_resetModem_desc3=Ziehen Sie das Stromversorgungskabel heraus und stecken Sie es nach ca. 2 Minuten wieder hinein.
 QIS_resetModem2_desc1=Stecken Sie das Stromversorgungskabel wieder in Ihr Modem und warten Sie ca. 1 Minute. Klicken Sie auf Erneut erkennen.
-QIS_wireless_desc1=Geben Sie einen Netzwerkschlüssel von 8 bis 63 Zeichen (Buchstaben, Zahlen oder Kombinationen daraus) ein. Wenn Sie keine Netzwerksicherheit einrichten wollen, lassen Sie die Felder für den Netzwerkschlüssel leer. <span style='font-weight:bolder;'>Die Standard-Wireless-Sicherheit ist WPA-Auto-Personal - AES + TKIPP.</span>
+QIS_wireless_desc1=Geben Sie einen Netzwerkschlüssel von 8 bis 63 Zeichen (Buchstaben, Zahlen oder Kombinationen daraus) oder 64 Hexadezimalzeichen ein. Wenn Sie keine Netzwerksicherheit einrichten wollen, lassen Sie die Felder für den Netzwerkschlüssel leer. <span style='font-weight:bolder;'>Die Standard-Wireless-Sicherheit ist WPA-Auto-Personal - AES + TKIPP.</span>
 [Traffic Monitor]
 Date=Datum
 Scale=Skala
@@ -153,10 +182,10 @@ ShareNode_Seeding_itemdesc=Hier können Sie die Seeding-Funktion aktivieren/deak
 ShareNode_MaxUpload_itemname=Maximale Upload-Rate
 ShareNode_MaxUpload_itemdesc=Geben Sie einen Wert zwischen 0 und 999 ein. Der Standardwert ist 0, welcher bedeutet, dass es keine Upload-Beschränkung gibt.
 [New item]
-HSDPAConfig_hsdpa_enable_hint1=Nach der Aktivierung von HSDPA werden Ihre WAN-Einstellungen deaktiviert.
-HSDPAConfig_hsdpa_enable_hint2=Wenn Sie die Verbindungsart ändern wollen, gehen Sie bitte zu <a href='/Advanced_HSDPA_others.asp'>HSDPA</a>, um den 3G/3.5G-Adapter zu deaktivieren.
-HSDPAConfig_USBAdapter_itemname=3G/3.5G USB-Adapter
-HSDPAConfig_USBAdapter_itemdesc=Nach der HDSPA-Aktivierung wählen Sie den Adapter, der den RT-N56U unterstützt.
+HSDPAConfig_hsdpa_enable_hint1=Nach der Aktivierung von USB Modem werden Ihre WAN-Einstellungen deaktiviert.
+HSDPAConfig_hsdpa_enable_hint2=Wenn Sie die Verbindungsart ändern wollen, gehen Sie bitte zu <a href="/Advanced_Modem_others.asp">USB Modem</a>, um den USB-Adapter zu deaktivieren.
+HSDPAConfig_USBAdapter_itemname=USB-Adapter
+HSDPAConfig_USBAdapter_itemdesc=Nach der USB Modem-Aktivierung wählen Sie den Adapter, der den RT-N56U unterstützt.
 APSurvey_msg_connected=Sie sind mit diesen AP schon verbunden.
 APSurvey_msg_connect_suggest1=Für eine stabilere Verbindung benutzen Sie ein Ethernet-Kabel, um sich mit den RT-N56U zu verbinden.
 APSurvey_msg_connect_suggest2=Klicken Sie auf [<span style=font-weight:bold; font-size:16px;>OK</span>], um mit der Konfiguration der Einstellungen fortzufahren. Die Verbindung zwischen Ihren Computer und den RT-N56U kann während der Konfiguration kurzzeitig unterbrochen werden.
@@ -200,17 +229,6 @@ AP_fail_get_IPaddr=IP-Informationen konnten nicht bezogen werden.
 AP_Remote_IP=AP-IP-Adresse
 AP_survey=AP-Suche
 statusTitle_AP=Access-Point-Status
-OP_switch_button_hint1=Der Betriebsmodusumschalter ist auf der Unterseite des RT-N56U zu finden.
-OP_switch_button_hint2=Zum Anzeigen hier klicken
-OP_GW_item=IP-Sharing-Modus(Standard)
-OP_GW_desc1=Im Breitbandfreigabemodus verbindet sich der RT-N56U über PPPoE, automatische IP, PPTP, L2TP oder statische IP mit dem Internet.
-OP_GW_desc2=Er stellt Ihnen ein Wireless-Funksignal zur Verfügung. Die NAT, Firewall und die Breitbandfreigabedienste für LAN-Clients sind aktiviert. Es wird auch UPnP und dynamischer DNS für SOHO oder Heimnutzer unterstützt.
-OP_RT_item=Router(Disable NAT)
-OP_RT_desc1=Benutzen Sie im im Router-Modus ein Ethernet-Kabel, um den RT-N56U mit Ihren Computer zu verbinden und eine Wireless-Netzwerkverbindung zu erstellen. Wählen Sie dann die Einstellungen für Ihre Wireless-Netzwerkverbindung. 
-OP_RT_desc2=RT-N56Uextends your wireless network coverage and allows you to configure the static routing protocol. It disables NAT (Network Address Translation) to allow communication and sharing services among LAN and WAN clients. Note: You need to specify the routing rules in the host router.
-OP_AP_item=Zugriffspunkt
-OP_AP_desc1=Benutzen Sie im AP-Modus ein Ethernet-Kabel, um den RT-N56U mit Ihren LAN zu verbinden, dann können Ihre Computer eine Wireless-Netzwerkverbindung zum RT-N56U erstellen. Alle Netzwerk-Clients werden zusammen gebrückt.
-OP_AP_desc2=Dieser Modus bietet eine Internetverbindung für Netzwerk-Clients, Firewall, IP-Sharing und NAT-Funktionen sind jedoch deaktiviert.
 [USB Application - HSDPA]
 HSDPAConfig_connection=Verbindungseinstellungen
 HSDPAConfig_pin_code_itemdesc=Bitte geben Sie den PIN-Code Ihrer SIM-Karte ein. Dies ist eine Zahl mit 4 – 7 Stellen. Falls Sie den PIN-Code nicht kennen, wenden Sie sich bitte an Ihren Internetanbieter.
@@ -231,8 +249,8 @@ HSDPAConfig_MRU_itemdesc=Diese Abkürzung steht für Maximum Receive Unit (maxim
 checkbox_Yes=Ja
 checkbox_No=Nein
 HSDPAConfig_basic=Basiskonfiguration
-HSDPAConfig_hsdpa_enable_itemname=HSDPA aktivieren?
-HSDPAConfig_hsdpa_mode_itemname=HSDPA-Modus
+HSDPAConfig_hsdpa_enable_itemname=USB Modem aktivieren?
+HSDPAConfig_hsdpa_mode_itemname=USB Modem-Modus
 HSDPAConfig_pin_code_enable_itemname=PIN-Code aktivieren?
 HSDPAConfig_pin_code_itemname=PIN-Code
 HSDPAConfig_enable_apn_itemname=APN-Service aktivieren:
@@ -399,7 +417,7 @@ menu5_3_6=DDNS
 menu5_4_1=Netzwerkumgebung-Freigabe
 menu5_4_2=FTP-Freigabe
 menu5_4_3=Sonstige Einstellungen
-menu5_4_4=HSDPA
+menu5_4_4=USB Modem
 menu5_5_1=Allgemein
 menu5_5_2=URL-Filter
 menu5_5_3=MAC-Filter
@@ -612,7 +630,7 @@ DiskStatus_refresh1=USB-Laufwerk wurde angeschlossen,
 DiskStatus_refresh2=erneuern
 DiskStatus_refresh3= Des Systemstatus.
 EZQoS=EZQoS-Bandbreitenmanagement
-footer_copyright_desc=2011 ASUSTek Computer Inc. Alle Rechte vorbehalten.
+footer_copyright_desc=2011 ASUSTeK Computer Inc. Alle Rechte vorbehalten.
 Help_button_default_hint=Zum Öffnen der Hilfe anklicken.
 Help_init_word1=In der Hilfe finden Sie Richtlinien und Informationen zur Nutzung der Router-Funktionen.  Klicken Sie auf die
 Help_init_word2=gelb und blau unterstrichenen verlinkten Wörter.
@@ -742,7 +760,7 @@ QKSet_type_rechoice=Bitte wählen Sie den WAN-Typ
 QKSet_wireless_webtitle=Wireless-Einstellungen
 WLANConfig11b_SSID_itemdesc=Zur Zuweisung einer Identifizier-ungszeichenfolge Ihrer Wireless-Verbindung mit bis zu 32 Zeichen.
 WLANConfig11b_SSID_itemname=SSID:
-WLANConfig11b_x_PSKKey_itemdesc=In dieses Feld muss ein Kennwort (8 – 63 Zeichen lang) zum Starten der Verschlüsselung eingegeben werden. Wenn Sie dieses Feld nicht ausfüllen, wird die Standardvorgabe [00000000] als Kennwort zugewiesen.
+WLANConfig11b_x_PSKKey_itemdesc=In dieses Feld muss ein Kennwort 8 bis 63 Zeichen (Buchstaben, Zahlen oder Kombinationen daraus) oder 64 Hexadezimalzeichen ein zum Starten der Verschlüsselung eingegeben werden. Wenn Sie dieses Feld nicht ausfüllen, wird die Standardvorgabe [00000000] als Kennwort zugewiesen.
 WLANConfig11b_x_PSKKey_itemname=WPA Pre-Shared Key:
 WLANConfig11b_WEPDefaultKey_itemdesc=Zum Festlegen des WEP-Schlüssels zur Verschlüsselung Ihrer Daten in Wireless-Netzwerken.
 WLANConfig11b_WEPDefaultKey_itemname=Schlüsselindex:
@@ -987,7 +1005,6 @@ FirewallConfig_URLActiveDate_itemname=Datum zum Aktivieren des URL-Filters:
 FirewallConfig_URLActiveDate_itemdesc=Dieses Feld definiert das Datum, zu dem der URL-Filter aktiviert wird.
 FirewallConfig_URLActiveTime_itemname=Uhrzeit zum Aktivieren des URL-Filters
 FirewallConfig_URLActiveTime_itemdesc=Dieses Feld definiert die Uhrzeit, zu welcher der URL-Filter aktiviert wird.
-FirewallConfig_URLActiveTime_itemhint3=Die Startzeit liegt nach der Endzeit. Diese Funktion wirkt Mitternacht-übergreifend.\nMöchten Sie wirklich fortfahren?
 FirewallConfig_URLActiveTime_itemhint2=Ungültiger Zeitraum.
 FirewallConfig_UrlFilterDefaultAct_itemname=URL mit definierten Schlüsselwörtern:
 FirewallConfig_UrlFilterDefaultAct_itemdesc=Wenn Sie VERWERFEN wählen, werden URLs, welche die in der Tabelle aufgeführten Schlüsselwörter enthalten, verworfen oder gegen Zugriff gesperrt. Wenn Sie AKZEPTIEREN wählen, können nur URLs aufgerufen werden, welche die definierten Schlüsselwörter enthält
@@ -1139,7 +1156,7 @@ LANHostConfig_x_DDNSStatus_itemname=Manuelle Aktualisierung:
 LANHostConfig_x_DDNSStatus_itemdesc=Mit dieser Schaltfläche können Sie die DDNS-Datenbank manuell aktualisieren. Diese Option steht nur dann zur Verfügung, wenn die automatische DDNS-Aktualisierung fehlschlug. Den aktuellen Status der DDNS-Aktualisierung können Sie dem Systemprotokoll entne
 LANHostConfig_ReservedAddresses_itemname=IP-Adresse:
 DeviceSecurity11a_display1_sectiondesc=Der Wireless-MAC-Filter ermöglicht die Steuerung von Paketen von Geraten mit spezifizierten MAC-Adressen in Ihrem WLAN.
-WLANAuthentication11a_display1_sectiondesc=Dieser Abschnitt ermöglicht die Einrichtung zusätzlicher Parameter zur Autorisierung von Wireless-Clients uber RADIUS-Server. Diese Angabe ist zwingend erforderlich, wenn Sie unter ?Wireless – Allgemein“ als ?Authentifikationsmethode“ entweder ?WPA-ENTERPRISE/WPA2-ENTERPRISE“ oder ?Radius mit 802.1x“ wählen.
+WLANAuthentication11a_display1_sectiondesc=Dieser Abschnitt ermöglicht die Einrichtung zusätzlicher Parameter zur Autorisierung von Wireless-Clients uber RADIUS-Server. Diese Angabe ist zwingend erforderlich, wenn Sie unter "Wireless – Allgemein" als "Authentifikationsmethode" entweder "WPA-ENTERPRISE/WPA2-ENTERPRISE" oder "Radius mit 802.1x" wählen.
 WLANAuthentication11a_ExAuthDBIPAddr_itemname=Server-IP-Adresse:
 WLANAuthentication11a_ExAuthDBIPAddr_itemdesc=Die IP-Adresse des RADIUS-Servers für 802.1X-Wireless-Authentisierung und dynamische WEP-Schlüsselableitung.
 WLANAuthentication11a_ExAuthDBPortNumber_itemname=Serverport:
@@ -1419,14 +1436,17 @@ HSDPAConfig_country_itemdesc=Bitte wählen Sie den Standort Ihres Dienstanbieter
 HSDPAConfig_dialnum_itemdesc=Bitte geben Sie die Einwahlnummer ein.
 HSDPAConfig_username_itemdesc=Bitte geben Sie den Benutzernamen ein.
 HSDPAConfig_password_itemdesc=Bitten geben Sie das Passwort ein.
-HSDPAConfig_usbadaptor_itemdesc=Bitte wählen Sie Ihren 3G/3.5G USB-Adapter.
+HSDPAConfig_usbadaptor_itemdesc=Bitte wählen Sie Ihren USB-Adapter.
 LANHostConfig_IPRouters_itemdesc=Die LAN-IP-Adresse des RT-N56U. Der Standardwert lautet 192.168.1.1. LAN IP Adressenbereich: 192.168.0.1 - 192.168.255.254, 172.16.0.1 – 172.31.255.254, 10.0.0.1 – 10.255.255.254
 confirm_disableftp_dm=Das Deaktivieren der Freigabe für die Netzwerkumgebung wird den Download Master deaktivieren.
-HSDPAConfig_hsdpa_mode_itemdesc=Wählen Sie den HSDPA-Modus umfassend zu Anforderungen und Umgebung. Vier Modi können ausgewählt werden: Ausfallsicherung, Ausgewogen, Immer hoch und Immer niedrig. Um den HSDPA-Adapter sicher zu entfernen, beziehen Sie sich auf <a href='/index.asp'>Index</a> und klicken Sie auf die Adapter-Schaltfläche.
+HSDPAConfig_hsdpa_mode_itemdesc=Wählen Sie den USB Modem-Modus umfassend zu Anforderungen und Umgebung. Vier Modi können ausgewählt werden: Ausfallsicherung, Ausgewogen, Immer hoch und Immer niedrig. Um den USB Modem-Adapter sicher zu entfernen, beziehen Sie sich auf <a href='/index.asp'>Index</a> und klicken Sie auf die Adapter-Schaltfläche.
 Not_authpage_login_again=Falls Sie sich wieder anmelden möchten, schließen Sie zuerst dieses Fenster.
-GO_HSDPA_SETTING=HSDPA Einstellungen aufrufen
+GO_HSDPA_SETTING=USB Modem Einstellungen aufrufen
+HSDPA_disable=If you want to change connection type，pleasw refer to <a href="/Advanced_Modem_others.asp"><#GO_HSDPA_SETTING#></a>to disable adaptor.
 [new strings - translated]
 GO_2G=2.4GHz Einstellungen aufrufen
 GO_5G=5GHz Einstellungen aufrufen
 [new strings]
 UPnPMediaServerType=Server Type
+HSDPA_LANtoWAN=After enabling USB Modem connection, the WAN port will change to LAN port, please remove the original cable.
+HSDPA_enable_confirm=Bitte vergewissern Sie sich, dass Ihre Einstellungen korrekt sind.

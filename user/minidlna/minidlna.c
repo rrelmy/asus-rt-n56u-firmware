@@ -65,6 +65,9 @@
 #include <pthread.h>
 #include <pwd.h>
 
+#include <sys/stat.h>	/* ASUS EXT */
+#include <dirent.h>	/* ASUS EXT */
+
 #include "config.h"
 
 #ifdef ENABLE_NLS
@@ -195,14 +198,14 @@ parselanaddr(struct lan_addr_s * lan_addr, const char * str)
 	lan_addr->str[n] = '\0';
 	if(!inet_aton(lan_addr->str, &lan_addr->addr))
 	{
-		DPRINTF(E_OFF, L_GENERAL, "Error parsing address/mask: %s\n", str);
+		DPRINTF(E_OFF, L_GENERAL, "Error parsing address: %s\n", str);
 		return -1;
 	}
 	lan_addr->mask.s_addr = htonl(nbits ? (0xffffffff << (32 - nbits)) : 0);
 	return 0;
 }
 
-void
+static void
 getfriendlyname(char * buf, int len)
 {
 	char * dot = NULL;
@@ -297,7 +300,7 @@ getfriendlyname(char * buf, int len)
 #endif
 }
 
-int
+static int
 open_db(void)
 {
 	char path[PATH_MAX];
@@ -320,6 +323,34 @@ open_db(void)
 	sql_exec(db, "pragma default_cache_size = 8192;");
 	sqlite3_create_collation(db, "naturalsort", SQLITE_UTF8, NULL, naturalsort);
 	return new_db;
+}
+
+/* ASUS EXT */
+int
+check_if_dir_exist(const char *dirpath)
+{
+	struct stat stat_buf;
+
+	if (!stat(dirpath, &stat_buf))
+		return S_ISDIR(stat_buf.st_mode);
+	else
+		return 0;
+}
+
+int
+mkdir_if_none(char *dir)
+{
+	DIR *dp;
+
+	if (!(dp = opendir(dir)))
+	{
+		umask(0000);
+		mkdir(dir, 0777);
+		return 1;
+	}
+        
+	closedir(dp);
+	return 0;
 }
 
 /* init phase :
@@ -346,7 +377,7 @@ init(int argc, char * * argv)
 	enum media_types type;
 	char * path;
 	char real_path[PATH_MAX];
-	char ext_ip_addr[INET_ADDRSTRLEN] = {'\0'};
+	char ip_addr[INET_ADDRSTRLEN + 3] = {'\0'};
 
 	/* first check if "-f" option is used */
 	for(i=2; i<argc; i++)
@@ -365,7 +396,7 @@ init(int argc, char * * argv)
 		DPRINTF(E_OFF, L_GENERAL, "No MAC address found.  Falling back to generic UUID.\n");
 		strcpy(mac_str, "554e4b4e4f57");
 	}
-	strcpy(uuidvalue+5, "41535553-0000-0000-0000-");
+	strcpy(uuidvalue+5, "4d696e69-444c-164e-9d41-");
 	strncat(uuidvalue, mac_str, 12);
 
 	getfriendlyname(friendly_name, FRIENDLYNAME_MAX_LEN);
@@ -388,13 +419,25 @@ init(int argc, char * * argv)
 			switch(ary_options[i].id)
 			{
 			case UPNPIFNAME:
-				if(getifaddr(ary_options[i].value, ext_ip_addr, INET_ADDRSTRLEN) >= 0)
+				for( string = ary_options[i].value; (word = strtok(string, ",")); string = NULL )
 				{
-					if( *ext_ip_addr && parselanaddr(&lan_addr[n_lan_addr], ext_ip_addr) == 0 )
-						n_lan_addr++;
+					if(n_lan_addr < MAX_LAN_ADDR)
+					{
+						if(getifaddr(word, ip_addr, sizeof(ip_addr)) >= 0)
+						{
+							if( *ip_addr && parselanaddr(&lan_addr[n_lan_addr], ip_addr) == 0 )
+								if(n_lan_addr < MAX_LAN_ADDR)
+									n_lan_addr++;
+						}
+						else
+							fprintf(stderr, "Interface %s not found, ignoring.\n", word);
+					}
+					else
+					{
+						fprintf(stderr, "Too many listening ips (max: %d), ignoring %s\n",
+				    		    MAX_LAN_ADDR, word);
+					}
 				}
-				else
-					fprintf(stderr, "Interface %s not found, ignoring.\n", ary_options[i].value);
 				break;
 			case UPNPLISTENING_IP:
 				if(n_lan_addr < MAX_LAN_ADDR)
@@ -484,7 +527,8 @@ init(int argc, char * * argv)
 				}
 				break;
 			case UPNPALBUMART_NAMES:
-				for( string = ary_options[i].value; (word = strtok(string, "/")); string = NULL ) {
+				for( string = ary_options[i].value; (word = strtok(string, "/")); string = NULL )
+				{
 					struct album_art_name_s * this_name = calloc(1, sizeof(struct album_art_name_s));
 					int len = strlen(word);
 					if( word[len-1] == '*' )
@@ -548,6 +592,39 @@ init(int argc, char * * argv)
 			}
 		}
 	}
+	if( log_path[0] == '\0' )
+	{
+		if( db_path[0] == '\0' )
+#if 0
+			strncpy(log_path, DEFAULT_LOG_PATH, PATH_MAX);
+#else	/* ASUS EXT */
+		{
+			if (check_if_dir_exist(DEFAULT_LOG_PATH))
+				strncpy(db_path, DEFAULT_LOG_PATH, PATH_MAX);
+			else
+			{
+				mkdir_if_none("/tmp/minidlna");
+				strncpy(db_path, "/tmp/minidlna", PATH_MAX);
+			}
+		}
+#endif
+		else
+			strncpy(log_path, db_path, PATH_MAX);
+	}
+	if( db_path[0] == '\0' )
+#if 0
+		strncpy(db_path, DEFAULT_DB_PATH, PATH_MAX);
+#else	/* ASUS EXT */
+	{
+		if (check_if_dir_exist(DEFAULT_DB_PATH))
+			strncpy(db_path, DEFAULT_DB_PATH, PATH_MAX);
+		else
+		{
+			mkdir_if_none("/tmp/minidlna");
+			strncpy(db_path, "/tmp/minidlna", PATH_MAX);
+		}
+	}
+#endif
 
 	/* command line arguments processing */
 	for(i=1; i<argc; i++)
@@ -642,7 +719,7 @@ init(int argc, char * * argv)
 				int address_already_there = 0;
 				int j;
 				i++;
-				if( getifaddr(argv[i], ext_ip_addr, INET_ADDRSTRLEN) < 0 )
+				if( getifaddr(argv[i], ip_addr, sizeof(ip_addr)) < 0 )
 				{
 					fprintf(stderr, "Network interface '%s' not found.\n",
 						argv[i]);
@@ -651,7 +728,7 @@ init(int argc, char * * argv)
 				for(j=0; j<n_lan_addr; j++)
 				{
 					struct lan_addr_s tmpaddr;
-					parselanaddr(&tmpaddr, ext_ip_addr);
+					parselanaddr(&tmpaddr, ip_addr);
 					if(0 == strcmp(lan_addr[j].str, tmpaddr.str))
 						address_already_there = 1;
 				}
@@ -659,7 +736,7 @@ init(int argc, char * * argv)
 					break;
 				if(n_lan_addr < MAX_LAN_ADDR)
 				{
-					if(parselanaddr(&lan_addr[n_lan_addr], ext_ip_addr) == 0)
+					if(parselanaddr(&lan_addr[n_lan_addr], ip_addr) == 0)
 						n_lan_addr++;
 				}
 				else
@@ -678,7 +755,7 @@ init(int argc, char * * argv)
 			runtime_vars.port = 0; // triggers help display
 			break;
 		case 'R':
-			snprintf(real_path, sizeof(real_path), "rm -rf %s/*", db_path);
+			snprintf(real_path, sizeof(real_path), "rm -rf %s/files.db %s/art_cache", db_path, db_path);
 			system(real_path);
 			break;
 		case 'V':
@@ -692,13 +769,14 @@ init(int argc, char * * argv)
 	/* If no IP was specified, try to detect one */
 	if( n_lan_addr < 1 )
 	{
-		if( (getsysaddr(ext_ip_addr, INET_ADDRSTRLEN) < 0) &&
-		    (getifaddr("br0", ext_ip_addr, INET_ADDRSTRLEN) < 0) &&	// ASUS EXT
-		    (getifaddr("eth0", ext_ip_addr, INET_ADDRSTRLEN) < 0) )	// ASUS EXT
+		if( (getsysaddr(ip_addr, sizeof(ip_addr)) < 0) &&
+		    (getifaddr("br0", ip_addr, sizeof(ip_addr)) < 0) &&	/* ASUS EXT */
+		    (getifaddr("eth0", ip_addr, sizeof(ip_addr)) < 0) &&
+		    (getifaddr("eth1", ip_addr, sizeof(ip_addr)) < 0) )
 		{
 			DPRINTF(E_OFF, L_GENERAL, "No IP address automatically detected!\n");
 		}
-		if( *ext_ip_addr && parselanaddr(&lan_addr[n_lan_addr], ext_ip_addr) == 0 )
+		if( *ip_addr && parselanaddr(&lan_addr[n_lan_addr], ip_addr) == 0 )
 		{
 			n_lan_addr++;
 		}
@@ -775,7 +853,7 @@ init(int argc, char * * argv)
 #endif
 	}
 #else
-	presentationurl[0] = '\0';	// ASUS EXT
+	presentationurl[0] = '\0';	/* ASUS EXT */
 #endif
 
 	/* set signal handler */
@@ -813,7 +891,8 @@ main(int argc, char * * argv)
 	struct upnphttp * next;
 	fd_set readset;	/* for select() */
 	fd_set writeset;
-	struct timeval timeout, timeofday, lastnotifytime = {0, 0}, lastupdatetime = {0, 0};
+	struct timeval timeout, timeofday, lastnotifytime = {0, 0};
+	time_t lastupdatetime = 0;
 	int max_fd = -1;
 	int last_changecnt = 0;
 	short int new_db = 0;
@@ -1035,7 +1114,10 @@ main(int argc, char * * argv)
 		if( scanning )
 		{
 			if( !scanner_pid || kill(scanner_pid, 0) )
+			{
 				scanning = 0;
+				updateID++;
+			}
 		}
 
 		/* select open sockets (SSDP, HTTP listen, and all HTTP soap sockets) */
@@ -1044,13 +1126,13 @@ main(int argc, char * * argv)
 		if (sudp >= 0) 
 		{
 			FD_SET(sudp, &readset);
-			max_fd = MAX( max_fd, sudp);
+			max_fd = MAX(max_fd, sudp);
 		}
 		
 		if (shttpl >= 0) 
 		{
 			FD_SET(shttpl, &readset);
-			max_fd = MAX( max_fd, shttpl);
+			max_fd = MAX(max_fd, shttpl);
 		}
 #ifdef TIVO_SUPPORT
 		if (sbeacon >= 0) 
@@ -1065,7 +1147,7 @@ main(int argc, char * * argv)
 			if((e->socket >= 0) && (e->state <= 2))
 			{
 				FD_SET(e->socket, &readset);
-				max_fd = MAX( max_fd, e->socket);
+				max_fd = MAX(max_fd, e->socket);
 				i++;
 			}
 		}
@@ -1101,14 +1183,14 @@ main(int argc, char * * argv)
 #endif
 		/* increment SystemUpdateID if the content database has changed,
 		 * and if there is an active HTTP connection, at most once every 2 seconds */
-		if( i && (time(NULL) >= (lastupdatetime.tv_sec + 2)) )
+		if( i && (timeofday.tv_sec >= (lastupdatetime + 2)) )
 		{
-			if( sqlite3_total_changes(db) != last_changecnt )
+			if( scanning || sqlite3_total_changes(db) != last_changecnt )
 			{
 				updateID++;
 				last_changecnt = sqlite3_total_changes(db);
 				upnp_event_var_change_notify(EContentDirectory);
-				memcpy(&lastupdatetime, &timeofday, sizeof(struct timeval));
+				lastupdatetime = timeofday.tv_sec;
 			}
 		}
 		/* process active HTTP connections */
@@ -1139,7 +1221,7 @@ main(int argc, char * * argv)
 					inet_ntoa(clientname.sin_addr),
 					ntohs(clientname.sin_port) );
 				/*if (fcntl(shttp, F_SETFL, O_NONBLOCK) < 0) {
-					DPRINTF(E_ERROR, L_GENERAL, "fcntl F_SETFL, O_NONBLOCK");
+					DPRINTF(E_ERROR, L_GENERAL, "fcntl F_SETFL, O_NONBLOCK\n");
 				}*/
 				/* Create a new upnphttp object and add it to
 				 * the active upnphttp object list */

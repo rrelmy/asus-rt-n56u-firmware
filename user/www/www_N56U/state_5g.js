@@ -794,7 +794,8 @@ var ssid2_2g = "";
 }*/
 
 function show_top_status(){
-	showtext($("firmver"), document.form.firmver.value);
+	//Viz modify for "1.0.1.4j" showtext($("firmver"), document.form.firmver.value);
+	showtext($("firmver"), '<% nvram_get_x("",  "firmver_sub"); %>');
 	
 	if(sw_mode == "1")  // Show operation mode in banner, Lock add at 2009/02/19
 		$("sw_mode_span").innerHTML = "IP Sharing";

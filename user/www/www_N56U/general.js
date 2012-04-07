@@ -2061,7 +2061,10 @@ function onSubmitCtrlOnly(o, s){
 function validate_ddns_hostname(o)
 {dot=0;
 s=o.value;
-if(!s.match(".asuscomm.com"))
+
+var unvalid_start=new RegExp("^[0-9].*", "gi");
+var valid_keyarr=s.split(".asuscomm.com");
+if(unvalid_start.test(s) || valid_keyarr.length >2 || valid_keyarr[0]=="" ||valid_keyarr[1] !="")
 {alert("<#LANHostConfig_x_DDNS_alarm_7#>");
 return false;
 }
@@ -2360,6 +2363,12 @@ else if (v == "wl_wme"){
 		inputCtrl(document.form.DLSCapable, 1);
 	}
 }
+	else if (s=="Layer3Forwarding" && v=="unifi_malaysia_radio"){//Cherry Cho added in 2011/6/13.
+		if (document.form.unifi_malaysia_radio[0].checked==1)
+			document.form.unifi_malaysia.value = "1";
+		else
+			document.form.unifi_malaysia.value = "0";
+	}
 return true;
 }
 

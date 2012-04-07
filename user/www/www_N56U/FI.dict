@@ -18,8 +18,38 @@ LANG_FI=Finsk
 LANG_DA=Dansk
 LANG_SV=Svensk
 LANG_BR=Brazil
+LANG_JP=日本語
+[Malaysia Unifi]
+PPPConnection_x_Unifi=Unifi Support :
+PPPConnection_x_Unifi_Describe=Select 'Yes' to support Malaysia Unifi services.
+[VPN Passthrough]
+VPN_PPTP_Passthrough=VPN PPTP ohitus
+VPN_L2TP_Passthrough=VPN L2TP ohitus
+VPN_IPSec_Passthrough=VPN IPSec ohitus
+vpn_passthrough_itemname=VPN-ohitus
+vpn_passthrough_desc=Ota käyttöön VPN-ohitus sallimaan Virtual Private Network (VPN) -liitännän kulkemaan reitittimen läpi verkkoasiakkaille.
+[AiDisk account alert]
+enable_noaccount_alert=Kun käytössä, se tapahtuu yhteys ongelma Samba-palvelimen ja ladata Master jos ei ole olemassa missään.
 [iTunes]
 iTunesMediaServer=iTunes-mediapalvelin
+[opmode strings]
+BasicConfig_EnableiTunesServer_itemname=Enable iTunes Server?
+OP_switch_button_hint1=Käyttötilakytkin sijaitsee RT-N56U:n pohjapaneelissa.
+OP_switch_button_hint2=Katso napsauttamalla tästä
+OP_GW_item=IP-jakaminen -tila (Oletus)
+OP_GW_desc1=Laajakaistan jakamistilassa RT-N56U muodostaa yhteyden internetiin PPPoE:llä, automaattisella IP:llä, PPTP:llä, L2TP:llä tai staattisella IP:llä.
+OP_GW_desc2=Se tarjoaa sinulle langattoman radiosignaalin. NAT, palomuuri ja laajakaistan jakamispalvelut LAN-asiakkaille ovat käytössä. Se tukee myös UPnP:tä ja dynaamista DNS:ää SOHO- tai kotikäyttäjillä.
+OP_RT_item=Langaton reititin
+OP_RT_desc1=In Router mode / IP sharing mode, RT-N56U connects to the Internet via PPPoE, DHCP, PPTP, L2TP, or Static IP and shares the wireless network to LAN client devices. In this mode, NAT, firewall, and DHCP server are enabled by default. UPnP and Dynamic DNS are supported for SOHO and home users. 
+OP_RT_desc2=Select this mode if you are a first-time user or you are not currently using any wired/wireless routers.
+OP_RE_item=Repeater mode
+OP_RE_desc1=In Repeater mode, RT-N56U wirelessly connects to an existing wireless network to extend the wireless coverage.In this mode, the firewall, IP sharing, and NAT functions are disabled.
+OP_AP_item=Access Point(AP) mode
+OP_AP_desc1=In Access Point (AP) mode, RT-N56U connects to a wireless router through an Ethernet cable to extend the wireless signal coverage to other network clients. In this mode,  the firewall, IP sharing, and NAT functions are disabled by default.
+OP_AP_desc2=Select this mode if you are an advanced network user who understands the difference between a wireless router and an access point, which is that a wireless router provides the Network Address Translation (NAT) and IP sharing functions. 
+OP_Modem=Modem
+OP_WirelessClient=Wireless Client
+OP_WirelessSignal=Existing wireless signal
 [untranslate]
 IPConnection_VSList_ftpport=FTP-palvelinportti:
 Adm_System_telnetd=Otetaanko Telnet-palvelin käyttöön?
@@ -94,7 +124,7 @@ QIS_resetModem_desc1=Irrota modeemin virtajohto.
 QIS_resetModem_desc2=Nollaa modeemi
 QIS_resetModem_desc3=Irrota ja liitä virtajohto kahden minuutin kuluttua.
 QIS_resetModem2_desc1=Liitä virtajohto takaisin modeemiin ja odota 1 minuutti. ASUS-reititin hakee modeemista uuden IP-osoitteen.
-QIS_wireless_desc1=Anna verkkoavain, jossa on 8-63 merkkiä (kirjaimia, numeroita tai niiden yhdistelmä). Jollet halua asettaa verkkosuojausta, jätä verkkoavainkenttä tyhjäksi. <span style='font-weight:bolder;'>Oletus verkkosuojaus on WPA-Auto-Personal - AES + TKIP.</span>
+QIS_wireless_desc1=Anna verkkoavain, jossa on 8 ja 63 merkkiä (kirjaimia, numeroita tai yhdistelmä) tai 64 heksadesimaalimerkkiä. Jollet halua asettaa verkkosuojausta, jätä verkkoavainkenttä tyhjäksi. <span style='font-weight:bolder;'>Oletus verkkosuojaus on WPA-Auto-Personal - AES + TKIP.</span>
 [Traffic Monitor]
 Date=Päivämäärä
 Scale=Skaalaa
@@ -152,10 +182,10 @@ ShareNode_Seeding_itemdesc=Antaa ottaa käyttöön tai pois käytöstä alustust
 ShareNode_MaxUpload_itemname=Maksiminopeus palvelimeen lataamiseen
 ShareNode_MaxUpload_itemdesc=Anna arvo välillä 0-999. Oletusarvo on 0, mikä tarkoittaa, palvelimelle lataamisella ei ole ylärajaa.
 [New item]
-HSDPAConfig_hsdpa_enable_hint1=Kun HSDPA on otettu käyttöön, alkuperäiset WAN-asetukset otetaan pois käytöstä.
-HSDPAConfig_hsdpa_enable_hint2=Jos haluat muuttaa yhteystyyppiä, siirry kohtaan <a href="/Advanced_HSDPA_others.asp">HSDPA</a> ottaaksesi 3G/3.5G-sovittimen pois käytöstä.
+HSDPAConfig_hsdpa_enable_hint1=Kun USB Modem on otettu käyttöön, alkuperäiset WAN-asetukset otetaan pois käytöstä.
+HSDPAConfig_hsdpa_enable_hint2=Jos haluat muuttaa yhteystyyppiä, siirry kohtaan <a href="/Advanced_Modem_others.asp">USB Modem</a> ottaaksesi 3G/3.5G-sovittimen pois käytöstä.
 HSDPAConfig_USBAdapter_itemname=3G/3.5G USB -sovitin
-HSDPAConfig_USBAdapter_itemdesc=Kun HDSPA on otettu käyttöön, valitse sovitin, jota RT-N56U tukee.
+HSDPAConfig_USBAdapter_itemdesc=Kun USB Modem on otettu käyttöön, valitse sovitin, jota RT-N56U tukee.
 APSurvey_msg_connected=Olet jo muodostanut yhteyden tähän tukiasemaan.
 APSurvey_msg_connect_suggest1=On suositeltavaa käyttää Ethernet-kaapelia RT-N56U:n liittämiseen vakaamman konfiguraation ja paremman käytön varmistamiseksi.
 APSurvey_msg_connect_suggest2=Jatka määrittämistä napsauttamalla [<span style="font-weight:bold; font-size:16px;">OK</span>]-painiketta. Asettamisen aikana tietokoneen yhteys voi katketa, eikä ole varmaa, että RT-N56U-reititin muodostaa yhteyden etätukiasemaan.
@@ -199,17 +229,6 @@ AP_fail_get_IPaddr=IP-tietojen hakeminen epäonnistui.
 AP_Remote_IP=Tukiaseman IP-osoite
 AP_survey=Tukiasematutkimus
 statusTitle_AP=Tukiaseman käyttötila
-OP_switch_button_hint1=Käyttötilakytkin sijaitsee RT-N56U:n pohjapaneelissa.
-OP_switch_button_hint2=Katso napsauttamalla tästä
-OP_GW_item=IP-jakaminen -tila (Oletus)
-OP_GW_desc1=Laajakaistan jakamistilassa RT-N56U muodostaa yhteyden internetiin PPPoE:llä, automaattisella IP:llä, PPTP:llä, L2TP:llä tai staattisella IP:llä.
-OP_GW_desc2=Se tarjoaa sinulle langattoman radiosignaalin. NAT, palomuuri ja laajakaistan jakamispalvelut LAN-asiakkaille ovat käytössä. Se tukee myös UPnP:tä ja dynaamista DNS:ää SOHO- tai kotikäyttäjillä.
-OP_RT_item=Reititin (Ota NAT pois käytöstä)
-OP_RT_desc1=Liitä reititin-tilassa RT-N56U tietokoneeseen Ethernet-kaapelilla ja luo langaton verkkoyhteys ja valitse sitten langattoman verkkoyhteyden asetukset. 
-OP_RT_desc2=RT-N56U laajentaa langattoman verkkosi peittoa ja antaa määrittää staattisen reititysprotokollan. Se ottaa NAT (Network Address Translation) -toiminnon pois käytöstä mahdollistaakseen tiedonsiirron ja jakamisen LAN- ja WAN-asiakkaiden kanssa. Huomaa: Sinun on määritettävä reitityssäännöt isäntäreitittimessä.
-OP_AP_item=Tukiasema
-OP_AP_desc1=Liitä Tukiasematilassa RT-N56U Ethernet-kaapelilla LAN-verkkoon. Tällöin tietokone voi luoda langattoman verkkoyhteyden RT-N56U-reitittimeen. Kaikki verkkoasiakkaat siltautetaan yhteen.
-OP_AP_desc2=Tämä tila tarjoaa internet-yhteyden verkkoasiakkaille, mutta ottaa pois käytöstä palomuurin, IP-jakamisen ja NAT-toiminnon.
 [USB Application - HSDPA]
 HSDPAConfig_connection=Yhteysasetus
 HSDPAConfig_pin_code_itemdesc=Syötä SIM-korttisi PIN (Personal Identification Number) -koodi. Sen on oltava numero, jonka pituus on yli 4 ja alle 8 numeroa. Jollet tiedä PIN-koodiasi, ota yhteyttä internet-palveluntarjoajaan.
@@ -225,13 +244,13 @@ HSDPAConfig_ConnectionTime_itemname=Yhteysaika
 HSDPAConfig_TransDataSize_itemname=Lähetetyn tiedon koko
 HSDPAConfig_ReceviedDataSize_itemname=Vastaanotetun tiedon koko
 HSDPAConfig_TotalDataSize_itemname=Tiedon koko yhteensä
-HSDPAConfig_MTU_itemdesc=Se tarkoittaa HSDPA-paketin maksimilähetysyksikköä (MTU).
-HSDPAConfig_MRU_itemdesc=Se tarkoittaa HSDPA-paketin maksimivastaanottoyksikköä (MRU).
+HSDPAConfig_MTU_itemdesc=Se tarkoittaa USB Modem-paketin maksimilähetysyksikköä (MTU).
+HSDPAConfig_MRU_itemdesc=Se tarkoittaa USB Modem-paketin maksimivastaanottoyksikköä (MRU).
 checkbox_Yes=Kyllä
 checkbox_No=Ei
 HSDPAConfig_basic=Perusasetus
-HSDPAConfig_hsdpa_enable_itemname=Otetaanko HSDPA käyttöön?
-HSDPAConfig_hsdpa_mode_itemname=HSDPA-tila
+HSDPAConfig_hsdpa_enable_itemname=Otetaanko USB Modem käyttöön?
+HSDPAConfig_hsdpa_mode_itemname=USB Modem-tila
 HSDPAConfig_pin_code_enable_itemname=Otetaanko PIN-koodi käyttöön?
 HSDPAConfig_pin_code_itemname=PIN-koodi
 HSDPAConfig_enable_apn_itemname=Ota APN-palvelu käyttöön:
@@ -275,7 +294,7 @@ Device_service_Printer=Tulostinpalvelu:
 Device_service_Wireless=Langaton:
 DrSurf_Alert21=RT-N56U-reitittimen levy on otettu käyttöön ja käytettävissä.
 ddnsname_computername=Kun asetus otetaan käyttöön, myös laitteen nimi muuttuu samalla. Haluatko jatkaa?
-JS_storageright=Se on RT-N56U-reitittimen nimi, ja vakiosyöttömerkkejä ovat kirjaimet (A-Z, a-z), numerot (0-9), välilyönnit, alaviiva (_) ja yhdysviiva (-). Ensimmäinen ja viimeinen merkki eivät voi olla välilyöntejä. Muun kuin standardi-nimen käyttö estää muita käyttäjiä löytämästä tietokonettasi verkosta.<br>Jos olet rekisteröinyt ja avannut ASUS DDNS -palvelun, kenttä päivittyy automaattisesti.
+JS_storageright=Se on RT-N56U-reitittimen nimi, ja vakiosyöttömerkkejä ovat kirjaimet (A-Z, a-z), numerot (0-9), välilyönnit, alaviiva (_) ja yhdysviiva (-). Ensimmäinen ja viimeinen merkki eivät voi olla välilyöntejä. Muun kuin standardi-nimen käyttö estää muita käyttäjiä löytämästä tietokonettasi verkosta.
 not_support_script=Selaimesi ei tue JavaScriptiä. Valitse selain, joka tukee JavaScriptiä tai ota se käyttöön voidaksesi käyttää ASUS RT-N56U-monitoimireititintä.
 [Advanced_AiDisk_others.asp]
 Help_of_Workgroup=Se on RT-N56U-reitittimen ryhmänimi verkkoympäristössä, ja vakiosyöttömerkkejä ovat kirjaimet (A-Z,a-z), numerot (0-9), välilyönnit, alaviiva (_) ja yhdysviiva (-). Ensimmäinen ja viimeinen merkki ei voi olla välilyönti. Muun kuin standardi-nimen käyttö estää muita käyttäjiä löytämästä tietokonettasi LAN-verkossa.
@@ -398,7 +417,7 @@ menu5_3_6=DDNS
 menu5_4_1=Verkkoympäristöjako
 menu5_4_2=FTP-jako
 menu5_4_3=Muut asetukset
-menu5_4_4=HSDPA
+menu5_4_4=USB Modem
 menu5_5_1=Yleistä
 menu5_5_2=URL-suodatin
 menu5_5_3=MAC-suodatin
@@ -679,7 +698,7 @@ QKSet_finishpre_rebootnow=Valmis
 QKSet_account_webtitle=ISP-tilin asetus
 QKSet_ISP_head=ISP-tietojen asetus
 QKSet_ISP_desc=Katso ISP-asetuksesi ja anna asiaankuuluvat tiedot.
-PPPConnection_UserName_itemdesc=Tämä kenttä on käytettävissä vain, kun asetat WAN-yhteystyypiksi HSDPA:n, PPPoE:n, PPTP:n tai L2TP:n.
+PPPConnection_UserName_itemdesc=Tämä kenttä on käytettävissä vain, kun asetat WAN-yhteystyypiksi USB Modem:n, PPPoE:n, PPTP:n tai L2TP:n.
 BOP_account_user_item=User Name (Käyttäjänimi):
 BOP_account_pass_item=Password (Salasana):
 QKSet_account_passwd=Salasana tälle käyttäjätilille.
@@ -741,7 +760,7 @@ QKSet_type_rechoice=Valitse WAN-tyyppi
 QKSet_wireless_webtitle=Langaton asetus
 WLANConfig11b_SSID_itemdesc=Määritä langattomalle yhteydellesi enintään 32 merkkiä pitkä yksilöintimerkkijono.
 WLANConfig11b_SSID_itemname=SSID:
-WLANConfig11b_x_PSKKey_itemdesc=Tähän kenttään on annettava 8–63 merkkiä pitkä salasana salauksen aloittamiseksi. Jos jätät tämän kentän tyhjäksi, salasanaksi määritetään oletussalasana [00000000].
+WLANConfig11b_x_PSKKey_itemdesc=Tähän kenttään on annettava 8 ja 63 merkkiä (kirjaimia, numeroita tai yhdistelmä) tai 64 heksadesimaalimerkkiä pitkä salasana salauksen aloittamiseksi. Jos jätät tämän kentän tyhjäksi, salasanaksi määritetään oletussalasana [00000000].
 WLANConfig11b_x_PSKKey_itemname=WPA-esijaettu avain:
 WLANConfig11b_WEPDefaultKey_itemdesc=Aseta WEP-avain lähettääksesi tietoja langattomassa verkossasi.
 WLANConfig11b_WEPDefaultKey_itemname=Avainhakemisto:
@@ -984,11 +1003,8 @@ FirewallConfig_URLActiveTime_itemhint=Aloitusaika on myöhempi kuin päättymisa
 FirewallConfig_UrlFilterEnable_itemname=Enable URL Filter (Ota URL-suodatin käyttöön)
 FirewallConfig_URLActiveTime_itemdesc=Tässä kentässä määritetään aikaväli, jolloin URL-suodatin on käytössä. Anna eri alkamis- ja päättymisaika.
 FirewallConfig_UrlFilterEnable_sectiondesc=Märittämällä avainsanan URL-suodatin estää asiakkaiden määritetyn URL-käytön.
-FirewallConfig_UrlFilterEnable_itemname2=Otetaanko URL-suodatin käyttöön?
 FirewallConfig_URLActiveDate_itemname=Date to Enable URL Filter (Päivämäärä URL-suodattimen käyttöön-ottamiseksi):
 FirewallConfig_URLActiveDate_itemdesc=Tässä kentässä määritetään päivämäärät, jolloin URL-suodatin on käytössä.
-FirewallConfig_URLActiveTime_itemname2=Time of Day to Enable URL Filter (Kellonaika URL-suodattimen käyttöön-ottamiseksi):
-FirewallConfig_URLActiveTime_itemdesc2=Tässä kentässä määritetään aikaväli, jolloin URL-suodatin on käytössä. Anna eri alkamis- ja päättymisaika. Jos alkamisaika on loppumisajan jälkeen, toiminto toimii yli puolenyön.
 FirewallConfig_URLActiveTime_itemhint2=Aikajakso ei kelpaa.
 FirewallConfig_UrlFilterDefaultAct_itemname=URL, joka sisältää määritetyt avainsanat tulee olemaan:
 FirewallConfig_UrlFilterDefaultAct_itemdesc=Jos valitset DROP (Poista), URL-osoitteet, jotka sisältävät taulukossa määritettyjä avainsanoja poistetaan tai niitä ei voi käyttää. Jos valitset ACCEPT (Hyväksy), vain URL-osoitteet, jotka sisältävät määritetyt avainsanat, ovat käytettävissä.
@@ -1425,8 +1441,8 @@ confirm_disableftp_dm=Verkkoympäristön jakamisen ottaminen pois käytöstä ai
 LANHostConfig_IPRouters_itemdesc=RT-N56U:n LAN IP -osoite. Oletusarvo on 192.168.1.1. LAN IP -osoitteiden alue: 192.168.0.1 - 192.168.255.254, 172.16.0.1 – 172.31.255.254, 10.0.0.1 – 10.255.255.254
 HSDPAConfig_hsdpa_mode_itemdesc=Liitä 3G/3.5G USB -sovitin RT-N56U-reitittimeen ja tee siitä siirrettävä reititin.
 Not_authpage_login_again=Jos haluat kirjautua sisään uudelleen, sulje ensin tämä ikkuna. 
-GO_HSDPA_SETTING=Siirry HSDPA-asetukseen.
-HSDPA_disable=Jos haluat muuttaa yhteystyyppiä, siirry kohtaan <a href="/Advanced_HSDPA_others.asp"><#GO_HSDPA_SETTING#></a>ottaaksesi 3G/3.5G-sovittimen pois käytöstä.
+GO_HSDPA_SETTING=Siirry USB Modem-asetukseen.
+HSDPA_disable=Jos haluat muuttaa yhteystyyppiä, siirry kohtaan <a href="/Advanced_Modem_others.asp"><#GO_HSDPA_SETTING#></a>ottaaksesi sovittimen pois käytöstä.
 [new strings - translated]
 GO_2G=Siirry 2.4 GHz -asetukseen.
 GO_5G=Siirry 5 GHz -asetukseen.

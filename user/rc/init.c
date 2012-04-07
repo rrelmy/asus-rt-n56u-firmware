@@ -358,12 +358,14 @@ static int fatal_signals[] = {
 	SIGTRAP,
 	SIGPWR,
 	SIGTERM,	/* reboot */
-	SIGUSR1,	/* halt */
+//	SIGUSR1,	/* halt */
 };
 
 void
 fatal_signal(int sig)
 {
+	dbG("sig: %d 0x%x\n", sig, sig);
+
 	char *message = NULL;
 
 	switch (sig) {
@@ -381,9 +383,11 @@ fatal_signal(int sig)
 	case SIGUSR1: message = "User-defined signal 1"; break;
 	}
 	if (message)
-		cprintf("%s\n", message);
+//		cprintf("%s\n", message);
+		dbG("%s\n", message);
 	else
-		cprintf("Caught signal %d\n", sig);
+//		cprintf("Caught signal %d\n", sig);
+		dbG("Caught signal %d\n", sig);
 
 	shutdown_system();
 	sleep(2);

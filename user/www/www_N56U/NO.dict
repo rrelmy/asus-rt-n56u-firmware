@@ -18,8 +18,38 @@ LANG_FI=Finsk
 LANG_DA=Dansk
 LANG_SV=Svensk
 LANG_BR=Brazil
+LANG_JP=日本語
+[Malaysia Unifi]
+PPPConnection_x_Unifi=Unifi Support :
+PPPConnection_x_Unifi_Describe=Select 'Yes' to support Malaysia Unifi services.
+[VPN Passthrough]
+VPN_PPTP_Passthrough=VPN PPTP Gjennomgang
+VPN_L2TP_Passthrough=VPN L2TP Gjennomgang
+VPN_IPSec_Passthrough=VPN IPSec Gjennomgang
+vpn_passthrough_itemname=VPN Gjennomgang
+vpn_passthrough_desc=Aktiver VPN Gjennomgang for å tillate en VPN-tilkobling (Virtual Private Network) å gå gjennom ruteren til nettverksklientene.
+[AiDisk account alert]
+enable_noaccount_alert=Når den er aktivert, vil det skje tilknytning problem å Samba server og ned Master hvis det ikke er foreligger noen konto.
 [iTunes]
 iTunesMediaServer=iTunes-medieserver
+[opmode strings]
+BasicConfig_EnableiTunesServer_itemname=Enable iTunes Server?
+OP_switch_button_hint1=Driftsmodusbryteren er plassert på bunnpanelet av RT-N56U.
+OP_switch_button_hint2=Klikk her for å vise
+OP_GW_item=IP-delingsmodus (Standard)
+OP_GW_desc1=I Bredbånd-delingsmodusen, kobler RT-N56U til Internett via PPPoE, automatis IP, PPTP, L2TP eller statisk IP.
+OP_GW_desc2=Den gir deg et trådløst radiosignal. NAT, brannmur og bredbåndsdelingstjenester for LAN-klienter er aktivert. Det støtter også UPnP og Dynamisk DNS for SOHO eller hjemmebruker.
+OP_RT_item=Trådløs ruter
+OP_RT_desc1=In Router mode / IP sharing mode, RT-N56U connects to the Internet via PPPoE, DHCP, PPTP, L2TP, or Static IP and shares the wireless network to LAN client devices. In this mode, NAT, firewall, and DHCP server are enabled by default. UPnP and Dynamic DNS are supported for SOHO and home users. 
+OP_RT_desc2=Select this mode if you are a first-time user or you are not currently using any wired/wireless routers.
+OP_RE_item=Repeater mode
+OP_RE_desc1=In Repeater mode, RT-N56U wirelessly connects to an existing wireless network to extend the wireless coverage.In this mode, the firewall, IP sharing, and NAT functions are disabled.
+OP_AP_item=AP-modus
+OP_AP_desc1=In Access Point (AP) mode, RT-N56U connects to a wireless router through an Ethernet cable to extend the wireless signal coverage to other network clients. In this mode,  the firewall, IP sharing, and NAT functions are disabled by default.
+OP_AP_desc2=Select this mode if you are an advanced network user who understands the difference between a wireless router and an access point, which is that a wireless router provides the Network Address Translation (NAT) and IP sharing functions. 
+OP_Modem=Modem
+OP_WirelessClient=Wireless Client
+OP_WirelessSignal=Existing wireless signal
 [untranslate]
 IPConnection_VSList_ftpport=FTP-serverport:
 Adm_System_telnetd=Aktiver Telnet-server?
@@ -94,7 +124,7 @@ QIS_resetModem_desc1=Koble strømledningen fra modemet.
 QIS_resetModem_desc2=Nullstill modemet
 QIS_resetModem_desc3=Koble fra og koble til igjen strømledningen etter to minutter.
 QIS_resetModem2_desc1=Koble strømledningen til igjen på baksiden av modemet og vent 1 minutt. ASUS-ruteren vil få den nye IP-en fra modemet.
-QIS_wireless_desc1=Tast inn en nettverksnøkkel mellom 8 og 63 tegn (bokstaver, tall eller en kombinasjon av disse). Hvis du ikke vil stille inn nettverkssikkerheten, lar du nettverksnøkkelfeltet stå tomt. <span style='font-weight:bolder;'>Standard trådløs sikkerhet er WPA-Auto-Personal - AES + TKIP.</span>
+QIS_wireless_desc1=Tast inn en nettverksnøkkel mellom 8 og 63 tegn (bokstaver, tall eller en kombinasjon av disse) eller 64 hex sifre. Hvis du ikke vil stille inn nettverkssikkerheten, lar du nettverksnøkkelfeltet stå tomt. <span style='font-weight:bolder;'>Standard trådløs sikkerhet er WPA-Auto-Personal - AES + TKIP.</span>
 [Traffic Monitor]
 Date=Dato
 Scale=Skala
@@ -152,10 +182,10 @@ ShareNode_Seeding_itemdesc=Lar deg aktivere eller deaktivere seeding-funksjonen.
 ShareNode_MaxUpload_itemname=Maksimal opplastingshastighet
 ShareNode_MaxUpload_itemdesc=Angi en verdi mellom 0 til 999. Standardverdien er 0, som betyr at det ikke er en opplastingsgrense.
 [New item]
-HSDPAConfig_hsdpa_enable_hint1=Etter aktivering av HSDPA, vil dine originale WAN-innstillinger bli deaktivert.
-HSDPAConfig_hsdpa_enable_hint2=Hvis du vil endre tilkoblingstypen, gå til <a href="/Advanced_HSDPA_others.asp">HSDPA</a> for å deaktivere 3G/3.5G-adapteren.
+HSDPAConfig_hsdpa_enable_hint1=Etter aktivering av USB Modem, vil dine originale WAN-innstillinger bli deaktivert.
+HSDPAConfig_hsdpa_enable_hint2=Hvis du vil endre tilkoblingstypen, gå til <a href="/Advanced_Modem_others.asp">USB Modem</a> for å deaktivere 3G/3.5G-adapteren.
 HSDPAConfig_USBAdapter_itemname=3G/3.5G USB-adapter
-HSDPAConfig_USBAdapter_itemdesc=Etter aktivering av HDSPA, velg adapteren som RT-N56U støtter.
+HSDPAConfig_USBAdapter_itemdesc=Etter aktivering av USB Modem, velg adapteren som RT-N56U støtter.
 APSurvey_msg_connected=Du har allerede koblet til dette tilgangspunktet.
 APSurvey_msg_connect_suggest1=Vi foreslår at du bruker en Ethernet-kabel til å koble til RT-N56U for en stabil konfigurasjon og bedre opplevelse.
 APSurvey_msg_connect_suggest2=Klikk på [<span style="font-weight:bold; font-size:16px;">OK</span>] for å beholde konfigureringen. Under innstillingsprosessen din, kan PC-en kobles fra og vi kan ikke forsikre at RT-N56U er koblet til det eksterne tilgangspunktet.
@@ -199,17 +229,6 @@ AP_fail_get_IPaddr=Kunne hente IP-informasjonen.
 AP_Remote_IP=AP IP-adresse
 AP_survey=AP-undersøkelse
 statusTitle_AP=Tilgangspunktstatus
-OP_switch_button_hint1=Driftsmodusbryteren er plassert på bunnpanelet av RT-N56U.
-OP_switch_button_hint2=Klikk her for å vise
-OP_GW_item=IP-delingsmodus (Standard)
-OP_GW_desc1=I Bredbånd-delingsmodusen, kobler RT-N56U til Internett via PPPoE, automatis IP, PPTP, L2TP eller statisk IP.
-OP_GW_desc2=Den gir deg et trådløst radiosignal. NAT, brannmur og bredbåndsdelingstjenester for LAN-klienter er aktivert. Det støtter også UPnP og Dynamisk DNS for SOHO eller hjemmebruker.
-OP_RT_item=Ruter (Deaktiver NAT)
-OP_RT_desc1=I rutermodusen, bruk en Ethernet-kabel til å koble RT-N56U til med datamaskinen og opprett en trådløs nettverkstilkobling, velg deretter innstillingene for din trådløse nettverkstilkobling. 
-OP_RT_desc2=RT-N56U forlenger det trådløse nettverksdekningsområdet og lar deg konfigurere den statiske ruteprotokollen. Den deaktiverer NAT (Network Address Translation) for å tillate kommunikasjon og delingstjenester blant LAN- og WAN-klienter. Merk: Du må spesifisere rutereglene i vertsruteren.
-OP_AP_item=Tilgangspunkt
-OP_AP_desc1=I Internettleverandør-modus, bruk en Ethernet-kabel til å koble RT-N56U til med LAN, deretter kan datamaskinen opprette en trådløs nettverkstilkobling til RT-N56U. Alle nettverksklientene må slås sammen med en bru.
-OP_AP_desc2=Denne modusen leverer en Internettilkobling for nettverksklienter, men deaktiverer brannmuren, IP-deling og NAT-funksjoner.
 [USB Application - HSDPA]
 HSDPAConfig_connection=Innstilling for tilkobling
 HSDPAConfig_pin_code_itemdesc=Legg inn PIN-koden til SIM-kortet. Det må være et tall som er større enn 4 og mindre enn 8. Hvis du ikke kjenner PIN-koden, må du ta kontakt med Internettleverandøren.
@@ -225,13 +244,13 @@ HSDPAConfig_ConnectionTime_itemname=Tilkoblingstid
 HSDPAConfig_TransDataSize_itemname=Overført datastørrelse
 HSDPAConfig_ReceviedDataSize_itemname=Mottatt datastørrelse
 HSDPAConfig_TotalDataSize_itemname=Total datastørrelse
-HSDPAConfig_MTU_itemdesc=Det betyr maksimal overføringsenhet (Maximum Transmission Unit (MTU)) til HSDPA-pakke.
-HSDPAConfig_MRU_itemdesc=Det betyr maksimal mottaksenhet (Maximum Receive Unit (MRU)) til HSDPA-pakke.
+HSDPAConfig_MTU_itemdesc=Det betyr maksimal overføringsenhet (Maximum Transmission Unit (MTU)) til USB Modem-pakke.
+HSDPAConfig_MRU_itemdesc=Det betyr maksimal mottaksenhet (Maximum Receive Unit (MRU)) til USB Modem-pakke.
 checkbox_Yes=Ja
 checkbox_No=Nei
 HSDPAConfig_basic=Grunnleggende innstilling
-HSDPAConfig_hsdpa_enable_itemname=Aktivere HSDPA?
-HSDPAConfig_hsdpa_mode_itemname=HSDPA-modus
+HSDPAConfig_hsdpa_enable_itemname=Aktivere USB Modem?
+HSDPAConfig_hsdpa_mode_itemname=USB Modem-modus
 HSDPAConfig_pin_code_enable_itemname=Aktiver PIN-kode?
 HSDPAConfig_pin_code_itemname=PIN-kode
 HSDPAConfig_enable_apn_itemname=Aktiver APN-tjeneste:
@@ -275,7 +294,7 @@ Device_service_Printer=Skrivertjeneste:
 Device_service_Wireless=Trådløs:
 DrSurf_Alert21=Disken i RT-N56U er montert og er tilgjengelig for tilgang.
 ddnsname_computername=Etter at du har brukt innstillingen, endres også Device Name (Enhetsnavn) samtidig. Vil du fortsette?
-JS_storageright=Det er navnet på RT-N56U, og standard inntastingstegn inkluderer bokstaver (A-Z, a-z), tall (0-9), mellomrom, understrekning (_) og bindestreker (-). Første og siste tegn bør ikke inneholde mellomrom. Bruk av et ikke-standard navn vil forhindre at andre brukere finner datamaskinen din på nettverket. <br> Hvis du har registrert og åpnet ASUS DDNS-tjenesten, er feltet automatisk oppdatert.
+JS_storageright=Det er navnet på RT-N56U, og standard inntastingstegn inkluderer bokstaver (A-Z, a-z), tall (0-9), mellomrom, understrekning (_) og bindestreker (-). Første og siste tegn bør ikke inneholde mellomrom. Bruk av et ikke-standard navn vil forhindre at andre brukere finner datamaskinen din på nettverket.
 not_support_script=Nettleseren din har ikke støtte for JavaScript. Velg en nettleser som støtter JavaScript eller aktiver dette for å bruke den flerfunksjonelle ruteren, ASUS RT-N56U.
 [Advanced_AiDisk_others.asp]
 Help_of_Workgroup=Det er gruppenavnet på RT-N56U i nettverksnabolaget, og standard inntastingstegn inkluderer bokstaver (A-Z, a-z), tall (0-9), mellomrom, understrekning (_) og bindestreker (-). Det bør ikke være noen mellomrom i første og siste tegn. Bruk av et ikke-standard navn fører til at andre brukere ikke kan finne datamaskinen din i et LAN.
@@ -398,7 +417,7 @@ menu5_3_6=DDNS
 menu5_4_1=Nettverksnabolagdel
 menu5_4_2=FTP-del
 menu5_4_3=Diverse innstillinger
-menu5_4_4=HSDPA
+menu5_4_4=USB Modem
 menu5_5_1=Generelt
 menu5_5_2=URL-filter
 menu5_5_3=MAC-filter
@@ -679,7 +698,7 @@ QKSet_finishpre_rebootnow=Fullfør
 QKSet_account_webtitle=ISP-kontoinnstilling
 QKSet_ISP_head=ISP-informasjonsinnstilling
 QKSet_ISP_desc=Henvis til ISP-innstillingen din, og angi den nødvendige informasjonen.
-PPPConnection_UserName_itemdesc=Dette feltet er bare tilgjengelig når du stiller inn WAN-tilkoblingstypen som HSDPA, PPPoE, PPTP eller L2TP.
+PPPConnection_UserName_itemdesc=Dette feltet er bare tilgjengelig når du stiller inn WAN-tilkoblingstypen som USB Modem, PPPoE, PPTP eller L2TP.
 BOP_account_user_item=Brukernavn:
 BOP_account_pass_item=Passord:
 QKSet_account_passwd=Passordet for denne brukerkontoen.
@@ -741,7 +760,7 @@ QKSet_type_rechoice=Velg WAN-typen
 QKSet_wireless_webtitle=Trådløs innstilling
 WLANConfig11b_SSID_itemdesc=Tildel en identifikasjonsstreng på opptil 32 tegn for din trådløse tilkobling.
 WLANConfig11b_SSID_itemname=SSID:
-WLANConfig11b_x_PSKKey_itemdesc=Dette feltet krever et passord på 8 til 63 tegn for å starte krypteringen. Hvis du lar dette feltet stå tomt, brukes standard [00000000] som passordet.
+WLANConfig11b_x_PSKKey_itemdesc=Dette feltet krever et passord på 8 og 63 tegn (bokstaver, tall eller en kombinasjon av disse) eller 64 hex sifre for å starte krypteringen. Hvis du lar dette feltet stå tomt, brukes standard [00000000] som passordet.
 WLANConfig11b_x_PSKKey_itemname=WPA forhåndsdelt nøkkel:
 WLANConfig11b_WEPDefaultKey_itemdesc=Still inn WEP-nøkkelen til å overføre data på det trådløse.
 WLANConfig11b_WEPDefaultKey_itemname=Nøkkelindeks:
@@ -984,11 +1003,8 @@ FirewallConfig_URLActiveTime_itemhint=Starttiden er senere enn sluttiden.
 FirewallConfig_UrlFilterEnable_itemname=Aktiver URL-filter
 FirewallConfig_URLActiveTime_itemdesc=Dette feltet definerer tidsintervallet som URL-filter vil være aktivert. Angi en forskjellig start- og sluttid.
 FirewallConfig_UrlFilterEnable_sectiondesc=For å spesifisere nøkkelord, vil URL-filteret blokkere spesifikk URL-tilgang fra klienter.
-FirewallConfig_UrlFilterEnable_itemname2=Aktiver URL-filter?
 FirewallConfig_URLActiveDate_itemname=Dato for å aktivere URL-filter:
 FirewallConfig_URLActiveDate_itemdesc=Dette feltet definerer datoene som URL-filter vil være aktivert.
-FirewallConfig_URLActiveTime_itemname2=Tidspunkt for å aktivere URL-filter:
-FirewallConfig_URLActiveTime_itemdesc2=Dette feltet definerer tidsintervallet som URL-filter vil være aktivert. Angi en forskjellig start- og sluttid. Hvis starttid er senere enn sluttid, vil funksjonen gå over midnatt.
 FirewallConfig_URLActiveTime_itemhint2=Ugyldig tidsperiode.
 FirewallConfig_UrlFilterDefaultAct_itemname=URL som inneholder de definerte nøkkelordene vil være:
 FirewallConfig_UrlFilterDefaultAct_itemdesc=Hvis du velger DROP, vil URL-adresser som inneholder nøkkelordene definert i tabellen bli droppet eller er ikke tilgjengelige. Hvis du velger ACCEPT, er bare de URL-adressene som inneholder de definerte nøkkelordene tilgjengelige.
@@ -1140,7 +1156,7 @@ LANHostConfig_x_DDNSStatus_itemname=Oppdater manuelt:
 LANHostConfig_x_DDNSStatus_itemdesc=Denne knappen lar deg oppdatere DDNS-databasen manuelt. Det er bare tilgjengelig når automatisk DDNS-oppdatering mislykkes. Du kan få gjeldende status på DDNS-oppdatering fra systemloggen.
 LANHostConfig_ReservedAddresses_itemname=IP-adresse:
 DeviceSecurity11a_display1_sectiondesc=Trådløst MAC-filter lar deg kontrollere pakker fra enheter med spesifisert MAC-adresse i ditt trådløse LAN.
-WLANAuthentication11a_display1_sectiondesc=Denne delen lar deg sette opp ekstra parametre for godkjenning av trådløse klienter gjennom RADIUS-serveren. Det kreves når du velger \"Godkjenningsmetode" i \"Trådløst – Generelt\" som \"WPA-ENTERPRISE/WPA2-ENTERPRISE\" eller \"Radius med 802.1x\".
+WLANAuthentication11a_display1_sectiondesc=Denne delen lar deg sette opp ekstra parametre for godkjenning av trådløse klienter gjennom RADIUS-serveren. Det kreves når du velger "Godkjenningsmetode" i "Trådløst – Generelt" som "WPA-ENTERPRISE/WPA2-ENTERPRISE" eller "Radius med 802.1x".
 WLANAuthentication11a_ExAuthDBIPAddr_itemname=IP-adresse for server:
 WLANAuthentication11a_ExAuthDBIPAddr_itemdesc=IP-adressen til RADIUS-serveren for 802.1X trådløs godkjenning og dynamisk WEP-nøkkelderivasjon.
 WLANAuthentication11a_ExAuthDBPortNumber_itemname=Serverport:
@@ -1425,8 +1441,8 @@ confirm_disableftp_dm=Deaktivering nettverksnabolagdel vil føre til at Download
 LANHostConfig_IPRouters_itemdesc=LAN IP-adressen til RT-N56U. Standardverdien er 192.168.1.1. Området til LAN IP-adressen: 192.168.0.1 - 192.168.255.254, 172.16.0.1 – 172.31.255.254, 10.0.0.1 – 10.255.255.254
 HSDPAConfig_hsdpa_mode_itemdesc=Koble 3G/3.5G USB-adapteren inn i RT-N56U og gjør den til en mobil ruter.
 Not_authpage_login_again=Hvis du vil logge på igjen, må du først lukke dette vinduet. 
-GO_HSDPA_SETTING=Gå til HSDPA-innstilling.
-HSDPA_disable=Hvis du vil endre tilkoblingstype，henvis til <a href="/Advanced_HSDPA_others.asp"><#GO_HSDPA_SETTING#></a>for å deaktivere 3G/3.5G-adapter.
+GO_HSDPA_SETTING=Gå til USB Modem-innstilling.
+HSDPA_disable=Hvis du vil endre tilkoblingstype，henvis til <a href="/Advanced_Modem_others.asp"><#GO_HSDPA_SETTING#></a>for å deaktivere adapter.
 [new strings - translated]
 GO_2G=Gå til 2.4 GHz-innstillingen
 GO_5G=Gå til 5 GHz-innstillingen

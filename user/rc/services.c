@@ -418,12 +418,15 @@ void nvram_commit_safe()
 int
 start_services(void)
 {
-	printf("[rc] start services\n");	// tmp test
+	printf("[rc] start services\n");
 
 	start_telnetd();
 	start_logger();
 
-	if (!nvram_match("computer_name", ""))
+	logmessage("RT-N56U", "bootloader version: %s", nvram_safe_get("blver"));
+	logmessage("RT-N56U", "firmware version: %s", nvram_safe_get("firmver_sub"));
+
+	if (!nvram_match("computer_name", "") && is_valid_hostname(nvram_safe_get("computer_name")))
 		doSystem("hostname %s", nvram_safe_get("computer_name"));
 	else
 		doSystem("hostname %s", nvram_safe_get("productid"));

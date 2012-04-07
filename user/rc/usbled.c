@@ -46,10 +46,29 @@ alarmtimer(unsigned long sec, unsigned long usec)
 	setitimer(ITIMER_REAL, &itv, NULL);
 }
 
+extern int linkstatus_usb;
+
+void nousbled(int sig)
+{
+	alarmtimer(0, 0);
+	linkstatus_usb = -1;
+	nvram_set("no_usb_led", "0");
+	remove("/var/run/usbled.pid");
+	exit(0);
+}
+
 int count = 0;
 
-void usbled(void)
+void usbled(int sig)
 {
+	char *usb_path1 = nvram_safe_get("usb_path1");
+	char *usb_path2 = nvram_safe_get("usb_path2");
+
+	if (strcmp(usb_path1, "storage") && strcmp(usb_path2, "storage"))
+	{
+		nousbled(sig);
+	}
+	else
 	{
 		count = (++count % 20);
 
@@ -59,16 +78,9 @@ void usbled(void)
 			LED_CONTROL(LED_USB, LED_ON);
 		else
 			LED_CONTROL(LED_USB, LED_OFF);
+
 		alarmtimer(0, URGENT_PERIOD);
 	}
-}
-
-void nousbled(void)
-{
-	alarmtimer(0, 0);
-	nvram_set("no_usb_led", "0");
-	remove("/var/run/usbled.pid");
-	exit(0);
 }
 
 int 

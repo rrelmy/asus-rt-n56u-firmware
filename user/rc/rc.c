@@ -165,6 +165,10 @@ set_wan0_vars(void)
 		nvram_set(strcat_r(prefix, "desc", tmp), "Default Connection");
 		nvram_set(strcat_r(prefix, "primary", tmp), "1");
 	}
+
+	// ex init
+	nvram_set("auto_dhcp_dns", "");
+	nvram_set("auto_dhcp_dns2", "");
 }
 
 static void
@@ -319,10 +323,21 @@ insmod(void)
 #endif
 #endif
 
-//	if (!nvram_match("wan0_proto", "3g"))
+	if (nvram_match("wan_route_x", "IP_Routed") &&
+		(nvram_match("fw_pt_pptp", "1") || nvram_match("fw_pt_l2tp", "1") || nvram_match("fw_pt_ipsec", "1") ||
+			nvram_match("wan_proto", "pptp") || nvram_match("wan_proto", "l2tp")))
 	{
-		system("insmod -q /usr/lib/ufsd.ko");
+		system("insmod -q nf_conntrack_proto_gre");	// CONFIG_NF_CT_PROTO_GRE
+		system("insmod -q nf_nat_proto_gre");		// CONFIG_NF_NAT_PROTO_GRE
+
+		if (nvram_match("fw_pt_pptp", "1") || nvram_match("wan_proto", "pptp"))
+		{
+			system("insmod -q nf_conntrack_pptp");	// CONFIG_NF_CONNTRACK_PPTP
+			system("insmod -q nf_nat_pptp");	// CONFIG_NF_NAT_PPTP
+		}
 	}
+
+	system("insmod -q /usr/lib/ufsd.ko");
 }
 
 /* States */
@@ -346,21 +361,27 @@ rc_signal(int sig)
 {
 	if (state == IDLE) {	
 		if (sig == SIGHUP) {
+			dbG("[rc] catch signal SIGHUP\n");
 			signalled = RESTART;
 		}
 		else if (sig == SIGUSR2) {
+			dbG("[rc] catch signal SIGSUR2\n");
 			signalled = START;
 		}
 		else if (sig == SIGINT) {
+			dbG("[rc] catch signal SIGINT\n");
 			signalled = STOP;
 		}
 		else if (sig == SIGALRM) {
+			dbG("[rc] catch signal SIGALRM\n");
 			signalled = TIMER;
 		}
 		else if (sig == SIGUSR1) {
+			dbG("[rc] catch signal SIGUSR1\n");
 			signalled = SERVICE;
 		}
 		else if (sig == SIGTTIN) {
+			dbG("[rc] catch signal SIGTTIN\n");
 			signalled = HOTPLUG;
 		}
 	}
@@ -654,12 +675,46 @@ Speedtest_Init_failed:
 			!is_hwnat_loaded() 
 		)
 		{
-			if (nvram_match("hwnat", "1"))
+			if (nvram_match("hwnat", "1") && nvram_match("fw_pt_l2tp", "0") && nvram_match("fw_pt_ipsec", "0"))
 				system("insmod -q hw_nat.ko");
 		}
 	}
+
+	logmessage("RT-N56U", "Hardware NAT: %s", is_hwnat_loaded() ? "Enabled": "Disabled");
+	logmessage("RT-N56U", "Software QoS: %s", nvram_match("qos_enable", "1") ? "Enabled": "Disabled");
 }
 #endif
+
+void restart_vpn_pt()
+{
+	if ((nvram_match("fw_pt_l2tp", "1") || nvram_match("fw_pt_ipsec", "1")) && is_hwnat_loaded())
+		system("rmmod hw_nat");
+
+	system("rmmod nf_nat_pptp 1>/dev/null 2>&1");
+	system("rmmod nf_conntrack_pptp 1>/dev/null 2>&1");
+	system("rmmod nf_nat_proto_gre 1>/dev/null 2>&1");
+	system("rmmod nf_conntrack_proto_gre 1>/dev/null 2>&1");
+
+	if (nvram_match("fw_pt_pptp", "1") || nvram_match("fw_pt_l2tp", "1") || nvram_match("fw_pt_ipsec", "1") || nvram_match("wan_proto", "pptp") || nvram_match("wan_proto", "l2tp"))
+	{
+		system("insmod -q nf_conntrack_proto_gre");
+		system("insmod -q nf_nat_proto_gre");
+                
+		if (nvram_match("fw_pt_pptp", "1") || nvram_match("wan_proto", "pptp"))
+		{
+			system("insmod -q nf_conntrack_pptp");
+			system("insmod -q nf_nat_pptp");
+		}
+	}
+
+	if (	nvram_match("hwnat", "1") && nvram_match("fw_pt_l2tp", "0") && nvram_match("fw_pt_ipsec", "0") &&
+		nvram_match("sw_mode_ex", "1") &&
+		(nvram_match("wl_radio_x", "0") || nvram_match("wl_mrate", "0")) &&
+		(nvram_match("rt_radio_x", "0") || nvram_match("rt_mrate", "0")) &&
+		!enable_qos() &&
+		!is_hwnat_loaded())
+		system("insmod -q hw_nat.ko");
+}
 
 void rc_restart_firewall()
 {
@@ -771,23 +826,7 @@ static void handle_notifications(void) {
 			dbg("rc rebooting the system.\n");
 
 			nvram_set("reboot", "1");
-/*
-//			if (nvram_match("wan0_proto", "3g") && (strlen(nvram_safe_get("usb_path1")) > 0))
-			if (strlen(nvram_safe_get("usb_path1")) > 0)
-			{
-				printf("[rc] hanble_notifications ejusb");
-				system("ejusb");
-				if (nvram_match("wan0_proto", "3g"))
-					sleep(10);
-				else
-					sleep(3);
-			}
-			else
-				sleep(1);	// wait httpd sends the page to the browser.
 
-			nvram_set("reboot", "1");
-			system("reboot");
-*/
 			return;
 		}
 		else if (strcmp(entry->d_name, "restart_networking") == 0)
@@ -812,8 +851,9 @@ static void handle_notifications(void) {
 		else if (strcmp(entry->d_name, "restart_ddns") == 0 && nvram_match("wan_route_x", "IP_Routed"))
 		{
 			dbg("rc restarting DDNS.\n");
+
 			stop_ddns();
-			
+
 			if (nvram_match("ddns_enable_x", "1")) {
 				start_ddns();
 				
@@ -899,12 +939,23 @@ static void handle_notifications(void) {
 			restart_qos();
 		}
 #endif
+		else if (strcmp(entry->d_name, "restart_vpn_pt") == 0)
+		{
+			printf("rc restart VPN passthrough.");
+			rc_restart_firewall();
+			restart_vpn_pt();
+		}
+		else if (strcmp(entry->d_name, "restart_switch_config") == 0)
+		{
+			printf("rc restart switch config");
+			restart_switch_config();
+		}
 		else if (strcmp(entry->d_name, "restart_syslog") == 0)
 		{
 			dbg("rc restarting syslogd.\n");
 #ifdef ASUS_EXT  
-	stop_logger();
-	start_logger();
+			stop_logger();
+			start_logger();
 #endif
 
 		}
@@ -1589,24 +1640,7 @@ usb_dbg("# rc: End of PRT PLUG OFF\n");
 
 			stop_lan();
 
-//			if (nvram_match("wan0_proto", "3g") && (strlen(nvram_safe_get("usb_path1")) > 0))
-#ifndef USB_MODEM
-			if (strlen(nvram_safe_get("usb_path1")) > 0)
-#else
-			if(strlen(nvram_safe_get("usb_path1")) > 0 || strlen(nvram_safe_get("usb_path2")) > 0)
-#endif
-			{
-				printf("[rc] main_loop ejusb");
-				system("ejusb");
-#ifndef USB_MODEM
-				if (nvram_match("wan0_proto", "3g"))
-#else
-				if(get_usb_modem_state())
-#endif
-					sleep(10);
-				else
-					sleep(3);
-			}
+			stop_usb();
 
 			if (state == STOP) {
 				state = IDLE;
@@ -1648,6 +1682,7 @@ usb_dbg("# rc: End of PRT PLUG OFF\n");
 
 			start_services();
 			start_usb();
+
 #ifdef USB_MODEM
 			nvram_set("system_ready", "1");	// for notifying wanduck.
 #endif
@@ -1866,49 +1901,16 @@ main(int argc, char **argv)
 			else if (strncmp(argv[1], "stop", 4) == 0)
 			{
 				printf("[rc stop]\n");
-//				if (nvram_match("wan0_proto", "3g") && (strlen(nvram_safe_get("usb_path1")) > 0))
-#ifndef USB_MODEM
-				if (strlen(nvram_safe_get("usb_path1")) > 0)
-#else
-				if(strlen(nvram_safe_get("usb_path1")) > 0 || strlen(nvram_safe_get("usb_path2")) > 0)
-#endif
-				{
-					printf("[rc] main stop ejusb");
-					system("ejusb");
-#ifndef USB_MODEM
-					if (nvram_match("wan0_proto", "3g"))
-#else
-					if(get_usb_modem_state())
-#endif
-						sleep(10);
-					else
-						sleep(3);
-				}
+
+				stop_usb();
 
 				return kill(1, SIGINT);
 			}
 			else if (strncmp(argv[1], "restart", 7) == 0)
 			{
 				printf("[rc restart]\n");
-#ifndef USB_MODEM
-				if (nvram_match("wan0_proto", "3g") && (strlen(nvram_safe_get("usb_path1")) > 0))
-				if (strlen(nvram_safe_get("usb_path1")) > 0)
-				{
-					printf("[rc] main restart ejusb");
-					system("ejusb");
-					if (nvram_match("wan0_proto", "3g"))
-						sleep(10);
-					else
-						sleep(3);
-				}
-#else
-				if(strlen(nvram_safe_get("usb_path1")) > 0 || strlen(nvram_safe_get("usb_path2")) > 0){
-					if(get_usb_modem_state())
-						sleep(10);
-					else
-						sleep(3);
-				}
-#endif
+
+				stop_usb();
 
 				return kill(1, SIGHUP);
 			}
@@ -2007,6 +2009,12 @@ main(int argc, char **argv)
 			puts("0");
 		return 0;
 	}
+	else if (!strcmp(base, "getIMG")) {
+		return getIMG();
+	}
+	else if (!strcmp(base, "slink")) {
+		return symlink(argv[1], argv[2]);
+	}
 	else if (!strcmp(base, "getSSID")) {
 		return getSSID();
 	}
@@ -2064,10 +2072,14 @@ main(int argc, char **argv)
 			return wps_pbc_2g();
 	}
 	else if (!strcmp(base, "wps_oob")) {
+#if 0
 		if (nvram_match("wps_band", "0"))
 			wps_oob();
 		else
 			wps_oob_2g();
+#else
+		wps_oob_both();
+#endif
 		return 0;
 	}
 	else if (!strcmp(base, "wps_start")) {
@@ -2131,6 +2143,15 @@ main(int argc, char **argv)
 		
 		return 0;
 	}
+	else if (!strcmp(base, "restart_dhcpd"))
+	{
+		dbg("rc update_resolvconf\n");
+		update_resolvconf();
+		dbg("rc restart_dhcpd\n");
+		restart_dhcpd();
+                
+		return 0;
+	}
 	else if (!strcmp(base, "restart_networkmap"))
 	{
 		stop_networkmap();
@@ -2156,6 +2177,7 @@ main(int argc, char **argv)
 		{
 			remove_usb_mass("1");
 			remove_usb_mass("2");
+			umount_sddev_all();
 		}
 		else
 			remove_usb_mass(argv[1]);
@@ -2412,6 +2434,8 @@ main(int argc, char **argv)
 	else if(!strcmp(base, "wanduck"))
 		return wanduck_main(argc, argv);
 // 2011.02 James. 3G. }
+        else if (!strcmp(base, "cpu"))
+		return cpu_main(argc, argv, 1);
 
 	return EINVAL;
 }

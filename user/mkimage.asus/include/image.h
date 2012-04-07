@@ -132,7 +132,7 @@
  * all data in network byte order (aka natural aka bigendian)
  */
 
-#define MAX_STRING 24
+#define MAX_STRING 23	// 24-1, for sub_fs 
 #define MAX_VER 4
 
 typedef struct {
@@ -144,6 +144,7 @@ typedef struct {
 	version_t kernel;
 	version_t fs;
 	char	  productid[MAX_STRING];
+	uint8_t   sub_fs;	// a - z, A - Z
 //	version_t hw[MAX_VER*2];
 } TAIL;
 

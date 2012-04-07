@@ -1,4 +1,4 @@
-﻿[Language type]
+[Language type]
 CHAR_set=UTF-8
 PASS_LANG=Language:
 LANG_select=Select Language
@@ -18,8 +18,38 @@ LANG_FI=Finsk
 LANG_DA=Dansk
 LANG_SV=Svensk
 LANG_BR=Brazil
+LANG_JP=日本語
+[Malaysia Unifi]
+PPPConnection_x_Unifi=Unifi Support :
+PPPConnection_x_Unifi_Describe=Select 'Yes' to support Malaysia Unifi services.
+[VPN Passthrough]
+VPN_PPTP_Passthrough=VPN PPTP Passthrough
+VPN_L2TP_Passthrough=VPN L2TP Passthrough
+VPN_IPSec_Passthrough=VPN IPSec Passthrough
+vpn_passthrough_itemname=VPN Passthrough
+vpn_passthrough_desc=Enable VPN Passthrough to allow a Virtual Private Network (VPN) connection to pass through the router to the network clients.
+[AiDisk account alert]
+enable_noaccount_alert=When enabled, it will happen connection problem to Samba server and Download Master if there is not exist any  account.
 [iTunes]
 iTunesMediaServer=iTunes Media Server
+[opmode strings]
+BasicConfig_EnableiTunesServer_itemname=Enable iTunes Server?
+OP_switch_button_hint1=The operation mode switch is located at the bottom panel of the RT-N56U.
+OP_switch_button_hint2=Click here to view
+OP_GW_item=IP Sharing mode(Default)
+OP_GW_desc1=In the Broadband share mode, RT-N56U connects to the Internet via PPPoE,Automatic IP, PPTP, L2TP, or Static IP.
+OP_GW_desc2=It provides you with wireless radio signal. The NAT, firewall, and broadband sharing services for LAN clients are enabled. It also supports UPnP and Dynamic DNS for SOHO or home user.
+OP_RT_item=Wireless Router / IP sharing mode
+OP_RT_desc1=In Router mode / IP sharing mode, RT-N56U connects to the Internet via PPPoE, DHCP, PPTP, L2TP, or Static IP and shares the wireless network to LAN client devices. In this mode, NAT, firewall, and DHCP server are enabled by default. UPnP and Dynamic DNS are supported for SOHO and home users. 
+OP_RT_desc2=Select this mode if you are a first-time user or you are not currently using any wired/wireless routers.
+OP_RE_item=Repeater mode
+OP_RE_desc1=In Repeater mode, RT-N56U wirelessly connects to an existing wireless network to extend the wireless coverage.In this mode, the firewall, IP sharing, and NAT functions are disabled.
+OP_AP_item=Access Point(AP) mode
+OP_AP_desc1=In Access Point (AP) mode, RT-N56U connects to a wireless router through an Ethernet cable to extend the wireless signal coverage to other network clients. In this mode,  the firewall, IP sharing, and NAT functions are disabled by default.
+OP_AP_desc2=Select this mode if you are an advanced network user who understands the difference between a wireless router and an access point, which is that a wireless router provides the Network Address Translation (NAT) and IP sharing functions. 
+OP_Modem=Modem
+OP_WirelessClient=Wireless Client
+OP_WirelessSignal=Existing wireless signal
 [untranslate]
 IPConnection_VSList_ftpport=FTP Server Port:
 Adm_System_telnetd=Enable Telnet Server?
@@ -94,7 +124,7 @@ QIS_resetModem_desc1=Please unplug the power cord from the modem.
 QIS_resetModem_desc2=Reset the modem
 QIS_resetModem_desc3=Unplug & replug the power cord after two mins.
 QIS_resetModem2_desc1=Plug the power cord back into your modem and wait 1 minute. ASUS router will get the new IP from the modem.
-QIS_wireless_desc1=Enter a network key between 8 and 63 characters(letters, numbers or a combination). If you do not want to set the network security, leave the network key field blank. <span style='font-weight:bolder;'>The default wireless security is WPA-Auto-Personal - AES + TKIP.</span>
+QIS_wireless_desc1=Enter a network key between 8 and 63 characters(letters, numbers or a combination) or 64 hex digits. If you do not want to set the network security, leave the network key field blank. <span style='font-weight:bolder;'>The default wireless security is WPA-Auto-Personal - AES + TKIP.</span>
 [Traffic Monitor]
 Date=Date
 Scale=Scale
@@ -152,10 +182,10 @@ ShareNode_Seeding_itemdesc=Allows you to enable or disable the seeding function.
 ShareNode_MaxUpload_itemname=Maximum Upload Rate
 ShareNode_MaxUpload_itemdesc=Enter a value between 0 to 999. The default value is 0, which denotes that there is no upload limit.
 [New item]
-HSDPAConfig_hsdpa_enable_hint1=After enabling HSDPA, your original WAN settings will be disabled.
-HSDPAConfig_hsdpa_enable_hint2=If you want to change the connection type, please go to <a href="/Advanced_HSDPA_others.asp">HSDPA</a> to disable 3G/3.5G adapter.
-HSDPAConfig_USBAdapter_itemname=3G/3.5G USB Adapter
-HSDPAConfig_USBAdapter_itemdesc=After enabling HDSPA, select the adapter that RT-N56U supports.
+HSDPAConfig_hsdpa_enable_hint1=After enabling USB Modem, your original WAN settings will be disabled.
+HSDPAConfig_hsdpa_enable_hint2=If you want to change the connection type, please go to <a href="/Advanced_Modem_others.asp">USB Modem</a> to disable USB adapter.
+HSDPAConfig_USBAdapter_itemname=USB Adapter
+HSDPAConfig_USBAdapter_itemdesc=After enabling USB Modem, select the adapter that RT-N56U supports.
 APSurvey_msg_connected=You have=already connected to this AP.
 APSurvey_msg_connect_suggest1=We suggest you use ethernet cable to connect to RT-N56U for having stable configuration and better experience.
 APSurvey_msg_connect_suggest2=Click [<span style="font-weight:bold; font-size:16px;">OK</span>] to keep configuring. During setting process, your PC may occur disconnection and we cannot ensure RT-N56U is connecting to remote AP.
@@ -199,17 +229,6 @@ AP_fail_get_IPaddr=Failed to get the IP information.
 AP_Remote_IP=AP IP address
 AP_survey=AP Survey
 statusTitle_AP=Access Point status
-OP_switch_button_hint1=The operation mode switch is located at the bottom panel of the RT-N56U.
-OP_switch_button_hint2=Click here to view
-OP_GW_item=IP Sharing mode(Default)
-OP_GW_desc1=In the Brodaband share mode, RT-N56U connects to the Internet via PPPoE,Automatic IP, PPTP, L2TP, or Static IP.
-OP_GW_desc2=It provides you with wireless radio signal. The NAT, firewall, and broadband sharing services for LAN clients are enabled. It also supports UPnP and Dynamic DNS for SOHO or home user.
-OP_RT_item=Router(Disable NAT)
-OP_RT_desc1=In the router mode, use an Ethernet cable to connect RT-N56U with your computer and create a wireless network connection, then select the settings for your wireless network connection. 
-OP_RT_desc2=RT-N56Uextends your wireless network coverage and allows you to configure the static routing protocol. It disables NAT (Network Address Translation) to allow communication and sharing services among LAN and WAN clients. Note: You need to specify the routing rules in the host router.
-OP_AP_item=Access Point
-OP_AP_desc1=In the AP mode, use an Ethernet cable to connect RT-N56U with your LAN then your computer can create a wireless network connection to RT-N56U. All the network clients will be bridged together.
-OP_AP_desc2=This mode provides Internet connection for network clients, but disables the firewall, IP sharing, and NAT functions.
 [USB Application - HSDPA]
 HSDPAConfig_connection=Connection setting
 HSDPAConfig_pin_code_itemdesc=Please input the Personal Identification Number(PIN) code of your SIM card. It must be the number which length is greater than 4 and smaller than 8. If you do not know the PIN code, please contact your ISP.
@@ -225,13 +244,13 @@ HSDPAConfig_ConnectionTime_itemname=Connection Time
 HSDPAConfig_TransDataSize_itemname=Transmitted Data Size
 HSDPAConfig_ReceviedDataSize_itemname=Recevied Data Size
 HSDPAConfig_TotalDataSize_itemname=Total Data Size
-HSDPAConfig_MTU_itemdesc=It means Maximum Transmission Unit(MTU) of HSDPA packet.
-HSDPAConfig_MRU_itemdesc=It means Maximum Receive Unit(MRU) of HSDPA packet.
+HSDPAConfig_MTU_itemdesc=It means Maximum Transmission Unit(MTU) of USB Modem packet.
+HSDPAConfig_MRU_itemdesc=It means Maximum Receive Unit(MRU) of USB Modem packet.
 checkbox_Yes=Yes
 checkbox_No=No
 HSDPAConfig_basic=Basic setting
-HSDPAConfig_hsdpa_enable_itemname=Enable HSDPA?
-HSDPAConfig_hsdpa_mode_itemname=HSDPA mode
+HSDPAConfig_hsdpa_enable_itemname=Enable USB Modem?
+HSDPAConfig_hsdpa_mode_itemname=USB Modem mode
 HSDPAConfig_pin_code_enable_itemname=Enable PIN code?
 HSDPAConfig_pin_code_itemname=PIN code
 HSDPAConfig_enable_apn_itemname=Enable APN service:
@@ -275,7 +294,7 @@ Device_service_Printer=Printer Service:
 Device_service_Wireless=Wireless:
 DrSurf_Alert21=The disk in RT-N56U is mounted and can be accessed.
 ddnsname_computername=After applying the setting, the Device Name is also changed at the same time. Do you continue?
-JS_storageright=It's the name of the RT-N56U, and standard input characters include letters(A-Z,a-z), digits(0-9), spaces, underscores(_) and hyphens(-). The first and last character should not contain any spaces. Using a non-standard name will prevent other users from finding your computer on the network.<br>If you have registered and opened the ASUS DDNS service, the field are updated automatically.
+JS_storageright=It's the name of the RT-N56U, and standard input characters include letters(A-Z,a-z), digits(0-9), spaces, underscores(_) and hyphens(-). The first and last character should not contain any spaces. Using a non-standard name will prevent other users from finding your computer on the network.
 not_support_script=Your browser does not support JavaScript. Choose a browser that supports JavaScript, or enable it to use the multi-functional router, ASUS RT-N56U.
 [Advanced_AiDisk_others.asp]
 Help_of_Workgroup=It is the group name of the RT-N56U in the Network Neighborhood, and standard input characters include letters(A-Z,a-z), digits(0-9), spaces, underscores(_), and hyphens(-). There should not be any space in the first and last character . Using a non-standard  name results in other users cannot find your computer in LAN.
@@ -368,7 +387,7 @@ HowToSharebyFTP3=Enable the DDNS service to allow access via the ftp, or click t
 HowToSharebyFTP4=(Only accessible in LAN.)
 [LeftMenu]		
 menu1=Network Map
-menu2=Media Server
+menu2=UPnP Media Server
 menu3=AiDisk
 menu4=EzQoS<br/> Bandwidth<br/> Management
 menu5=<div style=\"padding-top:10px;\">Advanced Setting</div>
@@ -398,7 +417,7 @@ menu5_3_6=DDNS
 menu5_4_1=Network Neighborhood Share
 menu5_4_2=FTP Share
 menu5_4_3=Miscellaneous setting
-menu5_4_4=HSDPA
+menu5_4_4=USB Modem
 menu5_5_1=General
 menu5_5_2=URL Filter
 menu5_5_3=MAC Filter
@@ -460,10 +479,10 @@ PauseConnect=Pause
 Connect=Renew
 Disconnect=Pause
 btn_go=GO
-Printing_status=Printing status:
-Computer_Name=Name
-Printing_button_item=Monopoly mode:
 MoreConfig=More Config
+Printing_status=Printing status:
+Printing_button_item=Monopoly mode:
+Computer_Name=Name
 ConnectedClient=Client List
 BlockedClient=Blocked client list
 Type=Type
@@ -611,7 +630,7 @@ DiskStatus_refresh1=I have plugged USB disk,
 DiskStatus_refresh2=renew
 DiskStatus_refresh3= the system status.
 EZQoS=EZQoS Bandwidth Management
-footer_copyright_desc=2011 ASUSTek Computer Inc. All rights reserved.
+footer_copyright_desc=2011 ASUSTeK Computer Inc. All rights reserved.
 Help_button_default_hint=Click to open Help.
 Help_init_word1=Help provides you with guidelines and information about using the router's functions.  Click the
 Help_init_word2=hyperlinked words with yellow and blue underline.
@@ -679,7 +698,7 @@ QKSet_finishpre_rebootnow=Finish
 QKSet_account_webtitle=ISP Account Setting
 QKSet_ISP_head=ISP Information Setting
 QKSet_ISP_desc=Please refer to your ISP setting, and input the related information.
-PPPConnection_UserName_itemdesc=This field is only available when you set the WAN Connection Type as HSDPA, PPPoE, PPTP or L2TP.
+PPPConnection_UserName_itemdesc=This field is only available when you set the WAN Connection Type as USB Modem, PPPoE, PPTP or L2TP.
 BOP_account_user_item=User Name:
 BOP_account_pass_item=Password:
 QKSet_account_passwd=The Password for this user account.
@@ -741,7 +760,7 @@ QKSet_type_rechoice=Please Choose the WAN type
 QKSet_wireless_webtitle=Wireless Setting
 WLANConfig11b_SSID_itemdesc=Assign an identification string of up to 32 characters for your wireless connection.
 WLANConfig11b_SSID_itemname=SSID:
-WLANConfig11b_x_PSKKey_itemdesc=This field requires a password of 8 to 63 characters to start the encryption process . If you leave this field blank, the default [00000000] will be assigned as your password.
+WLANConfig11b_x_PSKKey_itemdesc=This field requires a password of 8 to 63 characters(letters, numbers or a combination) or 64 hex digits to start the encryption process . If you leave this field blank, the default [00000000] will be assigned as your password.
 WLANConfig11b_x_PSKKey_itemname=WPA Pre-Shared Key:
 WLANConfig11b_WEPDefaultKey_itemdesc=Set the WEP key to transmit data on your wireless.
 WLANConfig11b_WEPDefaultKey_itemname=Key Index:
@@ -984,11 +1003,8 @@ FirewallConfig_URLActiveTime_itemhint=The start time is later than end time.
 FirewallConfig_UrlFilterEnable_itemname=Enable URL Filter
 FirewallConfig_URLActiveTime_itemdesc=This field defines the time interval that URL filter will be enabled. Please enter different start and end time.
 FirewallConfig_UrlFilterEnable_sectiondesc=To specify keywork, URL filter will block specific URL access from clients.
-FirewallConfig_UrlFilterEnable_itemname2=Enable URL Filter?
 FirewallConfig_URLActiveDate_itemname=Date to Enable URL Filter:
 FirewallConfig_URLActiveDate_itemdesc=This field defines the dates that URL filter will be enabled.
-FirewallConfig_URLActiveTime_itemname2=Time of Day to Enable URL Filter:
-FirewallConfig_URLActiveTime_itemdesc2=This field defines the time interval that URL filter will be enabled. Please enter different start and end time. If start time is later than end time, the function will work cross midnight.
 FirewallConfig_URLActiveTime_itemhint2=Invalid time period.
 FirewallConfig_UrlFilterDefaultAct_itemname=URL containing the defined keywords will be:
 FirewallConfig_UrlFilterDefaultAct_itemdesc=If you choose DROP, URLs containing the keywords defined in the table are dropped or inaccessible. If you choose ACCEPT, only those URLs containing the defined keywords are accessible.
@@ -1395,7 +1411,7 @@ LANHostConfig_x_DDNS_alarm_3=Registration is successful.
 LANHostConfig_x_DDNS_alarm_4=Registered the original hostname successfully.
 LANHostConfig_x_DDNS_alarm_5=Registered the new hostname successfully.
 LANHostConfig_x_DDNS_alarm_6=The IP and hostname are not registered, please register first.
-LANHostConfig_x_DDNS_alarm_7=Invalid Hostname! The format should be 'xxx.asuscomm.com' and 'xxx' cannot be entirely number.
+LANHostConfig_x_DDNS_alarm_7=Invalid Hostname! The format should be 'xxx.asuscomm.com' and 'xxx' is not a number prefix.
 LANHostConfig_x_DDNS_alarm_8=Invalid Domain! The format should be 'xxx.asuscomm.com'.
 LANHostConfig_x_DDNS_alarm_9=Invalid IP Address!
 LANHostConfig_x_DDNS_alarm_10=Unauthorized registration request!
@@ -1420,15 +1436,17 @@ HSDPAConfig_country_itemdesc=Please select your internet service provider locati
 HSDPAConfig_dialnum_itemdesc=Please enter your dial number.
 HSDPAConfig_username_itemdesc=Please enter your username.
 HSDPAConfig_password_itemdesc=Please enter your password.
-HSDPAConfig_usbadaptor_itemdesc=Please select your 3G/3.5G usb adaptor.
+HSDPAConfig_usbadaptor_itemdesc=Please select your usb adaptor.
 confirm_disableftp_dm=Disable Network Neighborhood Share will cause your Download Master can't be used.
 LANHostConfig_IPRouters_itemdesc=The LAN IP address of RT-N56U. The default value is 192.168.1.1. The range of LAN IP address: 192.168.0.1 - 192.168.255.254, 172.16.0.1 – 172.31.255.254, 10.0.0.1 – 10.255.255.254
-HSDPAConfig_hsdpa_mode_itemdesc=Pluging the 3G/3.5G USB adapter into RT-N56U and make it become mobile router.
+HSDPAConfig_hsdpa_mode_itemdesc=Pluging the USB adapter into RT-N56U and make it become mobile router.
 Not_authpage_login_again=If you want to login again, please close this window first. 
-GO_HSDPA_SETTING=Go to HSDPA setting.
-HSDPA_disable=If you want to change connection type，pleasw refer to <a href="/Advanced_HSDPA_others.asp"><#GO_HSDPA_SETTING#></a>to disable 3G/3.5G adaptor.
+GO_HSDPA_SETTING=Go to USB Modem setting.
+HSDPA_disable=If you want to change connection type，please refer to <a href="/Advanced_Modem_others.asp"><#GO_HSDPA_SETTING#></a>to disable adaptor.
 [new strings - translated]
 GO_2G=Go to 2.4GHz setting
 GO_5G=Go to 5GHz setting
 [new strings]
 UPnPMediaServerType=Server Type
+HSDPA_LANtoWAN=After enabling USB Modem connection, the WAN port will change to LAN port, please remove the original cable.
+HSDPA_enable_confirm=Please check whether all your settings are correct.

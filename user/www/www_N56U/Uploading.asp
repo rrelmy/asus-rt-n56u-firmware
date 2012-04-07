@@ -9,7 +9,7 @@
 </head>
 <body>
 <script>	
-	parent.showLoadingBar(65);	
+	parent.showLoadingBar(80);	
 </script>
 </body>
 </html>

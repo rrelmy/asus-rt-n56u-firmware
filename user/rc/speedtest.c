@@ -219,14 +219,14 @@ int qos_get_wan_rate()
 	char ubw_buf[128];
 	int i = 0;
 
+	if (nvram_match("wan0_proto", "static"))
+		count = 6;
+
 	printf("\nQos get wan rate\n");	// tmp test
 
 	while (!check_wan_link(0))
 	{
 		printf("check wan link fail\n");	// tmp test
-
-		if (nvram_match("wan0_proto", "static"))
-			count = 4;
 
 		if (i++ < count)
 			sleep(1);
@@ -323,6 +323,9 @@ int qos_get_wan_rate()
 	int count = 3, i = 0;
 	char ubw_buf[128];
 	double upload_speed;
+
+	if (nvram_match("wan0_proto", "static"))
+		count = 10;
 
 	printf("\nQos get wan rate\n");	// tmp test
 

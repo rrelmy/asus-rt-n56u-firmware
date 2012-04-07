@@ -97,17 +97,6 @@ typedef unsigned char   bool;
 
 #define wan_prefix(unit, prefix)	snprintf(prefix, sizeof(prefix), "wan%d_", unit)
 
-/*
-#define csprintf(fmt, args...) do{\
-	FILE *cp = fopen("/dev/console", "w");\
-	if (cp) {\
-		fprintf(cp, fmt, ## args);\
-		fclose(cp);\
-	}\
-}while (0)
-*/
-// 2008.08 magic }
-
 #include <sys/mman.h>
 //typedef uint32_t __u32; //2008.08 magic
 #ifndef	O_BINARY		/* should be define'd on __WIN32__ */
@@ -121,10 +110,7 @@ typedef unsigned char   bool;
 #include <syslog.h>
 #define logs(s) syslog(LOG_NOTICE, s)
 
-//#define sys_restart() kill(1, SIGHUP)
-//#define sys_reboot() nvram_set("stop_wps_led", "1"); nvram_set("reboot", "1")
 #define sys_reboot_rc() kill(1, SIGTERM)
-
 
 #ifdef WEBS
 #define init_cgi(query)
@@ -168,14 +154,14 @@ static void nvram_commit_safe()
 static int apply_cgi_group(webs_t wp, int sid, struct variable *var, char *groupName, int flag);
 static int nvram_generate_table(webs_t wp, char *serviceId, char *groupName);
 
-void new_sys_reboot();
 int count_sddev_mountpoint();
 
 // 2008.08 magic {
 //typedef u_int64_t u64;
 //typedef u_int32_t u32;
-static u64 restart_needed_bits = 0; 
-static u32 restart_tatal_time = 0; 
+//static u64 restart_needed_bits = 0;
+static unsigned long restart_needed_bits = 0;
+static unsigned int restart_tatal_time = 0; 
 //static u32 last_arp_info_len = 0, last_disk_info_len = 0;
 // 2008.08 magic }
 
@@ -296,63 +282,13 @@ fail:
 }
 #endif
 
-int sys_restart()
+void
+sys_reboot()
 {
-	printf("[httpd] restart\n");	// tmp test
-#ifndef USB_MODEM
-	//if (nvram_match("wan0_proto", "3g") && strlen(nvram_safe_get("usb_path1")) > 0)
-	if (strlen(nvram_safe_get("usb_path1")) > 0)
-#else
-	if(strlen(nvram_safe_get("usb_path1")) > 0 || strlen(nvram_safe_get("usb_path2")) > 0)
-#endif
-	{
-		printf("do ejusb\n");   // tmp test
-		system("ejusb");
-#ifndef USB_MODEM
-		if (nvram_match("wan0_proto", "3g"))
-#else
-		if(nvram_match("modem_enable", "1") && (nvram_match("usb_path1", "modem") || nvram_match("usb_path2", "modem")))
-#endif
-		{
-			printf("wait 10s...\n");
-			sleep(10);
-		}
-		//else if (nvram_match("ftp_setting_chg", "1"))
-		//{
-		//	nvram_commit();
-		//}
-	}
+	dbG("[httpd] reboot\n");
 
-	kill(1, SIGHUP);
-	return 0;
-}
-
-int sys_reboot()
-{
-	printf("[httpd] reboot\n");	// tmp test
-#ifndef USB_MODEM
-	//if (nvram_match("wan0_proto", "3g") && strlen(nvram_safe_get("usb_path1")) > 0)
-	if (strlen(nvram_safe_get("usb_path1")) > 0)
-#else
-	if(strlen(nvram_safe_get("usb_path1")) > 0 || strlen(nvram_safe_get("usb_path2")) > 0)
-#endif
-	{
-		printf("do ejusb\n");   // tmp test
-		system("ejusb");
-#ifndef USB_MODEM
-		if (nvram_match("wan0_proto", "3g"))
-#else
-		if(nvram_match("modem_enable", "1") && (nvram_match("usb_path1", "modem") || nvram_match("usb_path2", "modem")))
-#endif
-		{
-			printf("wait 10s...\n");
-			sleep(10);
-		}
-	}
-
-//	nvram_set("stop_wps_led", "1");
-	nvram_set("reboot", "1");
-	return 0;
+//	nvram_set("reboot", "1");
+	kill(1, SIGTERM);
 }
 
 char *
@@ -369,10 +305,10 @@ rfctime(const time_t *timep)
 }
 
 void
-reltime(unsigned int seconds, char *cs)
+reltime(unsigned long seconds, char *cs)
 {
 #ifdef SHOWALL
-	int days=0, hours=0, minutes=0;
+	unsigned int days=0, hours=0, minutes=0;
 
 	if (seconds > 60*60*24) {
 		days = seconds / (60*60*24);
@@ -561,7 +497,7 @@ void sys_script(char *name)
 	nvram_set("rc_service", "ddns_hostname_check");
 
 //	kill(1, SIGUSR1);
-	fprintf(stderr, "[httpd] send SIGUSR1 to watchdog for rc_service: %s\n", nvram_safe_get("rc_service"));
+	dbG("[httpd] send SIGUSR1 to watchdog for rc_service: %s\n", nvram_safe_get("rc_service"));
 	doSystem("killall -%d watchdog", SIGUSR1);
 	sleep(1);
 
@@ -1054,7 +990,7 @@ ej_uptime(int eid, webs_t wp, int argc, char_t **argv)
 	sprintf(buf, rfctime(&tm));
 
 	if (str) {
-		unsigned int up = atoi(str);
+		unsigned long up = atol(str);
 		free(str);
 		char lease_buf[128];
 		memset(lease_buf, 0, sizeof(lease_buf));
@@ -1073,7 +1009,7 @@ ej_sysuptime(int eid, webs_t wp, int argc, char_t **argv)
 	char *str = file2str("/proc/uptime");
 
 	if (str) {
-		unsigned int up = atoi(str);
+		unsigned long up = atoi(str);
 		free(str);
 
 		char lease_buf[128];
@@ -1500,7 +1436,7 @@ static int validate_asp_apply(webs_t wp, int sid, int groupFlag) {
 				nvram_set_x(GetServiceId(sid), v->name, value);
 				
 // 2008.03 James. {
-				if (!strcmp(GetServiceId(sid), "General") && !strcmp(v->name, "http_passwd"))
+				if ((/*!strcmp(GetServiceId(sid), "General") && */!strcmp(v->name, "http_passwd")) || !strcmp(v->name, "telnetd"))
 				{
 					change_passwd = 1;
 					eval("/sbin/start_telnetd");
@@ -1597,7 +1533,10 @@ static int validate_asp_apply(webs_t wp, int sid, int groupFlag) {
 				if (v->event)
 				{
 					//printf("add restart needed bits\n");	// tmp test
+					dbG("debug restart_needed_bits before: %ld 0x%lx\n", restart_needed_bits, restart_needed_bits);
+					dbG("debug v->event: %ld 0x%lx\n", v->event, v->event);
 					restart_needed_bits |= v->event;
+					dbG("debug restart_needed_bits after: %ld 0x%lx\n", restart_needed_bits, restart_needed_bits);
 				}
 			}
 
@@ -1752,9 +1691,12 @@ static int update_variables_ex(int eid, webs_t wp, int argc, char_t **argv) {
        	   					if (!strcmp(v->name, groupName))
        	   						break;
        					}
+
        					printf("--- Restart group %s. ---\n", groupName);
-       	   				
-						restart_needed_bits |= v->event;
+					dbG("debug restart_needed_bits before: %ld 0x%lx\n", restart_needed_bits, restart_needed_bits);
+					dbG("debug v->event: %ld 0x%lx\n", v->event, v->event);	
+					restart_needed_bits |= v->event;
+					dbG("debug restart_needed_bits after: %ld 0x%lx\n", restart_needed_bits, restart_needed_bits);
 
 					if (!strcmp(groupName, "RBRList") || !strcmp(groupName, "ACLList"))
 						wl_modified = 1;
@@ -2003,6 +1945,14 @@ csprintf("*** add ITVL_RESTART_ITUNES(%d).\n", ITVL_RESTART_ITUNES);
 csprintf("*** add ITVL_RESTART_QOS(%d).\n", ITVL_RESTART_QOS);
 				restart_tatal_time += ITVL_RESTART_QOS;
 			}
+			if ((restart_needed_bits & RESTART_VPN) != 0) {
+csprintf("*** add ITVL_RESTART_VPN(%d).\n", ITVL_RESTART_VPN);
+				restart_tatal_time += ITVL_RESTART_VPN;
+			}
+                        if ((restart_needed_bits & RESTART_SWITCH) != 0) {
+csprintf("*** add ITVL_RESTART_SIWTCH(%d).\n", ITVL_RESTART_SWITCH);
+                                restart_tatal_time += ITVL_RESTART_SWITCH;
+                        }
 			if ((restart_needed_bits & RESTART_SYSLOG) != 0) {
 csprintf("*** add ITVL_RESTART_SYSLOG(%d).\n", ITVL_RESTART_SYSLOG);
 				restart_tatal_time += ITVL_RESTART_SYSLOG;
@@ -2028,10 +1978,12 @@ csprintf("*** add ITVL_RESTART_NASDOCK(%d).\n", ITVL_RESTART_NASDOCK);
 csprintf("*** add ITVL_RESTART_TIME(%d).\n", ITVL_RESTART_TIME);
 				restart_tatal_time += ITVL_RESTART_TIME;
 			}
+/*
                         if ((restart_needed_bits & RESTART_RSTATS) != 0) {
                                 notify_rc("restart_rstats");
                                 restart_needed_bits &= ~(u32)RESTART_RSTATS;
                         }
+*/
 			if ((restart_needed_bits & RESTART_WPS) != 0) {
 csprintf("*** add ITVL_RESTART_WPS(%d).\n", ITVL_RESTART_WPS);
 				/*char *wsc_mode = nvram_safe_get("wsc_mode");
@@ -2097,23 +2049,30 @@ csprintf("*** Don't run asus_nvram_commit!\n");
 	return 0;
 }
 
+static void set_reboot_timestamp();
+
 static int ej_notify_services(int eid, webs_t wp, int argc, char_t **argv) {
 	restart_tatal_time = 0;
 	int no_run_str = 0;
+
+	dbG("debug restart_needed_bits: %ld 0x%lx\n", restart_needed_bits, restart_needed_bits);
 
 	//printf("notify service: %d\n", restart_needed_bits);	// tmp test
 	if (restart_needed_bits != 0) {
 		no_run_str = 1;
 		if ((restart_needed_bits & RESTART_REBOOT) != 0) {
 			printf("*** Run notify_rc restart_reboot! \n");
-			nvram_set("reboot", "1");
-//			notify_rc("restart_reboot");
+			set_reboot_timestamp();
+//			nvram_set("reboot", "1");
+			sys_reboot();
 		}
 		else if ((restart_needed_bits & RESTART_NETWORKING) != 0) {
 			csprintf("*** run notify_rc restart_networking! \n");
 			notify_rc("restart_networking");
 		}
 		else {
+			dbG("debug restart_needed_bits before: %ld 0x%lx\n", restart_needed_bits, restart_needed_bits);
+
 			if ((restart_needed_bits & RESTART_FTPSAMBA) != 0) {
 				notify_rc("restart_cifs");
 				restart_needed_bits &= ~(u32)RESTART_FTPSAMBA;
@@ -2156,6 +2115,16 @@ static int ej_notify_services(int eid, webs_t wp, int argc, char_t **argv) {
 				notify_rc("restart_qos");
 				restart_needed_bits &= ~(u32)RESTART_QOS;
 			}
+			if ((restart_needed_bits & RESTART_VPN) != 0) {
+				csprintf("*** run notify_rc restart_vpn! \n");
+				notify_rc("restart_vpn_pt");
+				restart_needed_bits &= ~(u32)RESTART_VPN;
+			}
+                        if ((restart_needed_bits & RESTART_SWITCH) != 0) {
+                                csprintf("*** run notify_rc restart_switch_config! \n");
+                                notify_rc("restart_switch_config");
+                                restart_needed_bits &= ~(u32)RESTART_SWITCH;
+                        }
 			if ((restart_needed_bits & RESTART_SYSLOG) != 0) {
 				notify_rc("restart_syslog");
 				restart_needed_bits &= ~(u32)RESTART_SYSLOG;
@@ -2219,6 +2188,8 @@ static int ej_notify_services(int eid, webs_t wp, int argc, char_t **argv) {
 
 				restart_needed_bits &= ~(u32)RESTART_WIFI;
 			}
+
+			dbG("debug restart_needed_bits after: %ld 0x%lx\n", restart_needed_bits, restart_needed_bits);
 		}
 		
 		restart_needed_bits = 0;
@@ -2978,7 +2949,7 @@ static int wanlink_hook(int eid, webs_t wp, int argc, char_t **argv) {
 #endif
 	if (nvram_match(strcat_r(prefix, "proto", tmp), "pppoe"))
 	{
-		strcpy(type, "PPPOE");
+		strcpy(type, "PPPoE");
 	}
 	else if (nvram_match(strcat_r(prefix, "proto", tmp), "pptp"))
 	{
@@ -3953,7 +3924,7 @@ int ej_shown_language_option(int eid, webs_t wp, int argc, char **argv) {
 	memset(lang, 0, 4);
 	strcpy(lang, nvram_safe_get("preferred_lang"));
 
-	for (i = 0; i < 20; ++i) {
+	for (i = 0; i < 21; ++i) {
 		memset(buffer, 0, sizeof(buffer));
 		if ((follow_info = fgets(buffer, sizeof(buffer), fp)) != NULL) {
 			if (strncmp(follow_info, "LANG_", 5))    // 5 = strlen("LANG_")
@@ -3987,6 +3958,18 @@ int ej_shown_language_option(int eid, webs_t wp, int argc, char **argv) {
 	fclose(fp);
 
 	return 0;
+}
+
+static void
+set_reboot_timestamp()
+{
+	time_t reboot_timestamp;
+	char reboot_timestampstr[32];
+
+	reboot_timestamp = uptime();
+	memset(reboot_timestampstr, 0, 32);
+	sprintf(reboot_timestampstr, "%lu", reboot_timestamp);
+	nvram_set("reboot_timestamp", reboot_timestampstr);
 }
 
 static int
@@ -4046,47 +4029,33 @@ apply_cgi(webs_t wp, char_t *urlPrefix, char_t *webDir, int arg,
 	}
 	else if (!strcmp(value, "Save&Restart "))
 	{
-		/*action = ACTION_SAVE_RESTART;*/
-		//websRedirect(wp, "Restarting.asp");
+		dbG("[httpd] action mode: %s\n", value);
+
 		websApply(wp, "Restarting.asp");
 		nvram_set_f("General", "x_Setting", "1");
 		nvram_set("w_Setting", "1");	// J++
-		nvram_set("httpd_die_reboot", "1");
-		
 		eval("early_convert");
-		
 		nvram_commit_safe();
-		//sys_script("bcm_set");
-		//system("/web/script/eject-usb.sh");
+		set_reboot_timestamp();
 		sys_reboot();
 		return (0);
 	}
 	else if (!strcmp(value, " Restart "))
 	{
+		dbG("[httpd] action mode: %s\n", value);
+
 		websApply(wp, "Restarting.asp");
-		nvram_set("httpd_die_reboot", "1");
+		set_reboot_timestamp();
 		sys_reboot();
 		return (0);
 	}
 	else if (!strcmp(value, "Restore"))
 	{
-		/* action = ACTION_RESET_DEFAULT;*/
-		//websRedirect(wp, "Restarting.asp");
+		dbG("[httpd] action mode: %s\n", value);
+
 		websApply(wp, "Restarting.asp");
-		//system("/web/script/eject-usb.sh");
 		sys_default();
-		sys_reboot();
-		return (0);
-	}
-	else if (!strcmp(value, "WlanUpdate "))
-	{
-		/*action = ACTION_SAVE_RESTART;*/
-		/*websRedirect(wp, "Restarting.asp");*/
-		if (strcmp(script, ""))
-		{
-			system(script);
-		}
-		websApply(wp, "Restarting.asp");
+		set_reboot_timestamp();
 		sys_reboot();
 		return (0);
 	}
@@ -4661,6 +4630,7 @@ do_lang_post(char *url, FILE *stream, int len, char *boundary)
 	int c;
 	char *p, *p1;
 	char orig_lang[4], new_lang[4];
+	char buf[1024];
 
 	if (url == NULL)
 		return;
@@ -4680,12 +4650,16 @@ do_lang_post(char *url, FILE *stream, int len, char *boundary)
 	}
 
 	// read remain data
-	if (feof (stream))      {
-		while ((c = fgetc(stream) != EOF))      {
+#if 0
+	if (feof (stream)) {
+		while ((c = fgetc(stream) != EOF)) {
 			;       // fall through
 		}
 	}
-
+#else
+	while ((c = fread(buf, 1, sizeof(buf), stream)) > 0)
+		;
+#endif
 
 	cprintf ("lang: %s --> %s\n", orig_lang, new_lang);
 	refresh_title_asp = 0;
@@ -4996,11 +4970,12 @@ do_upgrade_cgi(char *url, FILE *stream)
 		 * flushed by websApply, or it will be closed only on reboot
 		 * AFTER flashing.
 		 */
-		fclose(stream);
+//		fclose(stream);
 		sys_upgrade("/tmp/linux.trx");
 #else
 		websApply(stream, "Restarting.asp");
 #endif
+		set_reboot_timestamp();
 		/* can't nvram 'coz there's watchdog already */
 		sys_reboot_rc();
 	}	
@@ -5150,6 +5125,7 @@ do_upload_cgi(char *url, FILE *stream)
 		sys_upload("/tmp/settings_u.prf");
 		sys_nvram_set("httpd_die_reboot=1");
 		nvram_commit_safe();
+		set_reboot_timestamp();
 		sys_reboot();
 	}	
 	else    
@@ -7013,7 +6989,9 @@ dbg("%s, %s, %s.\n", new_lan_ip_str, new_dhcp_start_str, new_dhcp_end_str);
 	
 	nvram_commit_safe();
 	
-	nvram_set("reboot", "1");
+	set_reboot_timestamp();
+//	nvram_set("reboot", "1");
+	sys_reboot();
 	return 0;
 }
 // 2010.09 James. }

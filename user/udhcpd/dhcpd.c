@@ -90,6 +90,56 @@ static void signal_handler(int sig)
 	}
 }
 
+static int
+is_invalid_char_for_hostname(char c)
+{
+	int ret = 0;
+
+	if (c < 0x20)
+		ret = 1;
+	else if (c >= 0x21 && c <= 0x2c)
+		ret = 1;
+	else if (c >= 0x2e && c <= 0x2f)
+		ret = 1;
+	else if (c >= 0x3a && c <= 0x40)
+		ret = 1;
+#if 0
+	else if (c >= 0x5b && c <= 0x60)
+		ret = 1;
+#else
+	else if (c >= 0x5b && c <= 0x5e)
+		ret = 1;
+	else if (c == 0x60)
+		ret = 1;
+#endif
+	else if (c >= 0x7b)
+		ret = 1;
+
+	return ret;
+}
+
+static int
+is_valid_hostname(const char *name)
+{
+	int ret = 1, len, i;
+
+	if (!name)
+		return 0;
+
+	len = strlen(name);
+	if (len == 0)
+		return 0;
+
+	for (i = 0; i < len ; i++)
+		if (is_invalid_char_for_hostname(name[i]))
+		{
+			ret = 0;
+			break;
+		}
+
+	return ret;
+}
+
 #ifdef COMBINED_BINARY	
 int udhcpd_main(int argc, char *argv[])
 #else
@@ -284,6 +334,10 @@ int main(int argc, char *argv[])
 						bytes = sizeof(lease->hostname) - 1;
 					strncpy(lease->hostname, hostname, bytes);
 					lease->hostname[bytes] = '\0';
+
+					if (!is_valid_hostname(lease->hostname))
+						lease->hostname[0] = '\0';
+
 				} else
 					lease->hostname[0] = '\0';
 			

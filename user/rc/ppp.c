@@ -171,6 +171,9 @@ ipdown_main(int argc, char **argv)
 	if (!nvram_get(strcat_r(prefix, "ifname", tmp)))
 		return -1;
 
+//	ifconfig(wan_ifname, IFUP, "0.0.0.0", NULL);
+//	logmessage(nvram_safe_get("wan_proto_t"), "ifconfig %s 0.0.0.0", wan_ifname);
+
 	wan_down(wan_ifname);
 
 	unlink(strcat_r("/tmp/ppp/link.", wan_ifname, tmp));

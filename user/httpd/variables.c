@@ -699,6 +699,8 @@
 	      0), FALSE, RESTART_REBOOT},	// 2007.10 James
 
 		{"wan_stb_x", "", validate_range, ARGV("0", "4"), FALSE, RESTART_REBOOT},	// 2008.03 James
+
+		{"unifi_malaysia", "", validate_range, ARGV("0", "1"), FALSE, RESTART_REBOOT}, //Cherry Cho added in 2011/6/13.
 			     
       { 0, 0, 0, 0, 0, 0}
       };
@@ -762,6 +764,12 @@
 		{"dmz_ip", "", validate_ipaddr, NULL, FALSE, RESTART_FIREWALL},	// 2007.10 James
 			     
 		{"sp_battle_ips", "", validate_range, ARGV("0","1"), FALSE, RESTART_FIREWALL},	// 2007.10 James
+
+		{"fw_pt_pptp", "", validate_range, ARGV("0","1"), FALSE, RESTART_VPN},
+
+		{"fw_pt_l2tp", "", validate_range, ARGV("0","1"), FALSE, RESTART_VPN},
+
+		{"fw_pt_ipsec", "", validate_range, ARGV("0","1"), FALSE, RESTART_VPN},
 				       
 		{"", "", validate_range, ARGV("0","65535"), FALSE, FALSE},											    				     
 		{"vts_enable_x", "", validate_range, ARGV("0","1"), FALSE, RESTART_FIREWALL},	// 2007.10 James
@@ -855,7 +863,7 @@
 	      
 		   "both:Both",
 	      
-	      0), FALSE, RESTART_REBOOT},	// 2007.10 James
+	      0), FALSE, RESTART_FIREWALL},	// 2007.10 James
 			    
 		 {"misc_natlog_x", "", validate_range, ARGV("0","1"), FALSE, RESTART_FIREWALL},	// 2007.10 James
 			       
@@ -1022,10 +1030,10 @@
 	    
 		{"lan_netmask", "", validate_ipaddr, NULL, FALSE, RESTART_REBOOT},	// 2007.10 James
 
-                {"controlrate_unknown_unicast", "", validate_range, ARGV("0", "1024"), FALSE, RESTART_REBOOT},
-                {"controlrate_unknown_multicast", "", validate_range, ARGV("0", "1024"), FALSE, RESTART_REBOOT},
-                {"controlrate_multicast", "", validate_range, ARGV("0", "1024"), FALSE, RESTART_REBOOT},
-                {"controlrate_broadcast", "", validate_range, ARGV("0", "1024"), FALSE, RESTART_REBOOT},
+                {"controlrate_unknown_unicast", "", validate_range, ARGV("0", "1024"), FALSE, RESTART_SWITCH},
+                {"controlrate_unknown_multicast", "", validate_range, ARGV("0", "1024"), FALSE, RESTART_SWITCH},
+                {"controlrate_multicast", "", validate_range, ARGV("0", "1024"), FALSE, RESTART_SWITCH},
+                {"controlrate_broadcast", "", validate_range, ARGV("0", "1024"), FALSE, RESTART_SWITCH},
 
 		{"udpxy_enable_x", "", validate_range, ARGV("0","65535"), FALSE, RESTART_REBOOT},
 	    
@@ -1039,9 +1047,9 @@
 		 
 		{"lan_gateway", "", validate_ipaddr, NULL, FALSE, RESTART_REBOOT},	// 2007.10 James
 			     
-		 {"dhcp_enable_x", "", validate_range, ARGV("0","1"), FALSE, RESTART_REBOOT},	// 2007.10 James
+		 {"dhcp_enable_x", "", validate_range, ARGV("0","1"), FALSE, RESTART_DHCPD},	// 2007.10 James
 						    
-		    {"lan_domain", "", validate_string, ARGV("32"), FALSE, RESTART_REBOOT},	// 2007.10 James
+		    {"lan_domain", "", validate_string, ARGV("32"), FALSE, RESTART_DHCPD},	// 2007.10 James
 		 
 		{"dhcp_start", "", validate_ipaddr, NULL, FALSE, RESTART_DHCPD},	// 2007.10 James
 	    
@@ -1049,17 +1057,17 @@
 			 
 	     {"dhcp_lease", "", validate_range, ARGV("1", "86400", ""), FALSE, RESTART_DHCPD},	// 2007.10 James
 	
-		{"dhcp_gateway_x", "", validate_ipaddr, NULL, FALSE, RESTART_REBOOT},	// 2007.10 James
+		{"dhcp_gateway_x", "", validate_ipaddr, NULL, FALSE, RESTART_DHCPD},	// 2007.10 James
 	    
-		{"dhcp_dns1_x", "", validate_ipaddr, NULL, FALSE, RESTART_REBOOT},	// 2007.10 James
+		{"dhcp_dns1_x", "", validate_ipaddr, NULL, FALSE, RESTART_DHCPD},	// 2007.10 James
 	    
       {"x_LDNSServer2", "Status", NULL, ARGV("LANHostConfig","lan_ipaddr"), FALSE, RESTART_REBOOT},	// 2007.10 James
 
 		{"dhcp_wins_x", "", validate_ipaddr, NULL, FALSE, RESTART_DHCPD},	// 2007.10 James
 			     
-		 {"dhcp_static_x", "", validate_range, ARGV("0","1"), FALSE, RESTART_REBOOT},	// 2007.10 James
+		 {"dhcp_static_x", "", validate_range, ARGV("0","1"), FALSE, RESTART_DHCPD},	// 2007.10 James
 				       
-		       {"dhcp_staticnum_x", "", validate_range, ARGV("0","65535"), FALSE, RESTART_REBOOT},	// 2007.10 James
+		       {"dhcp_staticnum_x", "", validate_range, ARGV("0","65535"), FALSE, RESTART_DHCPD},	// 2007.10 James
 					     
 		       {"", "", validate_range, ARGV("0","65535"), FALSE, FALSE},											    
 		    
@@ -1069,7 +1077,7 @@
 		 
 	{"upnp_enable", "", validate_range, ARGV("0","1"), FALSE, RESTART_UPNP},	// 2007.10 James
 	      
-	{"telnetd", "", validate_range, ARGV("0","1"), FALSE, RESTART_REBOOT},
+	{"telnetd", "", validate_range, ARGV("0","1"), FALSE, FALSE},
 
 	{"log_ipaddr", "", validate_ipaddr, NULL, FALSE, RESTART_SYSLOG},	// 2007.10 James
 

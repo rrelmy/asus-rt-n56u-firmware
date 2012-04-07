@@ -101,7 +101,11 @@ helptitle[7] = [["", ""],
 				["<#PPPConnection_x_HeartBeat_itemname#>", "wan_heartbeat_x"],
 				["<#IPConnection_BattleNet_itemname#>", "sp_battle_ips"],
 				["<#Layer3Forwarding_x_STB_itemname#>", "wan_stb_x"],
-				["Hardware NAT", "hwnat"]];
+				["Hardware NAT", "hwnat"],
+				["<#vpn_passthrough_itemname#>", "fw_pt_pptp"],
+				["<#vpn_passthrough_itemname#>", "fw_pt_l2tp"],
+				["<#vpn_passthrough_itemname#>", "fw_pt_ipsec"],
+				["<#PPPConnection_x_Unifi#>", "unifi_malaysia_radio"]];
 //Firewall
 helptitle[8] = [["", ""],
 				["<#FirewallConfig_WanLanLog_itemname#>", "fw_log_x"],
@@ -307,7 +311,11 @@ helpcontent[7] = new Array("",
 							 "<#BOP_isp_heart_desc#>",
 							 "<#IPConnection_BattleNet_itemdesc#>",
 							 "<#Layer3Forwarding_x_STB_itemdesc#>",
-							 "<#hwnat_desc#>");
+							 "<#hwnat_desc#>",
+							 "<#vpn_passthrough_desc#>",
+							 "<#vpn_passthrough_desc#>",
+							 "<#vpn_passthrough_desc#>",
+							 "<#PPPConnection_x_Unifi_Describe#>");
 //Firewall
 helpcontent[8] = new Array("",
 						   "<#FirewallConfig_WanLanLog_itemdesc#>",
@@ -319,11 +327,11 @@ helpcontent[8] = new Array("",
 						   "<#FirewallConfig_DoSEnable_itemdesc#>");
 helpcontent[9] = new Array("",
 						   "<#FirewallConfig_URLActiveDate_itemdesc#>",
-						   "<#FirewallConfig_URLActiveTime_itemdesc#>",
+						   "<#FirewallConfig_URLActiveTime_itemdesc#><p><a href='/Main_LogStatus_Content.asp' target='_blank'><#General_x_SystemTime_itemname#> : <#DrSurf_suggestion10#></a></p>",
 						   "<#FirewallConfig_KeywordList_groupitemdesc#>");
 helpcontent[10] = new Array("",
 							"<#FirewallConfig_LanWanActiveDate_itemdesc#>",
-							"<#FirewallConfig_LanWanActiveTime_itemdesc#>",
+							"<#FirewallConfig_LanWanActiveTime_itemdesc#><p><a href='/Main_LogStatus_Content.asp' target='_blank'><#General_x_SystemTime_itemname#> : <#DrSurf_suggestion10#></a></p>",
 							"<#FirewallConfig_LanWanDefaultAct_itemdesc#>",
 							"<#FirewallConfig_LanWanICMP_itemdesc#>",
 							"<#FirewallConfig_LanWanFirewallEnable_itemdesc#>");
@@ -357,7 +365,7 @@ helpcontent[15] = new Array("",
 							"<#AiDisk_Step3_help#>");
 //EzQoS
 helpcontent[16] = new Array("",
-							"<#EZQoSDesc1#><p><#EZQoSDesc2#> <a href='/Advanced_QOSUserSpec_Content.asp'><#BM_title_User#></a></p>");
+							"<#EZQoSDesc1#><br><#EZQoSDesc2#> <a href='/Advanced_QOSUserSpec_Content.asp'><#BM_title_User#></a>");
 //Others in the USB application
 helpcontent[17] = new Array("",
 							"<#JS_storageMLU#>",

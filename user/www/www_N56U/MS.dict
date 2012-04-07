@@ -1,4 +1,4 @@
-﻿[Language type]
+[Language type]
 CHAR_set=UTF-8
 PASS_LANG=Bahasa
 LANG_select=Pilih bahasa
@@ -18,8 +18,38 @@ LANG_FI=Finsk
 LANG_DA=Dansk
 LANG_SV=Svensk
 LANG_BR=Brazil
+LANG_JP=日本語
+[Malaysia Unifi]
+PPPConnection_x_Unifi=Unifi Support :
+PPPConnection_x_Unifi_Describe=Select 'Yes' to support Malaysia Unifi services.
+[VPN Passthrough]
+VPN_PPTP_Passthrough=Laluan terus  VPN PPTP
+VPN_L2TP_Passthrough=Laluan terus VPN L2TP
+VPN_IPSec_Passthrough=Laluan terus VPN IPSec
+vpn_passthrough_itemname=Laluan terus VPN
+vpn_passthrough_desc=Dayakan Laluan terus VPN untuk membenarkan sambungan Rangkaian Persendirian Maya (VPN) untuk melintas penghala ke klien rangkaian.
+[AiDisk account alert]
+enable_noaccount_alert=Bila dihidupkan, itu akan terjadi masalah sambungan ke pelayan Samba dan Download Master jika tidak ada akaun.
 [iTunes]
 iTunesMediaServer=Pelayan Media iTunes
+[opmode strings]
+BasicConfig_EnableiTunesServer_itemname=Mendayakan iTunes Server?
+OP_switch_button_hint1=Suis mod operasi terletak di bahagian bawah panel RT-N56U.
+OP_switch_button_hint2=Klik di sini untuk lihat
+OP_GW_item=Mod Perkongsian IP(Lalai) 
+OP_GW_desc1=Dalam mod kongsi Brodaband, RT-N56U menyambung kepada Internet melalui PPPoE, IP Automatik, PPTP, L2TP, atau IP Statik. 
+OP_GW_desc2= Ia menyediakan anda isyarat radio wayarles. NAT, tembok api, dan perkhidmatan perkongsian jalur lebar untuk pelanggan LAN didayakan. Ia juga menyokong UPnP dan Dynamic DNS untuk SOHO atau pengguna di rumah.
+OP_RT_item=Penghala Wayales / Mod Perkongsian IP
+OP_RT_desc1=Dalam mod Penghala/ mod perkongsian IP, RT-N56U menyambung pada Internet melalui PPPoE, DHCP, PPTP, L2TP, atau IP Statik dan berkongsi rangkaian wayarles pada peranti pelanggan LAN.  Dalam mod ini, NAT, firewall, dan pelayan DHCP didayakan secara lalai. UPnP dan DNS Dinamik disokong untuk SOHO dan pengguna rumah. 
+OP_RT_desc2=Pilih mod ini jika anda pengguna kali pertama atau anda sekarang tidak menggunakan sebarang penghalang berwayar/wayarles.
+OP_RE_item=Mod Pengulang
+OP_RE_desc1=Dalam mod Pengulang, RT-N56U menyambung pada isyarat wayarles sedia ada dan melanjutkan isyarat ini untuk meluaskan lagi liputan rangkaian wayarles luas dan kualiti isyarat wayarles dengan lebih baik. 
+OP_AP_item=Mod Pusat Akses(AP)
+OP_AP_desc1=Dalam mod Pusat Akses (AP), RT-N56U menyambung ke penghala wayarles melalui kabel Ethernet untuk meluaskan liputan isyarat wayarles pada pelanggan rangkaian yang lain. Dalam mod ini,  firewall, perkongsian IP, dan fungsi NAT dinyahdayakan secara lalai. 
+OP_AP_desc2=Pilih mod ini jika anda pengguna rangkaian lanjutan yang memahami perbezaan antara penghala wayarles dan pusat akses, yang mana penghala wayarles menyediakan fungsi Terjemahan Alamat Rangkaian (NAT) dan perkongsian IP. 
+OP_Modem=Modem
+OP_WirelessClient=Pelanggan Wayarles
+OP_WirelessSignal=Isyarat wayarles sedia ada
 [untranslate]
 IPConnection_VSList_ftpport=FTP Server Port:
 Adm_System_telnetd=Enable Telnet Server?
@@ -28,6 +58,7 @@ USB_Application_account_alert=Akaun penguna tidak boleh dimasukkan sebagai ‘ro
 BasicConfig_USBStorageWhiteist_itemdesc=Julat untuk medan ini adalah hex 1 hingga FFFF. Masukkan 0 (kosong) untuk menyahdayakan ciri ini.
 BasicConfig_USBStorageWhiteist_itemname=Senarai putih VID Peranti Simpanan USB
 LANHostConfig_x_TimeZone_itemhint_2=Tetapan zon masa yang dipilih berbeza dengan apa yang telah dikesan oleh peranti ini. Adakah anda hendak menukar ke zon masa yang telah di kesan?
+RouterConfig_GWMulticast_Multicast_all_itemdesc=Aktifkan ciri ini untuk mengawal lalu lintas rangkaian dan mengelakkan badai siaran, yang akan mengakibatkan perlambatan rangkaian atau ke rangkaian tidak boleh digunakan. Kisaran untuk field ini adalah 1 hingga 1024. Masukkan 0 (sifar) untuk mematikan ciri ini.
 RouterConfig_GWMulticast_unknownUni_itemname=Kawalan ribut siaran tunggal(Mbps) tidak diketahui:
 RouterConfig_GWMulticast_unknownMul_itemname=Kawalan ribut berbilang siaran(Mbps) tidak diketahui:
 RouterConfig_GWMulticast_Multicast_itemname=Kawalan ribut berbilang siaran(Mbps):
@@ -53,7 +84,6 @@ RouterConfig_IPTV_itemname=IPTV UDP Berbilangcast kepada Port Proksi HTTP
 RHELP_desc9=Masukkan 0 (sifar) untuk menyahdayakan fungsi ini.
 WLANConfig11b_TxPower_itemname=Pelarasan Kuasa Tx
 WLANConfig11b_TxPower_itemdesc=Melaraskan nisbah kuasa isyarat.
-[translated]
 WLANConfig11b_Wireless_Speed_itemname_3=menggunakan jalur lebar uses 40MHz wujud bersama untuk memaksimumkan truput wayarles. Jika anda mengalami isu dengan kestabilan wayarles, sila pilih mod lalai.
 hwnat_desc=Enable Hardware NAT to offer internet speed with maximum throughput over 900Mbps when appropriately supported by you internet service provider. But please note that enabling Hardware NAT may conflict with QoS related functions.
 [error_page.htm]
@@ -94,7 +124,7 @@ QIS_resetModem_desc1=Sila tanggalkan kord kuasa dari modem.
 QIS_resetModem_desc2=Tetapkan semula modem
 QIS_resetModem_desc3=Tanggalkan & pasang semula kord kuasa selepas dua minit.
 QIS_resetModem2_desc1=Pasangkan kord kuasa semula ke dalam modem anda dan tunggu selama kira-kira satu minit. Klik Detect connection (Kesan sambungan).
-QIS_wireless_desc1=Masukkan kunci rangkaian antara 8 dan 63 aksara (huruf, nombor atau gabungan). Jika anda tidak mahu menetapkan keselamatan rangkaian, biarkan medan kunci rangkaian kosong. <span style='font-weight:bolder;'>Keselamatan wayarles lalai ialah WPA-Auto-Personal - AES + TKIP.</span>
+QIS_wireless_desc1=Masukkan kunci rangkaian antara 8 dan 63 aksara (huruf, nombor atau gabungan) atau 64 digit perenambelasan aksara. Jika anda tidak mahu menetapkan keselamatan rangkaian, biarkan medan kunci rangkaian kosong. <span style='font-weight:bolder;'>Keselamatan wayarles lalai ialah WPA-Auto-Personal - AES + TKIP.</span>
 [Traffic Monitor]
 Date=Tarikh
 Scale=Skala
@@ -152,10 +182,10 @@ ShareNode_Seeding_itemdesc=Membenarkan anda untuk mendayakan atau menyahdayakan 
 ShareNode_MaxUpload_itemname=Kadar Muat Naik Maksimum
 ShareNode_MaxUpload_itemdesc=Masukkan nilai antara 0 hingga 999. Nilai lalai adalah 0, yang menandakan bahawa tiada had muat naik.
 [New item]
-HSDPAConfig_hsdpa_enable_hint1=Selepas mendayakan HSDPA, seting WAN asal anda akan dinyahdaya.
-HSDPAConfig_hsdpa_enable_hint2=Jika anda hendak menukar jenis sambungan, sila pergi ke <a href="/Advanced_HSDPA_others.asp">HSDPA</a> untuk menyahdaya penyesuai 3G/3.5G.
-HSDPAConfig_USBAdapter_itemname=Penyesuai USB 3G/3.5G
-HSDPAConfig_USBAdapter_itemdesc=Selepas mendayakan HDSPA, pilih penyesuai yang RT-N56U sokong.
+HSDPAConfig_hsdpa_enable_hint1=Selepas mendayakan USB Modem, seting WAN asal anda akan dinyahdaya.
+HSDPAConfig_hsdpa_enable_hint2=Jika anda hendak menukar jenis sambungan, sila pergi ke <a href="/Advanced_Modem_others.asp">USB Modem</a> untuk menyahdaya penyesuai USB.
+HSDPAConfig_USBAdapter_itemname=Penyesuai USB
+HSDPAConfig_USBAdapter_itemdesc=Selepas mendayakan USB Modem, pilih penyesuai yang RT-N56U sokong.
 APSurvey_msg_connected=Anda sudah bersambung kepada titik akses ini.
 APSurvey_msg_connect_suggest1=Untuk sambungan yang lebih stabil, gunakan kabel Ethernet untuk menyamnung kepada RT-N56U.
 APSurvey_msg_connect_suggest2=Klik [OK] untuk meneruskan dengan mengkonfigurasi seting. Semasa proses pengkonfigurasian, komputer anda mungkin akan terputus buat sementara waktu daripada RT-N56U.
@@ -199,17 +229,6 @@ AP_fail_get_IPaddr=Gagal mendapatkan maklumat IP.
 AP_Remote_IP=Alamat IP AP
 AP_survey=Tinjauan AP
 statusTitle_AP=Status Titik Akses
-OP_switch_button_hint1=Suis mod operasi terletak di bahagian bawah panel RT-N56U.
-OP_switch_button_hint2=Klik di sini untuk lihat
-OP_GW_item=Mod Perkongsian IP(Lalai) 
-OP_GW_desc1=Dalam mod kongsi Brodaband, RT-N56U menyambung kepada Internet melalui PPPoE, IP Automatik, PPTP, L2TP, atau IP Statik. 
-OP_GW_desc2= Ia menyediakan anda isyarat radio wayarles. NAT, tembok api, dan perkhidmatan perkongsian jalur lebar untuk pelanggan LAN didayakan. Ia juga menyokong UPnP dan Dynamic DNS untuk SOHO atau pengguna di rumah.
-OP_RT_item=Penghala (Nyahdayakan NAT)
-OP_RT_desc1=Dalam mod penghala, gunakan kabel Ethernet untuk menyambungkan RT-N56U dengan komputer anda dan wujudkan sambungan rangkaain wayarles, kemudian pilih tetapan untuk sambungan rangkaian wayarles anda.
-OP_RT_desc2=RT-N56U melanjutkan liputan rangkaian wayarles anda dan membolehkan anda mengkonfigurasikan protokol penghalaan statik. Ia menyahdayakan NAT (Penterjemahan Alamat Rangkaian) untuk membolehken perkhidmatan komunikasi dan perkongsian di kalangan pelanggan LAN dan WAN. Nota: Anda perlu menentukan peraturan penghalaan dalam penghala hos.
-OP_AP_item=Pusat Akses
-OP_AP_desc1=Dalam mod AP, gunakan kabel Ethernet untuk menyambungkan RT-N56U dengan LAN anda kemudian komputer anda boleh mewujudkan sambungan rangkaian wayarles kepada RT-N56U.
-OP_AP_desc2=Semua pelanggan rangkaian akan dihubungkan bersama. Mod ini menyediakan sambungan Internet untuk pelanggan rangkaian, tetapi menyahdayakan tembok api, perkongsian IP, dan fungsi NAT.
 [USB Application - HSDPA]
 HSDPAConfig_connection=Seting sambungan
 HSDPAConfig_pin_code_itemdesc=Sila input kod PIN bagi kad SIM anda. Ia mestilah nombor yang panjangnya lebih daripada 3 dan lebih kecil daripada 8. Jika anda tidak tahu kod PIN, sila hubungi ISP anda.
@@ -225,13 +244,13 @@ HSDPAConfig_ConnectionTime_itemname=Masa Sambungan
 HSDPAConfig_TransDataSize_itemname=Saiz Data yang Dihantar
 HSDPAConfig_ReceviedDataSize_itemname=Saiz Data yang Diterima
 HSDPAConfig_TotalDataSize_itemname=Jumlah Saiz Data
-HSDPAConfig_MTU_itemdesc=Ia bermaksud Unit Penghantaran Maksimum(MTU) bagi paket HSDPA.
-HSDPAConfig_MRU_itemdesc=Ia bermaksud Unit Terima Maksimum(MRU) bagi paket HSDPA.
+HSDPAConfig_MTU_itemdesc=Ia bermaksud Unit Penghantaran Maksimum(MTU) bagi paket USB Modem.
+HSDPAConfig_MRU_itemdesc=Ia bermaksud Unit Terima Maksimum(MRU) bagi paket USB Modem.
 checkbox_Yes=Ya
 checkbox_No=Tidak
 HSDPAConfig_basic=Seting asas
-HSDPAConfig_hsdpa_enable_itemname=Mendayakan HSDPA?
-HSDPAConfig_hsdpa_mode_itemname=Mod HSDPA
+HSDPAConfig_hsdpa_enable_itemname=Mendayakan USB Modem?
+HSDPAConfig_hsdpa_mode_itemname=Mod USB Modem
 HSDPAConfig_pin_code_enable_itemname=Mendayakan kod PIN?
 HSDPAConfig_pin_code_itemname=Kod PIN
 HSDPAConfig_enable_apn_itemname=Mendayakan perkhidmatan APN:
@@ -275,7 +294,7 @@ Device_service_Printer=Perkhidmatan Pencetak:
 Device_service_Wireless=Wayarles:
 DrSurf_Alert21=Cakera dalam RT-N56U dipasang dan boleh diakses.
 ddnsname_computername=Selepas menggunakan seting, Nama Peranti juga ditukar pada masa yang sama. Adakah anda mahu teruskan?
-JS_storageright=Ia adalah nama bagi RT-N56U, dan aksara input standard termasuk(A-Z,a-z), digit(0-9), ruang, garis bawah(_) dan sengkang(-). Aksara pertama dan terakhir tidak seharusnya mengandungi sebarang ruang. Menggunakan nama bukan standard akan mengelakkan pengguna lain daripada menemui komputer anda pada rangkaian.<br>Jika anda telah mendaftar dan membuka perkhidmatan ASUS DDNS, medan dikemas kini secara automatik.
+JS_storageright=Ia adalah nama bagi RT-N56U, dan aksara input standard termasuk(A-Z,a-z), digit(0-9), ruang, garis bawah(_) dan sengkang(-). Aksara pertama dan terakhir tidak seharusnya mengandungi sebarang ruang. Menggunakan nama bukan standard akan mengelakkan pengguna lain daripada menemui komputer anda pada rangkaian.
 not_support_script=Penyemak imbas anda tidak menyokong JavaScript. Pilih penyemak imbas yang menyokong JavaScript atau dayakannya untuk menggunakan penghala berbilang fungsi, ASUS RT-N56U.
 [Advanced_AiDisk_others.asp]
 Help_of_Workgroup=Ia adalah nama kumpulan bagi RT-N56U dalam Kejiranan Rangkaian, dan aksara input standard termasuk(A-Z,a-z), digit(0-9), ruang, garis bawah(_) dan sengkang(-). Tidak seharusnya terdapat sebarang ruang di antara aksara pertama dan terakhir. Menggunakan nama bukan standard menyebabkan pengguna lain tidak dapat mencari anda dalam LAN.
@@ -398,7 +417,7 @@ menu5_3_6=DDNS
 menu5_4_1=Perkongsian Kejiranan Rangkaian
 menu5_4_2=Perkongsian FTP
 menu5_4_3=Seting pelbagai
-menu5_4_4=HSDPA
+menu5_4_4=USB Modem
 menu5_5_1=Am
 menu5_5_2=Penapis URL
 menu5_5_3=Penapis MAC
@@ -611,7 +630,7 @@ DiskStatus_refresh1=Saya telah memasang cakera USB,
 DiskStatus_refresh2=perbaharui semula 
 DiskStatus_refresh3= status sistem.
 EZQoS=Pengurusan Lebar Jalur EZQoS
-footer_copyright_desc=2011 ASUSTek Computer Inc. Semua hak cipta terpelihara.
+footer_copyright_desc=2011 ASUSTeK Computer Inc. Semua hak cipta terpelihara.
 Help_button_default_hint=Klik untuk membuka Bantuan.
 Help_init_word1=Bantuan memberikan anda panduan dan maklumat mengenai menggunakan fungsi penghala.  Klik
 Help_init_word2=perkataan yang dihiperpautkan dengan garisan bawah berwarna kuning dan biru.
@@ -679,7 +698,7 @@ QKSet_finishpre_rebootnow=Selesai
 QKSet_account_webtitle=Seting Akaun ISP
 QKSet_ISP_head=Seting Maklumat ISP
 QKSet_ISP_desc=Sila rujuk kepada seting ISP anda dan input maklumat berkaitan.
-PPPConnection_UserName_itemdesc=Medan ini hanya tersedia apabila anda set Jenis Sambungan  WAN sebagai HSDPA, PPPoE, PPTP atau L2TP.
+PPPConnection_UserName_itemdesc=Medan ini hanya tersedia apabila anda set Jenis Sambungan  WAN sebagai USB Modem, PPPoE, PPTP atau L2TP.
 BOP_account_user_item=Nama Pengguna:
 BOP_account_pass_item=Kata Laluan:
 QKSet_account_passwd=Kata Laluan untuk akaun pengguna ini.
@@ -741,7 +760,7 @@ QKSet_type_rechoice=Sila Pilih jenis WAN
 QKSet_wireless_webtitle=Seting Wayarles
 WLANConfig11b_SSID_itemdesc=Peruntukkan rentetan pengenalpastian sehingga 32 aksara untuk sambungan wayarles anda.
 WLANConfig11b_SSID_itemname=SSID:
-WLANConfig11b_x_PSKKey_itemdesc=Medan ini memerlukan kata laluan bagi 8 hingga 63 aksara untuk memulakan proses penyulitan. Jika anda membiarkan medan ini kosong, [00000000] lalai akan diperuntukkan sebagai kata laluan anda.
+WLANConfig11b_x_PSKKey_itemdesc=Medan ini memerlukan kata laluan bagi 8 dan 63 aksara (huruf, nombor atau gabungan) atau 64 digit perenambelasan aksara untuk memulakan proses penyulitan. Jika anda membiarkan medan ini kosong, [00000000] lalai akan diperuntukkan sebagai kata laluan anda.
 WLANConfig11b_x_PSKKey_itemname=Kekunci Dipra-Kongsi WPA:
 WLANConfig11b_WEPDefaultKey_itemdesc=Setkan kekunci WEP untuk menghantar data pada wayarles anda.
 WLANConfig11b_WEPDefaultKey_itemname=Indeks Kekunci:
@@ -986,8 +1005,6 @@ FirewallConfig_UrlFilterEnable_itemname=Mendayakan Penapis URL
 FirewallConfig_URLActiveDate_itemname=Tarikh untuk Mendayakan Penapis URL:
 FirewallConfig_URLActiveDate_itemdesc=Medan ini menentukan tarikh penapis URL akan didayakan.
 FirewallConfig_URLActiveTime_itemname=Masa bagi Hari untuk Mendayakan Penapis URL
-FirewallConfig_URLActiveTime_itemdesc2=Medan ini menentukan jarak waktu penapis URL akan didayakan. Sila masukkan masa mula dan tamat berbeza. Jika masa mula selepas masa tamat, fungsi akan berkesan pada tengah malam.
-FirewallConfig_URLActiveTime_itemhint3=Masa mula adalah selepas masa tamat. Fungsi ini akan berkesan pada tengah malam.\n Adakah anda pasti mahu teruskan?
 FirewallConfig_URLActiveTime_itemhint2=Tempoh masa tidak sah.
 FirewallConfig_UrlFilterDefaultAct_itemname=URL yang mengandungi kata kunci ditentukan akan menjadi:
 FirewallConfig_UrlFilterDefaultAct_itemdesc=Jika anda memilih JATUH, URL yang mengandungi kata kunci yang ditentukan dalam jadual digugurkan atau tidak boleh diakses. Jika anda memilih TERIMA, hanya URL yang mengandungi kata kunci yang ditentukan boleh diakses.
@@ -1139,7 +1156,7 @@ LANHostConfig_x_DDNSStatus_itemname=Kemas Kini Secara Manual:
 LANHostConfig_x_DDNSStatus_itemdesc=Butang ini membenarkan anda mengemas kini pangkalan data DDNS secara manual. Ia tersedia hanya apabila kemas kini DDNS automatik gagal. Anda boleh mendapatkan status semasa bagi kemas kini DDNS daripada Log Sistem.
 LANHostConfig_ReservedAddresses_itemname=Alamat IP:
 DeviceSecurity11a_display1_sectiondesc=Penapis MAC Wayarles membenarkan anda mengawal paket daripada peranti dengan alamat MAC ditentukan dalam LAN Wayarles anda.
-WLANAuthentication11a_display1_sectiondesc=Bahagian ini membenarkan anda menyediakan parameter tambahan untuk mengesahkan klien wayarles melalui pelayan RADIUS. Ia diperlukan semasa anda memilih "Kaedah Pengesahan" dalam "Wayarles - Am" sebagai ""WPA-ENTERPRISE/WPA2-ENTERPRISE" atau "Radius with 802.1x"..
+WLANAuthentication11a_display1_sectiondesc=Bahagian ini membenarkan anda menyediakan parameter tambahan untuk mengesahkan klien wayarles melalui pelayan RADIUS. Ia diperlukan semasa anda memilih "Kaedah Pengesahan" dalam "Wayarles - Am" sebagai "WPA-ENTERPRISE/WPA2-ENTERPRISE" atau "Radius with 802.1x".
 WLANAuthentication11a_ExAuthDBIPAddr_itemname=Alamat IP Pelayan:
 WLANAuthentication11a_ExAuthDBIPAddr_itemdesc=Alamat IP bagi pelayan RADIUS untuk pengesahan wayarles 802.1X dan pemerolehan kekunci WEP dinamik.
 WLANAuthentication11a_ExAuthDBPortNumber_itemname=Port Pelayan:
@@ -1419,14 +1436,17 @@ HSDPAConfig_country_itemdesc=Sila pilih lokasi ISP anda.
 HSDPAConfig_dialnum_itemdesc=Sila masukkan nombor dail anda.
 HSDPAConfig_username_itemdesc=Sila masukkan nama pengguna anda.
 HSDPAConfig_password_itemdesc=Sila masukkan kata laluan anda.
-HSDPAConfig_usbadaptor_itemdesc=Sila pilih penyesuai usb 3G/3.5G anda.
+HSDPAConfig_usbadaptor_itemdesc=Sila pilih penyesuai usb Modem anda.
 confirm_disableftp_dm=Menyahdayakan Perkongsian Sekitar Rangkaian akan menyahdayakan Muat Turun Utama.
 LANHostConfig_IPRouters_itemdesc=Alamat IP LAN bagi RT-N56U Nilai lalai adalah 192.168.1.1. Julat alamat LAN IP: 192.168.0.1 - 192.168.255.254, 172.16.0.1 – 172.31.255.254, 10.0.0.1 – 10.255.255.254
-HSDPAConfig_hsdpa_mode_itemdesc=Pilih mod HSDPA mengikut keperluan dan persekitaran anda. Kami memberikan empat mod di bawah: Sandaran, Sama berat, Sentiasa tinggi dan Sentiasa rendah.Untuk mengeluarkan penyesuai HSDPA, sila rujuk pada <a href='/index.asp'>Indeks</a> dan klik butang penyesuai.
+HSDPAConfig_hsdpa_mode_itemdesc=Pilih mod USB Modem mengikut keperluan dan persekitaran anda. Kami memberikan empat mod di bawah: Sandaran, Sama berat, Sentiasa tinggi dan Sentiasa rendah.Untuk mengeluarkan penyesuai USB Modem, sila rujuk pada <a href='/index.asp'>Indeks</a> dan klik butang penyesuai.
 Not_authpage_login_again=Jika anda hendak log masuk kembali, sila tutup tetingkap ini dahulu.
-GO_HSDPA_SETTING=Pergi ke Seting HSDPA
+GO_HSDPA_SETTING=Pergi ke Seting USB Modem
+HSDPA_disable=If you want to change connection type，please refer to <a href="/Advanced_Modem_others.asp"><#GO_HSDPA_SETTING#></a>to disable adaptor.
 [new strings - translated]
 GO_2G=Pergi ke Seting 2.4GHz
 GO_5G=Pergi ke Seting 5GHz
 [new strings]
 UPnPMediaServerType=Server Type
+HSDPA_LANtoWAN=After enabling USB Modem connection, the WAN port will change to LAN port, please remove the original cable.
+HSDPA_enable_confirm=Sila periksa sama ada Seting anda adalah betul.

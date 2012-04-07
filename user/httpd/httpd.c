@@ -60,6 +60,7 @@
 #include <flash_ioctl.h>
 #include <sys/ioctl.h>
 #include <netconf.h>
+#include <shutils.h>	// for dbg()
 
 typedef unsigned int __u32;   // 1225 ham
 //#include <ra_ioctl.h>
@@ -68,14 +69,6 @@ typedef unsigned int __u32;   // 1225 ham
 //2008.08 magic{
 #include <nvram/bcmnvram.h>	//2008.08 magic
 #include <arpa/inet.h>	//2008.08 magic
-
-#define csprintf(fmt, args...) do{\
-	FILE *cp = fopen("/dev/console", "w");\
-	if(cp) {\
-		fprintf(cp, fmt, ## args);\
-		fclose(cp);\
-	}\
-}while(0)
 
 #define eprintf2(fmt, args...) do{\
 	FILE *ffp = fopen("/tmp/detect_wrong.log", "a+");\
@@ -514,6 +507,7 @@ handle_request(void)
     int len;
     struct mime_handler *handler;
     int cl = 0, flags;
+    char *q;
 
     /* Initialize the request variables. */
     authorization = boundary = NULL;
@@ -575,6 +569,9 @@ handle_request(void)
 				if (isupper(p[i])) {
 					p[i]=tolower(p[i]);
 				}
+
+//			if (nvram_match("httpd_debug", "1"))
+//				dbg("[httpd] browser language: %s\n", p);
 
 			//2008.11 magic}
 			for (pLang = language_tables; pLang->Lang != NULL; ++pLang)
@@ -705,7 +702,7 @@ handle_request(void)
 			int login_state = http_login_check();
 
 			if ((login_state == 1 || login_state == 2)
-					//&& nvram_match("x_Setting", "0") //2008.11 magic
+					&& !nvram_match("x_Setting", "1") //2008.11 magic
 					&& (strstr(url, "QIS_") != NULL   // to avoid the interference of the other logined browser. 2008.11 magic
 //							|| !strcmp(url, "survey.htm")	// 1008 update
 //							|| !strcmp(url, "ureip.asp")	// 1202 update
@@ -818,7 +815,7 @@ handle_request(void)
 					/* Read up to two more characters */
 					if (fgetc(conn_fp) != EOF)
 						(void)fgetc(conn_fp);
-					
+
 					fcntl(fileno(conn_fp), F_SETFL, flags);
 				}
 #elif defined(vxworks)
