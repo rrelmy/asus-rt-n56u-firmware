@@ -12,8 +12,6 @@
 #include "libbb.h"
 #include "xregex.h"
 
-//#include <nvram/bcmnvram.h>
-
 struct globals {
 	int root_major, root_minor;
 };
@@ -52,47 +50,6 @@ static char *build_alias(char *alias, const char *device_name)
 	return alias;
 }
 #endif
-/*
-void
-tmp_log(char *buf)
-{
-	FILE *fd;
-	fd = fopen("/tmp/mdev02", "a");
-	if(fd > 0)
-	{
-		fprintf(fd, buf);
-		fprintf(fd, "\n");
-		close(fd);
-	}
-}
-*/
-int
-check_partition(const char *devname)
-{
-	FILE *procpt;
-	char line[256], ptname[32], ptname_check[32];
-	int ma, mi, sz;
-
-	if (devname && (procpt = fopen("/proc/partitions", "r")))
-	{
-		sprintf(ptname_check, "%s1", devname);
-
-		while (fgets(line, sizeof(line), procpt))
-		{
-			if (sscanf(line, " %d %d %d %[^\n ]", &ma, &mi, &sz, ptname) != 4)
-				continue;
-			if (!strcmp(ptname, ptname_check))
-			{
-				fclose(procpt);
-				return 1;
-			}
-		}
-
-		fclose(procpt);
-	}
-
-	return 0;
-}
 
 /* mknod in /dev based on a path like "/sys/block/hda/hda1" */
 /* NB: "mdev -s" may call us many times, do not leak memory/fds! */
@@ -320,56 +277,19 @@ static void make_device(char *path, int delete)
 		/* setenv will leak memory, use putenv/unsetenv/free */
 		char *s = xasprintf("MDEV=%s", device_name);
 		putenv(s);
-		char *s2;
+		char *action;
 		if(delete)
-			s2 = xasprintf("ACTION=remove");
+			action = xasprintf("ACTION=remove");
 		else
-			s2 = xasprintf("ACTION=add");
-		putenv(s2);
-		
-		if(!strncmp(device_name, "sd", 2)){
-			char aidisk_cmd[64];
-			char aidisk_path[64];
-			memset(aidisk_cmd, 0, sizeof(aidisk_cmd));
-			if (device_name[3] == '\0')	// sda, sdb, sdc...
-			{
-				if (!check_partition(device_name))
-				{
-					sprintf(aidisk_cmd, "/sbin/automount.sh $MDEV AiDisk_%c%c", device_name[2], '1');
-					sprintf(aidisk_path, "/media/AiDisk_%c%c", device_name[2], '1');
-				}
-				else
-					goto No_Need_To_Mount;
-			}
-			else
-			{
-				sprintf(aidisk_cmd, "/sbin/automount.sh $MDEV AiDisk_%c%c", device_name[2], device_name[3]);
-				sprintf(aidisk_path, "/media/AiDisk_%c%c", device_name[2], device_name[3]);
-			}
-//		tmp_log(aidisk_cmd);
-
-			umask(0000);
-			chmod("/media", 0777);
-			chmod("/tmp", 0777);
-			if (system(aidisk_cmd) == -1)
-				bb_perror_msg_and_die("can't run '%s'", aidisk_cmd);
-			else
-				chmod(aidisk_path, 0777);
-			sprintf(aidisk_cmd, "/sbin/test_of_var_files_in_mount_path %s", aidisk_path);
-			system(aidisk_cmd);
-		}
-		else{
-			if (system(command) == -1)
-				bb_perror_msg_and_die("can't run '%s'", command);
-		}
-		
+			action = xasprintf("ACTION=add");
+		if (system(command) == -1)
+			bb_perror_msg_and_die("can't run '%s'", command);
 		s[4] = '\0';
 		unsetenv(s);
 		free(s);
-		s2[6] = '\0';
-		unsetenv(s2);
-		free(s2);
-No_Need_To_Mount:
+		action[6] = '\0';
+		unsetenv(action);
+		free(action);
 		free(command);
 	}
 #endif
@@ -522,11 +442,8 @@ int mdev_main(int argc UNUSED_PARAM, char **argv)
 		char *seq;
 		char *action;
 		char *env_path;
-//		char *subsystem;
 		char seqbuf[sizeof(int)*3 + 2];
 		int seqlen = seqlen; /* for compiler */
-//		char nvram_name[20];
-		char nvram_cmd[32];
 
 		/* Hotplug:
 		 * env ACTION=... DEVPATH=... [SEQNUM=...] mdev
@@ -535,61 +452,8 @@ int mdev_main(int argc UNUSED_PARAM, char **argv)
 		 */
 		action = getenv("ACTION");
 		env_path = getenv("DEVPATH");
-//		subsystem = getenv("SUBSYSTEM");
 		if (!action || !env_path)
 			bb_show_usage();
-
-		if (action && env_path)
-		{
-//			tmp_log(action);
-//			tmp_log(env_path);
-
-			if (!strcmp(action, "add") || !strcmp(action, "remove"))
-			{
-				if (strstr(env_path, "/block/sd"))
-				{
-					sprintf(nvram_cmd, "usb_path_nvram %s %s", action, env_path);
-//					tmp_log(nvram_cmd);
-					system(nvram_cmd);
-/*
-					if (env_path[10] == '\0')	// sda, sdb, sdc...
-					{
-						sprintf(nvram_name, "usb_path%s_fs_path0", nvram_get("usb_path"));
-						nvram_set(nvram_name, &env_path[7]);
-						tmp_log(nvram_name);
-						tmp_log(&env_path[7]);
-					}
-					else if (env_path[14] == '1')	// sda1, sdb1, sdc1...
-					{
-						sprintf(nvram_name, "usb_path%s_fs_path0", nvram_get("usb_path"));
-						nvram_set(nvram_name, &env_path[11]);
-						tmp_log(nvram_name);
-						tmp_log(&env_path[11]);
-					}
-					else
-					{
-						sprintf(nvram_name, "usb_path%s_fs_path%c", nvram_get("usb_path"), env_path[14] - 1);
-						nvram_set(nvram_name, &env_path[11]);
-						tmp_log(nvram_name);
-						tmp_log(&env_path[11]);
-					}
-*/
-				}
-/*
-				else if (strstr(env_path, "/lp0") && !subsystem && !strcmp(subsystem, "usb"))
-					;
-*/
-			}
-/*
-			else if (!strcmp(action, "remove"))
-			{
-				if (strstr(env_path, "/block/sd"))
-					;
-				else if (strstr(env_path, "/lp0") && !subsystem && !strcmp(subsystem, "usb"))
-					;
-			}
-*/
-		}
 
 		seq = getenv("SEQNUM");
 		if (seq) {

@@ -27,7 +27,7 @@
 #include <stdarg.h>
 #include <signal.h>
 #include <syslog.h>
-#include <errno.h>
+#include <fcntl.h>
 
 #include "dproxy.h"
 #include "dns_decode.h"
@@ -41,8 +41,12 @@
 /*****************************************************************************/
 int dns_main_quit;
 int dns_sock;
+int srv_sock;
 fd_set rfds;
 dns_request_t *dns_request_list;
+struct in_addr ns_addr[MAX_NS_COUNT];
+int ns_count;
+int ns_shift;
 /*****************************************************************************/
 int is_connected()
 {
@@ -55,106 +59,131 @@ int is_connected()
   fclose(fp);
   return 1;
 }
-#define MAX_RETRY	6
-#define DNS_DEBUG	1
-#define MAX_DNS_NUM	3	// keep the same as in /tmp/resolv.conf
-int retry_dns = 0;
 /*****************************************************************************/
-int dns_init()
+void load_resolv_entries(char *resolv_file, int new_shift)
+{
+  FILE *fp;
+  struct in_addr in;
+  char line[81], dns_ser_ip[81];
+
+  ns_count = 0;
+  ns_shift = new_shift;
+  fp = fopen(config.resolv_file, "r");
+  if (!fp)
+	return;
+  while (
+    ns_count < MAX_NS_COUNT &&
+    fgets(line, 80, fp) != NULL &&
+    sscanf(line, "nameserver %s", dns_ser_ip) == 1 &&
+    inet_aton(dns_ser_ip, &in) && in.s_addr != INADDR_ANY)
+  {
+    ns_addr[ns_count++].s_addr = in.s_addr;
+  }
+  fclose(fp);
+}
+/*****************************************************************************/
+int dns_prepare_socket(int port)
 {
   struct sockaddr_in sa;
-  struct in_addr ip;
-  int retry, ret;
+  int fd = -1;
+  int flags;
 
   /* Clear it out */
   memset((void *)&sa, 0, sizeof(sa));
+  sa.sin_family = AF_INET;
+  sa.sin_addr.s_addr = INADDR_ANY;
+  sa.sin_port = htons(port);
 
-  dns_sock = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
+  fd = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
+  if (fd < 0)
+	return fd;
+
+  fcntl(fd, F_SETFD, FD_CLOEXEC);
+
+  flags = 1;
+  if (setsockopt(fd, SOL_SOCKET, SO_REUSEADDR, (char*) &flags, sizeof(flags)) < 0 ){
+	printf("Could not set reuse option\n");
+	debug_perror("setsockopt");
+	goto err;
+  }
+
+  flags = fcntl(fd, F_GETFL);
+  if (flags < 0 || fcntl(fd, F_SETFL, flags | O_NONBLOCK) < 0) {
+	printf("Could not set socket nonblock\n");
+	debug_perror("fcntl");
+	goto err;
+  }
+
+  if (bind(fd, (struct sockaddr *) &sa, sizeof(struct sockaddr)) < 0) {
+	printf("Could not bind socket to port %d\n", port);
+	debug_perror("bind");
+	goto err;
+  }
+
+  return fd;
+
+err:
+  close(fd);
+  return -1;
+}
+/*****************************************************************************/
+int dns_init()
+{
+  srv_sock = dns_prepare_socket(0);
 
   /* Error */
-  if( dns_sock < 0 ){
-	 debug_perror("Could not create socket");
-	perror("dns sock fail");
+  if (srv_sock < 0) {
+	 printf("Could not create server socket\n");
+	 debug_perror("Could not create server socket");
 	 exit(1);
   }
 
-  ip.s_addr = INADDR_ANY;
-  sa.sin_family = AF_INET;
-  memcpy((void *)&sa.sin_addr, (void *)&ip, sizeof(struct in_addr));
-  sa.sin_port = htons(PORT);
+  dns_sock = dns_prepare_socket(PORT);
 
-  /* bind() the socket to the interface */
-  for(retry = 0; retry < MAX_RETRY; ++retry)
-  {
-  	if ((ret = bind(dns_sock, (struct sockaddr *)&sa, sizeof(struct sockaddr))) < 0){
-		debug_perror("dns_init: bind: Could not bind to port");
-		perror("dns bind fail");
-	 	//exit(1);
-	 	sleep(1);
-  	} else
-		break;
-  }
-  if(retry == MAX_RETRY)
-  {
-	printf("**dns try bind retry fail\n");
-	exit(1);
+  /* Error */
+  if( dns_sock < 0 ){
+	 printf("Could not create socket\n");
+	 debug_perror("Could not create socket");
+	 exit(1);
   }
 
   dns_main_quit = 0;
 
   FD_ZERO( &rfds );
   FD_SET( dns_sock, &rfds );
+  FD_SET( srv_sock, &rfds );
 
   dns_request_list = NULL;
 
+  load_resolv_entries(config.resolv_file, 0);
   cache_purge( config.purge_time );
 
   return 1;
 }
 /*****************************************************************************/
-/* This function is added by CMC 8/4/2001 */
 void forward_dns_query(dns_request_t *node, dns_request_t *m)
 {
-  struct in_addr	in;
-  FILE			*fp;
-  char			line[81], dns_ser_ip[81];
-  int 			bad_dns = retry_dns;
-  int 			get_dns = 0;
+  struct in_addr in;
+  int try, ns_index = 0;
 
-  inet_aton( config.name_server, &in );
+  for (try = 0; try <= ns_count; try++) {
+    if (/* ns_count > 0 && */ try < ns_count) {
+      ns_index = (ns_shift + try) % ns_count;
+      in.s_addr = ns_addr[ns_index].s_addr;
+    } else
+      inet_aton(config.name_server, &in);
 
-  memset(line, 0, sizeof(line));
-  memset(dns_ser_ip, 0, sizeof(dns_ser_ip));
+    if (in.s_addr == INADDR_ANY)
+      continue;
 
-  if( (fp = fopen( "/tmp/resolv.conf" , "r")) != NULL) {
-	while ( fgets(line, 80, fp) != NULL ){
-		if(bad_dns != 0)
-		{
-			--bad_dns;
-			continue;		
-		}
-		if ( sscanf(line, "nameserver %s", dns_ser_ip) == 1 ){
-			get_dns = 1;
-			inet_aton( dns_ser_ip, &in );
-			/* the first or lastest nameserver */
-			//if ( !(node->duplicate_queries & 0x01) )	// tmp test
-			break;
-		}
-  		memset(line, 0, sizeof(line));
-  		memset(dns_ser_ip, 0, sizeof(dns_ser_ip));
-	}
-	fclose(fp);
-  }
-  if(!get_dns)
-  {
-	debug("dproxy using default dns server: 8.8.8.8\n");
-	memset(dns_ser_ip, 0, sizeof(dns_ser_ip));
-	sprintf(dns_ser_ip, "8.8.8.8");		// default google's free dns server
-	inet_aton(dns_ser_ip, &in);
+    debug("forward_dns_query: query DNS server -- %s\n", inet_ntoa(in));
+    if (dns_write_packet(srv_sock, in, PORT, m) > 0) {
+      ns_shift = ns_index;
+      return;
+    }
   }
 
-  debug("forward_dns_query: query DNS server -- %s\n", inet_ntoa(in) );
-  dns_write_packet( dns_sock, in, PORT, m );
+  debug("forward_dns_query: no DNS servers available\n");
 }
 /*****************************************************************************/
 void dns_handle_new_query(dns_request_t *m)
@@ -162,9 +191,7 @@ void dns_handle_new_query(dns_request_t *m)
   //struct in_addr in;
   int retval = 0;	/* modified by CMC from retval=-1 2002/12/6 */
 
-	debug("handle new query %s\n", m->ip);	// tmp test
   if( m->message.question[0].type == A || m->message.question[0].type == AAA){
-	debug("type is %x(A/AAA)\n", m->message.question[0].type);	// tmp test
     /* added by CMC to deny name 2002/11/19 */
     if ( deny_lookup_name( m->cname ) ) {
       debug("%s --> blocked.\n", m->cname);
@@ -175,14 +202,12 @@ void dns_handle_new_query(dns_request_t *m)
     /* standard query */
     retval = cache_lookup_name( m->cname, m->ip );
   }else if( m->message.question[0].type == PTR ){
-	debug("type is %x(PTR)\n", m->message.question[0].type);	// tmp test
     /* reverse lookup */
     retval = cache_lookup_ip( m->ip, m->cname );
   }
 
   debug(".......... %s ---- %s\n", m->cname, m->ip );
 
-	debug("cache retval is %d\n", retval);	// tmp test
   switch( retval )
     {
     case 0:
@@ -190,7 +215,7 @@ void dns_handle_new_query(dns_request_t *m)
 	debug("Adding to list-> id: %d\n", m->message.header.id);
 	dns_request_list = dns_list_add( dns_request_list, m );
 	/* relay the query untouched */
-	forward_dns_query( dns_request_list, m);  /* modified by CMC 8/3/2001 */
+	forward_dns_query( dns_request_list, m );  /* modified by CMC 8/3/2001 */
       }else{
 	debug("Not connected **\n");
 	dns_construct_error_reply(m);
@@ -209,50 +234,39 @@ void dns_handle_new_query(dns_request_t *m)
 
 }
 /*****************************************************************************/
-void dns_handle_request(dns_request_t *m)
+void dns_handle_response(dns_request_t *m)
 {
   dns_request_t *ptr = NULL;
 
-  /* request may be a new query or a answer from the upstream server */
-  ptr = dns_list_find_by_id( dns_request_list, m );
-
-  if( ptr != NULL ){
+  ptr = dns_list_find_by_id(dns_request_list, m);
+  if (ptr != NULL) {
     debug("Found query in list\n");
     /* message may be a response */
-    if( m->message.header.flags.f.question == 1 ){
-      //dns_write_packet( dns_sock, ptr->src_addr, ptr->src_port, m );
-      debug("Replying with answer from %s\n", inet_ntoa( m->src_addr ));
-      if( m->message.header.flags.f.rcode == 0 && /* modified by CMC 2002/12/6 */
-          (ptr->message.question[0].type == A || ptr->message.question[0].type == PTR) ){
-      	dns_write_packet( dns_sock, ptr->src_addr, ptr->src_port, m );
-	debug("Cache append: %s ----> %s\n", m->cname, m->ip );
-	cache_name_append( m->cname, m->ip );
-      	dns_request_list = dns_list_remove( dns_request_list, ptr );
+    if(m->message.header.flags.f.question == 1) {
+      dns_write_packet(dns_sock, ptr->src_addr, ptr->src_port, m);
+      debug("Replying with answer from %s\n", inet_ntoa(m->src_addr));
+      if (m->message.header.flags.f.rcode == 0 &&
+          (ptr->message.question[0].type == A || ptr->message.question[0].type == PTR)) {
+	debug("Cache append: %s ----> %s\n", m->cname, m->ip);
+	cache_name_append(m->cname, m->ip);
       }
-      else
-      {
-	debug("failed handle: rcode = %d, type = %d, ignore forwarding\n", m->message.header.flags.f.rcode, ptr->message.question[0].type);	// tmp test
-      	//++retry_dns;
-	//retry_dns %= MAX_DNS_NUM;
-      }
-      //dns_request_list = dns_list_remove( dns_request_list, ptr );
-    }else{
-      ptr->duplicate_queries++;	   /* added by CMC 8/4/2001 */
-      debug("Duplicate query(%d)\n", ptr->duplicate_queries);
-      if(ptr->duplicate_queries > 0)
-      {
-      		++retry_dns;
-		retry_dns %= MAX_DNS_NUM;
-      }
-      else
-		retry_dns = 0;
-      debug("retry_dns:%d\n", retry_dns);
-      forward_dns_query( ptr, m); /* added by CMC 8/4/2001 */
+      dns_request_list = dns_list_remove( dns_request_list, ptr );
     }
-  }else{
-    dns_handle_new_query( m );
   }
+}
+/*****************************************************************************/
+void dns_handle_query(dns_request_t *m)
+{
+  dns_request_t *ptr = NULL;
 
+  ptr = dns_list_find_by_id(dns_request_list, m);
+  if (ptr != NULL) {
+    ns_shift++;
+    ptr->duplicate_queries++;
+    debug("Duplicate query(%d)\n", ptr->duplicate_queries);
+    forward_dns_query(ptr, m);
+  } else
+    dns_handle_new_query(m);
 }
 /*****************************************************************************/
 int dns_main_loop()
@@ -264,6 +278,7 @@ int dns_main_loop()
   dns_request_t *ptr, *next;
   //int purge_time = config.purge_time / 60;
   int purge_time = CACHE_CHECK_TIME / DNS_TICK_TIME;	//(30sec) modified by CMC 8/4/2001
+  int max_fd;
 
   while( !dns_main_quit ){
 
@@ -274,13 +289,21 @@ int dns_main_loop()
     /* now copy the main rfds in the active one as it gets modified by select*/
     active_rfds = rfds;
 
-    retval = select( FD_SETSIZE, &active_rfds, NULL, NULL, &tv );
+    max_fd = (dns_sock > srv_sock) ? dns_sock : srv_sock;
+    retval = select(max_fd + 1, &active_rfds, NULL, NULL, &tv);
+    if (retval < 0) {
+      /* EINTR? A signal was caught, don't panic */
+      continue;
+    }
 
     if (retval){
       /* data is now available */
-      dns_read_packet( dns_sock, &m );
-      dns_handle_request( &m );
-	debug("handle req done\n");	// tmp test
+      if (FD_ISSET(srv_sock, &active_rfds) &&
+          dns_read_packet(srv_sock, &m) != -1)
+        dns_handle_response(&m);
+      if (FD_ISSET(dns_sock, &active_rfds) &&
+          dns_read_packet(dns_sock, &m) != -1)
+        dns_handle_query(&m);
     }else{
       /* select time out */
       ptr = dns_request_list;
@@ -301,6 +324,7 @@ int dns_main_loop()
       /* purge cache */
       purge_time--;
       if( purge_time <= 0 ){			//modified by CMC 8/4/2001
+	load_resolv_entries(config.resolv_file, ns_shift);
 	cache_purge( config.purge_time );
 	//purge_time = config.purge_time / 60;
 	purge_time = CACHE_CHECK_TIME / DNS_TICK_TIME; 	//(30sec) modified by CMC 8/3/2001
@@ -418,6 +442,7 @@ void sig_hup (int signo)
 {
   signal(SIGHUP, sig_hup); /* set this for the next sighup */
   conf_load (config.config_file);
+  load_resolv_entries(config.resolv_file, 0);
 }
 /*****************************************************************************/
 int main(int argc, char **argv)
@@ -427,6 +452,11 @@ int main(int argc, char **argv)
   if(get_options( argc, argv ) < 0 ) {
 	  exit(1);
   }
+
+  sigset_t sigs_to_catch;
+  sigemptyset(&sigs_to_catch);
+  sigaddset(&sigs_to_catch, SIGHUP);
+  sigprocmask(SIG_UNBLOCK, &sigs_to_catch, NULL);
 
   signal(SIGHUP, sig_hup);
 
@@ -440,8 +470,8 @@ int main(int argc, char **argv)
 		exit(-1);
 	 case 0:	/* Child: close off stdout, stdin and stderr */
 		close(0);
-		//close(1);
-		//close(2);
+		close(1);
+		close(2);
 		break;
 	 default:	/* Parent: Just exit */
 		exit(0);

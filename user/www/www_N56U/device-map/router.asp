@@ -235,7 +235,7 @@ function wl_auth_mode_change(isload){
 			else
 				new_array = new Array("AES", "TKIP+AES");
 		}
-		
+
 		free_options(document.form.wl_crypto);
 		for(var i in new_array){
 			document.form.wl_crypto[i] = new Option(new_array[i], new_array[i].toLowerCase());
@@ -659,8 +659,8 @@ function submitForm(){
 
 function startPBCmethod(){
 	stopFlag = 1;
-	document.WPSForm.action_script.value = "WPS_push_button";
-	document.WPSForm.current_page.value = "/";
+	document.WPSForm.action_script.value = "WPS_push_button_5g";
+	document.WPSForm.current_page.value = "/index.asp?flag=Router5g";
 	document.WPSForm.submit();
 }
 

@@ -24,7 +24,6 @@
  * SPECIFICALLY DISCLAIMS ANY IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS
  * FOR A SPECIFIC PURPOSE OR NONINFRINGEMENT CONCERNING THIS SOFTWARE.
  *
- * $Id: network.c,v 1.1.1.1 2007/01/25 12:52:21 jiahao_jhou Exp $
  */
 
 #include <stdio.h>
@@ -411,10 +410,17 @@ start_udhcpc()
 {
 	if ((nvram_match("router_disable", "1")) && (nvram_match("lan_proto_ex", "1")))
 	{
+		char *lan_hostname;
+		if (!nvram_match("computer_name", "") && is_valid_hostname(nvram_safe_get("computer_name")))
+			lan_hostname = nvram_safe_get("computer_name");
+		else
+			lan_hostname = nvram_safe_get("productid");
 		char *dhcp_argv[] = { "udhcpc",
 			"-i", "br0",
 			"-p", "/var/run/udhcpc_lan.pid",
 			"-s", "/tmp/landhcpc",
+			lan_hostname && *lan_hostname ? "-H" : NULL,
+			lan_hostname && *lan_hostname ? lan_hostname : NULL,
 			NULL
 		};
 		pid_t pid;
@@ -423,10 +429,13 @@ start_udhcpc()
 	}
 	else if (nvram_match("wan0_proto", "dhcp"))
 	{
+		char *wan_hostname = nvram_get("wan0_hostname");
 		char *dhcp_argv[] = { "udhcpc",
 			"-i", "eth3",
 			"-p", "/var/run/udhcpc0.pid",
 			"-s", "/tmp/udhcpc",
+			wan_hostname && *wan_hostname ? "-H" : NULL,
+			wan_hostname && *wan_hostname ? wan_hostname : NULL,
 			NULL
 		};
 		pid_t pid;
@@ -528,7 +537,7 @@ vconfig()
 	system("brctl stp br0 1");
 #endif
 	if (!is_ap_mode()
-#ifdef USB_MODEM
+#ifdef RTCONFIG_USB_MODEM
 			&& !get_usb_modem_state()
 #endif
 			)
@@ -538,32 +547,168 @@ vconfig()
 		if (stbport < 0 || stbport > 6)
 			stbport = 0;
 
-		if(!strcmp(nvram_safe_get("unifi_malaysia"), "1"))/*Added for Unifi. Cherry Cho added in 2011/6/20.*/
+		if(strcmp(nvram_safe_get("vlan_isp"), "none"))/* Cherry Cho added in 2011/6/28. */
 		{
-			switch(stbport)
+			char tmp[128];
+			int voip_port = 0;
+			int vlan_val;/* VID and PRIO */
+
+			voip_port = atoi(nvram_safe_get("voip_port"));
+			if (voip_port < 0 || voip_port > 4)
+				voip_port = 0;		
+
+			/* Fixed Ports Now*/
+			stbport = 4;	
+			voip_port = 3;
+	
+			sprintf(tmp, "8367m 29 %d", voip_port);	
+			system(tmp);	
+
+			if(!strncmp(nvram_safe_get("vlan_isp"), "unifi", 5))/* Added for Unifi. Cherry Cho modified in 2011/6/28.*/
 			{
-				case 1:	// LLLTW
-					system("8367m 26 1");
-					break;
-				case 2:	// LLTLW
-					system("8367m 26 2");
-					break;
-				case 3:	// LTLLW
-					system("8367m 26 3");
-					break;
-				case 4:	// TLLLW
-					system("8367m 26 4");
-					break;
-				case 5:	// TTLLW
-					system("8367m 26 5");
-					break;
-				case 6: // LLTTW
-					system("8367m 26 6");
-					break;
-				default:// LLLLW
-					system("8367m 26 0");
-					break;
-			}			
+				if(strstr(nvram_safe_get("vlan_isp"), "home"))
+				{					
+					system("8367m 38 1");/* IPTV: P0 */
+					/* Internet */
+					system("8367m 36 500");
+					system("8367m 37 0");
+					system("8367m 39 51249950");
+					/* IPTV */
+					system("8367m 36 600");
+					system("8367m 37 0");
+					system("8367m 39 65553");			
+				}
+				else/* No IPTV. Business package */
+				{
+					/* Internet */
+					system("8367m 38 0");
+					system("8367m 36 500");
+					system("8367m 37 0");
+					system("8367m 39 51315487");
+				}
+			}
+			else if(!strncmp(nvram_safe_get("vlan_isp"), "singtel", 7))/* Added for SingTel's exStream issues. Cherry Cho modified in 2011/7/19. */
+			{		
+				if(strstr(nvram_safe_get("vlan_isp"), "mio"))/* Connect Singtel MIO box to P3 */
+				{
+					system("8367m 38 3");/* IPTV: P0  VoIP: P1 */
+					/* Internet */
+					system("8367m 36 10");
+					system("8367m 37 0");
+					system("8367m 39 51118876");
+					/* VoIP */
+					system("8367m 36 30");
+					system("8367m 37 4");				
+					system("8367m 39 18");//VoIP Port: P1 tag
+				}
+				else//Connect user's own ATA to lan port and use VoIP by Singtel WAN side VoIP gateway at voip.singtel.com
+				{
+					system("8367m 38 1");/* IPTV: P0 */
+					/* Internet */
+					system("8367m 36 10");
+					system("8367m 37 0");
+					system("8367m 39 51249950");			
+				}
+
+				/* IPTV */
+				system("8367m 36 20");
+				system("8367m 37 4");
+				system("8367m 39 65553");	
+			}
+			else/* Cherry Cho added in 2011/7/11. */
+			{
+				/* Initialize VLAN and set Port Isolation */
+				if(strcmp(nvram_safe_get("iptv_vid"), "") && strcmp(nvram_safe_get("voip_vid"), ""))
+					system("8367m 38 3");// 3 = 0x11 IPTV: P0  VoIP: P1
+				else if(strcmp(nvram_safe_get("iptv_vid"), ""))
+					system("8367m 38 1");// 1 = 0x01 IPTV: P0 
+				else if(strcmp(nvram_safe_get("voip_vid"), ""))
+					system("8367m 38 2");// 2 = 0x10 VoIP: P1
+				else
+					system("8367m 38 0");//No IPTV and VoIP ports
+
+				/*++ Get and set Vlan Information */
+				if(strcmp(nvram_safe_get("internet_vid"), "") != 0)
+				{
+					vlan_val = atoi(nvram_safe_get("internet_vid"));
+					if((vlan_val >= 2) && (vlan_val <= 4094))
+					{											
+						sprintf(tmp, "8367m 36 %d", vlan_val);
+						system(tmp);
+					}
+
+					if(strcmp(nvram_safe_get("internet_prio"), "") != 0)
+					{
+						vlan_val = atoi(nvram_safe_get("internet_prio"));
+						if((vlan_val >= 0) && (vlan_val <= 7))
+						{
+							sprintf(tmp, "8367m 37 %d", vlan_val);
+							system(tmp);
+						}
+						else
+							system("8367m 37 0");
+					}
+
+					if(strcmp(nvram_safe_get("iptv_vid"), "") && strcmp(nvram_safe_get("voip_vid"), ""))
+						system("8367m 39 51118876");//5118876 = 0x30C 031C Port: P2 P3 P4 P8 P9 Untag: P2 P3 P8 P9
+					else if(strcmp(nvram_safe_get("iptv_vid"), ""))
+						system("8367m 39 51249950");//51249950 = 0x30E 031E Port: P1 P2 P3 P4 P8 P9 Untag: P1 P2 P3 P8 P9
+					else if(strcmp(nvram_safe_get("voip_vid"), ""))
+						system("8367m 39 51184413");//51184413 = 0x30D 031D Port: P0 P2 P3 P4 P8 P9 Untag: P0 P2 P3 P8 P9
+					else
+						system("8367m 39 51315487");//51315487 = 0x30F 031F
+				}
+
+				if(strcmp(nvram_safe_get("iptv_vid"), "") != 0)
+				{
+					vlan_val = atoi(nvram_safe_get("iptv_vid"));
+					if((vlan_val >= 2) && (vlan_val <= 4094))
+					{								
+						sprintf(tmp, "8367m 36 %d", vlan_val);	
+						system(tmp);
+					}
+
+					if(strcmp(nvram_safe_get("iptv_prio"), "") != 0)
+					{
+						vlan_val = atoi(nvram_safe_get("iptv_prio"));
+						if((vlan_val >= 0) && (vlan_val <= 7))
+						{
+							sprintf(tmp, "8367m 37 %d", vlan_val);	
+							system(tmp);
+						}
+						else
+							system("8367m 37 0");
+					}	
+
+					system("8367m 39 65553");//IPTV Port: P0 untag 65553 = 0x10 011
+				}	
+
+
+				if(strcmp(nvram_safe_get("voip_vid"), "") != 0)
+				{
+					vlan_val = atoi(nvram_safe_get("voip_vid"));
+					if((vlan_val >= 2) && (vlan_val <= 4094))
+					{					
+						sprintf(tmp, "8367m 36 %d", vlan_val);	
+						system(tmp);
+					}
+
+					if(strcmp(nvram_safe_get("voip_prio"), "") != 0)
+					{
+						vlan_val = atoi(nvram_safe_get("voip_prio"));
+						if((vlan_val >= 0) && (vlan_val <= 7))
+						{
+							sprintf(tmp, "8367m 37 %d", vlan_val);	
+							system(tmp);		
+						}
+						else
+							system("8367m 37 0");
+					}
+	
+					system("8367m 39 131090");//VoIP Port: P1 untag
+				}
+
+			}
 		}
 		else
 		{
@@ -936,10 +1081,17 @@ start_lan(void)
 */
 		if (nvram_match("lan_proto_ex", "1"))
 		{
+			char *lan_hostname;
+			if (!nvram_match("computer_name", "") && is_valid_hostname(nvram_safe_get("computer_name")))
+				lan_hostname = nvram_safe_get("computer_name");
+			else
+				lan_hostname = nvram_safe_get("productid");
 			char *dhcp_argv[] = { "udhcpc",
 					      "-i", "br0",
 					      "-p", "/var/run/udhcpc_lan.pid",
 					      "-s", "/tmp/landhcpc",
+					      lan_hostname && *lan_hostname ? "-H" : NULL,	
+					      lan_hostname && *lan_hostname ? lan_hostname : NULL,
 					      NULL
 			};
 			pid_t pid;
@@ -1088,7 +1240,7 @@ del_wan_routes(char *wan_ifname)
 	return del_routes(prefix, "route", wan_ifname);
 }
 
-#ifndef USB_MODEM
+#ifndef RTCONFIG_USB_MODEM
 int
 start_3g_process()
 {
@@ -1149,7 +1301,7 @@ int enable_qos()
 #endif
 	char qos_ubw_real[128];
 	memset(qos_ubw_real, 0x0, 128);
-	if (nvram_invmatch("qos_manual_ubw","") && nvram_invmatch("qos_manual_ubw","0") && (atoi(nvram_safe_get("qos_manual_ubw")) > 0))
+	if (!nvram_match("qos_manual_ubw","") && !nvram_match("qos_manual_ubw","0") && (atoi(nvram_safe_get("qos_manual_ubw")) > 0))
 		strcpy(qos_ubw_real, nvram_safe_get("qos_manual_ubw"));
 	else
 		strcpy(qos_ubw_real, nvram_safe_get("qos_ubw"));
@@ -1281,7 +1433,7 @@ start_wan(void)
 		if (!wan_proto || !strcmp(wan_proto, "disabled"))
 			continue;
 
-		dbg("%s(): wan_ifname=%s, wan_proto=%s\n", __FUNCTION__, wan_ifname, wan_proto);
+		dbg("%s: wan_ifname=%s, wan_proto=%s\n", __FUNCTION__, wan_ifname, wan_proto);
 
 		/* Set i/f hardware address before bringing it up */
 		if ((s = socket(AF_INET, SOCK_RAW, IPPROTO_RAW)) < 0)
@@ -1397,25 +1549,42 @@ start_wan(void)
 #endif
 ))
 */
-#ifdef USB_MODEM
+#ifdef RTCONFIG_USB_MODEM
 		if(get_usb_modem_state()){
-			/* Bring up  WAN interface */
-			ifconfig(wan_ifname, IFUP, NULL, NULL);
-			
-			/* do not use safe_get here, values are optional */
-			/* start firewall */
-			start_firewall_ex("ppp0", "0.0.0.0", "br0", nvram_safe_get("lan_ipaddr"));
-			
-			/* setup static wan routes via physical device */
-			add_routes("wan_", "route", wan_ifname);
-			
-			/* start multicast router */
-			start_igmpproxy(wan_ifname);
-			
-			/* launch pppoe client daemon */
-			system("pppd call 3g");
-			
-			nvram_set("wan_ifname_t", "ppp0");
+#ifdef RTCONFIG_USB_MODEM_WIMAX
+			if(nvram_match("modem_enable", "4")){
+				char *wan_hostname = nvram_get(strcat_r(prefix, "hostname", tmp));
+				char *wimax_argv[] = { "udhcpc",
+						"-i", WIMAX_INTERFACE,
+						"-p", (sprintf(tmp, "/var/run/udhcpc%d.pid", unit), tmp),
+						"-s", "/tmp/udhcpc",
+						wan_hostname && *wan_hostname ? "-H" : NULL,
+						wan_hostname && *wan_hostname ? wan_hostname : NULL,
+						NULL
+						};
+				
+				_eval(wimax_argv, NULL, 0, &pid);
+				
+				nvram_set("wan_ifname_t", WIMAX_INTERFACE);
+			}
+			else
+#endif // RTCONFIG_USB_MODEM_WIMAX
+			{
+				/* do not use safe_get here, values are optional */
+				/* start firewall */
+				start_firewall_ex("ppp0", "0.0.0.0", "br0", nvram_safe_get("lan_ipaddr"));
+				
+				/* setup static wan routes via physical device */
+				add_routes("wan_", "route", wan_ifname);
+				
+				/* start multicast router */
+				start_igmpproxy(wan_ifname);
+				
+				/* launch pppoe client daemon */
+				system("pppd call 3g");
+				
+				nvram_set("wan_ifname_t", "ppp0");
+			}
 		}
 		else
 #endif
@@ -1439,7 +1608,7 @@ start_wan(void)
 				/* launch dhcp client and wait for lease forawhile */
 				if (nvram_match(strcat_r(prefix, "pppoe_ipaddr", tmp), "0.0.0.0")) 
 				{
-					char *wan_hostname = nvram_safe_get(strcat_r(prefix, "hostname", tmp));
+					char *wan_hostname = nvram_get(strcat_r(prefix, "hostname", tmp));
 					char *dhcp_argv[] = { "udhcpc",
 					     "-i", wan_ifname,
 					     "-p", (sprintf(tmp, "/var/run/udhcpc%d.pid", unit), tmp),
@@ -1529,13 +1698,7 @@ start_wan(void)
 //|| (strcmp(wan_proto,"pptp")==0 && nvram_match(strcat_r(prefix, "pppoe_gateway", tmp), ""))
 //#endif
 		) {
-//			char *wan_hostname = nvram_safe_get(strcat_r(prefix, "hostname", tmp));
-			char *wan_hostname;
-			if (!nvram_match("computer_name", "") && is_valid_hostname(nvram_safe_get("computer_name")))
-				wan_hostname = nvram_safe_get("computer_name");
-			else
-				wan_hostname = nvram_safe_get("productid");
-
+			char *wan_hostname = nvram_get(strcat_r(prefix, "hostname", tmp));
 			char *dhcp_argv[] = { "udhcpc",
 					      "-i", wan_ifname,
 					      "-p", (sprintf(tmp, "/var/run/udhcpc%d.pid", unit), tmp),
@@ -1578,7 +1741,7 @@ start_wan(void)
 //#ifdef DHCP_PPTP
 // 		if (strcmp(wan_proto,"pptp")==0 && nvram_match(strcat_r(prefix, "pppoe_gateway", tmp), ""))
 // 		{
-//			char *wan_hostname = nvram_safe_get(strcat_r(prefix, "hostname", tmp));
+//			char *wan_hostname = nvram_get(strcat_r(prefix, "hostname", tmp));
 //			char *dhcp_argv[] = { "udhcpc",
 //					      "-i", wan_ifname,
 //					      "-p", (sprintf(tmp, "/var/run/udhcpc%d.pid", unit), tmp),
@@ -1717,14 +1880,6 @@ stop_wan2(void)
 {
 	char name[80], *next;
 
-#ifndef USB_MODEM
-	if (nvram_match("wan0_proto", "3g"))
-	{
-		stop_3g();
-		return;
-	}
-#endif
-
 	if (pids("stats"))
 		system("killall stats");
 	if (pids("ntpclient"))
@@ -1765,61 +1920,185 @@ stop_wan2(void)
 }
 
 int
+add_dns(const char *wan_ifname)
+{
+	dbG("wan_ifname: %\n", wan_ifname);
+
+	FILE *fp;
+	char tmp[100], prefix[] = "wanXXXXXXXXXX_";
+	char word[100], *next;
+	char line[100];
+	int unit = 0;
+	char *wan_dns;
+	char *wan_dns_final;
+
+	/* check if auto dns enabled */
+	if (nvram_match("wan0_proto", "static") || !nvram_match("wan0_dnsenable_x", "1"))
+		return 0;
+
+	snprintf(prefix, sizeof(prefix), "wan%d_", unit);
+
+	/* Open resolv.conf to read */
+	if (!(fp = fopen("/tmp/resolv.conf", "r+"))) {
+		perror("/tmp/resolv.conf");
+		return errno;
+	}
+#if 0
+	dbG("wan_ifname: %s, wan0_dns: %s, wanx_dns: %s\n",
+		wan_ifname,
+		nvram_get("wan0_dns") ? nvram_get("wan0_dns") : "NULL",
+		nvram_get("wanx_dns") ? nvram_get("wanx_dns") : "NULL");
+
+	logmessage("add_dns()", "wan_ifname: %s, wan0_dns: %s, wanx_dns: %s",
+		wan_ifname,
+		nvram_get("wan0_dns") ? nvram_get("wan0_dns") : "NULL",
+		nvram_get("wanx_dns") ? nvram_get("wanx_dns") : "NULL");
+#endif
+	/* Append only those not in the original list */
+//	foreach(word, nvram_safe_get(strcat_r(prefix, "dns", tmp)), next) {
+	wan_dns = nvram_safe_get(strcat_r(prefix, "dns", tmp));
+	wan_dns_final = strlen(wan_dns) ? wan_dns : nvram_safe_get("wanx_dns");
+//	dbG("wan dns: %s\n", wan_dns_final);
+	foreach(word, wan_dns_final, next) {
+		fseek(fp, 0, SEEK_SET);
+		while (fgets(line, sizeof(line), fp)) {
+			char *token = strtok(line, " \t\n");
+
+			if (!token || strcmp(token, "nameserver") != 0)
+				continue;
+			if (!(token = strtok(NULL, " \t\n")))
+				continue;
+
+			if (!strcmp(token, word))
+				break;
+		}
+		if (feof(fp))
+			fprintf(fp, "nameserver %s\n", word);
+	}
+	fclose(fp);
+
+	eval("touch", "/tmp/resolv.conf");
+	unlink("/etc/resolv.conf");
+	symlink("/tmp/resolv.conf", "/etc/resolv.conf");
+
+	/* notify dns server */
+	snprintf(tmp, sizeof(tmp), "-%d", SIGHUP);
+	eval("killall", tmp, "dproxy");
+	
+	return 0;
+}
+
+int
+del_dns(const char *wan_ifname)
+{
+	dbG("wan_ifname: %s\n", wan_ifname);
+
+	FILE *fp, *fp2;
+	char tmp[100], prefix[] = "wanXXXXXXXXXX_";
+	char word[100], *next;
+	char line[100];
+	int unit = 0;
+	char *wan_dns;
+	char *wan_dns_final;
+	int match;
+
+	snprintf(prefix, sizeof(prefix), "wan%d_", unit);
+
+	/* Open resolv.conf to read */
+	if (!(fp = fopen("/tmp/resolv.conf", "r"))) {
+		perror("fopen /tmp/resolv.conf");
+		return errno;
+	}
+
+	/* Open resolv.tmp to save updated name server list */
+	if (!(fp2 = fopen("/tmp/resolv.tmp", "w"))) {
+		perror("fopen /tmp/resolv.tmp");
+		fclose(fp);
+		return errno;
+	}
+#if 0
+	dbG("wan_ifname: %s, wan0_dns: %s, wanx_dns: %s\n",
+		wan_ifname,
+                nvram_get("wan0_dns") ? nvram_get("wan0_dns") : "NULL",
+                nvram_get("wanx_dns") ? nvram_get("wanx_dns") : "NULL");
+
+        logmessage("del_dns()", "wan_ifname: %s, wan0_dns: %s, wanx_dns: %s",
+                wan_ifname,
+                nvram_get("wan0_dns") ? nvram_get("wan0_dns") : "NULL",
+                nvram_get("wanx_dns") ? nvram_get("wanx_dns") : "NULL");
+#endif
+	/* Copy updated name servers */
+	while (fgets(line, sizeof(line), fp)) {
+		char *token = strtok(line, " \t\n");
+
+		if (!token || strcmp(token, "nameserver") != 0)
+			continue;
+		if (!(token = strtok(NULL, " \t\n")))
+			continue;
+
+		match = 0;
+//		foreach(word, nvram_safe_get(strcat_r(prefix, "dns", tmp)), next)
+		wan_dns = nvram_safe_get(strcat_r(prefix, "dns", tmp));
+		wan_dns_final = strlen(wan_dns) ? wan_dns : nvram_safe_get("wanx_dns");
+//		dbG("wan dns: %s\n", wan_dns_final);
+		foreach(word, wan_dns_final, next)
+		{
+			if (!strcmp(word, token))
+			{
+				match = 1;
+				break;
+			}
+		}
+
+		if (!match && !next)
+			fprintf(fp2, "nameserver %s\n", token);
+	}
+	fclose(fp);
+	fclose(fp2);
+	/* Use updated file as resolv.conf */
+	unlink("/tmp/resolv.conf");
+	rename("/tmp/resolv.tmp", "/tmp/resolv.conf");
+	eval("touch", "/tmp/resolv.conf");
+        unlink("/etc/resolv.conf");
+        symlink("/tmp/resolv.conf", "/etc/resolv.conf");
+	
+	/* notify dns server */
+	snprintf(tmp, sizeof(tmp), "-%d", SIGHUP);
+	eval("killall", tmp, "dproxy");
+	
+	return 0;
+}
+
+int
 update_resolvconf(void)
 {
 	FILE *fp;
 	char word[256], *next;
-	int auto_set = 0;
-	int auto_set2 = 0;
-
-	nvram_set("auto_dhcp_dns", "");
-	nvram_set("auto_dhcp_dns2", "");
-
-	while (strcmp(nvram_safe_get("update_resolv"), "used") == 0)
-		continue;
 
 	/* check if auto dns enabled */
-	if (!nvram_match("wan_dnsenable_x", "1"))
+	if (nvram_match("wan0_proto", "static") || !nvram_match("wan0_dnsenable_x", "1"))
 		return 0;
 
-	nvram_set("update_resolv", "used");
-
 	if (!(fp = fopen("/tmp/resolv.conf", "w+"))) {
-		nvram_set("update_resolv", "free");
 		perror("/tmp/resolv.conf");
 		return errno;
 	}
 
 	/* Write resolv.conf with upstream nameservers */
-	//foreach(word, ((strlen(nvram_safe_get("wan_dns_t")) > 0) ? nvram_safe_get("wan_dns_t"):
-	foreach(word, (strlen(nvram_safe_get("wan0_dns")) ? nvram_safe_get("wan0_dns") :
-                nvram_safe_get("wanx_dns")), next)
-        {
-                fprintf(fp, "nameserver %s\n", word);
-                if(!auto_set)
-                {
-                        nvram_set("auto_dhcp_dns", word);
-                        ++auto_set;
-                }
-		else if(!auto_set2)
-		{
-			nvram_set("auto_dhcp_dns2", word);
-			++auto_set2;
-		}
-        }
-        fclose(fp);
+	foreach(word, (strlen(nvram_safe_get("wan0_dns")) ? nvram_safe_get("wan0_dns") : nvram_safe_get("wanx_dns")), next)
+		fprintf(fp, "nameserver %s\n", word);
 
-	nvram_set("update_resolv", "free");
+	fclose(fp);
 
 	restart_dns();
-
+	
 	return 0;
 }
 
 void
 wan_up(char *wan_ifname)	// oleg patch, replace
 {
-	dbg("%s(%s)\n", __FUNCTION__, wan_ifname);
+	dbG("wan_ifname: %s\n", wan_ifname);
 
 	char tmp[100], prefix[] = "wanXXXXXXXXXX_";
 	char *wan_proto, *gateway;
@@ -1827,7 +2106,6 @@ wan_up(char *wan_ifname)	// oleg patch, replace
 	/* Figure out nvram variable name prefix for this i/f */
 	if (wan_prefix(wan_ifname, prefix) < 0)
 	{
-		printf("wan up chk\n");	// tmp test
 		/* called for dhcp+ppp */
 		if (!nvram_match("wan0_ifname", wan_ifname))
 		{
@@ -1869,9 +2147,14 @@ wan_up(char *wan_ifname)	// oleg patch, replace
 		/* start multicast router */
 		start_igmpproxy(wan_ifname);
 //#endif
+
+#if 0
 		update_resolvconf();
-		if (strcmp(wan_proto, "static"))
-		restart_dhcpd();
+		if (!nvram_match(strcat_r(prefix, "proto", tmp), "static") && nvram_match("wan0_dnsenable_x", "1"))
+			restart_dhcpd();
+#else
+		add_dns(wan_ifname);
+#endif
 
 //		nvram_set("wanup_mem_cric", "0");
 		return;
@@ -1918,9 +2201,13 @@ wan_up(char *wan_ifname)	// oleg patch, replace
 //#endif
 
 	/* Add dns servers to resolv.conf */
+#if 0	
 	update_resolvconf();
-	if (strcmp(wan_proto, "static"))
-	restart_dhcpd();
+	if (strcmp(wan_proto, "static") && nvram_match("wan0_dnsenable_x", "1"))
+		restart_dhcpd();
+#else
+	add_dns(wan_ifname);
+#endif
 
 	/* Sync time */
 #ifdef ASUS_EXT
@@ -1970,14 +2257,13 @@ wan_up(char *wan_ifname)	// oleg patch, replace
 	else
 		try_count_max = 2;
 	nvram_set("qos_ubw", "0");
-//	if (!(!nvram_match("qos_manual_ubw","") && !nvram_match("qos_manual_ubw","0")))
 	while ((nvram_match("qos_ubw", "") || nvram_match("qos_ubw", "0")) && (try_count++ < try_count_max))
 		qos_get_wan_rate();
 #endif
 //2008.10 magic{
 #ifdef QOS
         
-	if (nvram_invmatch("qos_manual_ubw","") && nvram_invmatch("qos_manual_ubw","0") && (atoi(nvram_safe_get("qos_manual_ubw")) > 0))
+	if (!nvram_match("qos_manual_ubw","") && !nvram_match("qos_manual_ubw","0") && (atoi(nvram_safe_get("qos_manual_ubw")) > 0))
 		nvram_set("qos_ubw_real", nvram_safe_get("qos_manual_ubw"));
 	else
 		nvram_set("qos_ubw_real", nvram_safe_get("qos_ubw"));
@@ -2001,7 +2287,6 @@ wan_up(char *wan_ifname)	// oleg patch, replace
 		}
 	}
 
-//	if (nvram_match("qos_global_enable", "1") || nvram_match("qos_userdef_enable", "1"))
 	if (	nvram_match("qos_tos_prio", "1") ||
 		nvram_match("qos_pshack_prio", "1") ||
 		nvram_match("qos_service_enable", "1") ||
@@ -2125,9 +2410,14 @@ wan_down(char *wan_ifname)
 	del_wan_routes(wan_ifname);
 
 	/* Update resolv.conf -- leave as is if no dns servers left for demand to work */
-	if (*nvram_safe_get("wanx_dns"))	// oleg patch
+	del_dns(wan_ifname);
+#if 0
+	if (nvram_get("wanx_dns"))	// oleg patch
+#endif
 		nvram_unset(strcat_r(prefix, "dns", tmp));
+#if 0
 	update_resolvconf();
+#endif
 
 	if (strcmp(wan_proto, "static")==0)
 		ifconfig(wan_ifname, IFUP, NULL, NULL);
@@ -2407,6 +2697,17 @@ get_wan_ipaddr()
 	if ((s = socket(AF_INET, SOCK_RAW, IPPROTO_RAW)) < 0)
 		return strdup("0.0.0.0");
 
+#ifdef RTCONFIG_USB_MODEM
+	if(get_usb_modem_state()){
+#ifdef RTCONFIG_USB_MODEM_WIMAX
+		if(nvram_match("modem_enable", "4"))
+			strncpy(ifr.ifr_name, WIMAX_INTERFACE, IFNAMSIZ);
+		else
+#endif
+			strncpy(ifr.ifr_name, "ppp0", IFNAMSIZ);
+	}
+	else
+#endif
 	if (nvram_match("wan0_proto", "dhcp") || nvram_match("wan0_proto", "static"))
 		strncpy(ifr.ifr_name, "eth3", IFNAMSIZ);
 	else
@@ -2440,6 +2741,17 @@ print_wan_ip()
 //		return 0;
 		return;
 
+#ifdef RTCONFIG_USB_MODEM
+	if(get_usb_modem_state()){
+#ifdef RTCONFIG_USB_MODEM_WIMAX
+		if(nvram_match("modem_enable", "4"))
+			strncpy(ifr.ifr_name, WIMAX_INTERFACE, IFNAMSIZ);
+		else
+#endif
+			strncpy(ifr.ifr_name, "ppp0", IFNAMSIZ);
+	}
+	else
+#endif
 	if (nvram_match("wan0_proto", "dhcp") || nvram_match("wan0_proto", "static"))
 		strncpy(ifr.ifr_name, "eth3", IFNAMSIZ);
 	else
@@ -2474,6 +2786,17 @@ has_wan_ip()
 	if ((s = socket(AF_INET, SOCK_RAW, IPPROTO_RAW)) < 0)
 		return 0;
 
+#ifdef RTCONFIG_USB_MODEM
+	if(get_usb_modem_state()){
+#ifdef RTCONFIG_USB_MODEM_WIMAX
+		if(nvram_match("modem_enable", "4"))
+			strncpy(ifr.ifr_name, WIMAX_INTERFACE, IFNAMSIZ);
+		else
+#endif
+			strncpy(ifr.ifr_name, "ppp0", IFNAMSIZ);
+	}
+	else
+#endif
 	if (nvram_match("wan0_proto", "dhcp") || nvram_match("wan0_proto", "static"))
 		strncpy(ifr.ifr_name, "eth3", IFNAMSIZ);
 	else
@@ -2516,10 +2839,11 @@ start_mac_clone()
 
 	while (!got_wan_ip() && !had_try)
 	{
-#ifndef USB_MODEM
+#ifndef RTCONFIG_USB_MODEM
 		if (is_phyconnected() == 0)
 #else
-		if(is_phyconnected()&0x1 != 1) // NO wan port but maybe have a usb modem.
+		int link_wan = is_phyconnected()&0x1;
+		if(!link_wan)
 #endif
 		{
 			sleep(5);
@@ -2735,6 +3059,26 @@ found_default_route()
 
 		if (found)
 		{
+#ifdef RTCONFIG_USB_MODEM
+			if(get_usb_modem_state()){
+#ifdef RTCONFIG_USB_MODEM_WIMAX
+				if(nvram_match("modem_enable", "4")){
+					if(!strcmp(WIMAX_INTERFACE, device))
+						return 1;
+					else
+						goto no_default_route;
+				}
+				else
+#endif
+				{
+					if(!strcmp("ppp0", device))
+						return 1;
+					else
+						goto no_default_route;
+				}
+			}
+			else
+#endif
 			if (nvram_match("wan0_proto", "dhcp") || nvram_match("wan0_proto", "static"))
 			{
 				if (!strcmp("eth3", device))

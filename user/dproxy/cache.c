@@ -27,6 +27,8 @@
   **
   **
 */
+#define _GNU_SOURCE
+
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -124,7 +126,10 @@ int cache_lookup_ip(char *ip, char result[BUF_SIZE])
 	 strtok( line, " ");
 	 token = strtok( NULL, " ");
 	 if( !strncasecmp( token, ip, strlen(ip) ) ){
-		while( isalnum(line[i]) || (line[i]=='.') )result[i] = line[i++];
+		while( isalnum(line[i]) || line[i]=='.' || line[i]=='-' ){
+			result[i] = line[i];
+			i++;
+		}
 		result[i] = 0;
 		fclose(fp);
 		return 1;
@@ -182,6 +187,7 @@ void cache_purge(int older_than)
   char line[BUF_SIZE];
   char old_cache[1024];
   char *name, *ip, *time_made;
+  time_t now;
 
   debug("enter cache_purge(): %d sec\n", older_than);
 
@@ -214,12 +220,13 @@ void cache_purge(int older_than)
   dns_cache_count = 0;	//added by CMC 8/4/2001
 
   if( in_fp ) {
+    now = time(NULL);
     while( fgets(line, BUF_SIZE, in_fp) ){
 	 name = strtok( line, " ");
 	 ip = strtok( NULL, " ");
 	 time_made = strtok( NULL, " ");
 	 if(!time_made)continue;
-	 if( time(NULL) - atoi( time_made ) < older_than ){
+	 if( now - atoi( time_made ) < older_than ){
 	 	if(strlen(ip)) {//JYWeng 20031215: add not to save name without ip
 			fprintf( out_fp, "%s %s %s", name, ip, time_made );
 			dns_cache_count++; //added by CMC 8/4/2001

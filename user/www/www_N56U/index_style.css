@@ -67,7 +67,7 @@ body {
 #option2 a:hover,#option2 a:active {color:#ffffff; background: url(images/m-button-02.gif) 0 -44px;}
 
 #option3 a{height:38px; line-height:100%;}
-#option3 a:link, #option3 a:visited {background: url(images/m-button-03.gif);  line-height:34px;}
+#option3 a:link, #option3 a:visited {background: url(images/m-button-03.gif); line-height:34px;}
 #option3 a:hover,#option3 a:active {color:#ffffff; background: url(images/m-button-03.gif) 0 -44px;}
 
 #option4 {height:55px; }
@@ -78,22 +78,11 @@ body {
 #option5 a:link, #option5 a:visited {height:42px; background:url(images/m-button-05.gif);}
 #option5 a:hover,#option5 a:active {color:#ffffff; background:url(images/m-button-05.gif) 0 -42px;}
 
-.m1_r {width:144px;height: 34px;font-family:Verdana ;font-size : 11px;color: #94ccf2;	padding-left:50px;background:url(images/m-button-01_d.gif) no-repeat; color:#000000;font-weight:bold; padding-top:10px}
-.m2_r {width:144px;height: 34px;font-family:Verdana ;font-size : 11px;color: #94ccf2;	padding-left:50px;background:url(images/m-button-02_d.gif) no-repeat; color:#000000;font-weight:bold;vertical-align:top;padding-top:10px;}
-.m3_r {width:144px;height: 34px;font-family:Verdana ;font-size : 11px;color: #94ccf2;	padding-left:50px;background:url(images/m-button-03_d.gif) no-repeat; color:#000000;font-weight:bold;vertical-align:top;padding-top:10px;}
-.m4_r {width:144px;height: 52px;font-family:Verdana ;font-size : 11px;color: #94ccf2;	padding-left:50px;background:url(images/m-button-04_d.gif) no-repeat; color:#000000;font-weight:bold;vertical-align:top;padding-top:2px}
-.m5_r {
-	width:150px;
-	height:42px;
-	font-family:Verdana;
-	font-size:11px;
-	color:#94ccf2;
-	padding-left:50px;
-	background:url(images/m-button-05_d.gif) no-repeat;
-	color:#000000;
-	font-weight:bold;
-	line-height:100%;
-}
+.m1_r {width:144px;height:34px;font-family:Verdana;font-size : 11px;color: #94ccf2;	padding-left:50px;background:url(images/m-button-01_d.gif) no-repeat; color:#000000;font-weight:bold;vertical-align:top;padding-top:10px;}
+.m2_r {width:144px;height:34px;font-family:Verdana;font-size : 11px;color: #94ccf2;	padding-left:50px;background:url(images/m-button-02_d.gif) no-repeat; color:#000000;font-weight:bold;vertical-align:top;padding-top:10px;}
+.m3_r {width:144px;height:34px;font-family:Verdana;font-size : 11px;color: #94ccf2;	padding-left:50px;background:url(images/m-button-03_d.gif) no-repeat; color:#000000;font-weight:bold;vertical-align:top;padding-top:10px;}
+.m4_r {width:144px;height:52px;font-family:Verdana;font-size : 11px;color: #94ccf2;	padding-left:50px;background:url(images/m-button-04_d.gif) no-repeat; color:#000000;font-weight:bold;vertical-align:top;padding-top:2px}
+.m5_r {width:150px;height:42px;font-family:Verdana;font-size : 11px;color: #94ccf2;	padding-left:50px;background:url(images/m-button-05_d.gif) no-repeat;	color:#000000;font-weight:bold;vertical-align:top;padding-top:2px}
 
 .submenu {width:187px; font-family:Verdana; font-size:11px; line-height:20px;}
 .submenu a {height:26px; text-decoration:none; }

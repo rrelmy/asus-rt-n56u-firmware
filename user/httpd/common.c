@@ -26,7 +26,6 @@
  * duplicated in any form, in whole or in part, without the prior written
  * permission of ASUSTeK Inc..
  *
- * $Id: common.c,v 1.1.1.1 2007/02/15 12:13:18 jiahao Exp $
  */
 
 #include <stdio.h>

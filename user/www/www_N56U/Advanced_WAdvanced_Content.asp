@@ -92,12 +92,31 @@ function validForm(){
 			return false;
 	}
 	
+if(document.form.wl_radio_x[0].checked){	
 	if(!validate_timerange(document.form.wl_radio_time_x_starthour, 0)
 			|| !validate_timerange(document.form.wl_radio_time_x_startmin, 1)
 			|| !validate_timerange(document.form.wl_radio_time_x_endhour, 2)
 			|| !validate_timerange(document.form.wl_radio_time_x_endmin, 3)
-			)
-		return false;
+			){	return false;}
+
+	var starttime = eval(document.form.wl_radio_time_x_starthour.value + document.form.wl_radio_time_x_startmin.value);
+	var endtime = eval(document.form.wl_radio_time_x_endhour.value + document.form.wl_radio_time_x_endmin.value);				
+	
+	if(starttime > endtime){
+		alert("<#FirewallConfig_URLActiveTime_itemhint#>");
+			document.form.wl_radio_time_x_starthour.focus();
+			document.form.wl_radio_time_x_starthour.select;
+		return false;  
+	}
+	if(starttime == endtime){
+		alert("<#FirewallConfig_URLActiveTime_itemhint2#>");
+			document.form.wl_radio_time_x_starthour.focus();
+			document.form.wl_radio_time_x_starthour.select;
+		return false;  
+	}
+
+			
+}			
 	
 	//alert(document.form.wl_radio_x[0].checked+","+document.form.wl_radio_x[1].checked+","+document.form.wl_radio_date_x_Sun.checked+","+document.form.wl_radio_date_x_Mon.checked+","+document.form.wl_radio_date_x_Tue.checked+","+document.form.wl_radio_date_x_Wed.checked+","+document.form.wl_radio_date_x_Thu.checked+","+document.form.wl_radio_date_x_Fri.checked+","+document.form.wl_radio_date_x_Sat.checked);
 	if((document.form.wl_radio_x[0].checked ==true) 
@@ -225,8 +244,8 @@ function disableAdvFn(row){
 			<tr>
 			  <th><a class="hintstyle" href="javascript:void(0);" onClick="openHint(3, 5);"><#WLANConfig11b_x_IsolateAP_itemname#></a></th>
 			  <td>
-				<input type="radio" value="1" name="wl_ap_isolate" class="input" onClick="return change_common_radio(this, 'WLANConfig11b', 'wl_ap_isolate', '1')" <% nvram_match_x("WLANConfig11b","wl_ap_isolate", "1", "checked"); %>>Yes
-				<input type="radio" value="0" name="wl_ap_isolate" class="input" onClick="return change_common_radio(this, 'WLANConfig11b', 'wl_ap_isolate', '0')" <% nvram_match_x("WLANConfig11b","wl_ap_isolate", "0", "checked"); %>>No
+				<input type="radio" value="1" name="wl_ap_isolate" class="input" onClick="return change_common_radio(this, 'WLANConfig11b', 'wl_ap_isolate', '1')" <% nvram_match_x("WLANConfig11b","wl_ap_isolate", "1", "checked"); %>><#checkbox_Yes#>
+				<input type="radio" value="0" name="wl_ap_isolate" class="input" onClick="return change_common_radio(this, 'WLANConfig11b', 'wl_ap_isolate', '0')" <% nvram_match_x("WLANConfig11b","wl_ap_isolate", "0", "checked"); %>><#checkbox_No#>
 			  </td>
 			</tr>
 			

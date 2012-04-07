@@ -43,6 +43,9 @@ typedef u_int32_t uint32;
 #ifndef CONFIG_FILE_DEFAULT
 #define CONFIG_FILE_DEFAULT "/etc/dproxy.conf"
 #endif
+#ifndef RESOLV_FILE_DEFAULT
+#define RESOLV_FILE_DEFAULT "/etc/resolv.conf"
+#endif
 #ifndef DENY_FILE_DEFAULT
 #define DENY_FILE_DEFAULT "/etc/dproxy.deny"
 #endif
@@ -76,6 +79,7 @@ typedef u_int32_t uint32;
 #define CACHE_CHECK_TIME	30	/* sec. */
 #define MAX_CACHE_NUM		400	/* 400 cache names */
 #define MAX_LIST_SIZE		150	/* 908k = 6052 * 150 */
+#define MAX_NS_COUNT		8
 
 void debug_perror( char * msg );
 void debug(char *fmt, ...);

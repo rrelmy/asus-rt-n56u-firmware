@@ -22,7 +22,6 @@
  * SPECIFICALLY DISCLAIMS ANY IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS
  * FOR A SPECIFIC PURPOSE OR NONINFRINGEMENT CONCERNING THIS SOFTWARE.
  *
- * $Id: ntp.c,v 1.1.1.1 2007/01/25 12:52:21 jiahao_jhou Exp $
  */
  
 #include <stdio.h>
@@ -64,7 +63,6 @@ int ntp_main(void)
 	FILE *fp;
 	int ret;
 
-//	strcpy(servers, nvram_safe_get("ntp_servers"));
 	strcpy(servers, nvram_safe_get("ntp_server0"));
 	nvram_set("ntp_server_tried", servers);
 

@@ -3,7 +3,7 @@ set com 115200n81
 set senddelay 0.05
 waitquiet 1 0.2
 send "ATH^m"
-waitfor 5 "OK","ERR","ERROR"
+waitfor 6 "OK","ERR","ERROR"
 if % = -1 goto timeerror
 if % = 0 goto ok
 if % = 1 goto error

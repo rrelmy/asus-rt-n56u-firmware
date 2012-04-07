@@ -22,9 +22,97 @@
 #include <unistd.h>
 #include <nvram/bcmnvram.h>
 #include <shutils.h>
+
+#include "usb_info.h"
 #include "disk_io_tools.h"
 #include "disk_initial.h"
 #include "disk_share.h"
+
+#define SAMBA_CONF "/etc/smb.conf"
+
+int
+is_invalid_char_for_hostname(char c)
+{
+	int ret = 0;
+
+	if (c < 0x20)
+		ret = 1;
+	else if (c >= 0x21 && c <= 0x2c)
+		ret = 1;
+	else if (c >= 0x2e && c <= 0x2f)
+		ret = 1;
+	else if (c >= 0x3a && c <= 0x40)
+		ret = 1;
+#if 0
+	else if (c >= 0x5b && c <= 0x60)
+		ret = 1;
+#else	/* allow '_' */
+	else if (c >= 0x5b && c <= 0x5e)
+		ret = 1;
+	else if (c == 0x60)
+		ret = 1;
+#endif
+	else if (c >= 0x7b)
+		ret = 1;
+#if 0
+	printf("%c (0x%02x) is %svalid for hostname\n", c, c, (ret == 0) ? "  " : "in");
+#endif
+	return ret;
+}
+
+int
+is_valid_hostname(const char *name)
+{
+	int ret = 1, len, i;
+
+	if (!name)
+		return 0;
+
+	len = strlen(name);
+	if (len == 0)
+	{
+		ret = 0;
+		goto ENDERR;
+	}
+
+	for (i = 0; i < len ; i++)
+		if (is_invalid_char_for_hostname(name[i]))
+		{
+			ret = 0;
+			break;
+		}
+
+ENDERR:
+#if 0
+	printf("%s is %svalid for hostname\n", name, (ret == 1) ? "  " : "in");
+#endif
+	return ret;
+}
+
+int check_existed_share(const char *string){
+	FILE *tp;
+	char buf[4096], target[256];
+
+	if((tp = fopen(SAMBA_CONF, "r")) == NULL)
+		return 0;
+
+	if(string == NULL || strlen(string) <= 0)
+		return 0;
+
+	memset(target, 0, 256);
+	sprintf(target, "[%s]", string);
+
+	memset(buf, 0, 4096);
+	while(fgets(buf, sizeof(buf), tp) != NULL){
+		if(strstr(buf, target)){
+			fclose(tp);
+			return 1;
+		}
+	}
+
+	fclose(tp);
+	return 0;
+}
 
 int main(int argc, char *argv[]) {
 	FILE *fp;
@@ -43,25 +131,36 @@ int main(int argc, char *argv[]) {
 	char SMB_SHWRIGHT[384];
 	char SHWR[384];
 	char SMB_SHACCUSER[384];
+	char *p_computer_name = NULL;
 	disk_info_t *follow_disk, *disks_info = NULL;
 	partition_info_t *follow_partition;
 	
 	/* write smb.conf  */
-	if ((fp=fopen("/etc/smb.conf", "r"))) {
+	if ((fp=fopen(SAMBA_CONF, "r"))) {
 		fclose(fp);
-		unlink("/etc/smb.conf");
+		unlink(SAMBA_CONF);
 	}
 	
-	fp = fopen("/etc/smb.conf", "w");
+	if((fp = fopen(SAMBA_CONF, "w")) == NULL)
+		goto confpage;
+	
 	fprintf(fp, "[global]\n");
 	if (nvram_safe_get("st_samba_workgroup"))
 		fprintf(fp, "workgroup = %s\n", nvram_safe_get("st_samba_workgroup"));
-	
+
+#if 0
 	if (nvram_safe_get("computer_name")) {
 		fprintf(fp, "netbios name = %s\n", nvram_safe_get("computer_name"));
 		fprintf(fp, "server string = %s\n", nvram_safe_get("computer_name"));
 	}
-	
+#else
+	p_computer_name = nvram_get("computer_name") && is_valid_hostname(nvram_get("computer_name")) ? nvram_get("computer_name") : nvram_safe_get("productid");
+	if (p_computer_name) {
+		fprintf(fp, "netbios name = %s\n", p_computer_name);
+		fprintf(fp, "server string = %s\n", p_computer_name);
+	}
+#endif
+
 	unlink("/var/log.samba");
 	fprintf(fp, "log file = /var/log.samba\n");
 	fprintf(fp, "log level = 0\n");
@@ -79,7 +178,7 @@ int main(int argc, char *argv[]) {
 		fprintf(fp, "map to guest = Bad User\n");
 	}
 	else{
-		csprintf("samba mode: no\n");
+		usb_dbg("samba mode: no\n");
 		goto confpage;
 	}
 	
@@ -105,7 +204,7 @@ int main(int argc, char *argv[]) {
 	fprintf(fp, "unix charset = UTF8\n");		// ASUS add
 	fprintf(fp, "display charset = UTF8\n");	// ASUS add
 	fprintf(fp, "bind interfaces only = yes\n");	// ASUS add
-	fprintf(fp, "interfaces = lo br0 eth3\n");			// J++
+	fprintf(fp, "interfaces = lo br0 %s\n", (!nvram_match("sw_mode", "3") ? nvram_safe_get("wan0_ifname") : ""));	// J++
 //	fprintf(fp, "dns proxy = no\n");				// J--
 	fprintf(fp, "use sendfile = yes\n");
 
@@ -117,19 +216,19 @@ int main(int argc, char *argv[]) {
 //	fprintf(fp, "force security mode = 0\n");			// J++
 //	fprintf(fp, "directory security mask = 0777\n");		// J++
 //	fprintf(fp, "force directory security mode = 0\n");		// J++
-	
+
 	disks_info = read_disk_data();
 	if (disks_info == NULL) {
-		csprintf("Couldn't get disk list when writing smb.conf!\n");
+		usb_dbg("Couldn't get disk list when writing smb.conf!\n");
 		goto confpage;
 	}
-	
+
 	/* share */
 	if (!strcmp(nvram_safe_get("st_samba_mode"), "0") || !strcmp(nvram_safe_get("st_samba_mode"), "")) {
 		;
 	}
 	else if (!strcmp(nvram_safe_get("st_samba_mode"), "1")) {
-		csprintf("samba mode: share\n");
+		usb_dbg("samba mode: share\n");
 		
 		for (follow_disk = disks_info; follow_disk != NULL; follow_disk = follow_disk->next) {
 			for (follow_partition = follow_disk->partitions; follow_partition != NULL; follow_partition = follow_partition->next) {
@@ -155,7 +254,7 @@ int main(int argc, char *argv[]) {
 		}
 	}
 	else if (!strcmp(nvram_safe_get("st_samba_mode"), "2")) {
-		csprintf("samba mode: user\n");
+		usb_dbg("samba mode: user\n");
 		n = 0;
 		sh_num = atoi(nvram_safe_get("sh_num"));
 		while (n < sh_num) {
@@ -229,7 +328,7 @@ endloop:
 		}
 	}/* st_samba_mode = 2 */
 	else if (!strcmp(nvram_safe_get("st_samba_mode"), "3")) {
-		csprintf("samba mode: share\n");
+		usb_dbg("samba mode: share\n");
 		
 		for (follow_disk = disks_info; follow_disk != NULL; follow_disk = follow_disk->next) {
 			for (follow_partition = follow_disk->partitions; follow_partition != NULL; follow_partition = follow_partition->next) {
@@ -240,7 +339,7 @@ endloop:
 				
 				// 1. get the folder list
 				if (get_folder_list_in_mount_path(follow_partition->mount_point, &sh_num, &folder_list) < 0) {
-					csprintf("Can't read the folder list in %s.\n", follow_partition->mount_point);
+					usb_dbg("Can't read the folder list in %s.\n", follow_partition->mount_point);
 					free_2_dimension_list(&sh_num, &folder_list);
 					continue;
 				}
@@ -262,14 +361,14 @@ endloop:
 		}
 	}
 	else if (!strcmp(nvram_safe_get("st_samba_mode"), "4")) {
-		csprintf("samba mode: user\n");
+		usb_dbg("samba mode: user\n");
 		
 		int acc_num;
 		char **account_list;
 		
 		// get the account list
 		if (get_account_list(&acc_num, &account_list) < 0) {
-			csprintf("Can't read the account list.\n");
+			usb_dbg("Can't read the account list.\n");
 			free_2_dimension_list(&acc_num, &account_list);
 			goto confpage;
 		}
@@ -283,7 +382,7 @@ endloop:
 				
 				// 1. get the folder list
 				if (get_folder_list_in_mount_path(follow_partition->mount_point, &sh_num, &folder_list) < 0) {
-					csprintf("Can't read the folder list in %s.\n", follow_partition->mount_point);
+					usb_dbg("Can't read the folder list in %s.\n", follow_partition->mount_point);
 					free_2_dimension_list(&sh_num, &folder_list);
 					continue;
 				}
@@ -291,8 +390,27 @@ endloop:
 				// 2. start to get every share
 				for (n = 0; n < sh_num; ++n) {
 					int i, right, first;
+					char share[256];
 					
-					fprintf(fp, "[%s]\n", folder_list[n]);
+					memset(share, 0, 256);
+					strcpy(share, folder_list[n]);
+					
+					fclose(fp);
+					
+					if(check_existed_share(share)){
+						i = 1;
+						memset(share, 0, 256);
+						sprintf(share, "%s(%d)", folder_list[n], i);
+						while(check_existed_share(share)){
+							++i;
+							memset(share, 0, 256);
+							sprintf(share, "%s(%d)", folder_list[n], i);
+						}
+					}
+					
+					if((fp = fopen(SAMBA_CONF, "a")) == NULL)
+						goto confpage;
+					fprintf(fp, "[%s]\n", share);
 					fprintf(fp, "comment = %s\n", folder_list[n]);
 					fprintf(fp, "path = %s/%s\n", follow_partition->mount_point, folder_list[n]);
 					fprintf(fp, "writeable = no\n");
@@ -330,7 +448,7 @@ endloop:
 					first = 1;
 					for (i = 0; i < acc_num; ++i) {
 						right = get_permission(account_list[i], follow_partition->mount_point, folder_list[n], "cifs");
-						if (right != 1)
+						if (right < 1)
 							continue;
 						
 						if (first == 1)
@@ -366,8 +484,9 @@ endloop:
 		free_2_dimension_list(&acc_num, &account_list);
 	}
 	
-confpage:	
-	fclose(fp);
+confpage:
+	if(fp != NULL)
+		fclose(fp);
 	free_disk_data(&disks_info);
 	return 0;
 }

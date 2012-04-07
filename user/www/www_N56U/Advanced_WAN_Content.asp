@@ -47,7 +47,7 @@ function initial(){
 		inputRCtrl1(document.form.hwnat, 0);
 	}*/
 
-	/*$("wan_proto_menu").style.display = (wan_proto == "3g")?"none":"block";
+	$("wan_proto_menu").style.display = (wan_proto == "3g")?"none":"block";
 	$("wan_proto_hint").style.display = (wan_proto == "3g")?"block":"none";
 	if(wan_proto == "3g"){
 		$("ip_sect").style.display = "none";
@@ -55,12 +55,9 @@ function initial(){
 		$("account_sect").style.display = "none";
 		$("isp_sect").style.display = "none";
 		$("wan_stb_x").style.display = "none";
-	}*/
+	}
 
-	if(document.form.unifi_malaysia.value == "1")//Cherry Cho added in 2011/6/13.
-		document.form.unifi_malaysia_radio[0].checked=1;
-	else if(document.form.unifi_malaysia.value == "0")
-		document.form.unifi_malaysia_radio[1].checked=1;
+	ISPSelection(document.form.vlan_isp.value);
 }
 
 function applyRule(){
@@ -167,6 +164,35 @@ function validForm(){
 	if(document.form.wan_heartbeat_x.value.length > 0)
 		 if(!validate_string(document.form.wan_heartbeat_x))
 		 	return false;
+
+	if(document.form.selectedISP.value == "manual")
+	{
+		if(document.form.internet_vid.value.length > 0)
+		{
+			if(!validate_range(document.form.internet_vid, 2, 4094))
+				return false;
+		}
+		if(document.form.iptv_vid.value.length > 0)
+		{
+			if(!validate_range(document.form.iptv_vid, 2, 4094))
+				return false;
+		}
+		if(document.form.voip_vid.value.length > 0)
+		{
+			 if(!validate_range(document.form.voip_vid, 2, 4094))
+				return false;
+		}
+
+		if(document.form.internet_prio.value.length > 0 && !validate_range(document.form.internet_prio, 0, 7))
+			return false;
+
+		if(document.form.iptv_prio.value.length > 0 && !validate_range(document.form.iptv_prio, 0, 7))
+			return false;
+
+		if(document.form.voip_prio.value.length > 0 && !validate_range(document.form.voip_prio, 0, 7))
+			return false;
+
+	}
 	
 	return true;
 }
@@ -182,10 +208,6 @@ function change_wan_type(wan_type, flag){
 		change_wan_dhcp_enable(1);
 	
 	if(wan_type == "pppoe"){
-		//Cherry Cho added in 2011/6/13.
-		inputCtrl(document.form.unifi_malaysia_radio[0], 1);
-		inputCtrl(document.form.unifi_malaysia_radio[1], 1);
-		
 		inputCtrl(document.form.wan_dnsenable_x[0], 1);
 		inputCtrl(document.form.wan_dnsenable_x[1], 1);
 		
@@ -203,12 +225,9 @@ function change_wan_type(wan_type, flag){
 		inputCtrl(document.form.wan_pptp_options_x, 0);
 		// 2008.03 James. patch for Oleg's patch. }
 		inputRCtrl1(document.form.wan_pppoe_relay_x, 1);
+
 	}
-	else if(wan_type == "pptp"){
-		//Cherry Cho added in 2011/6/13.
-		inputCtrl(document.form.unifi_malaysia_radio[0], 1);
-		inputCtrl(document.form.unifi_malaysia_radio[1], 1);		
-		
+	else if(wan_type == "pptp"){		
 		inputCtrl(document.form.wan_dnsenable_x[0], 1);
 		inputCtrl(document.form.wan_dnsenable_x[1], 1);
 		
@@ -228,11 +247,7 @@ function change_wan_type(wan_type, flag){
 
 		inputRCtrl1(document.form.wan_pppoe_relay_x, 1);
 	}
-	else if(wan_type == "l2tp"){
-		//Cherry Cho added in 2011/6/13.
-		inputCtrl(document.form.unifi_malaysia_radio[0], 1);
-		inputCtrl(document.form.unifi_malaysia_radio[1], 1);
-		
+	else if(wan_type == "l2tp"){		
 		inputCtrl(document.form.wan_dnsenable_x[0], 1);
 		inputCtrl(document.form.wan_dnsenable_x[1], 1);
 		
@@ -253,10 +268,6 @@ function change_wan_type(wan_type, flag){
 		inputRCtrl1(document.form.wan_pppoe_relay_x, 1);
 	}
 	else if(wan_type == "static"){
-		//Cherry Cho added in 2011/6/13.
-		inputCtrl(document.form.unifi_malaysia_radio[0], 1);
-		inputCtrl(document.form.unifi_malaysia_radio[1], 1);		
-		
 		inputCtrl(document.form.wan_dnsenable_x[0], 0);
 		inputCtrl(document.form.wan_dnsenable_x[1], 0);
 		
@@ -276,11 +287,7 @@ function change_wan_type(wan_type, flag){
 
 		inputRCtrl1(document.form.wan_pppoe_relay_x, 1);
 	}
-	else{	// Automatic IP
-		//Cherry Cho added in 2011/6/13.
-		inputCtrl(document.form.unifi_malaysia_radio[0], 1);
-		inputCtrl(document.form.unifi_malaysia_radio[1], 1);		
-		
+	else{	// Automatic IP		
 		inputCtrl(document.form.wan_dnsenable_x[0], 1);
 		inputCtrl(document.form.wan_dnsenable_x[1], 1);
 		
@@ -300,6 +307,13 @@ function change_wan_type(wan_type, flag){
 
 		inputRCtrl1(document.form.wan_pppoe_relay_x, 1);
 	}
+
+	/* By Viz 2011.08 show out at each wan_type
+	if(wan_type == "pptp" || wan_type == "l2tp")
+		$("vpn_x").style.display = "";	
+	else
+		$("vpn_x").style.display = "none";	
+	*/	
 }
 
 function fixed_change_wan_type(wan_type){
@@ -471,8 +485,84 @@ function change_wan_dhcp_enable(flag){
 }
 
 function hsdpa_disable(){
-	location.href = "/Advanced_HSDPA_others.asp";
+	location.href = "/Advanced_Modem_others.asp";
 }
+
+function ISPSelection(isp){
+	var wan_type = document.form.wan_proto.value;
+
+	if(isp == "none"){
+		$("wan_stb_x").style.display = "";
+		$("wan_iptv_x").style.display = "none";
+		$("wan_voip_x").style.display = "none";
+		$("wan_internet_x").style.display = "none";
+		$("wan_iptv_port4_x").style.display = "none";
+		$("wan_voip_port3_x").style.display = "none";
+		document.form.vlan_isp.value = "none";
+	}
+	else if(isp == "russia"){
+		$("wan_stb_x").style.display = "";
+		$("wan_iptv_x").style.display = "none";
+		$("wan_voip_x").style.display = "none";
+		$("wan_internet_x").style.display = "none";
+		$("wan_iptv_port4_x").style.display = "none";
+		$("wan_voip_port3_x").style.display = "none";
+		document.form.vlan_isp.value = "russia";
+	}
+  	else if(isp == "unifi_home"){
+		$("wan_stb_x").style.display = "none";
+		$("wan_iptv_x").style.display = "";
+		$("wan_voip_x").style.display = "none";
+		$("wan_internet_x").style.display = "none";
+		$("wan_iptv_port4_x").style.display = "none";
+		$("wan_voip_port3_x").style.display = "none";
+		document.form.vlan_isp.value = "unifi_home";
+	}
+	else if(isp == "unifi_biz"){
+		$("wan_stb_x").style.display = "none";
+		$("wan_iptv_x").style.display = "none";
+		$("wan_voip_x").style.display = "none";
+		$("wan_internet_x").style.display = "none";
+		$("wan_iptv_port4_x").style.display = "none";
+		$("wan_voip_port3_x").style.display = "none";
+		document.form.vlan_isp.value = "unifi_biz";
+	}
+	else if(isp == "singtel_mio"){
+		$("wan_stb_x").style.display = "none";
+		$("wan_iptv_x").style.display = "";
+		$("wan_voip_x").style.display = "";
+		$("wan_internet_x").style.display = "none";
+		$("wan_iptv_port4_x").style.display = "none";
+		$("wan_voip_port3_x").style.display = "none";	
+		/*$("hostname_x").style.display = "none";
+		$("clone_mac_x").style.display = "";*/
+		document.form.vlan_isp.value = "singtel_mio";
+	}
+	else if(isp == "singtel_others"){
+		$("wan_stb_x").style.display = "none";
+		$("wan_iptv_x").style.display = "";
+		$("wan_voip_x").style.display = "none";
+		$("wan_internet_x").style.display = "none";
+		$("wan_iptv_port4_x").style.display = "none";
+		$("wan_voip_port3_x").style.display = "none";
+		/*$("hostname_x").style.display = "none";
+		$("clone_mac_x").style.display = "";*/
+		document.form.vlan_isp.value = "singtel_others";
+	}
+	else if(isp == "manual"){
+		$("wan_stb_x").style.display = "none";
+		$("wan_iptv_x").style.display = "";
+		$("wan_voip_x").style.display = "";
+		$("wan_internet_x").style.display = "";
+		$("wan_iptv_port4_x").style.display = "";
+		$("wan_voip_port3_x").style.display = "";
+		/*$("hostname_x").style.display = "";
+		$("clone_mac_x").style.display = "";*/
+		document.form.vlan_isp.value = "manual";
+	}
+
+}
+
 </script>
 </head>
 
@@ -511,7 +601,7 @@ function hsdpa_disable(){
 <input type="hidden" name="lan_ipaddr" value="<% nvram_get_x("LANHostConfig", "lan_ipaddr"); %>" />
 <input type="hidden" name="lan_netmask" value="<% nvram_get_x("LANHostConfig", "lan_netmask"); %>" />
 
-<input type="hidden" name="unifi_malaysia" value="<% nvram_get_x("Layer3Forwarding", "unifi_malaysia"); %>">
+<input type="hidden" name="vlan_isp" value="<% nvram_get_x("Layer3Forwarding", "vlan_isp"); %>" />
 
 <table border="0" class="content" align="center" cellpadding="0" cellspacing="0">
   <tr>
@@ -549,27 +639,13 @@ function hsdpa_disable(){
 								<th width="30%"><#Layer3Forwarding_x_ConnectionType_itemname#></th>
 								<td align="left">
 									<select id="wan_proto_menu" class="input" name="wan_proto" onchange="change_wan_type(this.value);fixed_change_wan_type(this.value);">
-										<option value="dhcp" <% nvram_match_x("Layer3Forwarding", "wan_proto", "dhcp", "selected"); %>>Automatic IP</option>
+										<option value="dhcp" <% nvram_match_x("Layer3Forwarding", "wan_proto", "dhcp", "selected"); %>><#BOP_ctype_title1#></option>
 										<option value="pppoe" <% nvram_match_x("Layer3Forwarding", "wan_proto", "pppoe", "selected"); %>>PPPoE</option>
 										<option value="pptp" <% nvram_match_x("Layer3Forwarding", "wan_proto", "pptp", "selected"); %>>PPTP</option>
 										<option value="l2tp" <% nvram_match_x("Layer3Forwarding", "wan_proto", "l2tp", "selected"); %>>L2TP</option>
-										<option value="static" <% nvram_match_x("Layer3Forwarding", "wan_proto", "static", "selected"); %>>Static IP</option>
+										<option value="static" <% nvram_match_x("Layer3Forwarding", "wan_proto", "static", "selected"); %>><#BOP_ctype_title5#></option>
 									</select>
-									<!--span style="font-weight:normal;" id="wan_proto_hint"><span style="color:#000;font-size:14px;">3G/3.5G</span><input class="button" onclick="hsdpa_disable();" type="button" value="<#Disconnected#>"/></span-->
-								</td>
-							</tr>
-							<tr id="wan_stb_x">
-								<th width="30%"><#Layer3Forwarding_x_STB_itemname#></th>
-								<td align="left">
-									<select name="wan_stb_x" class="input">
-										<option value="0" <% nvram_match_x("Layer3Forwarding", "wan_stb_x", "0", "selected"); %>>None</option>
-										<option value="1" <% nvram_match_x("Layer3Forwarding", "wan_stb_x", "1", "selected"); %>>LAN1</option>
-										<option value="2" <% nvram_match_x("Layer3Forwarding", "wan_stb_x", "2", "selected"); %>>LAN2</option>
-										<option value="3" <% nvram_match_x("Layer3Forwarding", "wan_stb_x", "3", "selected"); %>>LAN3</option>
-										<option value="4" <% nvram_match_x("Layer3Forwarding", "wan_stb_x", "4", "selected"); %>>LAN4</option>
-										<option value="6" <% nvram_match_x("Layer3Forwarding", "wan_stb_x", "6", "selected"); %>>LAN1 & LAN2</option>
-										<option value="5" <% nvram_match_x("Layer3Forwarding", "wan_stb_x", "5", "selected"); %>>LAN3 & LAN4</option>
-									</select>
+									<span style="font-weight:normal;" id="wan_proto_hint"><span style="color:#000;font-size:14px;">3G/3.5G</span><input class="button" onclick="hsdpa_disable();" type="button" value="<#Disconnected#>"/></span>
 								</td>
 							</tr>
 							<tr>
@@ -591,7 +667,7 @@ function hsdpa_disable(){
 								<th width="30%"><a class="hintstyle" href="javascript:void(0);" onClick="openHint(7,22);"><#BasicConfig_HWNAT_itemname#></th>                 
 								<td style="font-weight:normal;" align="left">
 									<input type="radio" name="hwnat" class="input" value="1" <% nvram_match_x("PrinterStatus","hwnat", "1", "checked"); %>><#checkbox_Yes#>
-									<input type="radio" name="hwnat" class="input" value="0" <% nvram_match_x("PrinterStatus","hwnat", "0", "checked"); %>>No
+									<input type="radio" name="hwnat" class="input" value="0" <% nvram_match_x("PrinterStatus","hwnat", "0", "checked"); %>><#checkbox_No#>
 								</td>
 							</tr-->
 							
@@ -731,28 +807,79 @@ function hsdpa_disable(){
             <td colspan="2"><#PPPConnection_x_HostNameForISP_sectionname#></td>
             </tr>
 		</thead>
-				
-				<tr>
-	   	<th width="30%"><a class="hintstyle" href="javascript:void(0);" onClick="openHint(7,26);"><#PPPConnection_x_Unifi#></a></th>	
-	   	<td>
-			<!-- 2011/6/13 Cherry Cho added for Unifi issues { -->
-			<input type="radio" name="unifi_malaysia_radio" value="1" onClick="return change_common(this, 'Layer3Forwarding', 'unifi_malaysia_radio', '1')"/><#checkbox_Yes#>
-			<input type="radio" name="unifi_malaysia_radio" value="0" onClick="return change_common(this, 'Layer3Forwarding', 'unifi_malaysia_radio', '0')"/><#checkbox_No#>
-			<!-- 2011/6/13 Cherry Cho added for Unifi issues } -->		
-		</td>		
-	   </tr>	
-	   <tr>
+	<tr > 
+		 <th width="30%">Select ISP:</th>
+  	<td>
+		<select name="selectedISP" class="input" onChange="ISPSelection(this.value)">
+			<option value="none" <% nvram_match_x("Layer3Forwarding", "vlan_isp", "none", "selected"); %>>None</option>
+			<!--option value="russia" <% nvram_match_x("Layer3Forwarding", "vlan_isp", "russia", "selected"); %>>Russia</option-->
+			<option value="unifi_home" <% nvram_match_x("Layer3Forwarding", "vlan_isp", "unifi_home", "selected"); %>>Unifi-Home</option>
+			<option value="unifi_biz" <% nvram_match_x("Layer3Forwarding", "vlan_isp", "unifi_biz", "selected"); %>>Unifi-Business</option>
+			<option value="singtel_mio" <% nvram_match_x("Layer3Forwarding", "vlan_isp", "singtel_mio", "selected"); %>>Singtel-MIO</option>
+			<option value="singtel_others" <% nvram_match_x("Layer3Forwarding", "vlan_isp", "singtel_others", "selected"); %>>Singtel-Others</option>
+			<option value="manual" <% nvram_match_x("Layer3Forwarding", "vlan_isp", "manual", "selected"); %>>Manual</option>
+		</select>
+  	</td>
+	</tr>
+	<tr id="wan_stb_x">
+		<th width="30%"><#Layer3Forwarding_x_STB_itemname#></th>
+		<td align="left">
+				<select name="wan_stb_x" class="input">
+					<option value="0" <% nvram_match_x("Layer3Forwarding", "wan_stb_x", "0", "selected"); %>>None</option>
+					<option value="1" <% nvram_match_x("Layer3Forwarding", "wan_stb_x", "1", "selected"); %>>LAN1</option>
+					<option value="2" <% nvram_match_x("Layer3Forwarding", "wan_stb_x", "2", "selected"); %>>LAN2</option>
+					<option value="3" <% nvram_match_x("Layer3Forwarding", "wan_stb_x", "3", "selected"); %>>LAN3</option>
+					<option value="4" <% nvram_match_x("Layer3Forwarding", "wan_stb_x", "4", "selected"); %>>LAN4</option>
+					<option value="6" <% nvram_match_x("Layer3Forwarding", "wan_stb_x", "6", "selected"); %>>LAN1 & LAN2</option>
+					<option value="5" <% nvram_match_x("Layer3Forwarding", "wan_stb_x", "5", "selected"); %>>LAN3 & LAN4</option>
+				</select>
+		</td>
+	</tr>		
+	<tr id="wan_iptv_x">
+	  <th width="30%"><#Layer3Forwarding_x_STB_itemname#></th>
+	  <td>LAN4</td>
+	</tr>
+
+	<tr id="wan_voip_x">
+	  <th width="30%">VoIP Port:</th>
+	  <td>LAN3</td>
+	</tr>
+
+	<tr id="wan_internet_x">
+	  <th width="30%">Internet:</th>
+	  <td>
+		VID&nbsp;<input type="text" name="internet_vid" class="input" size="5" maxlength="4" value="<% nvram_get_x("Layer3Forwarding","internet_vid"); %>">&nbsp;&nbsp;&nbsp;&nbsp;
+		PRIO&nbsp;<input type="text" name="internet_prio" class="input" size="5" maxlength="1" value="<% nvram_get_x("Layer3Forwarding","internet_prio"); %>">
+	  </td>
+	</tr>
+
+	<tr id="wan_iptv_port4_x">
+	  <th width="30%">IPTV (LAN port 4):</th>
+	  <td>
+		VID&nbsp;<input type="text" name="iptv_vid" class="input" size="5" maxlength="4" value="<% nvram_get_x("Layer3Forwarding","iptv_vid"); %>">&nbsp;&nbsp;&nbsp;&nbsp;
+		PRIO&nbsp;<input type="text" name="iptv_prio" class="input" size="5" maxlength="1" value="<% nvram_get_x("Layer3Forwarding","iptv_prio"); %>">
+	  </td>
+	</tr>
+
+	<tr id="wan_voip_port3_x">
+	  <th width="30%">VoIP (LAN port 3):</th>
+	  <td>
+		VID&nbsp;<input type="text" name="voip_vid" class="input" size="5" maxlength="4" value="<% nvram_get_x("Layer3Forwarding","voip_vid"); %>">&nbsp;&nbsp;&nbsp;&nbsp;
+		PRIO&nbsp;<input type="text" name="voip_prio" class="input" size="5" maxlength="1" value="<% nvram_get_x("Layer3Forwarding","voip_prio"); %>">
+	  </td>
+	</tr>					
+	   <tr id="vpn_x">
           <th><a class="hintstyle" href="javascript:void(0);" onClick="openHint(7,19);"><#PPPConnection_x_HeartBeat_itemname#></a></th>
           <td>
           	<!-- 2008.03 James. patch for Oleg's patch. { -->
           	<input type="text" name="wan_heartbeat_x" class="input" maxlength="256" size="32" value="<% nvram_get_x("PPPConnection","wan_heartbeat_x"); %>" onKeyPress="return is_string(this)"></td>
           	<!-- 2008.03 James. patch for Oleg's patch. } -->
         </tr>
-        <tr>
+        <tr id="hostname_x">
           <th><a class="hintstyle" href="javascript:void(0);" onClick="openHint(7,15);"><#PPPConnection_x_HostNameForISP_itemname#></a></th>
           <td><input type="text" name="wan_hostname" class="input" maxlength="32" size="32" value="<% nvram_get_x("PPPConnection","wan_hostname"); %>" onkeypress="return is_string(this)"></td>
         </tr>
-        <tr>
+        <tr id="clone_mac_x">
           <th><a class="hintstyle" href="javascript:void(0);" onClick="openHint(7,16);"><#PPPConnection_x_MacAddressForISP_itemname#></a></th>
           <td><input type="text" name="wan_hwaddr_x" class="input" maxlength="12" size="12" value="<% nvram_get_x("PPPConnection","wan_hwaddr_x"); %>" onKeyPress="return is_hwaddr()"></td>
         </tr>

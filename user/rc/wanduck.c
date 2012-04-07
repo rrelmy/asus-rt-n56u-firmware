@@ -61,13 +61,6 @@ csprintf("\n# Rebuild rules by SIGUSR2\n");
 }
 // 2010.09 James. }
 
-#ifdef USB_MODEM
-static void reset_modem_state(int signo){
-	modem_ready = is_usb_modem_ready();
-usb_dbg("# wanduck: Set modem_ready=%d.\n", modem_ready);
-}
-#endif
-
 int passivesock(char *service, int protocol_num, int qlen){
 	//struct servent *pse;
 	struct sockaddr_in sin;
@@ -154,7 +147,7 @@ check_task(char *cmd, int target)
 }
 
 /* Find process name by pid from /proc directory */
-#ifdef USB_MODEM
+#ifdef RTCONFIG_USB_MODEM
 char *find_name_by_proc(int target){
         DIR  *dir;
         struct dirent *dent;
@@ -206,8 +199,8 @@ int chk_proto(){
 	else
 		strcpy(tmp, wan0_proto);
 
-#ifdef USB_MODEM
-	if(get_usb_modem_state()){
+#ifdef RTCONFIG_USB_MODEM
+	if(modem_running){
 		DIR *ppp_dir;
 		struct dirent *entry;
 		int got_ppp_link;
@@ -381,7 +374,7 @@ int first_enter_repeater()
 	}
 }
 
-#ifndef USB_MODEM
+#ifndef RTCONFIG_USB_MODEM
 int if_wan_phyconnected(void)
 {
         int val = 0, idx = 1, ret;
@@ -401,8 +394,9 @@ int if_wan_phyconnected(void)
 }
 #else
 int if_wan_phyconnected(void){
-//csprintf("\n# wanduck: wan_port=%d, usb_port=%d.\n", is_phyconnected()&0x1, get_usb_modem_state());
-	if(is_phyconnected()&0x1 != 1 && !get_usb_modem_state()){
+	int link_wan = is_phyconnected()&0x1;
+
+	if(!link_wan && !modem_running){
 		disconn_case = CASE_DISWAN;
 		return DISCONN;
 	}
@@ -473,8 +467,8 @@ int wanduck_main(int argc, char **argv){
 	struct sockaddr_in cliaddr;
 	struct timeval  tval;
 	int nready, maxi, sockfd, conn_state;
-#ifdef USB_MODEM
-	int system_ready = 0, system_ready_count;
+#ifdef RTCONFIG_USB_MODEM
+	int modem_ready_count = MODEM_IDLE;
 #endif
 	/*int pid;
 	
@@ -506,9 +500,6 @@ int wanduck_main(int argc, char **argv){
 	signal(SIGTERM, safe_leave);
 	signal(SIGUSR1, get_related_nvram2); // 2010.09 James.
 	signal(SIGUSR2, rebuild_rule); // 2010.09 James.
-#ifdef USB_MODEM
-	signal(SIGINT, reset_modem_state);
-#endif
 	
 	if(argc < 3){
 		http_servport = DFL_HTTP_SERV_PORT;
@@ -625,19 +616,6 @@ csprintf("\n# Rebuild rules\n");
 		}
 // 2008.03 James. }
 
-#ifdef USB_MODEM
-		if(system_ready == 0 && !strcmp(nvram_safe_get("system_ready"), "1")){
-			system_ready = 1;
-			
-			system_ready_count = 0;
-		}
-
-		if(system_ready && system_ready_count < MAX_WAIT_OF_MODEM){
-csprintf("# wanduck: system_ready_count=%d.\n", system_ready_count+1);
-			++system_ready_count;
-		}
-#endif
-
 		if((nat_enable == 1) || (fer < HAD_SET)){
 			conn_state = if_wan_phyconnected();
 			
@@ -646,18 +624,39 @@ csprintf("# wanduck: system_ready_count=%d.\n", system_ready_count+1);
 					err_state = D2C;
 				else
 					err_state = CONNED;
+					
+#ifdef RTCONFIG_USB_MODEM
+				modem_ready_count = MODEM_IDLE;
+#endif
 			}
 			else if(conn_state == DISCONN){
 				if(err_state == CONNED)
 					err_state = C2D;
 				else
 					err_state = DISCONN;
+
+#ifdef RTCONFIG_USB_MODEM
+			if(disconn_case == CASE_THESAMESUBNET)
+				modem_ready_count = MODEM_IDLE;
+			else if(!strcmp(nvram_safe_get("manually_disconnect_wan"), "1"))
+				modem_ready_count = MODEM_IDLE;
+			else if(!link_modem)
+				modem_ready_count = MODEM_IDLE;
+			else if(modem_ready_count == MODEM_IDLE)
+				modem_ready_count = MODEM_READY;
+#endif
 			}
-#ifdef USB_MODEM
-if(err_state == C2D)
-	usb_dbg("# wanduck: state change: C2D.\n");
-else if(err_state == D2C)
-	usb_dbg("# wanduck: state change: D2C.\n");
+
+#ifdef RTCONFIG_USB_MODEM
+		if(modem_ready_count != MODEM_IDLE){
+			if(modem_ready_count < MAX_WAIT_COUNT){
+				++modem_ready_count;
+csprintf("# wanduck: wait time for switching: %d/%d.\n", modem_ready_count*SCAN_INTERVAL, MAX_WAIT_TIME_OF_MODEM);
+			}
+			else{
+				modem_ready_count = MODEM_READY;
+			}
+		}
 #endif
 
 			record_conn_status();	// 2008.02 James.
@@ -672,10 +671,10 @@ csprintf("\n# Enable direct rule(C2D)\n");
 					change_redirect_rules(2, 1);
 					update_wan(0);
 
-#ifdef USB_MODEM
-					if(err_state == C2D){
-csprintf("\n# wanduck(C2D): Try to Switch the WAN line.(modem_ready=%d).\n", modem_ready);
-						switch_usb_modem(modem_ready);
+#ifdef RTCONFIG_USB_MODEM
+					if(err_state == C2D && !link_modem && modem_running){ // plug-off the Modem.
+csprintf("\n# wanduck(C2D): Try to Switch the WAN line.(link_modem=%d).\n", link_modem);
+						switch_usb_modem(link_modem);
 					}
 #endif
 				}
@@ -695,11 +694,19 @@ csprintf("\n#w Disable direct rule(D2C)\n");
 					update_wan(1);
 				}
 			}
-#ifdef USB_MODEM
+#ifdef RTCONFIG_USB_MODEM
 			// After boot, wait the WAN port to connect.
 			else if(err_state == DISCONN){
-				if(system_ready_count >= MAX_WAIT_OF_MODEM)
-					switch_usb_modem(modem_ready);
+				if((link_modem && modem_ready_count >= MAX_WAIT_COUNT)
+						|| (!link_modem && modem_running)
+						)
+				{
+if(modem_running)
+	csprintf("# Switching the connect to WAN port...\n");
+else
+	csprintf("# Switching the connect to USB Modem...\n");
+					switch_usb_modem(!modem_running);
+				}
 			}
 #endif
 		}
@@ -1152,4 +1159,9 @@ void get_related_nvram2(){
 	memset(wan_subnet_t, 0, 11);
 	strcpy(wan_subnet_t, nvram_safe_get("wan_subnet_t"));
 // 2010.09 James. }
+
+#ifdef RTCONFIG_USB_MODEM
+	link_modem = is_usb_modem_ready();
+	modem_running = get_usb_modem_state();
+#endif
 }

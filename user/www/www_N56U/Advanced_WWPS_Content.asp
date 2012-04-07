@@ -224,7 +224,7 @@ function refresh_wpsinfo(xmldoc){
 	var wpss = xmldoc.getElementsByTagName("wps");
 
 	if(wpss == null || wpss[0] == null){
-		if (confirm('<#JS_badconnection#>'))
+		if (confirm("<#JS_badconnection#>"))
 			;
 		else
 			stopFlag=1;
@@ -286,7 +286,7 @@ function show_wsc_status(wps_infos){
 	// WPS status
 	if(wps_enable_old == "0"){
 		$("wps_state_tr").style.display = "";
-		$("wps_state_td").innerHTML = "Not used";
+		$("wps_state_td").innerHTML = "<#btn_Disabled#>";
 	}
 	else{
 		$("wps_state_tr").style.display = "";
@@ -334,9 +334,9 @@ function show_wsc_status(wps_infos){
 	}
 	
 	if(wps_infos[1].firstChild.nodeValue == "No")
-			$("wps_config_td").innerHTML = "No";
+			$("wps_config_td").innerHTML = "<#checkbox_No#>";
 	else
-			$("wps_config_td").innerHTML = "Yes";
+			$("wps_config_td").innerHTML = "<#checkbox_Yes#>";
 }
 </script>
 </head>

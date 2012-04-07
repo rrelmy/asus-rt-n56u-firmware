@@ -22,7 +22,6 @@
  * SPECIFICALLY DISCLAIMS ANY IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS
  * FOR A SPECIFIC PURPOSE OR NONINFRINGEMENT CONCERNING THIS SOFTWARE.
  *
- * $Id: watchdog.c,v 1.1.1.1 2007/01/25 12:52:21 jiahao_jhou Exp $
  */
 
  
@@ -56,7 +55,7 @@ typedef unsigned char bool;
 #include <ralink.h>
 
 #define BCM47XX_SOFTWARE_RESET  0x40		/* GPIO 6 */
-#define RESET_WAIT		3		/* seconds */
+#define RESET_WAIT		5		/* seconds */
 #define RESET_WAIT_COUNT	RESET_WAIT * 10 /* 10 times a second */
 
 #define TEST_PERIOD		100		/* second */
@@ -458,6 +457,10 @@ void btn_check(void)
 					{
 						if (!nvram_match("sw_mode_ex", "3"))
 						{
+							stop_wsc();
+							stop_wsc_2g();
+							nvram_set("wps_enable", "0");
+
 #if (!defined(W7_LOGO) && !defined(WIFI_LOGO))
 							nvram_set("wps_triggered", "1");	// psp fix
 #endif
@@ -503,6 +506,10 @@ void btn_check(void)
 			{
 				if (!nvram_match("sw_mode_ex", "3"))
 				{
+					stop_wsc();
+					stop_wsc_2g();
+					nvram_set("wps_enable", "0");
+
 #if (!defined(W7_LOGO) && !defined(WIFI_LOGO))
 					nvram_set("wps_triggered", "1");	// psp fix
 #endif
@@ -672,6 +679,8 @@ void refresh_ntpc(void)
 		kill_pidfile_s("/var/run/ntp.pid", SIGTSTP);
 }
 
+void reset_svc_radio_time();
+
 static int ntp_first_refresh = 0;
 
 int ntp_timesync(void)
@@ -691,7 +700,9 @@ int ntp_timesync(void)
 				start_ddns();
 
 			sync_interval = 4320;
-			logmessage("ntp client", "time is synchronized to %s", nvram_safe_get("ntp_servers"));
+			logmessage("ntp client", "time is synchronized to %s", nvram_safe_get("ntp_server0"));
+
+			reset_svc_radio_time();
 		}
 		else if (sync_interval == 0)
 		{
@@ -702,8 +713,10 @@ int ntp_timesync(void)
 			if (local.tm_year > 100)
 			{	
 				sync_interval = 4320;
-				logmessage("ntp client", "time is synchronized to %s", nvram_safe_get("ntp_servers"));
+				logmessage("ntp client", "time is synchronized to %s", nvram_safe_get("ntp_server0"));
 				system("date");
+
+				reset_svc_radio_time();
 			}
 			else
 			{
@@ -780,6 +793,32 @@ int timecheck_item(char *activeDate, char *activeTime)
 	return active;
 }
 
+void check_radio_time(const char *radio_time_name)
+{
+	char *radio_time = nvram_get(radio_time_name);
+	char starttime[5], endtime[5];
+
+	memset(starttime, 0, 5);
+	memset(endtime, 0, 5);
+
+	if ((!radio_time) || strlen(radio_time) != 8)
+		goto err;
+
+	strncpy(starttime, radio_time, 4);
+	strncpy(endtime, radio_time + 4, 4);
+//	dbG("%s starttime: %s\n", radio_time_name, starttime);
+//	dbG("%s endtime: %s\n", radio_time_name, endtime);
+
+	if (atoi(starttime) >= atoi(endtime))
+		goto err;
+
+	return;
+
+err:
+	dbG("fix %s as 00002359\n", radio_time_name);
+	nvram_set(radio_time_name, "00002359");
+}
+
 extern int valid_url_filter_time();
 
 /* Check for time-dependent service 	*/
@@ -829,6 +868,7 @@ int svc_timecheck(void)
 				nvram_set("reload_svc_wl", "0");
 			}
 
+			check_radio_time("wl_radio_time_x");
 			strcpy(svcDate[RADIOACTIVE], nvram_safe_get("wl_radio_date_x"));
 			strcpy(svcTime[RADIOACTIVE], nvram_safe_get("wl_radio_time_x"));
 			svcStatus[RADIOACTIVE] = -2;
@@ -865,6 +905,7 @@ int svc_timecheck(void)
 				nvram_set("reload_svc_rt", "0");
 			}
 
+			check_radio_time("rt_radio_time_x");
 			strcpy(svcDate[RADIO2ACTIVE], nvram_safe_get("rt_radio_date_x"));
 			strcpy(svcTime[RADIO2ACTIVE], nvram_safe_get("rt_radio_time_x"));
 			svcStatus[RADIO2ACTIVE] = -2;
@@ -891,6 +932,12 @@ int svc_timecheck(void)
 	}
 
 	return 0;
+}
+
+void reset_svc_radio_time()
+{
+	svcStatus[RADIOACTIVE] = -1;
+	svcStatus[RADIO2ACTIVE] = -1;
 }
 
 /* Sometimes, httpd becomes inaccessible, try to re-run it */
@@ -933,7 +980,7 @@ void u2ec_processcheck(void)
         u2ec_timer = (u2ec_timer + 1) % 3;
         if (u2ec_timer) return 1;
 
-	if (nvram_match("apps_u2ec_ex", "1") && !pids("u2ec"))
+	if (nvram_match("apps_u2ec_ex", "1") && (!pids("u2ec") || !pids("lpd")))
 	{
 		stop_u2ec();
 		stop_lpd();
@@ -977,7 +1024,7 @@ void media_processcheck(void)
 }
 
 int samba_error_count = 0;
-
+#if 0
 void samba_processcheck(void)
 {
 	if (!nvram_match("enable_samba", "1") || nvram_match("apps_smb_ex", "0"))
@@ -994,7 +1041,7 @@ void samba_processcheck(void)
 		eval("/sbin/nmbd", "-D", "-s", "/etc/smb.conf");
         }
 }
-
+#endif
 void nm_processcheck(void)
 {
 	nm_timer = (nm_timer + 1) % 12;
@@ -1009,11 +1056,12 @@ void nm_processcheck(void)
 		dbg("timeout: %d\n", (unsigned long)(now - strtoul(nvram_safe_get("fullscan_timestamp"), NULL, 10)));
 	}
 */
-	if (nvram_match("networkmap_fullscan", "1") && ((unsigned long)(now - strtoul(nvram_safe_get("fullscan_timestamp"), NULL, 10)) > 600))
+	if (nvram_match("networkmap_fullscan", "1") &&
+		((unsigned long)(now - strtoul(nvram_safe_get("fullscan_timestamp"), NULL, 10)) > 600) &&
+			ddns_timer)
 	{
 //		dbg("networkmap is busy looping!\n");
 		stop_networkmap();
-		nvram_set("networkmap_fullscan", "0");
 	}
 }
 
@@ -1023,9 +1071,9 @@ void pppd_processcheck()
 	char prefix[] = "wanXXXXXXXXXX_";
 	char *wan_proto = nvram_safe_get("wan_proto");
 
-	if (!strcmp(wan_proto, "pppoe") &&
-	    !strcmp(wan_proto, "pptp") &&
-	    !strcmp(wan_proto, "l2tp"))
+	if (strcmp(wan_proto, "pppoe") &&
+	    strcmp(wan_proto, "pptp") &&
+	    strcmp(wan_proto, "l2tp"))
 		return;
 
 	pppd_timer = (pppd_timer + 1) % 15;
@@ -1089,7 +1137,7 @@ cpu_usage_minotor()
 	else
 		high_cpu_usage_count = 0;
 
-	if (high_cpu_usage_count > 5)
+	if (high_cpu_usage_count > 30)
 	{
 		dbG("reboot for high CPU load !!!\n");
 		dbG("reboot for high CPU load !!!\n");
@@ -1151,7 +1199,7 @@ static void catch_sig(int sig)
 			WscStatus_old = -1;
 			WscStatus_old_2g = -1;
 		}
-		else if (nvram_match("wps_start_flag", "3"))	// let the SW push button be the same as the HW push button.
+		else if (nvram_match("wps_start_flag", "3") || nvram_match("wps_start_flag", "4"))	// let the SW push button be the same as the HW push button
 		{
 #if defined (W7_LOGO) || defined (WIFI_LOGO)
 			if (nvram_match("wps_band", "0"))
@@ -1168,9 +1216,18 @@ static void catch_sig(int sig)
 #endif
 				return;
 #endif
+//			if (nvram_match("wl_radio_x", "1"))
+			stop_wsc();
+//			if (nvram_match("rt_radio_x", "1"))
+			stop_wsc_2g();
+			nvram_set("wps_enable", "0");
 #if (!defined(W7_LOGO) && !defined(WIFI_LOGO))
 			nvram_set("wps_triggered", "1");	// psp fix
 			count_to_stop_wps = 0;
+			if (nvram_match("wps_start_flag", "3"))
+                                nvram_set("wps_band", "1");
+                        else
+				nvram_set("wps_band", "0");
 #endif
 			nvram_set("wps_start_flag", "0");
 			alarmtimer(NORMAL_PERIOD, 0);
@@ -1186,8 +1243,10 @@ static void catch_sig(int sig)
 #if 0
 			start_wsc_pbc_both();
 #else
-			nvram_set("wps_band", "1");
-			start_wsc_pbc_2g();
+			if (nvram_match("wps_band", "1"))
+				start_wsc_pbc_2g();
+			else
+				start_wsc_pbc();
 #endif
 #endif
 			WscStatus_old = -1;
@@ -1207,10 +1266,10 @@ static void catch_sig(int sig)
 			LED_CONTROL(LED_POWER, LED_ON);
 			alarmtimer(NORMAL_PERIOD, 0);
 //			if (nvram_match("wps_band", "0"))
-				if (nvram_match("wl_radio_x", "1"))
+//				if (nvram_match("wl_radio_x", "1"))
 					stop_wsc();
 //			else
-				if (nvram_match("rt_radio_x", "1"))
+//				if (nvram_match("rt_radio_x", "1"))
 					stop_wsc_2g();
 		}
 		else if (nvram_match("wps_start_flag", "1"))
@@ -1285,24 +1344,16 @@ static void catch_sig(int sig)
 				if (nvram_match("wps_pin_web", ""))
 				{
 					if (nvram_match("wps_band", "0"))
-					{
-						wps_pin(0);
-					}
+						wps_pin("0");
 					else
-					{
-						wps_pin_2g(0);
-					}
+						wps_pin_2g("0");
 				}
 				else
 				{
 					if (nvram_match("wps_band", "0"))
-					{
-						wps_pin(atoi(nvram_safe_get("wps_pin_web")));
-					}
+						wps_pin(nvram_safe_get("wps_pin_web"));
 					else
-					{
-						wps_pin_2g(atoi(nvram_safe_get("wps_pin_web")));
-					}
+						wps_pin_2g(nvram_safe_get("wps_pin_web"));
 				}
 			}
 			else
@@ -1436,9 +1487,9 @@ void watchdog(void)
 
 		return;
 	}
-	else
+#else
+	if (nvram_match("reboot", "1")) return;
 #endif
-	if (nvram_match("reboot", "0")) return;
 
 	if (stop_service_type_99) return;
 
@@ -1459,7 +1510,9 @@ void watchdog(void)
 
 		if (!count_to_stop_wps)
 		{
+//			if (nvram_match("wl_radio_x", "1"))
 			stop_wsc();			// psp fix
+//			if (nvram_match("rt_radio_x", "1"))
 			stop_wsc_2g();			// psp fix
 			nvram_set("wps_enable", "0");	// psp fix
 		}
@@ -1502,9 +1555,9 @@ void watchdog(void)
 	u2ec_processcheck();
 
 	media_processcheck();
-
+#if 0
 	samba_processcheck();
-
+#endif
 	pppd_processcheck();
 
 	if (nvram_match("wan_route_x", "IP_Routed"))
@@ -1577,22 +1630,6 @@ void watchdog(void)
 		if (!is_phyconnected() || !has_wan_ip())
 			return;
 
-		/* dns chk */
-#if 0
-		if (nvram_match("wan_dnsenable_x", "1") && !chk_dns)
-		{
-			char *dns_list = nvram_get("wan_dns_t");
-			if (!dns_list || (strlen(dns_list) == 0))
-			{
-				dns_list = nvram_get("wanx_dns");
-			}
-			if (dns_list && strlen(dns_list) > 0)
-			{
-				chk_dns = 1;
-				update_resolvconf();
-			}
-		}
-#endif
 		/* sync time to ntp server if necessary */
 		if (!nvram_match("wan_dns_t", "") && !nvram_match("wan_gateway_t", ""))
 		{
@@ -1604,6 +1641,12 @@ void watchdog(void)
 		)
 		{
 			start_ddns();
+		}
+
+		if (!ddns_timer)
+		{
+			stop_networkmap();
+			start_networkmap();
 		}
 	}
 	else
@@ -1624,6 +1667,7 @@ int
 watchdog_main(int argc, char *argv[])
 {
 	FILE *fp;
+	sigset_t sigs_to_catch;
 
 #ifdef REMOVE
 	/* Run it under background */
@@ -1655,6 +1699,14 @@ watchdog_main(int argc, char *argv[])
 	ra_gpio_init();
 
 	/* set the signal handler */
+	sigemptyset(&sigs_to_catch);
+	sigaddset(&sigs_to_catch, SIGUSR1);
+	sigaddset(&sigs_to_catch, SIGUSR2);
+	sigaddset(&sigs_to_catch, SIGTSTP);
+	sigaddset(&sigs_to_catch, SIGALRM);
+	sigaddset(&sigs_to_catch, SIGTTIN);
+	sigprocmask(SIG_UNBLOCK, &sigs_to_catch, NULL);
+
 	signal(SIGUSR1, catch_sig);
 	signal(SIGUSR2, catch_sig);
 	signal(SIGTSTP, catch_sig);
@@ -1664,8 +1716,8 @@ watchdog_main(int argc, char *argv[])
 	nvram_set("btn_rst", "0");
 	nvram_set("btn_ez", "0");
 #if (!defined(W7_LOGO) && !defined(WIFI_LOGO))
-	if (!pids("ots"))
-		start_ots();
+//	if (!pids("ots"))
+//		start_ots();
 #endif
 	setenv("TZ", nvram_safe_get("time_zone_x"), 1);
 

@@ -27,7 +27,6 @@
  * Misc useful OS-independent routines.
  *
  * Copyright(c) 2001 ASUSTeK Inc.
- * $Id: bcmutils.c,v 1.1.1.1 2007/02/15 12:13:18 jiahao Exp $
  */
 
 #include <osl.h>

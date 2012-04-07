@@ -41,6 +41,7 @@ struct config {
   int ppp_detect;
   int purge_time;
   char config_file[CONF_PATH_LEN];
+  char resolv_file[CONF_PATH_LEN];
   char deny_file[CONF_PATH_LEN];
   char cache_file[CONF_PATH_LEN];
   char hosts_file[CONF_PATH_LEN];

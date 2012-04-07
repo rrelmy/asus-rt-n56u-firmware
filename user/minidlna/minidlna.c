@@ -67,7 +67,6 @@
 
 #include <sys/stat.h>	/* ASUS EXT */
 #include <dirent.h>	/* ASUS EXT */
-
 #include "config.h"
 
 #ifdef ENABLE_NLS
@@ -268,22 +267,28 @@ getfriendlyname(char * buf, int len)
 		}
 	}
 	fclose(info);
+	memcpy(pnpx_hwid+4, "01F2", 4);
 	if( strcmp(modelnumber, "NVX") == 0 )
-		memcpy(pnpx_hwid+4, "01F2&amp;DEV_0101", 17);
+		memcpy(pnpx_hwid+17, "0101", 4);
 	else if( strcmp(modelnumber, "Pro") == 0 ||
 	         strcmp(modelnumber, "Pro 6") == 0 ||
 	         strncmp(modelnumber, "Ultra 6", 7) == 0 )
-		memcpy(pnpx_hwid+4, "01F2&amp;DEV_0102", 17);
+		memcpy(pnpx_hwid+17, "0102", 4);
 	else if( strcmp(modelnumber, "Pro 2") == 0 ||
 	         strncmp(modelnumber, "Ultra 2", 7) == 0 )
-		memcpy(pnpx_hwid+4, "01F2&amp;DEV_0103", 17);
+		memcpy(pnpx_hwid+17, "0103", 4);
 	else if( strcmp(modelnumber, "Pro 4") == 0 ||
 	         strncmp(modelnumber, "Ultra 4", 7) == 0 )
-		memcpy(pnpx_hwid+4, "01F2&amp;DEV_0104", 17);
+		memcpy(pnpx_hwid+17, "0104", 4);
 	else if( strcmp(modelnumber+1, "100") == 0 )
-		memcpy(pnpx_hwid+4, "01F2&amp;DEV_0105", 17);
+		memcpy(pnpx_hwid+17, "0105", 4);
 	else if( strcmp(modelnumber+1, "200") == 0 )
-		memcpy(pnpx_hwid+4, "01F2&amp;DEV_0106", 17);
+		memcpy(pnpx_hwid+17, "0106", 4);
+	/* 0107 = Stora */
+	else if( strcmp(modelnumber, "Duo v2") == 0 )
+		memcpy(pnpx_hwid+17, "0108", 4);
+	else if( strcmp(modelnumber, "NV+ v2") == 0 )
+		memcpy(pnpx_hwid+17, "0109", 4);
 #else
 	char * logname;
 	logname = getenv("LOGNAME");
@@ -330,29 +335,24 @@ int
 check_if_dir_exist(const char *dirpath)
 {
 	struct stat stat_buf;
-
 	if (!stat(dirpath, &stat_buf))
 		return S_ISDIR(stat_buf.st_mode);
 	else
 		return 0;
 }
-
 int
 mkdir_if_none(char *dir)
 {
 	DIR *dp;
-
 	if (!(dp = opendir(dir)))
 	{
 		umask(0000);
 		mkdir(dir, 0777);
 		return 1;
 	}
-        
 	closedir(dp);
 	return 0;
 }
-
 /* init phase :
  * 1) read configuration file
  * 2) read command line arguments
@@ -403,6 +403,7 @@ init(int argc, char * * argv)
 	
 	runtime_vars.port = -1;
 	runtime_vars.notify_interval = 895;	/* seconds between SSDP announces */
+	runtime_vars.root_container = NULL;
 
 	/* read options file first since
 	 * command line arguments have final say */
@@ -586,6 +587,37 @@ init(int argc, char * * argv)
 				if( (strcmp(ary_options[i].value, "yes") == 0) || atoi(ary_options[i].value) )
 					SETFLAG(DLNA_STRICT_MASK);
 				break;
+			case ROOT_CONTAINER:
+				switch( ary_options[i].value[0] )
+				{
+				case '.':
+					runtime_vars.root_container = NULL;
+					break;
+				case 'B':
+				case 'b':
+					runtime_vars.root_container = BROWSEDIR_ID;
+					break;
+				case 'M':
+				case 'm':
+					runtime_vars.root_container = MUSIC_ID;
+					break;
+				case 'V':
+				case 'v':
+					runtime_vars.root_container = VIDEO_ID;
+					break;
+				case 'P':
+				case 'p':
+					runtime_vars.root_container = IMAGE_ID;
+					break;
+				default:
+					fprintf(stderr, "Invalid root container! [%s]\n",
+						ary_options[i].value);
+					break;
+				}
+				break;
+			case UPNPMINISSDPDSOCKET:
+				minissdpdsocketpath = ary_options[i].value;
+				break;
 			default:
 				fprintf(stderr, "Unknown option in file %s\n",
 				        optionsfile);
@@ -617,7 +649,7 @@ init(int argc, char * * argv)
 #else	/* ASUS EXT */
 	{
 		if (check_if_dir_exist(DEFAULT_DB_PATH))
-			strncpy(db_path, DEFAULT_DB_PATH, PATH_MAX);
+		strncpy(db_path, DEFAULT_DB_PATH, PATH_MAX);
 		else
 		{
 			mkdir_if_none("/tmp/minidlna");
@@ -895,7 +927,6 @@ main(int argc, char * * argv)
 	time_t lastupdatetime = 0;
 	int max_fd = -1;
 	int last_changecnt = 0;
-	short int new_db = 0;
 	pid_t scanner_pid = 0;
 	pthread_t inotify_thread = 0;
 	struct media_dir_s *media_path, *last_path;
@@ -935,14 +966,14 @@ main(int argc, char * * argv)
 #endif
 	LIST_INIT(&upnphttphead);
 
-	new_db = open_db();
-	if( !new_db )
+	if( open_db() == 0 )
 	{
 		updateID = sql_get_int_field(db, "SELECT UPDATE_ID from SETTINGS");
 	}
-	if( sql_get_int_field(db, "pragma user_version") != DB_VERSION )
+	i = db_upgrade(db);
+	if( i != 0 )
 	{
-		if( new_db )
+		if( i < 0 )
 		{
 			DPRINTF(E_WARN, L_GENERAL, "Creating new database...\n");
 		}
@@ -1001,7 +1032,11 @@ main(int argc, char * * argv)
 	sudp = OpenAndConfSSDPReceiveSocket(n_lan_addr, lan_addr);
 	if(sudp < 0)
 	{
-		DPRINTF(E_FATAL, L_GENERAL, "Failed to open socket for receiving SSDP. EXITING\n");
+		DPRINTF(E_INFO, L_GENERAL, "Failed to open socket for receiving SSDP. Trying to use MiniSSDPd\n");
+		if(SubmitServicesToMiniSSDPD(lan_addr[0].str, runtime_vars.port) < 0) {
+			DPRINTF(E_FATAL, L_GENERAL, "Failed to connect to MiniSSDPd. EXITING");
+			return 1;
+		}
 	}
 	/* open socket for HTTP connections. Listen on the 1st LAN address */
 	shttpl = OpenAndConfHTTPSocket(runtime_vars.port);

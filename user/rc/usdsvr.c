@@ -71,7 +71,7 @@ void catch_sig(int sig)
 		// response format: "USB device name","current status of the device","IP of cccupied user"
 		if (nvram_match("u2ec_device", ""))
 			sprintf(sendbuffer, "\"%s\",\"%s\"", "", "");
-		else if (nvram_invmatch("u2ec_busyip", ""))
+		else if (!nvram_match("u2ec_busyip", ""))
 			sprintf(sendbuffer, "\"%s\",\"%s\",\"%s\"", nvram_safe_get("u2ec_device"), "Busy", nvram_safe_get("u2ec_busyip"));
 		else
 			sprintf(sendbuffer, "\"%s\",\"%s\"", nvram_safe_get("u2ec_device"), "Idle");

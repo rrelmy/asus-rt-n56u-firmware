@@ -21,7 +21,7 @@
 #include <nvram/bcmnvram.h>
 #include <shutils.h>
 
-void psp_stopwps(int ign)
+void psp_stopwps(int sig)
 {
 	if (nvram_match("wps_triggered", "0"))
 	{

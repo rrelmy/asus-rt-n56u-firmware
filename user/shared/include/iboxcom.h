@@ -524,7 +524,7 @@ typedef struct PktSetInfoGWQuick
 {
 	BYTE QuickFlag;			// 1 byte
 	GW_QUICK_WIRELESS WSetting;	// 99 byte
-	GW_QUICK_ISP ISPSetting;	// 348 byte,total = 46(IBOX_COMM_PKT_HDR_EX) + 1 + 99 + 348 = 494 (max = 512)
+	GW_QUICK_ISP ISPSetting;	// 349 byte,total = 46(IBOX_COMM_PKT_HDR_EX) + 1 + 99 + 349 = 495 (max = 512)
 } PKT_SET_INFO_GW_QUICK;
 
 #endif

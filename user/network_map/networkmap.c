@@ -276,6 +276,14 @@ char *fixstr(const char *buf)
 		return trim_r(copy);
 }
 
+void do_exit(int sig)
+{
+        alarm(0);
+	nvram_set("networkmap_fullscan", "0");
+        remove("/var/run/networkmap.pid");
+        exit(0);
+}
+
 /******************************************/
 int main()
 {
@@ -322,6 +330,7 @@ int main()
 	if (strlen(router_mac)!=0) ether_atoe(router_mac, my_hwaddr);
 
 	signal(SIGUSR1, refresh_sig); //catch UI refresh signal
+	signal(SIGTERM, do_exit);
 
         // create UDP socket and bind to "br0" to get ARP packet//
 	arp_sockfd = create_socket(INTERFACE);

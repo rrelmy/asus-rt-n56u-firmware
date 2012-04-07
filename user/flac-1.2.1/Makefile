@@ -21,7 +21,7 @@ configure:
 	)
 
 clean:
-	$(MAKE) -C source clean
+	$(MAKE) -C source distclean
 	rm -rf install
 	rm -f libFLAC.so.8.2.0
 	rm -f config_done

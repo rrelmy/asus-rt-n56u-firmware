@@ -68,7 +68,7 @@ usb_status()
 {
 	if (nvram_match("no_usb_led", "1"))
 		return 0;
-	else if (nvram_invmatch("usb_path1", "") || nvram_invmatch("usb_path2", ""))
+	else if (!nvram_match("usb_path1", "") || !nvram_match("usb_path2", ""))
 		return 1;
 	else
 		return 0;
@@ -204,6 +204,10 @@ void catch_sig_linkstatus(int sig)
 #endif
 					logmessage("linkstatus", "perform DHCP renew");
 					system("killall -SIGUSR1 udhcpc");
+
+					try_count = 0;
+					while (pids("wanduck") && (++try_count < 10))
+						sleep(1);
 
 					try_count = 0;
 					while (!pids("wanduck") && (++try_count < 10))

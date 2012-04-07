@@ -253,7 +253,8 @@ getStorageStatus(STORAGE_INFO_T *st)
 
 	memset(st->PrinterModel1, 0, 32);
 	memset(st->PrinterModel2, 0, 32);
-	if (strncmp(nvram_safe_get("st_ftp_modex"), "2", 1) == 0)
+#if 0
+	if (strncmp(nvram_safe_get("st_ftp_mode"), "2", 1) == 0)
 	{
 		username = nvram_safe_get("acc_username0");
 		password = nvram_safe_get("acc_password0");
@@ -264,7 +265,7 @@ getStorageStatus(STORAGE_INFO_T *st)
 	{
 		strncpy(st->PrinterModel1, "anonymous", 9);
 	}
-
+#endif
 	// copy apps_version to DiskModel
 	apps_ver = nvram_get("apps_version");
 	if(!apps_ver)

@@ -153,7 +153,7 @@ apcli_restart()
 	}
 
 	//EncrypType
-//	if (nvram_invmatch("sta_wep_x", "0"))
+//	if (!nvram_match("sta_wep_x", "0"))
 	if (flag_wep)
 	{
 		//DefaultKeyID
@@ -431,7 +431,7 @@ site_survey_for_channel(const char *ssid, int *HT_EXT)
 	int ht_extcha_max;
 	int wep = 0;
 
-	if (nvram_invmatch("sta_wep_x", "0") || nvram_match("sta_auth_mode", "psk"))
+	if (!nvram_match("sta_wep_x", "0") || nvram_match("sta_auth_mode", "psk"))
 		wep = 1;
 
 	memset(data, 0x00, 255); 
@@ -961,7 +961,7 @@ void catch_sig_apcli(int sig)
 		}
 		else
 		{
-			if (nvram_invmatch("sta_connected", "1"))
+			if (!nvram_match("sta_connected", "1"))
 			{
 				dbg("this SIGUSR2 should be ignored!\n");
 				return;

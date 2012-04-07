@@ -253,13 +253,10 @@
 { "preferred_lang", "", 0 },
 
 //{ "qos_", "", 0 },				// 2007.12 James.
-//{ "qos_enable","0", 0 },
-//{ "qos_global_enable","0", 0 },
-//{ "qos_userdef_enable","0", 0 },
+{ "qos_enable","0", 0 },
 { "qos_shortpkt_prio","0", 0 },			// Internet
 { "qos_pshack_prio","0", 0 },			// Game
 { "qos_tos_prio","0", 0 },
-//{ "qos_userspec_app","0", 0 },
 { "qos_service_enable","0", 0 },
 { "qos_service_ubw","0", 0 },
 { "qos_manual_ubw","0", 0 },			// 2008.05 James.
@@ -308,12 +305,11 @@
 { "record_lanaddr", "", 0 },
 
 { "modem_enable", "0", 0},
-{ "EVDO_on", "0", 0},
 { "Dev3G", "AUTO", 0},
-{ "modem_apn", "internet", 0},
+{ "modem_apn", "", 0},
 { "modem_country", "", 0},
 { "modem_isp", "", 0},
-{ "modem_dialnum", "*99***1#", 0},
+{ "modem_dialnum", "", 0},
 { "modem_user", "", 0},
 { "modem_pass", "", 0},
 { "wan_3g_pin", "", 0},
@@ -355,5 +351,15 @@
 
 {"dm_delay", "6", 0},
 
-{ "unifi_malaysia", "0", 0},/* 1: For Malaysia Unifi *///Cherry added in 2011/6/13.*/
+//ISP VLAN Settings
+{ "vlan_isp", "none", 0},	// value: none, russia, unifi_home, unifi_biz, singtel_mio, singtel_others, manual
+{ "internet_vid", "", 0},	// Unifi: 500  SingTel's exStream: 10
+{ "iptv_vid", "", 0},		// Unifi: 600  SingTel's exStream: 20
+{ "voip_vid", "", 0},		// SingTel's exStream: 30
+{ "internet_prio", "0", 0},
+{ "iptv_prio", "0", 0},
+{ "voip_prio", "0", 0},
+{ "voip_port", "3", 0},
+
 { "pppoe_dhcp_route", "0", 0},
+{ "sw_mode", "1", 0},

@@ -61,7 +61,7 @@ function clearLog(){
 </script>
 </head>
 
-<body onload="show_banner(1); show_menu(5,7,1); show_footer();load_body();showclock(); showbootTime();" onunLoad="return unload_body();">
+<body onload="show_banner(2); show_menu(5,7,1); show_footer();load_body();showclock(); showbootTime();" onunLoad="return unload_body();">
 <div id="TopBanner"></div>
 
 <div id="Loading" class="popup_bg"></div>

@@ -462,7 +462,7 @@ csprintf("initial_one_var_file_in_mount_path %s.\n", account_list[i]);
 	return 0;
 }
 
-extern int test_of_var_files_in_mount_path(const char *const mount_path) {
+extern int test_of_var_files(const char *const mount_path) {
 	char *list_file;
 	int len;
 	
@@ -782,6 +782,10 @@ extern int set_permission(const char *const account,
 		csprintf("No right about \"%s\" with \"%s\".\n", folder, account);
 		free(var_info);
 		
+		result = initial_folder_list_in_mount_path(mount_path);
+		if (result != 0)
+			csprintf("Can't initial the folder list.\n");
+		
 		fp = fopen(var_file, "a+");
 		if (fp == NULL) {
 			csprintf("1. Can't rewrite the file, \"%s\".\n", var_file);
@@ -795,19 +799,25 @@ extern int set_permission(const char *const account,
 		
 		// 5.1 change the right of folder
 		if (!strcmp(protocol, "cifs"))
-			fprintf(fp, "%d%d%d\n", flag, DEFAULT_FTP_RIGHT, DEFAULT_DMS_RIGHT);
+			fprintf(fp, "%d%d%d\n", flag, 0, DEFAULT_DMS_RIGHT);
 		else if (!strcmp(protocol, "ftp"))
-			fprintf(fp, "%d%d%d\n", DEFAULT_SAMBA_RIGHT, flag, DEFAULT_DMS_RIGHT);
+			fprintf(fp, "%d%d%d\n", 0, flag, DEFAULT_DMS_RIGHT);
 		else if (!strcmp(protocol, "dms"))
-			fprintf(fp, "%d%d%d\n", DEFAULT_SAMBA_RIGHT, DEFAULT_FTP_RIGHT, flag);
+			fprintf(fp, "%d%d%d\n", 0, 0, flag);
 		else{
 			csprintf("The protocol, \"%s\", is incorrect.\n", protocol);
 			
 			fclose(fp);
 			return -1;
 		}
-		
 		fclose(fp);
+		
+		result = system("/sbin/run_ftpsamba");
+		if (result != 0) {
+			csprintf("Fail to \"run_ftpsamba\"!\n");
+			return -1;
+		}
+		
 		return 0;
 	}
 	free(target);

@@ -42,10 +42,12 @@ RC_SCRIPT_DIR=/etc/rc.d/init.d
 
 CACHE_FILE=$(CACHE_DIR)/dproxy.cache
 CONFIG_FILE=$(CONFIG_DIR)/dproxy.conf
+RESOLV_FILE=$(CONFIG_DIR)/resolv.conf
 
 DEFAULTS= -DCACHE_FILE_DEFAULT=\"$(CACHE_FILE)\" \
 	  -DDHCP_LEASES_DEFAULT=\"$(DHCP_LEASES)\" \
-	  -DCONFIG_FILE_DEFAULT=\"$(CONFIG_FILE)\"
+	  -DCONFIG_FILE_DEFAULT=\"$(CONFIG_FILE)\" \
+	  -DRESOLV_FILE_DEFAULT=\"$(RESOLV_FILE)\" \
 
 RCDEFS= $(DIST) -DBIN_DIR="$(BIN_DIR)" -DCONFIG_DIR="$(CONFIG_DIR)" 
 
@@ -73,40 +75,44 @@ dproxy.conf:  dproxy
 clean:
 	rm -f *.o *~ core dproxy dproxy.rc dproxy.conf
 
-romfs: all 
-	$(STRIP) dproxy
+romfs: all
 	$(ROMFSINST) /usr/sbin/dproxy
 
-#ifeq (1, 0)
-#ifeq ($(DIST), -DSLACK)
-#	@echo "Attempting Slackware install";
-#	@if [ -f $(SLACKWARE_SCRIPT) ] && ! grep -e dproxy $(SLACKWARE_SCRIPT) >/dev/null; then \
-#		echo 'Adding dproxy to $(SLACKWARE_SCRIPT)'; \
-#      echo '# dproxy (DNS caching proxy)' >>$(SLACKWARE_SCRIPT); \
-#      echo 'if [ -x $(BIN_DIR)/dproxy ]; then' >>$(SLACKWARE_SCRIPT); \
-#      echo '  echo "Starting dproxy"' >>$(SLACKWARE_SCRIPT); \
-#      echo '  $(BIN_DIR)/dproxy -c$(CONFIG_DIR)/dproxy.conf' >>$(SLACKWARE_SCRIPT); \
-#      echo 'fi' >>$(SLACKWARE_SCRIPT); \
-#		echo "success."; \
-#	else \
-#		echo "Slackware install failed, could not find script '$(SLACKWARE_SCRIPT)' or dproxy was already enabled within"; \
-#	fi	
+install: all 
+	$(INSTALL) dproxy $(BIN_DIR)/dproxy
+#	$(INSTALL) -s dproxy $(BIN_DIR)/dproxy
+#JY	$(INSTALL) -d $(CACHE_DIR)
 
-#else
-#	$(INSTALL) dproxy.rc $(RC_SCRIPT_DIR)/dproxy
-#endif
+ifeq (1, 0)
+ifeq ($(DIST), -DSLACK)
+	@echo "Attempting Slackware install";
+	@if [ -f $(SLACKWARE_SCRIPT) ] && ! grep -e dproxy $(SLACKWARE_SCRIPT) >/dev/null; then \
+		echo 'Adding dproxy to $(SLACKWARE_SCRIPT)'; \
+      echo '# dproxy (DNS caching proxy)' >>$(SLACKWARE_SCRIPT); \
+      echo 'if [ -x $(BIN_DIR)/dproxy ]; then' >>$(SLACKWARE_SCRIPT); \
+      echo '  echo "Starting dproxy"' >>$(SLACKWARE_SCRIPT); \
+      echo '  $(BIN_DIR)/dproxy -c$(CONFIG_DIR)/dproxy.conf' >>$(SLACKWARE_SCRIPT); \
+      echo 'fi' >>$(SLACKWARE_SCRIPT); \
+		echo "success."; \
+	else \
+		echo "Slackware install failed, could not find script '$(SLACKWARE_SCRIPT)' or dproxy was already enabled within"; \
+	fi	
 
-#	@if [ -f $(CONFIG_DIR)/dproxy.conf ] ; \
-#	then \
-#	   mv $(CONFIG_DIR)/dproxy.conf $(CONFIG_DIR)/dproxy.conf.saved ; \
-#	   echo "*******************************************************";\
-#	   echo "NOTE : your old dproxy configuration has been moved to"; \
-#	   echo "  $(CONFIG_DIR)/dproxy.conf.saved " ; \
-#	   echo "you may want to restore it before you restart dproxy." ; \
-#	   echo "*******************************************************";\
-#	fi
-#	$(INSTALL) dproxy.conf $(CONFIG_DIR)/dproxy.conf
-#endif
+else
+	$(INSTALL) dproxy.rc $(RC_SCRIPT_DIR)/dproxy
+endif
+
+	@if [ -f $(CONFIG_DIR)/dproxy.conf ] ; \
+	then \
+	   mv $(CONFIG_DIR)/dproxy.conf $(CONFIG_DIR)/dproxy.conf.saved ; \
+	   echo "*******************************************************";\
+	   echo "NOTE : your old dproxy configuration has been moved to"; \
+	   echo "  $(CONFIG_DIR)/dproxy.conf.saved " ; \
+	   echo "you may want to restore it before you restart dproxy." ; \
+	   echo "*******************************************************";\
+	fi
+	$(INSTALL) dproxy.conf $(CONFIG_DIR)/dproxy.conf
+endif
 
 uninstall:
 	rm -f $(BIN_DIR)/dproxy

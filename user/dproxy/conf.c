@@ -64,6 +64,7 @@ struct config config_defaults = {
   PPP_DETECT_DEFAULT ,
   PURGE_TIME_DEFAULT ,
   CONFIG_FILE_DEFAULT, 
+  RESOLV_FILE_DEFAULT,
   DENY_FILE_DEFAULT ,
   CACHE_FILE_DEFAULT, 
   HOSTS_FILE_DEFAULT, 
@@ -109,6 +110,15 @@ config_param config_params[] = {
      init_int,
      copy_int ,
      print_int
+  } ,
+  { 
+     "resolv_file" ,
+     "# Location of the resolv.conf file\n",
+     &config.resolv_file,
+     &config_defaults.resolv_file,
+     copy_string ,
+     copy_string ,
+     print_string
   } ,
   { 
      "deny_file" ,

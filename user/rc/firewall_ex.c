@@ -22,7 +22,6 @@
  * SPECIFICALLY DISCLAIMS ANY IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS
  * FOR A SPECIFIC PURPOSE OR NONINFRINGEMENT CONCERNING THIS SOFTWARE.
  *
- * $Id: firewall_ex.c,v 1.1.1.1 2007/01/25 12:52:21 jiahao_jhou Exp $
  */
 #include <stdio.h>
 #include <stdlib.h>
@@ -55,7 +54,6 @@ char g_buf_pool[1024];
 bool
 valid_autofw_port(const netconf_app_t *app)
 {
-	//printf("test valid autofw port\n");	// test
 	/* Check outbound protocol */
 	if (app->match.ipproto != IPPROTO_TCP && app->match.ipproto != IPPROTO_UDP)
 		return FALSE;
@@ -537,7 +535,6 @@ char *iprange_ex_conv(char *ip_name, int idx)
 	ip=nvram_safe_get(itemname_arr);
 	strcpy(g_buf, "");
 
-	//printf("## iprange_ex_conv: %s, %d, %s\n", ip_name, idx, ip);	// tmp test
 	// scan all ip string
 	i=j=k=0;
 	mask=32;
@@ -568,7 +565,6 @@ char *iprange_ex_conv(char *ip_name, int idx)
 		strcpy(g_buf, "");
 	else sprintf(g_buf, "%s/%d", startip, mask);
 
-	//printf("\nmask is %d, g_buf is %s\n", mask, g_buf);	// tmp test
 	return (g_buf_alloc(g_buf));
 }
 
@@ -1003,7 +999,7 @@ void nat_setting(char *wan_if, char *wan_ip, char *lan_if, char *lan_ip, char *l
 	//kill_pidfile_s("/var/run/wanduck.pid", SIGUSR1);	// 2008.03 James.
 
 #ifdef WEB_REDIRECT
-#ifndef USB_MODEM
+#ifndef RTCONFIG_USB_MODEM
 	redirect_setting();
 #endif
 	nvram_set("wan_ready", "1");	// 2008.03 James.
@@ -1013,7 +1009,7 @@ void nat_setting(char *wan_if, char *wan_ip, char *lan_if, char *lan_ip, char *l
 #ifdef WEB_REDIRECT
 void redirect_setting()
 {
-#ifndef USB_MODEM
+#ifndef RTCONFIG_USB_MODEM
 	FILE *nat_fp = fopen("/tmp/nat_rules", "r");
 #endif
 	FILE *redirect_fp = fopen("/tmp/redirect_rules", "w+");
@@ -1034,7 +1030,7 @@ void redirect_setting()
 		return;
 	}
 
-#ifndef USB_MODEM
+#ifndef RTCONFIG_USB_MODEM
 	if (nat_fp != NULL) {
 		memset(tmp_buf, 0, sizeof(tmp_buf));
 		while ((fgets(tmp_buf, sizeof(tmp_buf), nat_fp)) != NULL
@@ -1049,7 +1045,7 @@ void redirect_setting()
 #endif
 		fprintf(redirect_fp, "*nat\n");
 		fprintf(redirect_fp, ":PREROUTING ACCEPT [0:0]\n");
-#ifndef USB_MODEM
+#ifndef RTCONFIG_USB_MODEM
 	}
 #endif
 	fprintf(fake_nat_fp, "*nat\n");
@@ -1092,7 +1088,6 @@ default_filter_setting()
 {
 	FILE *fp;
 
-	printf("\nset default filter settings\n");	// tmp test
 	if ((fp=fopen("/tmp/filter.default", "w"))==NULL) return -1;
 
 	fprintf(fp, "*filter\n:INPUT ACCEPT [0:0]\n:FORWARD ACCEPT [0:0]\n:OUTPUT ACCEPT [0:0]\n:logaccept - [0:0]\n:logdrop - [0:0]\n");
@@ -1221,7 +1216,7 @@ valid_url_filter_time()
 		printf("starttime1: %s\n", starttime1);
 		printf("endtime1: %s\n", endtime1);
 
-		if (atoi(starttime1) > atoi(endtime1))
+		if (atoi(starttime1) >= atoi(endtime1))
 			goto err;
 	}
 
@@ -1235,7 +1230,7 @@ valid_url_filter_time()
 		printf("starttime2: %s\n", starttime2);
 		printf("endtime2: %s\n", endtime2);
 
-		if (atoi(starttime2) > atoi(endtime2))
+		if (atoi(starttime2) >= atoi(endtime2))
 			goto err;
 	}
 
@@ -1465,6 +1460,9 @@ filter_setting(char *wan_if, char *wan_ip, char *lan_if, char *lan_ip, char *log
 		, "ACCEPT");
 	}
 	strcpy(macaccept, "");
+
+	if (atoi(nvram_safe_get("macfilter_num_x")) == 0)
+		nvram_set("macfilter_enable_x", "0");
 
 	// FILTER from LAN to WAN Source MAC
 	if (!nvram_match("macfilter_enable_x", "0"))
@@ -1860,20 +1858,20 @@ filter_setting(char *wan_if, char *wan_ip, char *lan_if, char *lan_ip, char *log
 
 	// Block VPN traffic
 	if (nvram_match("fw_pt_pptp", "0"))
-		fprintf(fp, "-A %s -i %s -o %s -p tcp --dport %d -j %s\n", chain, lan_if, wan_if, 1723, "DROP");
+		fprintf(fp, "-I %s -i %s -o %s -p tcp --dport %d -j %s\n", chain, lan_if, wan_if, 1723, "DROP");
 	if (nvram_match("fw_pt_l2tp", "0"))
-		fprintf(fp, "-A %s -i %s -o %s -p udp --dport %d -j %s\n", chain, lan_if, wan_if, 1701, "DROP");
+		fprintf(fp, "-I %s -i %s -o %s -p udp --dport %d -j %s\n", chain, lan_if, wan_if, 1701, "DROP");
 	if (nvram_match("fw_pt_ipsec", "0"))
 	{
-		fprintf(fp, "-A %s -i %s -o %s -p udp --dport %d -j %s\n", chain, lan_if, wan_if, 500, "DROP");
-		fprintf(fp, "-A %s -i %s -o %s -p udp --dport %d -j %s\n", chain, lan_if, wan_if, 4500, "DROP");
+		fprintf(fp, "-I %s -i %s -o %s -p udp --dport %d -j %s\n", chain, lan_if, wan_if, 500, "DROP");
+		fprintf(fp, "-I %s -i %s -o %s -p udp --dport %d -j %s\n", chain, lan_if, wan_if, 4500, "DROP");
 	}
 	if (nvram_match("fw_pt_pptp", "0"))
-		fprintf(fp, "-A %s -i %s -o %s -p 47 -j %s\n", chain, lan_if, wan_if, "DROP");
+		fprintf(fp, "-I %s -i %s -o %s -p 47 -j %s\n", chain, lan_if, wan_if, "DROP");
 	if (nvram_match("fw_pt_ipsec", "0"))
 	{
-		fprintf(fp, "-A %s -i %s -o %s -p 50 -j %s\n", chain, lan_if, wan_if, "DROP");
-		fprintf(fp, "-A %s -i %s -o %s -p 51 -j %s\n", chain, lan_if, wan_if, "DROP");
+		fprintf(fp, "-I %s -i %s -o %s -p 50 -j %s\n", chain, lan_if, wan_if, "DROP");
+		fprintf(fp, "-I %s -i %s -o %s -p 51 -j %s\n", chain, lan_if, wan_if, "DROP");
 	}
 
 	// Filter from WAN to LAN
@@ -2328,11 +2326,11 @@ start_firewall_ex(char *wan_if, char *wan_ip, char *lan_if, char *lan_ip)
 	if ((fp=fopen("/proc/sys/net/nf_conntrack_max", "w+")))
 	{
 		if (apps_running_when_start_firewall)
-			fputs("8192", fp);
+			fputs(MAX_CONNTRACK_DM, fp);
 		else
 		{
 			if (nvram_get("misc_conntrack_x") == NULL)
-				fputs("8192", fp);
+				fputs(MAX_CONNTRACK_DM, fp);
 			else
 				fputs(nvram_safe_get("misc_conntrack_x"), fp);
 		}

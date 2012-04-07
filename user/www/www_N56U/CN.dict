@@ -20,8 +20,8 @@ LANG_SV=Svensk
 LANG_BR=Brazil
 LANG_JP=日本語
 [Malaysia Unifi]
-PPPConnection_x_Unifi=Unifi Support :
-PPPConnection_x_Unifi_Describe=Select 'Yes' to support Malaysia Unifi services.
+PPPConnection_x_Unifi=Unifi Support:
+PPPConnection_x_Unifi_Describe=选择 '是' 可以支持Malaysia Unifi 的服务。
 [VPN Passthrough]
 VPN_PPTP_Passthrough=VPN PPTP Passthrough
 VPN_L2TP_Passthrough=VPN L2TP Passthrough
@@ -29,7 +29,7 @@ VPN_IPSec_Passthrough=VPN IPSec Passthrough
 vpn_passthrough_itemname=VPN Passthrough
 vpn_passthrough_desc=启用 VPN Passthrough 功能，让 Virtual Private Network (VPN) 服务所需要用到的协定允许通过。
 [AiDisk account alert]
-enable_noaccount_alert=启用后，若不新增帐号会导致网芳与下载大师连线出现问题。
+enable_noaccount_alert= 若您在没有使用 AiDisk 创建一个共享账号的情况下试图在 U 盘中分享文件，Samba 服务器与 下载大师（Download Master）会出现问题。
 [iTunes]
 iTunesMediaServer=iTunes媒体服务器
 [opmode strings]
@@ -39,22 +39,20 @@ OP_switch_button_hint2=按我观看
 OP_GW_item=IP分享模式(默认)
 OP_GW_desc1=在此种模式中，我们建议您使用 RT-N56U 通过ADSL或Cable Modem来连接互联网。同时，在您的环境中许多人都可共享同一IP来使用ISP。
 OP_GW_desc2=从专业术语的角度解释，网关模式是 -启用网络地址转换（Network Address Translation，NAT），允许使用PPPoE、DHCP client或静态IP来进行互联网（WAN）连线作业。另外，也支持一些对家庭用户相当有用的功能，像是通用即插即用（UPnP）及动态DNS（DDNS）。
-OP_RT_item=Router mode(无线路由器模式)
-OP_RT_desc1=在Router / IP sharing mode (无线路由器/无线IP分享模式)下, RT-N56U 可使用PPPoE、自动取得IP、固定IP或PPTP/L2TP等方式连线到Internet(WAN), 并将IP分享给区域网路(LAN)内的用户端。在本模式下NAT, 防火墙, 及IP分享功能预设为启动。用户也可以使用UPnP及动态DNS等进阶功能。
-OP_RT_desc2=若您第一次使用无线路由器请选泽这个模式。
-OP_RE_item=Repeater mode(中继模式)
-OP_RE_desc1=在Repeater mode (中继模式)下，RT-N56U 可以延伸您使用环境内其他基地台的讯号，以提供无线用户更好的讯号品质。
-OP_AP_item=Access Point mode(无线存取点)
-OP_AP_desc1=在Access Point mode (无线存取点)模式下，RT-N56U 必需使用网路线连接到既存的路由器。此模式能以最稳定的方式延伸无线网路讯号或者替有线路由器增加无线存取的能力。 
-OP_AP_desc2=NAT, 防火墙, 及IP分享功能在此模式下会被关闭。切换到此模式前建议使用者能够分遍出无线路由器及无线存取点的差别。
+OP_RT_item=路由器(取消NAT)
+OP_RT_desc1=在「路由器」模式下，您可能已经建构了一个局域网络（LAN），建议您将RT-N56U的广域网络（WAN）连接端口以网络线连接到您的局域网络，并选择适当的因特网设定以建立联机。
+OP_RT_desc2=路由器模式主要目的在延伸你的局域网络，并允许设定静态路由通讯协议，但关闭网络地址转换（NAT）以允许RT-N56U下的用户与原本局域网络的用户互相通讯与共享服务 (<span style='color:#EE0000'>注意：必须在原本的路由器上加入静态路由规则</span>)。
+OP_AP_item=无线网络桥接器
+OP_AP_desc1=在「无线网络桥接器」模式中，四组局域网通信端口（LAN ports）及无线通信设备全数装设在同一局域网（LAN）之中。在这里不支持与WAN相关的功能。
+OP_AP_desc2=从专业术语的角度解释，无线网络桥接器模式是 - 取消网络地址转换（NAT），允许将 RT-N56U 的无线局域网与四组局域网通信端口（LAN port）桥接在一起。
 OP_Modem=数据机
 OP_WirelessClient=无线用户端
 OP_WirelessSignal=既存无线讯号
 [untranslate]
-IPConnection_VSList_ftpport=FTP伺服器埠号:
-Adm_System_telnetd=Enable Telnet Server?
+IPConnection_VSList_ftpport=FTP 伺服器埠号:
+Adm_System_telnetd=启用 Telnet 伺服器?
 wps_start_btn=起始
-USB_Application_account_alert=用户账号不能为‘root’, ‘Root’, ‘ROOT’, ‘admin’, ‘Admin’, ‘ADMIN’, ‘family’, ‘Family’, ‘FAMILY’请输入有效的账号名称！
+USB_Application_account_alert=用户账号不能为'root', 'Root', 'ROOT', 'admin', 'Admin', 'ADMIN', 'family', 'Family', 'FAMILY'请输入有效的账号名称！
 BasicConfig_USBStorageWhiteist_itemdesc=此栏位范围为十六进制 1 到 FFFF。输入 0（零）以关闭此功能。
 BasicConfig_USBStorageWhiteist_itemname=USB 存储设备 VID 白名单
 LANHostConfig_x_TimeZone_itemhint_2=您选择的时区设置与设备侦测到的不同。您想要更改为设备侦测到的时区吗？
@@ -126,6 +124,7 @@ QIS_resetModem_desc3=拔掉电源线并在两分钟后重新插上。
 QIS_resetModem2_desc1=将电源线重新连接到您的调制解调器并等待约一分钟。点击 重新侦测。
 QIS_wireless_desc1=输入 8~63 个字符（字母、数字或其组合）或64个十六进制字符组成的网络密钥。若您不想进行网络加密设置，请保持网络密钥一栏空白。<span style='font-weight:bolder;'>默认的无线加密方式为 WPA-Auto-Personal - AES + TKIP。</span>
 [Traffic Monitor]
+TM_Note=To monitor LAN traffic, please enable your EZQoS function.
 Date=日期
 Scale=标度
 Last30days=过去30天
@@ -526,7 +525,7 @@ Game=网络游戏
 Internet=互联网
 Stream=在线影音
 EzQoS_helptitle=关于EZQoS带宽管理
-EZQoSDesc1=EZQoS带宽管理提供四种常用的网络应用类型，通过简易的设置方式，确保这些应用的联机速度在网络拥塞的情况下，维持一定的水平。<p>例如：在开启P2P的情况下，仍可让您所选择的应用，保有较高的网络使用权，而不会受到P2P的影响出现延迟。</p><p>若您的上传带宽速度高于40MB/s，建议您不需要启用EzQoS功能，以节省系统资源。</p>
+EZQoSDesc1=EZQoS带宽管理提供四种常用的网络应用类型，通过简易的设置方式，确保这些应用的联机速度在网络拥塞的情况下，维持一定的水平。<p>例如：在开启P2P的情况下，仍可让您所选择的应用，保有较高的网络使用权，而不会受到P2P的影响出现延迟。</p><p>若您的上传带宽速度高于40Mb/s，建议您不需要启用EzQoS功能，以节省系统资源。</p>
 EZQoSDesc2=若需要更专业详尽的设置，请选择
 Day=天
 Hour=时
@@ -577,7 +576,7 @@ yoursharesetting=即将设置文件共享方式为：
 noDDNS=您尚未开启DDNS服务。
 neednotDDNS=跳过华硕DDNS服务设置。
 asusddns_inputhint=请输入名称
-[WPS]		
+[WPS]
 WPS_PBCbutton_hint=按下此钮与客户端的WPS按钮后，于两分钟内进行无线联机。
 WPS_PBCbutton_hint_notEnable=请先开启WPS功能
 WPS_PBCbutton_hint_waiting=WPS模式运行中，等待无线用户连接。
@@ -829,7 +828,7 @@ JS_validip=不是有效的IP地址！
 JS_itemlimit1=本表仅允许
 JS_itemlimit2=项目！
 JS_duplicate=此项已纳入列表中。
-JS_validmac=请输入完整包含12个16进位制字母的MAC地址，0~9，A~F不包括"："。
+JS_validmac=请输入完整包含12个16进位制字母的 MAC 地址，0~9、A~F，不包括':'。
 JS_validstr1=本字符串无法起自
 JS_validstr2=本字符串无法包含
 JS_validSSID1=SSID不能包含「
@@ -1142,7 +1141,8 @@ TZ84=努瓜娄发
 LANHostConfig_x_NTPServer_itemname=NTP服务器：
 LANHostConfig_x_NTPServer_itemdesc=RT-N56U可与NTP服务器同步，维持系统时间的正确。
 LANHostConfig_x_DDNSEnable_sectionname=DDNS设置：
-LANHostConfig_x_DDNSEnable_sectiondesc=动态DNS（DDNS）让您即使在没有静态IP地址的情况下，仍可将服务器连同特有名称一并导出至互联网上。目前，在 RT-N56U 之中已有数台嵌入的DDNS客户端。您可点选下方的「免费试用」，来启用一个免费试用账号。
+LANHostConfig_x_DDNSEnable_sectiondesc=动态DNS（DDNS）让您即使在没有静态IP地址的情况下，仍可将服务器连同特有名称一并导出至互联网上。目前，在 RT-N56U 之中已有数台嵌入的DDNS客户端。您可点选下方的「免费试用」，来启用一个免费试用账号。<p>
+LANHostConfig_x_DDNSEnable_sectiondesc2=目前无线路由器使用一个私人的 WAN IP 地址（192.168.x.x, 10,x,x,x, or 172.16.x.x）。此路由器可能处于多个 NAT 中并且 DDNS 服务不能在此环境下工作。
 LANHostConfig_x_DDNSEnable_itemname=启用DDNS Client？
 LANHostConfig_x_DDNSServer_itemname=服务器：
 LANHostConfig_x_DDNSUserName_itemname=用户名称或E-mail账号：
@@ -1396,7 +1396,7 @@ BM_desc4=将影音封包设为高优先权，以维持您使用IP电话或在线
 BM_hint=您的上传带宽速度已高于理想值，建议您不需要启用EzQoS功能，以节省系统资源。
 BM_GB=网络游戏
 BM_IA=网络应用程序
-BM_FTPS=AiDisk
+BM_FTPS=FTP
 BM_VVS=在线影音
 BM_NoChange=请选择符合的网络应用。
 t2QOS2=用户指定服务
@@ -1412,7 +1412,7 @@ LANHostConfig_x_DDNS_alarm_3=注册成功。
 LANHostConfig_x_DDNS_alarm_4=原主机名称更新成功。
 LANHostConfig_x_DDNS_alarm_5=新主机名称注册成功。
 LANHostConfig_x_DDNS_alarm_6=IP与主机名称尚未注册，请先注册。
-LANHostConfig_x_DDNS_alarm_7=主机名称错误，格式须为'xxx.asuscomm.com'，且'xxx'不能全为数字。
+LANHostConfig_x_DDNS_alarm_7=主机名不能为数字前缀与 \".\"（如 \"123abc\" 或 \"aaa.bbb\" ）
 LANHostConfig_x_DDNS_alarm_8=网域名称错误，格式须为'xxx.asuscomm.com'。
 LANHostConfig_x_DDNS_alarm_9=注册失败(IP地址格式不正确)。
 LANHostConfig_x_DDNS_alarm_10=不合法的注册请求。
@@ -1439,7 +1439,7 @@ HSDPAConfig_username_itemdesc=请输入您的帐号。
 HSDPAConfig_password_itemdesc=请输入您的密码。
 HSDPAConfig_usbadaptor_itemdesc=请选择您要使用的USB网卡。
 confirm_disableftp_dm=停用网路芳邻功能，将会暂时无法使用下载大师。
-HSDPAConfig_hsdpa_mode_itemdesc=您可依据您的需求及环境来选择USB Modem的使用模式，我们提供四种：Backup(备援)、Equal weight(平行)、Always high(主要)及 Always low(次要)。若需移除数据卡，请至<a href='/index.asp'>首页</a>，点选数据卡图示，选择安全移除，以避免功能异常。
+HSDPAConfig_hsdpa_mode_itemdesc=您可依据您的需求及环境来选择USB Modem的使用模式，我们提供四种：Backup(备援)、Equal weight(平行)、Always high(主要)及 Always low(次要)。若需移除数据卡，请至<a href='/index.asp' target=\'_blank\'>首页</a>，点选数据卡图示，选择安全移除，以避免功能异常。
 Not_authpage_login_again=请先关闭视窗，再重新登入。
 GO_HSDPA_SETTING=到USB Modem设置
 HSDPA_disable=若需要更改連線類型，請先至<a href="/Advanced_Modem_others.asp">USB Modem設定</a>停用USB網卡

@@ -273,9 +273,25 @@ function loadData()
 				if (nvram.wan_ifname == i) t = ' Internet';
 			}
 			 
-			// Viz 2010.09 added if loop // ||i=='lo''wds0''wds1''wds2''wds3''wdsi0''wdsi1''wdsi2''wdsi3'
-			if (i=='eth3'||i=='br0'||i=='eth2'||i=='ra0'||i=='rai0')
-				tabs.push(['speed-tab-' + i, t]);
+			// Viz 2010.09 added if loop 
+			// Viz 2011.08 showhide by <% check_hwnat(); %> 
+			// ||i=='lo''wds0''wds1''wds2''wds3''wdsi0''wdsi1''wdsi2''wdsi3'
+			var chk_hwnat = '<% check_hwnat(); %>';			
+			var chk_qos_enable = '<% nvram_get_x("",  "qos_global_enable"); %>';
+			var preferred_lang = '<% nvram_get_x("",  "preferred_lang"); %>';
+			if(preferred_lang=="JP"){
+				if(chk_hwnat==1 || chk_qos_enable==0){
+					if (i=='ra0'||i=='rai0')
+						tabs.push(['speed-tab-' + i, t]);
+				}else{
+					if (i=='eth3'||i=='br0'||i=='eth2'||i=='ra0'||i=='rai0')
+						tabs.push(['speed-tab-' + i, t]);
+				}
+			}else{
+					if (i=='eth3'||i=='br0'||i=='eth2'||i=='ra0'||i=='rai0')
+						tabs.push(['speed-tab-' + i, t]);				
+			}
+				
 		}
 
 		tabs = tabs.sort(

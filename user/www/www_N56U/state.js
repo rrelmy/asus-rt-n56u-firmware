@@ -1,7 +1,6 @@
 ﻿//For operation mode;
 sw_mode = '<% nvram_get_x("IPConnection",  "sw_mode"); %>';
 productid = '<% nvram_get_f("general.log","productid"); %>';
-country_code='<% nvram_get_f("","wl_country_code"); %>'
 
 var uptimeStr = "<% uptime(); %>";
 var timezone = uptimeStr.substring(26,31);
@@ -568,7 +567,10 @@ function show_banner(L3){// L3 = The third Level of Menu
 	banner_code += '<div id="drsword" class="drsword">\n';
 	banner_code += '<span id="eventDescription"></span>\n';
 	banner_code += '<br>\n';
-	banner_code += '<a id="eventLink" href="javascript:void(0);"><span id="linkDescription"></span></a>\n';
+	if(L3==2)
+		banner_code += '<a id="eventLink" href="javascript:void(0);"></a>\n';	//no place to show link
+	else
+		banner_code += '<a id="eventLink" href="javascript:void(0);"><span id="linkDescription"></span></a>\n';
 	banner_code += '</div>\n';
 	banner_code += '<div id="wordarrow" class="wordarrow"><img src="/images/wordarrow.png"></div>\n';
 	
@@ -605,7 +607,7 @@ var tabtitle = new Array(7);
 tabtitle[0] = new Array("", "<#menu5_1_1#>", "<#menu5_1_2#>", "<#menu5_1_3#>", "<#menu5_1_4#>", "<#menu5_1_5#>", "<#menu5_1_6#>");
 tabtitle[1] = new Array("", "<#menu5_2_1#>", "<#menu5_2_2#>", "<#menu5_2_3#>");
 tabtitle[2] = new Array("", "<#menu5_3_1#>", "<#menu5_3_2#>", "<#menu5_3_3#>", "<#menu5_3_4#>", "<#menu5_3_5#>", "<#menu5_3_6#>");
-tabtitle[3] = new Array("", "<#menu5_4_1#>", "<#menu5_4_2#>", "<#menu5_4_3#>", "<#menu5_4_4#>");
+tabtitle[3] = new Array("", "<#menu5_4_1#>", "<#menu5_4_2#>", "<#menu5_4_3#>", "<#OP_Modem#>");
 tabtitle[4] = new Array("", "<#menu5_5_1#>", "<#menu5_5_2#>", "<#menu5_5_5#>", "<#menu5_5_3#>", "<#menu5_5_4#>");
 tabtitle[5] = new Array("", "<#menu5_6_1#>", "<#menu5_6_2#>", "<#menu5_6_3#>", "<#menu5_6_4#>");
 tabtitle[6] = new Array("", "<#menu5_7_2#>", "<#menu5_7_3#>", "<#menu5_7_4#>", "<#menu5_7_5#>", "<#menu5_7_6#>");
@@ -616,7 +618,7 @@ var tablink = new Array(7);
 tablink[0] = new Array("", "Advanced_Wireless2g_Content.asp", "Advanced_WWPS2g_Content.asp", "Advanced_WMode2g_Content.asp", "Advanced_ACL2g_Content.asp", "Advanced_WSecurity2g_Content.asp", "Advanced_WAdvanced2g_Content.asp");
 tablink[1] = new Array("", "Advanced_LAN_Content.asp", "Advanced_DHCP_Content.asp", "Advanced_GWStaticRoute_Content.asp");
 tablink[2] = new Array("", "Advanced_WAN_Content.asp", "Advanced_QOSUserSpec_Content.asp", "Advanced_PortTrigger_Content.asp", "Advanced_VirtualServer_Content.asp", "Advanced_Exposed_Content.asp", "Advanced_ASUSDDNS_Content.asp");
-tablink[3] = new Array("", "Advanced_AiDisk_samba.asp", "Advanced_AiDisk_ftp.asp", "Advanced_AiDisk_others.asp", "Advanced_HSDPA_others.asp");
+tablink[3] = new Array("", "Advanced_AiDisk_samba.asp", "Advanced_AiDisk_ftp.asp", "Advanced_AiDisk_others.asp", "Advanced_Modem_others.asp");
 tablink[4] = new Array("", "Advanced_BasicFirewall_Content.asp", "Advanced_URLFilter_Content.asp", "Advanced_KeywordFilter_Content.asp", "Advanced_MACFilter_Content.asp", "Advanced_Firewall_Content.asp");
 tablink[5] = new Array("", "Advanced_OperationMode_Content.asp", "Advanced_System_Content.asp", "Advanced_FirmwareUpgrade_Content.asp", "Advanced_SettingBackup_Content.asp");
 tablink[6] = new Array("", "Main_LogStatus_Content.asp", "Main_DHCPStatus_Content.asp", "Main_WStatus2g_Content.asp", "Main_IPTStatus_Content.asp", "Main_RouteStatus_Content.asp");
@@ -634,8 +636,8 @@ function show_menu(L1, L2, L3){
 	tabtitle[4].splice(3,1);//Keyword Filter
 	tablink[4].splice(3,1);//Keyword Filter
 
-	tabtitle[3].splice(4,1);//HSDPA
-	tablink[3].splice(4,1);//HSDPA
+	//tabtitle[3].splice(4,1);//HSDPA
+	//tablink[3].splice(4,1);//HSDPA
 	
 	if(sw_mode == '4'){
 		tablink[2].splice(3,3);
@@ -749,11 +751,9 @@ function show_menu(L1, L2, L3){
 			$("tabMenu").innerHTML = tab_code;
 		}
 		else{
-			var tab_length=tabtitle[7].length;
-			if(country_code=="JP")
-				tab_length=tab_length-1;
-				
+			var tab_length=tabtitle[7].length;							
 			tab_code = '<table border="0" cellspacing="0" cellpadding="0"><tr>\n';
+			
 			for(var i = 1; i < tab_length; ++i){
 				if(tabtitle[7][i] == "")
 					continue;

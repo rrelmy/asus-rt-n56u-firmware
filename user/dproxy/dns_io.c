@@ -17,7 +17,9 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
+#include <string.h>
 #include "dns_io.h"
+#include "dns_decode.h"
 
 /*****************************************************************************/
 int dns_read_packet(int sock, dns_request_t *m)

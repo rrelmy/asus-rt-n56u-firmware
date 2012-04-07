@@ -51,9 +51,14 @@
 #include "nvram/typedefs.h"
 #include "rc.h"
 
-#ifdef USB_MODEM
+#ifdef RTCONFIG_USB_MODEM
+#define MAX_WAIT_TIME_OF_MODEM 60
+#define MAX_WAIT_COUNT MAX_WAIT_TIME_OF_MODEM/SCAN_INTERVAL
+#define MODEM_IDLE -1
+#define MODEM_READY 0
+int link_modem = 0;
+int modem_running = 0;
 #define MAX_WAIT_OF_MODEM 10
-int modem_ready = 0;
 #endif
 
 #define SCAN_INTERVAL 1

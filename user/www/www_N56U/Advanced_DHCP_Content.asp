@@ -66,7 +66,7 @@ function validForm(){
 			!validate_ipaddr_final(document.form.dhcp_wins_x, 'dhcp_wins_x'))
 		return false;
 	
-	if(!validate_range(document.form.dhcp_lease, 1, 86400))
+	if(!validate_range(document.form.dhcp_lease, 1, 604800))
 		return false;
 	
 	if(intoa(document.form.dhcp_start.value) > intoa(document.form.dhcp_end.value)){
@@ -177,7 +177,7 @@ function done_validating(action){
 			  <tr>
             <th><a class="hintstyle" href="javascript:void(0);" onClick="openHint(5,5);"><#LANHostConfig_LeaseTime_itemname#></a></th>
             <td>
-              <input type="text" maxlength="5" size="5" name="dhcp_lease" class="input" value="<% nvram_get_x("LANHostConfig", "dhcp_lease"); %>" onKeyPress="return is_number(this)"> sec
+              <input type="text" maxlength="6" size="6" name="dhcp_lease" class="input" value="<% nvram_get_x("LANHostConfig", "dhcp_lease"); %>" onKeyPress="return is_number(this)"> sec
             </td>
 			  </tr>
 			  

@@ -49,7 +49,6 @@
 #include <bcmnvram.h>
 #endif	// ASUS_NVRAM
 
-//Jiahao
 #define PATH_DEV_NVRAM "/dev/nvram"
 
 /* Globals */
@@ -289,14 +288,12 @@ _nvram_set(const char *name, const char *value)
 	return (ret == count) ? 0 : ret;
 }
 
-char *		  /* added by Jiahao for WL500gP */
+char *
 nvram_xfr(char *buf)
 {
 	size_t count = strlen(buf)*2 + 1;       // ham 1120
 	int ret;
 	char tmpbuf[1024];
-
-	//printf("[nvram_xfr]: [%s]\n", buf);	// tmp test
 
 	if (nvram_fd < 0)
 		if ((ret = nvram_init(NULL)))
@@ -313,7 +310,6 @@ nvram_xfr(char *buf)
 		return NULL;
 
 	ret = ioctl(nvram_fd, NVRAM_MAGIC, tmpbuf);
-	//printf("ret is %d\n", ret);	// tmp test
 
 	if (ret < 0)
 	{

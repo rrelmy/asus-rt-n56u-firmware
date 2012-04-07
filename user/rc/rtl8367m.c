@@ -187,15 +187,6 @@ int rtl8367m_ioctl(int val, int val2)
                 }
                 break;
 
-        case 26:/*For Unifi. Cherry Cho added in 2011/6/20. */
-		value = val2;
-                if(ioctl(fd, 26, &value) < 0){
-                        perror("rtl8367m ioctl");
-                        close(fd);
-                        return -1;
-                }
-                break;
-
 	case 27:
 		if(ioctl(fd, 27, 0) < 0){
 			perror("rtl8367m ioctl");
@@ -203,6 +194,51 @@ int rtl8367m_ioctl(int val, int val2)
 			return -1;
 		}
                 break;
+
+	case 29:/* Set VoIP port. Cherry Cho added in 2011/6/30. */
+		value = val2;
+                if(ioctl(fd, 34, &value) < 0){
+                        perror("rtl8367m ioctl");
+                        close(fd);
+                        return -1;
+                }
+                break;
+
+	case 36:/* Set Vlan VID. */
+		value = val2;
+                if(ioctl(fd, 36, &value) < 0){
+                        perror("rtl8367m ioctl");
+                        close(fd);
+                        return -1;
+                }
+                break;
+
+	case 37:/* Set Vlan PRIO. */
+		value = val2;
+                if(ioctl(fd, 37, &value) < 0){
+                        perror("rtl8367m ioctl");
+                        close(fd);
+                        return -1;
+                }
+                break;
+
+	case 38: /* Initialize VLAN. Cherry Cho added in 2011/7/15. */
+		value2 = val2;
+                if(ioctl(fd, 38, &value2) < 0){
+                        perror("rtl8367m ioctl");
+                        close(fd);
+                        return -1;
+                }		
+		break;
+		
+	case 39: /* Create VLAN. Cherry Cho added in 2011/7/15. */
+		value2 = val2;
+                if(ioctl(fd, 39, &value2) < 0){
+                        perror("rtl8367m ioctl");
+                        close(fd);
+                        return -1;
+                }		
+		break;
 
 	default:
 		printf("wrong ioctl cmd: %d\n", val);

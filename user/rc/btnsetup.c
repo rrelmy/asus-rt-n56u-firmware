@@ -340,7 +340,7 @@ int btn_setup_get_setting(PKT_SET_INFO_GW_QUICK *pkt)	// WLAN 2.4G
 			strcpy(pkt->WSetting.Key, nvram_safe_get(tmpbuf));
 		}	
 	}
-	else if(nvram_match("rt_auth_mode", "psk"))	// add "rt_wpa_mode" matching by Jiahao for WL-520gu
+	else if(nvram_match("rt_auth_mode", "psk"))
 	{
 // 2008.06 James. {
 		/*if(nvram_match("rt_wpa_mode", "1"))
@@ -423,7 +423,7 @@ int btn_setup_get_setting2(PKT_SET_INFO_GW_QUICK *pkt)	// WLAN 5G
 			strcpy(pkt->WSetting.Key, nvram_safe_get(tmpbuf));
 		}	
 	}
-	else if(nvram_match("wl_auth_mode", "psk"))	// add "wl_wpa_mode" matching by Jiahao for WL-520gu
+	else if(nvram_match("wl_auth_mode", "psk"))
 	{
 // 2008.06 James. {
 		/*if(nvram_match("wl_wpa_mode", "1"))
@@ -948,7 +948,8 @@ int OTSStart(int flag)
 		tw = (TEMP_WIRELESS *)sharedkeystr;
 		nvram_set("sharedkeystr", "");
 		nvram_commit_safe();
-		time(&bs_time);
+//		time(&bs_time);
+		bs_time = uptime();
 		bs_mode=BTNSETUP_DATAEXCHANGE_EXTEND;
 		bs_timeout = BTNSETUP_EXCHANGE_TIMEOUT;
 	}
@@ -985,7 +986,8 @@ int OTSStart(int flag)
 		bs_mode = BTNSETUP_DATAEXCHANGE;
 #endif		
 		bs_timeout = BTNSETUP_INIT_TIMEOUT;
-		time(&bs_time);
+//		time(&bs_time);
+		bs_time = uptime();
 	}
 	return 1;
 
@@ -1153,14 +1155,14 @@ int isWAN_detect()
 {
 	FILE *fp = NULL;
 	char line[80], cmd[128];
-	char *detect_host[] = {"8.8.8.8", "208.67.220.220", "208.67.222.222"};
+	char *detect_host[] = {"8.8.8.8", "208.67.220.220", "8.8.4.4", "208.67.222.222"};
 	int i;
 
 	if (iw_debug) dbg("## isWAN_detect: internet status ##\n");
 
 	remove(isWAN_DETECT_FILE);
-	i = rand_seed_by_time() % 3;
-	snprintf(cmd, sizeof(cmd), "/usr/sbin/tcpcheck 5 %s:53 %s:53 >%s", detect_host[i], detect_host[(i+1)%3], isWAN_DETECT_FILE);
+	i = rand_seed_by_time() % 4;
+	snprintf(cmd, sizeof(cmd), "/usr/sbin/tcpcheck 4 %s:53 %s:53 >%s", detect_host[i], detect_host[(i+1)%4], isWAN_DETECT_FILE);
 	if (iw_debug) dbg("cmd: %s\n", cmd);
 	system(cmd);
 	if (iw_debug)
@@ -1324,7 +1326,8 @@ int OTSPacketHandler(int sockfd)
 
 		     strcpy(ezprobe_res->ProductID, nvram_safe_get("productid")); 
 		     strcpy(ezprobe_res->FirmwareVersion, nvram_safe_get("firmver"));
-		     time(&bs_time); // reset timer only
+//		     time(&bs_time); // reset timer only
+		     bs_time = uptime();
 		     bs_auth=-1;
 		     bs_encrypt=-1;
 
@@ -1355,7 +1358,8 @@ int OTSPacketHandler(int sockfd)
 		     else memcpy(cpubkey, pkey->Key, MAX_DHKEY_LEN);
 
 		     bs_mode = BTNSETUP_DATAEXCHANGE;
-		     time(&bs_time);
+//		     time(&bs_time);
+		     bs_time = uptime();    
 		     bs_timeout=BTNSETUP_EXCHANGE_TIMEOUT;
 		     bs_auth=pkey->Auth;
 		     bs_encrypt=pkey->Encrypt;
@@ -1433,8 +1437,8 @@ int OTSPacketHandler(int sockfd)
 		     	 if(!ots_simu(5)) return INFO_PDU_LENGTH;
 #endif
                      }
-		     time(&bs_time);
-
+//		     time(&bs_time);
+		     bs_time = uptime();
 #ifdef OTS_LOG
 	if (phdr->OpCode!=NET_CMD_ID_EZPROBE)
 		ots_log(phdr->OpCode + gwquick->QuickFlag, 3);
@@ -1509,7 +1513,7 @@ ots_main(int argc, char *argv[])
 		fclose(fp);
 	}
 
-	if (nvram_invmatch("sharedkeystr", "")) 
+	if (!nvram_match("sharedkeystr", "")) 
 	{
 //		printf("dbg: OST:1\n");
 		OTSStart(1);
@@ -1568,7 +1572,8 @@ ots_main(int argc, char *argv[])
 		      flag = 1;
 		      goto finish;		
 		}
-		time(&now);
+//		time(&now);
+		now = uptime();
 		if (bs_mode>=BTNSETUP_FINISH) goto finish;
 #ifdef FULL_EZSETUP // Added by Chen-I 200802012
 		if ((now-bs_time)>bs_timeout) goto finish;

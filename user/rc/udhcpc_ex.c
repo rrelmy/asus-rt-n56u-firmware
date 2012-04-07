@@ -26,7 +26,6 @@
  * SPECIFICALLY DISCLAIMS ANY IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS
  * FOR A SPECIFIC PURPOSE OR NONINFRINGEMENT CONCERNING THIS SOFTWARE.
  *
- * $Id: udhcpc_ex.c,v 1.1.1.1 2007/01/25 12:52:21 jiahao_jhou Exp $
  */
 
 #include <stdio.h>
@@ -79,7 +78,7 @@ deconfig(void)
 	char *lan_ifname = safe_getenv("interface");
 /*
 	if (	nvram_match("sw_mode_ex", "2") &&
-		nvram_invmatch("lan_ipaddr_t", "") && nvram_invmatch("lan_netmask_t", ""))
+		!nvram_match("lan_ipaddr_t", "") && !nvram_match("lan_netmask_t", ""))
 		ifconfig(lan_ifname, IFUP,
 			 nvram_safe_get("lan_ipaddr_t"),
 			 nvram_safe_get("lan_netmask_t"));
@@ -176,8 +175,8 @@ apply(void)	// step 2 of 2-step dhcp lease application for RT-N13 repeater mode 
 	char lan_ifname[5];
 	char udhcpstate_local[8];
 
-	if (	nvram_invmatch("sw_mode_ex", "2") ||
-		nvram_invmatch("ui_triggered", "1") ||
+	if (	!nvram_match("sw_mode_ex", "2") ||
+		!nvram_match("ui_triggered", "1") ||
 		!nvram_get("lan_ipaddr_new") ||
 		!nvram_get("lan_netmask_new") ||
 		!nvram_get("lan_gateway_new"))

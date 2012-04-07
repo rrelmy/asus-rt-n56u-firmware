@@ -16,15 +16,22 @@
 var printer_manufacturer_array = parent.printer_manufacturers();
 var printer_model_array = parent.printer_models(); 
 var printer_pool_array = parent.printer_pool();
+var printer_order = parent.get_clicked_device_order();
 
 function initial(){
 	if(printer_model_array.length > 0 ) {
-		showtext($("printerModel"), printer_manufacturer_array[0]+" "+printer_model_array[0]);
+		showtext($("printerModel"), printer_manufacturer_array[printer_order]+" "+printer_model_array[printer_order]);
 		
-		if(printer_pool_array[0] != "")
+		if(printer_pool_array[printer_order] != ""){
 			showtext($("printerStatus"), '<#CTL_Enabled#>');
-		else
+			$("printer_button").style.display = "";
+			$("button_descrition").style.display = "";
+		}
+		else{
 			showtext($("printerStatus"), '<#CTL_Disabled#>');
+			$("printer_button").style.display = "none";
+			$("button_descrition").style.display = "none";
+		}
 	}
 	else
 		showtext($("printerStatus"), '<% translate_x("System_Internet_Details_Item5_desc2"); %>');
@@ -63,14 +70,14 @@ function cleanTask(){
 		<th><span class="top-messgae"><#Printing_status#></span></th>
 		<td><span id="printerStatus"></span></td>
 	</tr>
-	<tr>
+	<tr id="printer_button" style="display:none;">
 		<!--th><a class="hintstyle"  href="javascript:void(0);" onClick="parent.showHelpofDrSurf(12, 5);"><#Printing_button_item#></a></th-->
 		<th><#Printing_button_item#></th>
 		<td><input type="button" class="button" value="<#btn_Enable#>" onclick="cleanTask();"></td>
 	</tr>
 </table>
 
-<div style="padding:5px 0px 5px 25px;">
+<div id="button_descrition" style="display:none;padding:5px 0px 5px 25px;">
 <ul style="font-size:11px; font-family:Arial; padding:0px; margin:0px; list-style:outside; line-height:150%;">
 	<li><#PrinterStatus_x_Monopoly_itemdesc#></li>
 </ul>

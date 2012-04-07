@@ -121,6 +121,6 @@ echo "mounted /dev/$1 @ /media/$2" >> /tmp/auto01
 fi
 
 # rc need to know the event.
-killall -SIGTTIN init
+#killall -SIGTTIN init
 exit 0
 

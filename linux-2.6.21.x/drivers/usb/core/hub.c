@@ -32,13 +32,6 @@
 #include "hcd.h"
 #include "hub.h"
 
-extern int usb_plug_flag;
-extern int g3_flag;
-extern int hub_re_enable;
-#define PLUG_ON         10
-#define PLUG_OFF        11
-#define HUB_RE_ENABLE   30
-
 struct usb_hub {
 	struct device		*intfdev;	/* the "interface" device */
 	struct usb_device	*hdev;
@@ -2596,7 +2589,6 @@ done:
 	hub_port_disable(hub, port1, 1);
 }
 
-
 static void hub_events(void)
 {
 	struct list_head *tmp;
@@ -2735,8 +2727,6 @@ static void hub_events(void)
 					    "disabled by hub (EMI?), "
 					    "re-enabling...\n",
 						i);
-					usb_plug_flag = HUB_RE_ENABLE;		// asus chk
-					hub_re_enable = 1;			// asus chk
 					connect_change = 1;
 				}
 			}

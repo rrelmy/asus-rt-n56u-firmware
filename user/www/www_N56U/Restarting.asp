@@ -14,17 +14,14 @@ function redirect(){
 }
 
 function redirect1(){
-	if(parent.lan_ipaddr == "192.168.1.1")
-		if(navigator.appName.indexOf("Microsoft") >= 0){
-			parent.parent.location.href = "http://192.168.1.1/QIS_wizard.htm";
-		}
-		else{
-			parent.parent.location.href = "http://192.168.1.1/QIS_wizard.htm";
-		}
-	else{
+	if(parent.lan_ipaddr == "192.168.1.1"){
+		//if(navigator.appName.indexOf("Microsoft") >= 0){
+			parent.parent.location.href = "http://192.168.1.1/QIS_wizard.htm?flag=detect";
+	}else{
 		parent.$('drword').innerHTML = "<#Setting_factorydefault_iphint#><br/>";
 		setTimeout("parent.hideLoading()",1000);
 		setTimeout("parent.dr_advise();",1000);
+		parent.parent.location.href = "http://192.168.1.1/QIS_wizard.htm?flag=detect";
 	}
 }
 </script>

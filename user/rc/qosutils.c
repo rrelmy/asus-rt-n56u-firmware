@@ -19,8 +19,8 @@
  * File Name	: qosutile.c
  * Description  : modify from WRT54GS-v4.70.6:voip_qos.c. Called by speedtest.
  * Auther       : Wendel Huang.
- * History	: 2006.05.22 modify to post on WL500gP.
-		  2006.07.18 Post to WL700g, and remove execution message from release version.
+ * History	: 2006.05.22 modify to port on WL500gP.
+		  2006.07.18 Port to WL700g, and remove execution message from release version.
 		  2006.08.08 modify check_wan_link() to ckeck WL700g wan status.
 		  2006.08.14 modify get_dns_list() to get WL700g's DNS setting.
  ************************************************************************************************************/
@@ -44,7 +44,7 @@
 
 #include <nvram/bcmnvram.h>
 #include <dirent.h>	// 2008.01 James.
-#include "rc.h"	// for USB_MODEM
+#include "rc.h"
 
 //#define RTL8366S_GETPORTLINKSTATUS		 0xf1
 
@@ -68,7 +68,7 @@ int get_ppp_pid(char *conntype)
 	return pid;
 }
 
-#ifndef USB_MODEM
+#ifndef RTCONFIG_USB_MODEM
 /* Find process name by pid from /proc directory */
 char *find_name_by_proc(int pid)
 {
@@ -160,7 +160,7 @@ int osl_ifflags(const char *ifname)
 #define	SIOCGETCPHYRD	0x89FE
 #endif															  
 
-#ifndef USB_MODEM
+#ifndef RTCONFIG_USB_MODEM
 //#define EVBOARD		1	// tmp add for ev-board
 /* RT-N14: phy0,1,2,3,4 = LLLLW */	/* EV board: WLLLL */
 int is_phyconnected()
@@ -221,7 +221,14 @@ int check_subnet(){
 
 		memset(wan_ipaddr_t, 0, 16);
 		memset(wan_netmask_t, 0, 16);
-                
+
+#ifdef RTCONFIG_USB_MODEM
+		if(get_usb_modem_state()){
+			strcpy(wan_ipaddr_t, nvram_safe_get("wan_ipaddr_t"));
+			strcpy(wan_netmask_t, nvram_safe_get("wan_netmask_t"));
+		}
+		else
+#endif
 		if (nvram_match("wan0_proto", "dhcp"))
 		{
 			strcpy(wan_ipaddr_t, nvram_safe_get("wan_ipaddr_tmp"));
@@ -271,8 +278,11 @@ int check_wan_link(int num)
 	struct dirent *entry;	// 2008.01 James.
 	int got_ppp_link;
 
+	nvram_set("qos_ubw_status", "");
+	nvram_set("qos_ubw_reason", "");
+
 	//Check WAN Cable connect
-#ifndef USB_MODEM
+#ifndef RTCONFIG_USB_MODEM
 	if ( is_phyconnected(nvram_safe_get("wan_ifname"))==0 ) {
 	//if ( 	strcmp( nvram_safe_get("wan_status_t"), "Disconnected")==0 
 	//	&& strcmp( nvram_safe_get("wan_reason_t"), "Cable is not attached")==0 ) {
@@ -327,6 +337,7 @@ int check_wan_link(int num)
 			else{
 				wan_link = 1;
  				nvram_set("qos_ubw_status", "initialing");
+				nvram_set("qos_ubw_reason", "");
 			}
 		}
 	}
@@ -352,19 +363,23 @@ int check_wan_link(int num)
 				if(pwanip == NULL || strlen(pwanip) <= 0){
 					wan_link = 0;
 					nvram_set("qos_ubw_status", "fail");
+					nvram_set("qos_ubw_reason", "");
 				}
 				else if(!strcmp(pwanip, nvram_safe_get("wan_gateway_t"))){
 					wan_link = 0;
 					nvram_set("qos_ubw_status", "fail");
+					nvram_set("qos_ubw_reason", "");
 				}
 				else{
 					wan_link = 1;
  					nvram_set("qos_ubw_status", "initialing");
+					nvram_set("qos_ubw_reason", "");
 				}
 			}
 			else{
 				wan_link = 0;
 				nvram_set("qos_ubw_status", "fail");
+				nvram_set("qos_ubw_reason", "");
 			}
 			
 			close(s);

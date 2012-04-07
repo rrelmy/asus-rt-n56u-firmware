@@ -36,7 +36,11 @@ function initial(){
 	if(dnsArray[1])
 		showtext($("#DNS2")[0], dnsArray[1]);
 	
-	showtext($("#connectionType")[0], wanlink_type());
+	var wantype = wanlink_type();
+	if(wantype=='Automatic IP')
+		showtext($("#connectionType")[0], '<#BOP_ctype_title1#>');
+	else	
+		showtext($("#connectionType")[0], wantype);
 	
 	showtext($("#gateway")[0], wanlink_gateway());
 }

@@ -34,7 +34,7 @@ extern void free_2_dimension_list(int *, char ***);
 extern int initial_folder_list_in_mount_path(const char *const);
 extern int initial_one_var_file_in_mount_path(const char *const, const char *const);
 extern int initial_all_var_file_in_mount_path(const char *const);
-extern int test_of_var_files_in_mount_path(const char *const);
+extern int test_of_var_files(const char *const);
 extern void refresh_folder_list_all();	// J++
 
 extern int create_if_no_var_files(const char *const);

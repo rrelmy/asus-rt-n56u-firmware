@@ -21,7 +21,7 @@ configure:
 	)
 
 clean:
-	$(MAKE) -C source clean
+	$(MAKE) -C source distclean
 	rm -rf install
 	rm -f libvorbis.so.0.4.5
 	rm -f config_done

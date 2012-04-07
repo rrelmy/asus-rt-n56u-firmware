@@ -1,3 +1,29 @@
+/*
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation; either version 2 of
+ * the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston,
+ * MA 02111-1307 USA
+ *
+ * Copyright 2011, ASUSTeK Inc.
+ * All Rights Reserved.
+ * 
+ * THIS SOFTWARE IS OFFERED "AS IS", AND ASUS GRANTS NO WARRANTIES OF ANY
+ * KIND, EXPRESS OR IMPLIED, BY STATUTE, COMMUNICATION OR OTHERWISE. BROADCOM
+ * SPECIFICALLY DISCLAIMS ANY IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A SPECIFIC PURPOSE OR NONINFRINGEMENT CONCERNING THIS SOFTWARE.
+ *
+ */
+
 #include <linux/init.h>
 #include <linux/version.h>
 #include <linux/module.h>
@@ -703,12 +729,51 @@ void LANWANPartition_adv(int wan_stb_x)
 	}
 }
 
-void LANWANPartition_unifi(int wan_stb_x)//Cherry Cho added for Malaysia Unifi issues in 2011/6/17.
+static int voip_port_g = 0;
+static rtk_vlan_t vlan_vid = 0;
+static rtk_vlan_t vlan_prio = 0;
+
+void initialVlan(u32 portinfo)/*Initalize VLAN. Cherry Cho added in 2011/7/15. */
 {
-	rtk_portmask_t portmask, mbrmsk, untagmsk;
+	rtk_portmask_t lanmask, wanmask, tmpmask;
+	int i = 0;
+	u32 laninfo = 0, waninfo = 0;
+
+	if(portinfo != 0)
+	{
+		laninfo = ~portinfo & 0x10F;
+		waninfo = portinfo | 0x210;
+		lanmask.bits[0] = laninfo;
+		wanmask.bits[0] = waninfo;
+		printk("initialVlan - portinfo = 0x%X LAN portmask= 0x%X WAN portmask = 0x%X\n", portinfo, lanmask.bits[0], wanmask.bits[0]);	
+		for(i = 0; i <= 9; i++)//LAN 
+		{
+			if((laninfo >> i ) & 0x1)
+			{
+				rtk_port_isolation_set(i, lanmask);
+				rtk_port_efid_set(i, 0);
+			}
+		}
+
+		for(i = 0; i <= 3; i++)//WAN 
+		{
+			if((waninfo >> i ) & 0x1)
+			{
+				tmpmask.bits[0] = 0x10 | (1 << i);
+				rtk_port_isolation_set(i, tmpmask);
+				rtk_port_efid_set(i, 1);
+			}
+		}
+
+		rtk_port_isolation_set(4, wanmask);
+		rtk_port_efid_set(4, 1);
+		wanmask.bits[0] = 0x210;
+		rtk_port_isolation_set(9, wanmask);
+		rtk_port_efid_set(9, 1);
+	}
 
 	rtk_vlan_init();
-	
+
         /* set VLAN filtering for each LAN port */
 	rtk_vlan_portIgrFilterEnable_set(0, ENABLED);
 	rtk_vlan_portIgrFilterEnable_set(1, ENABLED);
@@ -717,343 +782,32 @@ void LANWANPartition_unifi(int wan_stb_x)//Cherry Cho added for Malaysia Unifi i
 	rtk_vlan_portIgrFilterEnable_set(4, ENABLED);
 	rtk_vlan_portIgrFilterEnable_set(8, ENABLED);
 	rtk_vlan_portIgrFilterEnable_set(9, ENABLED);
+	
+}
 
 
-	switch(wan_stb_x)
+/* portInfo:  bit0-bit15 :  member mask
+	     bit16-bit31 :  untag mask */
+void createVlan(u32 portinfo)/* Cherry Cho added in 2011/7/14. */
+{
+	rtk_portmask_t mbrmsk, untagmsk;
+	int i = 0;
+
+	mbrmsk.bits[0] = portinfo & 0x0000FFFF;
+	untagmsk.bits[0] = portinfo >> 16;
+	printk("createVlan - vid = %d prio = %d mbrmsk = 0x%X untagmsk = 0x%X\n", vlan_vid, vlan_prio, mbrmsk.bits[0], untagmsk.bits[0]);	
+
+	rtk_vlan_set(vlan_vid, mbrmsk, untagmsk, 0);
+
+
+	for(i = 0; i <= 9; i++)
 	{
-		case 1: /* STB Port: P3  LAN: P0,P1,P2  WAN: P4   LAN_PORT_1 = P3 */
-			printk("Unifi - STB Port:P3 LAN:P0,P1,P2\n");
-			/* LAN */
-    			portmask.bits[0] = 0x107;
-			rtk_port_isolation_set(0, portmask);
-			rtk_port_isolation_set(1, portmask);
-			rtk_port_isolation_set(2, portmask);
-			rtk_port_isolation_set(8, portmask);
- 
-			/* WAN */
-			portmask.bits[0] = 0x210;
-			rtk_port_isolation_set(9, portmask);
-			portmask.bits[0] = 0x218;
-			rtk_port_isolation_set(4, portmask);
-			portmask.bits[0] = 0x018;
-			rtk_port_isolation_set(3, portmask);
-    
- 
-			/* EFID setting LAN */
-			rtk_port_efid_set(0, 0);
-			rtk_port_efid_set(1, 0);
-			rtk_port_efid_set(2, 0);
-			rtk_port_efid_set(8, 0);
- 
-			/* EFID setting WAN */
-			rtk_port_efid_set(3, 1);    
-			rtk_port_efid_set(4, 1);
-			rtk_port_efid_set(9, 1);
-
-
-           		//default VLAN 1: VID = 500 
-			mbrmsk.bits[0] = 0x0317;  //exclude P3
-			untagmsk.bits[0] = 0x0307;
-			rtk_vlan_set(500,mbrmsk, untagmsk, 0);
-
-			/* set PVID for P0 P1 P2 P4 P8 P9 */
-			rtk_vlan_portPvid_set (0, 500, 0);
-			rtk_vlan_portPvid_set (1, 500, 0);
-			rtk_vlan_portPvid_set (2, 500, 0);
-			rtk_vlan_portPvid_set (4, 500, 0);
-			rtk_vlan_portPvid_set (8, 500, 0);
-			rtk_vlan_portPvid_set (9, 500, 0);
-
-			/* VLAN 2: VID = 600 */
-		        mbrmsk.bits[0] = 0x0018;
-            		untagmsk.bits[0] = 0x0008;
-			rtk_vlan_set(600,mbrmsk, untagmsk, 0);
-
-           		/* set PVID for P3 */
-			rtk_vlan_portPvid_set (3, 600, 0);
-			break;
-
-		case 2:/* STB Port:P2 LAN:P0,P1,P3  LAN_PORT_2 = P2 */
-			printk("Unifi - STB Port:P2 LAN:P0,P1,P3\n");
-			/* LAN */
- 			portmask.bits[0] = 0x10B;
-			rtk_port_isolation_set(0, portmask);
-			rtk_port_isolation_set(1, portmask);
-			rtk_port_isolation_set(3, portmask);
-			rtk_port_isolation_set(8, portmask);
- 
-			/* WAN */
-			portmask.bits[0] = 0x210;
-			rtk_port_isolation_set(9, portmask);
-			portmask.bits[0] = 0x214;
-			rtk_port_isolation_set(4, portmask);
-			portmask.bits[0] = 0x014;
-			rtk_port_isolation_set(2, portmask);
-    
- 
-			/* EFID setting LAN */
-			rtk_port_efid_set(0, 0);
-			rtk_port_efid_set(1, 0);
-			rtk_port_efid_set(3, 0);
-			rtk_port_efid_set(8, 0);
- 
-			/* EFID setting WAN */
-			rtk_port_efid_set(2, 1);    
-			rtk_port_efid_set(4, 1);
-			rtk_port_efid_set(9, 1);
-
-
-         		//default VLAN 1: VID = 500 
-			mbrmsk.bits[0] = 0x031B;  //exclude P2
-			untagmsk.bits[0] = 0x030B;
-			rtk_vlan_set(500,mbrmsk, untagmsk, 0);
-
-			/* set PVID for P0 P1 P3 P4 P8 P9 */
-			rtk_vlan_portPvid_set (0, 500, 0);
-			rtk_vlan_portPvid_set (1, 500, 0);
-			rtk_vlan_portPvid_set (3, 500, 0);
-			rtk_vlan_portPvid_set (4, 500, 0);
-			rtk_vlan_portPvid_set (8, 500, 0);
-			rtk_vlan_portPvid_set (9, 500, 0);
-
-			/* VLAN 2: VID = 600 */
-		        mbrmsk.bits[0] = 0x0014;
-            		untagmsk.bits[0] = 0x0004;
-			rtk_vlan_set(600,mbrmsk, untagmsk, 0);
-
-           		/* set PVID for P2 */
-			rtk_vlan_portPvid_set (2, 600, 0);
-			break;
-
-		case 3:/* STB Port:P1 LAN:P0 P2 P3  LAN_PORT_3 = P1 */
-			printk("Unifi - STB Port:P1 LAN:P0,P2,P3\n");	
-			/* LAN */
- 			portmask.bits[0] = 0x10D;
-			rtk_port_isolation_set(0, portmask);
-			rtk_port_isolation_set(2, portmask);
-			rtk_port_isolation_set(3, portmask);
-			rtk_port_isolation_set(8, portmask);
- 
-			/* WAN */
-			portmask.bits[0] = 0x210;
-			rtk_port_isolation_set(9, portmask);
-			portmask.bits[0] = 0x212;
-			rtk_port_isolation_set(4, portmask);
-			portmask.bits[0] = 0x012;
-			rtk_port_isolation_set(1, portmask);
-    
- 
-			/* EFID setting LAN */
-			rtk_port_efid_set(0, 0);
-			rtk_port_efid_set(2, 0);
-			rtk_port_efid_set(3, 0);
-			rtk_port_efid_set(8, 0);
- 
-			/* EFID setting WAN */
-			rtk_port_efid_set(1, 1);    
-			rtk_port_efid_set(4, 1);
-			rtk_port_efid_set(9, 1);
-
-
-         		//default VLAN 1: VID = 500 
-			mbrmsk.bits[0] = 0x031D;  //exclude P1
-			untagmsk.bits[0] = 0x030D;
-			rtk_vlan_set(500,mbrmsk, untagmsk, 0);
-
-			/* set PVID for P0 P2 P3 P4 P8 P9 */
-			rtk_vlan_portPvid_set (0, 500, 0);
-			rtk_vlan_portPvid_set (2, 500, 0);
-			rtk_vlan_portPvid_set (3, 500, 0);
-			rtk_vlan_portPvid_set (4, 500, 0);
-			rtk_vlan_portPvid_set (8, 500, 0);
-			rtk_vlan_portPvid_set (9, 500, 0);
-
-			/* VLAN 2: VID = 600 */
-		        mbrmsk.bits[0] = 0x0012;
-            		untagmsk.bits[0] = 0x0002;
-			rtk_vlan_set(600,mbrmsk, untagmsk, 0);
-
-           		/* set PVID for P1 */
-			rtk_vlan_portPvid_set (1, 600, 0);		
-			break;
-
-		case 4:/* STB Port:P0 LAN:P0 P2 P3  LAN_PORT_4 = P0 */
-			printk("Unifi - STB Port:P0 LAN:P1,P2,P3\n");	
-			/* LAN */
- 			portmask.bits[0] = 0x10E;
-			rtk_port_isolation_set(1, portmask);
-			rtk_port_isolation_set(2, portmask);
-			rtk_port_isolation_set(3, portmask);
-			rtk_port_isolation_set(8, portmask);
- 
-			/* WAN */
-			portmask.bits[0] = 0x210;
-			rtk_port_isolation_set(9, portmask);
-			portmask.bits[0] = 0x211;
-			rtk_port_isolation_set(4, portmask);
-			portmask.bits[0] = 0x011;
-			rtk_port_isolation_set(0, portmask);
-    
- 
-			/* EFID setting LAN */
-			rtk_port_efid_set(1, 0);
-			rtk_port_efid_set(2, 0);
-			rtk_port_efid_set(3, 0);
-			rtk_port_efid_set(8, 0);
- 
-			/* EFID setting WAN */
-			rtk_port_efid_set(0, 1);    
-			rtk_port_efid_set(4, 1);
-			rtk_port_efid_set(9, 1);
-
-
-         		//default VLAN 1: VID = 500 
-			mbrmsk.bits[0] = 0x031E;  //exclude P0
-			untagmsk.bits[0] = 0x030E;
-			rtk_vlan_set(500,mbrmsk, untagmsk, 0);
-
-			/* set PVID for P1 P2 P3 P4 P8 P9 */
-			rtk_vlan_portPvid_set (1, 500, 0);
-			rtk_vlan_portPvid_set (2, 500, 0);
-			rtk_vlan_portPvid_set (3, 500, 0);
-			rtk_vlan_portPvid_set (4, 500, 0);
-			rtk_vlan_portPvid_set (8, 500, 0);
-			rtk_vlan_portPvid_set (9, 500, 0);
-
-			/* VLAN 2: VID = 600 */
-		        mbrmsk.bits[0] = 0x0011;
-            		untagmsk.bits[0] = 0x0001;
-			rtk_vlan_set(600,mbrmsk, untagmsk, 0);
-
-           		/* set PVID for P0 */
-			rtk_vlan_portPvid_set (0, 600, 0);	
-			break;
-
-		case 5:
-			printk("Unifi - STB Port:P0,P1 LAN:P2,P3\n");	
-			/* LAN */
- 			portmask.bits[0] = 0x10C;
-			rtk_port_isolation_set(2, portmask);
-			rtk_port_isolation_set(3, portmask);
-			rtk_port_isolation_set(8, portmask);
- 
-			/* WAN */
-			portmask.bits[0] = 0x210;
-			rtk_port_isolation_set(9, portmask);
-			portmask.bits[0] = 0x213;
-			rtk_port_isolation_set(4, portmask);
-			portmask.bits[0] = 0x011;
-			rtk_port_isolation_set(0, portmask);
-			portmask.bits[0] = 0x012;
-			rtk_port_isolation_set(1, portmask);
-    
- 
-			/* EFID setting LAN */
-			rtk_port_efid_set(2, 0);
-			rtk_port_efid_set(3, 0);
-			rtk_port_efid_set(8, 0);
- 
-			/* EFID setting WAN */
-			rtk_port_efid_set(0, 1);    
-			rtk_port_efid_set(1, 1);    
-			rtk_port_efid_set(4, 1);
-			rtk_port_efid_set(9, 1);
-
-
-         		//default VLAN 1: VID = 500 
-			mbrmsk.bits[0] = 0x031C;  //exclude P0 P1
-			untagmsk.bits[0] = 0x030C;
-			rtk_vlan_set(500,mbrmsk, untagmsk, 0);
-
-			/* set PVID for P2 P3 P4 P8 P9 */
-			rtk_vlan_portPvid_set (2, 500, 0);
-			rtk_vlan_portPvid_set (3, 500, 0);
-			rtk_vlan_portPvid_set (4, 500, 0);
-			rtk_vlan_portPvid_set (8, 500, 0);
-			rtk_vlan_portPvid_set (9, 500, 0);
-
-			/* VLAN 2: VID = 600 */
-		        mbrmsk.bits[0] = 0x0013;
-            		untagmsk.bits[0] = 0x0003;
-			rtk_vlan_set(600,mbrmsk, untagmsk, 0);
-
-           		/* set PVID for P0 & P1*/
-			rtk_vlan_portPvid_set (0, 600, 0);	
-			rtk_vlan_portPvid_set (1, 600, 0);
-			break;
-
-		case 6:
-			printk("Unifi - STB Port:P2,P3 LAN:P0,P1\n");
-			/* LAN */
- 			portmask.bits[0] = 0x103;
-			rtk_port_isolation_set(0, portmask);
-			rtk_port_isolation_set(1, portmask);
-			rtk_port_isolation_set(8, portmask);
-
-			/* WAN */
-			portmask.bits[0] = 0x210;
-			rtk_port_isolation_set(9, portmask);
-			portmask.bits[0] = 0x21C;
-			rtk_port_isolation_set(4, portmask);
-			portmask.bits[0] = 0x014;
-			rtk_port_isolation_set(2, portmask);
-			portmask.bits[0] = 0x018;
-			rtk_port_isolation_set(3, portmask);
-    
- 
-			/* EFID setting LAN */
-			rtk_port_efid_set(0, 0);
-			rtk_port_efid_set(1, 0);
-			rtk_port_efid_set(8, 0);
- 
-			/* EFID setting WAN */
-			rtk_port_efid_set(2, 1);    
-			rtk_port_efid_set(3, 1);    
-			rtk_port_efid_set(4, 1);
-			rtk_port_efid_set(9, 1);
-
-
-        		//default VLAN 1: VID = 500 
-			mbrmsk.bits[0] = 0x0313;  //exclude P3
-			untagmsk.bits[0] = 0x0303;
-			rtk_vlan_set(500,mbrmsk, untagmsk, 0);
-
-			/* set PVID for P0 P1 P4 P8 P9 */
-			rtk_vlan_portPvid_set (0, 500, 0);
-			rtk_vlan_portPvid_set (1, 500, 0);
-			rtk_vlan_portPvid_set (4, 500, 0);
-			rtk_vlan_portPvid_set (8, 500, 0);
-			rtk_vlan_portPvid_set (9, 500, 0);
-
-			/* VLAN 2: VID = 600 */
-		        mbrmsk.bits[0] = 0x001C;
-            		untagmsk.bits[0] = 0x000C;
-			rtk_vlan_set(600,mbrmsk, untagmsk, 0);
-
-           		/* set PVID for port3 */
-			rtk_vlan_portPvid_set (2, 600, 0);
-			rtk_vlan_portPvid_set (3, 600, 0);		
-			break;
-
-		default:
-			printk("LAN: P0,P1,P2,P3 WAN: P4\n");
-           		//default VLAN 1: VID = 500 
-			mbrmsk.bits[0] = 0x031F;
-			untagmsk.bits[0] = 0x030F;
-			rtk_vlan_set(500,mbrmsk, untagmsk, 0);
-
-			/* set PVID for P0 P1 P2 P3 P4 P8 P9 */
-			rtk_vlan_portPvid_set (0, 500, 0);
-			rtk_vlan_portPvid_set (1, 500, 0);
-			rtk_vlan_portPvid_set (2, 500, 0);
-			rtk_vlan_portPvid_set (3, 500, 0);
-			rtk_vlan_portPvid_set (4, 500, 0);
-			rtk_vlan_portPvid_set (8, 500, 0);
-			rtk_vlan_portPvid_set (9, 500, 0);
-			break;
+		if((portinfo >>i ) & 0x1)
+			rtk_vlan_portPvid_set (i, vlan_vid, vlan_prio);
 	}
 
 }
+
 
 rtk_api_ret_t rtk_port_linkStatus_get(rtk_port_t port, rtk_port_linkStatus_t *pLinkStatus)
 {
@@ -1115,6 +869,7 @@ int rtl8367m_ioctl(struct inode *inode, struct file *file, unsigned int req,
 	unsigned int regData;
 	rtk_port_phy_data_t pData;
 	unsigned int control_rate;
+	u32 portInfo;//Cherry Cho added in 2011/7/15.
 
 	switch(req) {
 	case 0:					// check WAN port phy status
@@ -2102,14 +1857,6 @@ int rtl8367m_ioctl(struct inode *inode, struct file *file, unsigned int req,
 		
 		break;
 
-	case 26: //Malaysia Unifi support. Cherry Cho added in 2011/6/17.
-		printk("Malaysia Unifi support setting\n");
-		copy_from_user(&wan_stb_x, (int __user *)arg, sizeof(int));
-		wan_stb_g = wan_stb_x;
-		LANWANPartition_unifi(wan_stb_x);
-
-		break;
-
 	case 27:
 		printk("software reset RTL8367M...\n");
 		rtl8370_setAsicReg(0x1322, 1);	// software reset
@@ -2230,6 +1977,28 @@ int rtl8367m_ioctl(struct inode *inode, struct file *file, unsigned int req,
 	
 		LANWANPartition();
 
+		break;
+
+	case 29:/* Set VoIP port. Cherry Cho added in 2011/6/30. */
+		copy_from_user(&voip_port_g, (int __user *)arg, sizeof(int));
+		break;
+
+	case 36:/* Set Vlan VID. Cherry Cho added in 2011/7/18. */
+		copy_from_user(&vlan_vid, (int __user *)arg, sizeof(int));		
+		break;
+
+	case 37:/* Set Vlan PRIO. Cherry Cho added in 2011/7/18. */
+		copy_from_user(&vlan_prio, (int __user *)arg, sizeof(int));
+		break;
+
+	case 38:/* Initialize VLAN */
+		copy_from_user(&portInfo, (int __user *)arg, sizeof(int));
+		initialVlan((u32) portInfo);
+		break;
+
+	case 39:/* Create VLAN. Cherry Cho added in 2011/7/15. */
+		copy_from_user(&portInfo, (int __user *)arg, sizeof(int));
+		createVlan((u32) portInfo);		
 		break;
 
 	default:

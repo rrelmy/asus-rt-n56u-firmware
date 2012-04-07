@@ -20,8 +20,8 @@ LANG_SV=Svensk
 LANG_BR=Brazil
 LANG_JP=日本語
 [Malaysia Unifi]
-PPPConnection_x_Unifi=Unifi Support :
-PPPConnection_x_Unifi_Describe=Select 'Yes' to support Malaysia Unifi services.
+PPPConnection_x_Unifi=Podpora Unifi:
+PPPConnection_x_Unifi_Describe=Výběrem (Ano) získáte podporu malajských služeb Unifi.
 [VPN Passthrough]
 VPN_PPTP_Passthrough=Průchod VPN PPTP
 VPN_L2TP_Passthrough=Průchod VPN L2TP
@@ -29,7 +29,7 @@ VPN_IPSec_Passthrough=Průchod VPN IPSec
 vpn_passthrough_itemname=Průchod VPN
 vpn_passthrough_desc=Aktivací průchodu VPN umožníte průchod připojení virtuální privátní sítě (VPN) směšovačem k síťovým klientům.
 [AiDisk account alert]
-enable_noaccount_alert=Pokud je povoleno, bude to stalo problém s připojením k serveru Samba a Download Master je-li neexistuje nějaký účet.
+enable_noaccount_alert=Pokusíte-li se sdílet soubory na disku USB bez vytvoření sdíleného účtu prostřednictvím AiDisk, může dojít k problémům se serverem Samba a Správcem stahování.
 [iTunes]
 iTunesMediaServer=iTunes Media Server
 [opmode strings]
@@ -39,14 +39,12 @@ OP_switch_button_hint2=Klepnutím zde zobrazíte
 OP_GW_item=Režim sdílení IP(Výchozí)
 OP_GW_desc1=V režimu sdílení šířky pásma se RT-N56U připojuje k Internetu prostřednictvím PPPoE, automatické IP, PPTP, L2TP, nebo statické IP.
 OP_GW_desc2=Poskytuje vám bezdrátový rádiový signál. Služby NAT, brána firewall a sdílení služeb šířky pásma pro klienty místní sítě LAN jsou aktivovány. Rovněž podporuje UPnP a dynamický DNS pro SOHO nebo domácího uživatele.
-OP_RT_item=Bezdrátový směrovač / režim sdílení adresy IP
-OP_RT_desc1=V režimu směrovače/ režimu sdílení adresy IP se zařízení RT-N56U připojuje k Internetu prostřednictvím PPPoE, DHCP, PPTP, L2TP nebo statické adresy IP a sdílí bezdrátovou síť pro klientská zařízení místní sítě LAN.  V tomto režimu jsou NAT, brána firewall a server DHCP aktivovány jako výchozí. UPnP a dynamický server DNS jsou podporovány pro uživatele SOHO a domácí uživatele. 
-OP_RT_desc2=Vyberte tento režim, pokud jste noví uživatelé nebo pokud aktuálně nepoužíváte žádné pevné/bezdrátové směrovače.
-OP_RE_item=Režim regenerativního zesilovače
-OP_RE_desc1=V režimu regenerativního zesilovače se zařízení RT-N56U připojuje k existujícímu bezdrátovému signálu a prodlužuje tento signál pro dosažení širšího pokrytí bezdrátové sítě a lepší kvality bezdrátového signálu.
-OP_AP_item=Režim přístupového bodu (AP)
-OP_AP_desc1=V režimu přístupového bodu (AP) se zařízení RT-N56U připojuje k bezdrátovému směrovači prostřednictvím kabelu Ethernet pro rozšíření pokrytí bezdrátovým signálem dalším síťovým klientům. V tomto režimu jsou funkce brány firewall, sdílení IP a NAT ve výchozí konfiguraci deaktivovány. 
-OP_AP_desc2=Vyberte tento režim, pokud jste pokročilí síťoví uživatelé, kteří chápou rozdíl mezi bezdrátovým směrovačem a přístupovým bodem, tzn. bezdrátový směrovač poskytuje funkce Převod síťových adres (NAT) a sdílení IP. 
+OP_RT_item=Router(Disable NAT)
+OP_RT_desc1=V režimu směrovače připojte RT-N56U k počítači ethernetovým kabelem a vytvořte bezdrátové síťové připojení, potom vyberte nastavení pro vaše bezdrátové síťové připojení. 
+OP_RT_desc2=RT-N56U rozšiřuje pokrytí vaší bezdrátové sítě a umožňuje vám konfigurovat statický směrovací protokol. Deaktivuje NAT (převod síťových adres), aby byly umožněny služby komunikace a sdílení mezi klienty LAN a WAN. Poznámka: Je třeba specifikovat pravidla směrování v hostitelském směrovači.
+OP_AP_item=Přístupový bod
+OP_AP_desc1=V režimu AP připojte RT-N56U ethernetovým kabelem k místní síti LAN; potom může váš počítač vytvořit bezdrátové síťové připojení k RT-N56U. Všichni síťový klienti budou spojeni mostem.
+OP_AP_desc2=Tento režim poskytuje internetové připojení pro síťové klienty, ale deaktivuje funkce brány firewall, sdílení IP a NAT.
 OP_Modem=Modem
 OP_WirelessClient=Bezdrátový klient
 OP_WirelessSignal=Stávající bezdrátový signál
@@ -54,7 +52,7 @@ OP_WirelessSignal=Stávající bezdrátový signál
 IPConnection_VSList_ftpport=FTP Server Port:
 Adm_System_telnetd=Enable Telnet Server?
 wps_start_btn=Zahájení
-USB_Application_account_alert=Uživatelský účet nemůže být ‘kořen’, ‘Kořen’, ‘KOŘEN’, ‘správce’, ‘Správce’, ‘SPRÁVCE’, ‘rodina’, ‘Rodina’, ‘RODINA’ ! Zadejte platný účet.
+USB_Application_account_alert=Uživatelský účet nemůže být 'kořen', 'Kořen', 'KOŘEN', 'správce', 'Správce', 'SPRÁVCE', 'rodina', 'Rodina', 'RODINA' ! Zadejte platný účet.
 BasicConfig_USBStorageWhiteist_itemdesc=Rozsah pro toto pole je šestnáctkově 1 až FFFF. Zadáním 0 (nula) deaktivujete tuto funkci.
 BasicConfig_USBStorageWhiteist_itemname=Seznam povolených VID paměťového zařízení USB
 LANHostConfig_x_TimeZone_itemhint_2=Vybrané nastavení časového pásma se liší od toho, co zařízení rozpoznalo. Chcete změnit na rozpoznané časové pásmo?
@@ -1141,7 +1139,8 @@ TZ84=Nuku\'alofa
 LANHostConfig_x_NTPServer_itemname=NTP Server:
 LANHostConfig_x_NTPServer_itemdesc=Synchronizovat váš systémpvý čas s NTP serverem.
 LANHostConfig_x_DDNSEnable_sectionname=Nastavení DDNS
-LANHostConfig_x_DDNSEnable_sectiondesc=Pomocí dynamického DNS (DDNS) můžete přiřadit název internetové domény počítači s dynamickou IP adresou. Momentálně je několik služeb DDNS přiřazeno k RT-N56U. Dále je uveden odkaz na zkušební verzi, klikněte na něj, abyste spustili zkušební verzi účtu.
+LANHostConfig_x_DDNSEnable_sectiondesc=Pomocí dynamického DNS (DDNS) můžete přiřadit název internetové domény počítači s dynamickou IP adresou. Momentálně je několik služeb DDNS přiřazeno k RT-N56U. Dále je uveden odkaz na zkušební verzi, klikněte na něj, abyste spustili zkušební verzi účtu.<p>
+LANHostConfig_x_DDNSEnable_sectiondesc2=Tento bezdrátový směrovač aktuálně používá soukromou adresu IP WAN (192.168.x.x, 10,x,x,x nebo 172.16.x.x). Tento směrovač může být v prostředí s více překlady adres (NAT) a služba DDNS nemůže v tomto prostředí fungovat.
 LANHostConfig_x_DDNSEnable_itemname=Povolit klienta DDNS?
 LANHostConfig_x_DDNSServer_itemname=Server:
 LANHostConfig_x_DDNSUserName_itemname=Uživatelské jméno nebo e-mailová adresa:
@@ -1308,7 +1307,7 @@ FirewallConfig_display2_sectiondesc=Povolení Firewallu (SPI Firewall) poskytuje
 FirewallConfig_LanWanFirewallEnable_itemname=Povolit filtr LAN do WAN?
 FirewallConfig_LanWanFirewallEnable_itemdesc=Vyberte [Ano] pro povolení filtru, který rozepisuje IP adresu nebo port pro příchozí a odchozí pakety.
 FirewallConfig_FirewallEnable_itemname=Povolit Firewall?
-FirewallConfig_FirewallEnable_itemdesc=FirewallConfig_FirewallEnable_itemdesc=Pokud zakážete firewall, bude zakázána příslušná funkce uvedená dále. Například bude zakázán přístup k webu ze sítě WAN.
+FirewallConfig_FirewallEnable_itemdesc=Pokud zakážete firewall, bude zakázána příslušná funkce uvedená dále. Například bude zakázán přístup k webu ze sítě WAN.
 FirewallConfig_DoSEnable_itemname=Povolit ochranu DoS?
 FirewallConfig_x_WanWebEnable_itemname=Povolit webovou správu přes WAN?
 FirewallConfig_x_WanWebEnable_itemdesc=Tato funkce umožňuje konfigurovat RT-N56U z Internetu. Pokud jste v režimu domácí brány, prosím přihlaste se k RT-N56U přes port 8080 (tedy http://VAŠE IP ADRESA:8080).
@@ -1395,7 +1394,7 @@ BM_desc4=RT-N56U řídí veškerý audio/video provoz. Už žádná dlouhá odez
 BM_hint=Vaše uplink rychlost dosáhla ideální hodnoty. Doporučujeme, abyste nepovolovali EzQoS a ušetřili tak systémové prostředky. 
 BM_GB=Gaming Blaster
 BM_IA=Internetové aplikace
-BM_FTPS=AiDisk
+BM_FTPS=FTP
 BM_VVS=Voip/Video Streaming
 BM_NoChange=Prosím vyberte internetovou aplikaci pro svou situaci.
 t2QOS2=Specifické uživatelské služby
@@ -1411,7 +1410,7 @@ LANHostConfig_x_DDNS_alarm_3=Registrace proběhla úspěšně.
 LANHostConfig_x_DDNS_alarm_4=Registrace původního jména hostitele proběhla úspěšně.
 LANHostConfig_x_DDNS_alarm_5=Registrace nového jména hostitele proběhla úspěšně.
 LANHostConfig_x_DDNS_alarm_6=IP adresa a jméno hostitele nejsou zaregistrovány, prosím nejprve je zaregistrujte.
-LANHostConfig_x_DDNS_alarm_7=Neplatné jméno hostitele! Jméno musí být ve formátu 'xxx.asuscomm.com' a 'xxx' nesmí být pouze číslice.
+LANHostConfig_x_DDNS_alarm_7=Název hostitele nemůže přijmout číselnou předponu a \".\" (například \"123abc\" nebo \"aaa.bbb\") 
 LANHostConfig_x_DDNS_alarm_8=Neplatná doména! Musí být ve formátu 'xxx.asuscomm.com'.
 LANHostConfig_x_DDNS_alarm_9=Neplatní IP adresa!
 LANHostConfig_x_DDNS_alarm_10=Neoprávněný požadavek registrace!
@@ -1439,10 +1438,10 @@ HSDPAConfig_password_itemdesc=Zadejte vaše heslo.
 HSDPAConfig_usbadaptor_itemdesc=Vyberte váš usb adaptér.
 confirm_disableftp_dm=Deaktivací položky sdílené okolními počítači bude deaktivován správce stahování.
 LANHostConfig_IPRouters_itemdesc=IP adresa LAN RT-N56U. Původní hodnota je 192.168.1.1. Rozsah adres IP místní sítě LAN: 192.168.0.1 - 192.168.255.254, 172.16.0.1 – 172.31.255.254, 10.0.0.1 – 10.255.255.254
-HSDPAConfig_hsdpa_mode_itemdesc=Choose the USB Modem mode according by your requirements and enviroments. We provide four mode below: Backup, Equal weight, Always high and Always low. Chcete-li bezpečně odebrat USB Modem adaptér, viz <a href='/index.asp'>Rejstřík</a> a klepněte na tlačítko adaptéru.
+HSDPAConfig_hsdpa_mode_itemdesc=Choose the USB Modem mode according by your requirements and enviroments. We provide four mode below: Backup, Equal weight, Always high and Always low. Chcete-li bezpečně odebrat USB Modem adaptér, viz <a href='/index.asp' target=\'_blank\'>Rejstřík</a> a klepněte na tlačítko adaptéru.
 Not_authpage_login_again=Chcete-li se znovu přihlásit, nejdříve zavřete toto okno.
 GO_HSDPA_SETTING=Přejít na USB Modem nastavení
-HSDPA_disable=Pokud chcete změnit typ připojení, pleasw naleznete <a href="/Advanced_Modem_others.asp"> <# # GO_HSDPA_SETTING> </ a> vypnout adaptér
+HSDPA_disable=Pokud chcete změnit typ připojení, pleasw naleznete <a href="/Advanced_Modem_others.asp"> <#GO_HSDPA_SETTING#> </a> vypnout adaptér
 [new strings - translated]
 GO_2G=Přejít na 2.4GHz nastavení
 GO_5G=Přejít na 5GHz nastavení

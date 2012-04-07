@@ -21,7 +21,7 @@ configure:
 	)
 
 clean:
-	$(MAKE) -C source clean
+	$(MAKE) -C source distclean
 	rm -rf install
 	rm -f libsqlite3.so.0.8.6
 	rm -f config_done

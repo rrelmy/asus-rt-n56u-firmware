@@ -49,6 +49,12 @@
 
 #define ACL_ADD_SDMAC_ANY   		(13)
 #define ACL_DEL_SDMAC_ANY   		(14)
+#define ACL_ADD_ETYPE_ANY   		(15)
+#define ACL_DEL_ETYPE_ANY   		(16)
+
+#define ACL_ADD_SMAC_DMAC_ETYPE_VID_SIP_DIP_TOS_PORT   	(17)
+#define ACL_DEL_SMAC_DMAC_ETYPE_VID_SIP_DIP_TOS_PORT   	(18)
+#define ACL_GET_ALL_ENTRIES				(19)
 
 #define ACL_DEVNAME			"acl0"
 #define ACL_MAJOR			(230)
@@ -78,17 +84,32 @@ enum AclResult {
 
 struct acl_args {
 	unsigned char  mac[6];
+	unsigned char  dmac[6];
 	enum AclResult result; /* ioctl result */
 	enum AclRuleMethod  method; /* Deny, Allow */
+	enum AclProtoType   L4;
 	unsigned long  sip_s; /* start of sip */
 	unsigned long  sip_e; /* end of sip */
 	unsigned long  dip_s; /* start of dip */
 	unsigned long  dip_e; /* end of dip */
 	unsigned short dp_s; /* start of dp */
 	unsigned short dp_e; /* end of dp */
+	unsigned short sp_s; /* start of sp */
+	unsigned short sp_e; /* end of sp */
+	unsigned char tos_s; /* start of tos */
+	unsigned char tos_e; /* end of tos */
+	unsigned short ethertype; /* end of tos */
+	unsigned short protocol; /* protocol of ip header */
+	unsigned int   vid:12; /*VID*/
 	unsigned int   up:3; /*acl=>up*/
+	unsigned int   pn:3; /*physical port*/
 };
 
+struct acl_list_args {
+	enum AclResult   result;
+	unsigned int     num_of_entries:16;
+	struct acl_args  entries[0];
+};
 int AclRegIoctlHandler(void);
 void AclUnRegIoctlHandler(void);
 

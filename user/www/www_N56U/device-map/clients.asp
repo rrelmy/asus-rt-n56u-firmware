@@ -38,7 +38,6 @@ var blocked_clients = new Array();
 var rule_array;
 var page_modified = 0;
 
-
 function initial(){
 	flash_button();
 	parent.show_client_status(clients.length);
@@ -156,7 +155,7 @@ function set_client_is_blocked(){
 		}
 		$("alert_block").style.display = "none";
 	}
-	else{                  // when MAC filter is in "Reject mode".  2010.12 jerry5 modified.
+	else{	// when MAC filter is in "Reject mode".  2010.12 jerry5 modified.
 		for(var i = 0; i < clients.length; ++i){
 			if(!checkDuplicateName(clients[i][2], list_of_BlockedClient)){
 				clients[i][9] = "u";
@@ -171,7 +170,7 @@ function set_client_is_blocked(){
 	}
 }
 
-function simplyName(orig_name){
+function simplyName(orig_name, index){
 	if(orig_name != null){
 		if(orig_name.length > 17)
 			shown_client_name = orig_name.substring(0, 15) + "...";
@@ -179,7 +178,7 @@ function simplyName(orig_name){
 			shown_client_name = orig_name;
 	}
 	else
-		shown_client_name = "";
+		shown_client_name = clients[index][2];
 		
 	return;
 }
@@ -199,10 +198,9 @@ function show_clients(){
 	  	clientName = addClient.insertCell(1);
 		  clientIP = addClient.insertCell(2);
 		  clientPriority = addClient.insertCell(3);
-	
-			simplyName(clients[j][0]);
+			simplyName(clients[j][0], j);
 		  	  	  	  
-		  clients[j][5] = (clients[j][5] == undefined)?6:clients[j][5];		  
+		  clients[j][5] = (clients[j][5] == undefined)?6:clients[j][5];
 		  	 	  
 		  var isPrt = "";
 			switch(clients[j][7]){
@@ -221,7 +219,7 @@ function show_clients(){
 		  
 		  var isITu = (clients[j][8] == "1")?"<br/><strong><#Device_service_iTune#> </strong>YES":"";
 		  var isWL = (clients[j][3] == "10")?"<br/><strong><#Device_service_Wireless#> </strong>YES":"";
-		  
+
 		  clientType.style.textAlign = "center";	  
 		  clientType.innerHTML = "<img title='"+ DEVICE_TYPE[clients[j][5]]+"' src='/images/wl_device/" + clients[j][5] +".gif'>";
 		  clientName.innerHTML = shown_client_name;
@@ -263,8 +261,7 @@ function show_clients(){
 		  k++; //for insertRow();
 		}
 		else if(clients[j][9] == "b"){  //show blocked device..
-
-			simplyName(clients[j][0]);
+			simplyName(clients[j][0], j);
 				
 			add_xClient = $('xClients_table').insertRow(i+2); //here use i for create row
 			xClientType = add_xClient.insertCell(0);
@@ -345,9 +342,15 @@ function unBlockClient(blockedClient_order){
 
 function do_block_client(){
 	parent.showLoading();
-	document.macfilterForm.action_mode.value = " Add ";
-	document.macfilterForm.macfilter_list_x_0.value = clients[this.selectedClientOrder][2];
-	
+	if(!checkDuplicateName(clients[this.selectedClientOrder][2], list_of_BlockedClient)){
+		document.macfilterForm.action_mode.value = " Add ";
+		document.macfilterForm.macfilter_list_x_0.value = clients[this.selectedClientOrder][2];
+	}
+	else{
+		document.macfilterForm.target = "";
+		document.macfilterForm.action_mode.value = " Restart ";
+		document.macfilterForm.macfilter_list_x_0.disabled = true;
+	}
 	document.macfilterForm.submit();
 }
 
@@ -404,14 +407,12 @@ function submit_macfilter(){
 	document.macfilterForm.target = "";
 	document.macfilterForm.action_mode.value = " Restart ";
 	document.macfilterForm.next_page.value = location.pathname;
-	
 	document.macfilterForm.submit();
 }
 
 function submit_apply_qosrule(){
 	document.qosForm.action_mode.value = " Restart ";
 	document.qosForm.action_script.value = "goonsetting";
-	
 	document.qosForm.submit();
 }
 
@@ -500,13 +501,10 @@ function networkmap_update(s){
 <input type="hidden" name="current_page" value="/device-map/clients.asp">
 <input type="hidden" name="next_page" value="/device-map/clients.asp">
 <input type="hidden" name="modified" value="<% nvram_get_x("", "page_modified"); %>">
-
 <!-- for enable rule in MACfilter -->
 <input type="hidden" name="macfilter_enable_x" value="2">
-
 <!-- for add rule in MACfilter -->
 <input type="hidden" name="macfilter_list_x_0" value="">
-
 <!-- for del rule in MACfilter -->
 <select name="MFList_s" id="MFList_s" multiple="true" style="visibility:hidden; width:0px; height:0px;"></select>
 </form>
@@ -545,7 +543,7 @@ function networkmap_update(s){
 <input type="hidden" name="action_script" value="">
 <input type="hidden" name="sid_list" value="PrinterStatus;">
 <input type="hidden" name="group_id" value="x_USRRuleList">
-<input type="hidden" name="current_page" value="/device-map/clients.asp">
+<input type="hidden" name="current_page" value="/">
 <input type="hidden" name="next_page" value="/device-map/clients.asp">
 
 <input type="hidden" name="qos_service_name_x_0" value="">

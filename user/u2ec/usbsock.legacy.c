@@ -53,6 +53,7 @@ int 	count_bulk_read = 0;
 int	count_bulk_read_ret0_1 = 0;
 int	count_bulk_read_ret0_2 = 0;
 int 	count_bulk_read_epson = 0;
+int 	count_int_epson = 0;
 int 	flag_monitor_epson = 0;
 
 char EPSON_BR_STR1_09[]={0x00, 0x00, 0x00, 0x09, 0x01, 0x00, 0x80, 0x00, 0x10};
@@ -663,6 +664,7 @@ int handleURB(PIRP_SAVE pirp_saverw, struct u2ec_list_head *curt_pos)
 			udev = usb_open(dev);
 			if (udev) {	
 				if ((USB_ENDPOINT_TYPE_MASK & dev->config[tmp_config].interface[tmp_int].altsetting[tmp_alt].endpoint[tmp_ep].bmAttributes) == USB_ENDPOINT_TYPE_BULK) {
+					count_int_epson = 0;
 					if ((USB_ENDPOINT_DIR_MASK & dev->config[tmp_config].interface[tmp_int].altsetting[tmp_alt].endpoint[tmp_ep].bEndpointAddress) == USB_ENDPOINT_OUT) {
 						purb->UrbBulkOrInterruptTransfer.TransferFlags = 2;
 						gettimeofday(&tv_ref, NULL);
@@ -759,7 +761,7 @@ int handleURB(PIRP_SAVE pirp_saverw, struct u2ec_list_head *curt_pos)
 							((PCONNECTION_INFO)curt_pos)->count_class_int_in = 0;
 						}
 					} else {
-						purb->UrbBulkOrInterruptTransfer.TransferFlags=3;
+						purb->UrbBulkOrInterruptTransfer.TransferFlags = 3;
 						gettimeofday(&tv_ref, NULL);
 						alarm(0);
 						if (purb->UrbBulkOrInterruptTransfer.TransferBufferLength > MAX_BUFFER_SIZE)
@@ -769,13 +771,12 @@ int handleURB(PIRP_SAVE pirp_saverw, struct u2ec_list_head *curt_pos)
 						else
 							ret = usb_bulk_read(udev, dev->config[tmp_config].interface[tmp_int].altsetting[tmp_alt].endpoint[tmp_ep].bEndpointAddress, (char*)pbuf, purb->UrbBulkOrInterruptTransfer.TransferBufferLength, timeout_bulk_read_msg_tmp);
 						alarm(1);
-						gettimeofday(&tv_now, NULL);						
+						gettimeofday(&tv_now, NULL);
 
 						if (Is_Canon && tmp_intclass == 7)
 						{
 							if (ret > 64 && ret < 256 && memcmp(pbuf+2, "BST:", 4) == 0)
 							{
-
 								if (flag_canon_monitor == 1 && ((PCONNECTION_INFO)curt_pos)->count_class_int_in < 3)
 								{
 									flag_canon_monitor = 0;
@@ -870,19 +871,75 @@ int handleURB(PIRP_SAVE pirp_saverw, struct u2ec_list_head *curt_pos)
 								PDEBUG("sec: %ld, msec: %ld\n", tv_now.tv_sec-tv_ref.tv_sec-1, (1000000+tv_now.tv_usec-tv_ref.tv_usec)/1000);
 						}
 
-/*							if (purb->UrbBulkOrInterruptTransfer.TransferBufferLength != 0 && ret == 0)
-								pirp_saverw->Status = 0xC0000004;	// STATUS_INFO_LENGTH_MISMATCH
-							else if (ret < 0)
-								pirp_saverw->Status = 0xC00000AE;	// STATUS_PIPE_BUSY
+/*						if (purb->UrbBulkOrInterruptTransfer.TransferBufferLength != 0 && ret == 0)
+							pirp_saverw->Status = 0xC0000004;	// STATUS_INFO_LENGTH_MISMATCH
+						else if (ret < 0)
+							pirp_saverw->Status = 0xC00000AE;	// STATUS_PIPE_BUSY
 */
 					}
 				} else {
 					PDEBUG("USB_ENDPOINT_TYPE_INTERRUPT\n");
 
-					usb_close(udev);
-					pirp_saverw->BufferSize = purb->UrbHeader.Length;
-					pirp_saverw->NeedSize = sizeof(IRP_SAVE) + pirp_saverw->BufferSize;
-					return 0;
+					if (!Is_EPSON)
+					{
+						usb_close(udev);
+						pirp_saverw->BufferSize = purb->UrbHeader.Length;
+						pirp_saverw->NeedSize = sizeof(IRP_SAVE) + pirp_saverw->BufferSize;
+						return 0;
+					}
+					else
+					{
+						if ((USB_ENDPOINT_DIR_MASK & dev->config[tmp_config].interface[tmp_int].altsetting[tmp_alt].endpoint[tmp_ep].bEndpointAddress) == USB_ENDPOINT_OUT) {
+							PDEBUG("USB_ENDPOINT_OUT\n");
+	
+							purb->UrbBulkOrInterruptTransfer.TransferFlags = 2;
+	
+							gettimeofday(&tv_ref, NULL);
+							alarm(0);
+							if (purb->UrbBulkOrInterruptTransfer.TransferBufferLength > MAX_BUFFER_SIZE)
+								purb->UrbBulkOrInterruptTransfer.TransferBufferLength = MAX_BUFFER_SIZE;
+							ret = usb_interrupt_write(udev, dev->config[tmp_config].interface[tmp_int].altsetting[tmp_alt].endpoint[tmp_ep].bEndpointAddress, (char*)pbuf, purb->UrbBulkOrInterruptTransfer.TransferBufferLength, timeout_bulk_write_msg_tmp);
+							alarm(1);
+							gettimeofday(&tv_now, NULL);
+	
+							PDEBUG("usb_interrupt_write() return: %d\n", ret);
+	
+							if (ret < 0) {
+								if ((tv_now.tv_usec - tv_ref.tv_usec) >= 0)
+									PDEBUG("sec: %ld, msec: %ld\n", tv_now.tv_sec-tv_ref.tv_sec, (tv_now.tv_usec-tv_ref.tv_usec)/1000);
+								else
+									PDEBUG("sec: %ld, msec: %ld\n", tv_now.tv_sec-tv_ref.tv_sec-1, (1000000+tv_now.tv_usec-tv_ref.tv_usec)/1000);
+							}
+						} else {
+							PDEBUG("USB_ENDPOINT_IN\n");
+	
+							purb->UrbBulkOrInterruptTransfer.TransferFlags=3;
+	
+							gettimeofday(&tv_ref, NULL);
+							alarm(0);
+							if (purb->UrbBulkOrInterruptTransfer.TransferBufferLength > MAX_BUFFER_SIZE)
+								purb->UrbBulkOrInterruptTransfer.TransferBufferLength = MAX_BUFFER_SIZE;
+//							ret = usb_interrupt_read(udev, dev->config[tmp_config].interface[tmp_int].altsetting[tmp_alt].endpoint[tmp_ep].bEndpointAddress, (char*)pbuf, purb->UrbBulkOrInterruptTransfer.TransferBufferLength, timeout_bulk_read_msg_tmp);
+							if (count_int_epson)
+								ret = usb_interrupt_read(udev, dev->config[tmp_config].interface[tmp_int].altsetting[tmp_alt].endpoint[tmp_ep].bEndpointAddress, (char*)pbuf, purb->UrbBulkOrInterruptTransfer.TransferBufferLength, 5000);
+							else								
+								ret = usb_interrupt_read(udev, dev->config[tmp_config].interface[tmp_int].altsetting[tmp_alt].endpoint[tmp_ep].bEndpointAddress, (char*)pbuf, purb->UrbBulkOrInterruptTransfer.TransferBufferLength, 1);
+							alarm(1);
+							gettimeofday(&tv_now, NULL);
+
+							PDEBUG("usb_interrupt_read() return: %d\n", ret);
+
+							if (ret < 0) {
+								if ((tv_now.tv_usec - tv_ref.tv_usec) >= 0)
+									PDEBUG("sec: %ld, msec: %ld\n", tv_now.tv_sec-tv_ref.tv_sec, (tv_now.tv_usec-tv_ref.tv_usec)/1000);
+								else
+									PDEBUG("sec: %ld, msec: %ld\n", tv_now.tv_sec-tv_ref.tv_sec-1, (1000000+tv_now.tv_usec-tv_ref.tv_usec)/1000);
+							}
+						}
+
+						if (!count_int_epson)
+							count_int_epson = 1;
+					}
 				}
 
 				if (ret < 0) {
@@ -1510,6 +1567,7 @@ int handleURB_64(PIRP_SAVE pirp_saverw, struct u2ec_list_head *curt_pos)
 			udev = usb_open(dev);
 			if (udev) {	
 				if ((USB_ENDPOINT_TYPE_MASK & dev->config[tmp_config].interface[tmp_int].altsetting[tmp_alt].endpoint[tmp_ep].bmAttributes) == USB_ENDPOINT_TYPE_BULK) {
+					count_int_epson = 0;
 					if ((USB_ENDPOINT_DIR_MASK & dev->config[tmp_config].interface[tmp_int].altsetting[tmp_alt].endpoint[tmp_ep].bEndpointAddress) == USB_ENDPOINT_OUT) {
 						purb->UrbBulkOrInterruptTransfer.TransferFlags = 2;
 						gettimeofday(&tv_ref, NULL);
@@ -1555,7 +1613,7 @@ int handleURB_64(PIRP_SAVE pirp_saverw, struct u2ec_list_head *curt_pos)
 								PDEBUG("retry...");
 								ret = usb_bulk_write(udev, dev->config[tmp_config].interface[tmp_int].altsetting[tmp_alt].endpoint[tmp_ep].bEndpointAddress, (char*)pbuf, purb->UrbBulkOrInterruptTransfer.TransferBufferLength, timeout_bulk_write_msg_tmp);
 							}
-							if (ret >= 4096)
+							else if (ret >= 4096)
 							{
 								count_bulk_read_epson = 0;
 								flag_monitor_epson = 0;
@@ -1566,10 +1624,6 @@ int handleURB_64(PIRP_SAVE pirp_saverw, struct u2ec_list_head *curt_pos)
 
 						count_bulk_write ++;
 						count_bulk_read_ret0_1 = 0;
-
-						if (Is_EPSON) {
-
-						}
 
 						if (ret < 0) {
 							if ((tv_now.tv_usec - tv_ref.tv_usec) >= 0)
@@ -1685,7 +1739,7 @@ int handleURB_64(PIRP_SAVE pirp_saverw, struct u2ec_list_head *curt_pos)
 									count_bulk_read_ret0_1 = 0;
 									count_bulk_read_ret0_2 = 0;
 								}
-								if (Is_HP_LaserJet) {						// laserjet 33xx series 
+								if (Is_HP_LaserJet) {						// laserjet 33xx series
 									if (count_bulk_write == 1 && count_bulk_read == 1)
 										count_bulk_read_ret0_2 ++;
 								}
@@ -1718,19 +1772,78 @@ int handleURB_64(PIRP_SAVE pirp_saverw, struct u2ec_list_head *curt_pos)
 								PDEBUG("sec: %ld, msec: %ld\n", tv_now.tv_sec-tv_ref.tv_sec, (tv_now.tv_usec-tv_ref.tv_usec)/1000);
 							else
 								PDEBUG("sec: %ld, msec: %ld\n", tv_now.tv_sec-tv_ref.tv_sec-1, (1000000+tv_now.tv_usec-tv_ref.tv_usec)/1000);
-							}
+						}
 
-/*							if (purb->UrbBulkOrInterruptTransfer.TransferBufferLength != 0 && ret == 0)
-								pirp_saverw->Status = 0xC0000004;	// STATUS_INFO_LENGTH_MISMATCH
-							else if (ret < 0)
-								pirp_saverw->Status = 0xC00000AE;	// STATUS_PIPE_BUSY
+/*						if (purb->UrbBulkOrInterruptTransfer.TransferBufferLength != 0 && ret == 0)
+							pirp_saverw->Status = 0xC0000004;	// STATUS_INFO_LENGTH_MISMATCH
+						else if (ret < 0)
+							pirp_saverw->Status = 0xC00000AE;	// STATUS_PIPE_BUSY
 */
 					}
 				} else {
-					usb_close(udev);
-					pirp_saverw->BufferSize = purb->UrbHeader.Length;
-					pirp_saverw->NeedSize = sizeof(IRP_SAVE) + pirp_saverw->BufferSize;
-					return 0;
+					PDEBUG("USB_ENDPOINT_TYPE_INTERRUPT\n");
+
+					if (!Is_EPSON)
+					{
+						usb_close(udev);
+						pirp_saverw->BufferSize = purb->UrbHeader.Length;
+						pirp_saverw->NeedSize = sizeof(IRP_SAVE) + pirp_saverw->BufferSize;
+						return 0;
+					}
+					else
+					{
+						if ((USB_ENDPOINT_DIR_MASK & dev->config[tmp_config].interface[tmp_int].altsetting[tmp_alt].endpoint[tmp_ep].bEndpointAddress) == USB_ENDPOINT_OUT) {
+							PDEBUG("USB_ENDPOINT_OUT\n");
+	
+							purb->UrbBulkOrInterruptTransfer.TransferFlags = 2;
+	
+							gettimeofday(&tv_ref, NULL);
+							alarm(0);
+							if (purb->UrbBulkOrInterruptTransfer.TransferBufferLength > MAX_BUFFER_SIZE)
+								purb->UrbBulkOrInterruptTransfer.TransferBufferLength = MAX_BUFFER_SIZE;
+							ret = usb_interrupt_write(udev, dev->config[tmp_config].interface[tmp_int].altsetting[tmp_alt].endpoint[tmp_ep].bEndpointAddress, (char*)pbuf, purb->UrbBulkOrInterruptTransfer.TransferBufferLength, timeout_bulk_write_msg_tmp);
+							alarm(1);
+							gettimeofday(&tv_now, NULL);
+	
+							PDEBUG("usb_interrupt_write() return: %d\n", ret);
+	
+							if (ret < 0) {
+								if ((tv_now.tv_usec - tv_ref.tv_usec) >= 0)
+									PDEBUG("sec: %ld, msec: %ld\n", tv_now.tv_sec-tv_ref.tv_sec, (tv_now.tv_usec-tv_ref.tv_usec)/1000);
+								else
+									PDEBUG("sec: %ld, msec: %ld\n", tv_now.tv_sec-tv_ref.tv_sec-1, (1000000+tv_now.tv_usec-tv_ref.tv_usec)/1000);
+							}
+						} else {
+							PDEBUG("USB_ENDPOINT_IN\n");
+	
+							purb->UrbBulkOrInterruptTransfer.TransferFlags=3;
+	
+							gettimeofday(&tv_ref, NULL);
+							alarm(0);
+							if (purb->UrbBulkOrInterruptTransfer.TransferBufferLength > MAX_BUFFER_SIZE)
+								purb->UrbBulkOrInterruptTransfer.TransferBufferLength = MAX_BUFFER_SIZE;
+//							ret = usb_interrupt_read(udev, dev->config[tmp_config].interface[tmp_int].altsetting[tmp_alt].endpoint[tmp_ep].bEndpointAddress, (char*)pbuf, purb->UrbBulkOrInterruptTransfer.TransferBufferLength, timeout_bulk_read_msg_tmp);
+							if (count_int_epson)
+								ret = usb_interrupt_read(udev, dev->config[tmp_config].interface[tmp_int].altsetting[tmp_alt].endpoint[tmp_ep].bEndpointAddress, (char*)pbuf, purb->UrbBulkOrInterruptTransfer.TransferBufferLength, 5000);
+							else								
+								ret = usb_interrupt_read(udev, dev->config[tmp_config].interface[tmp_int].altsetting[tmp_alt].endpoint[tmp_ep].bEndpointAddress, (char*)pbuf, purb->UrbBulkOrInterruptTransfer.TransferBufferLength, 1);
+							alarm(1);
+							gettimeofday(&tv_now, NULL);
+
+							PDEBUG("usb_interrupt_read() return: %d\n", ret);
+
+							if (ret < 0) {
+								if ((tv_now.tv_usec - tv_ref.tv_usec) >= 0)
+									PDEBUG("sec: %ld, msec: %ld\n", tv_now.tv_sec-tv_ref.tv_sec, (tv_now.tv_usec-tv_ref.tv_usec)/1000);
+								else
+									PDEBUG("sec: %ld, msec: %ld\n", tv_now.tv_sec-tv_ref.tv_sec-1, (1000000+tv_now.tv_usec-tv_ref.tv_usec)/1000);
+							}
+						}
+
+						if (!count_int_epson)
+							count_int_epson = 1;
+					}
+					
 				}
 
 				if (ret < 0) {
@@ -2014,6 +2127,11 @@ int exchangeIRP(PIRP_SAVE pirp_saver, PIRP_SAVE pirp_saverw, struct u2ec_list_he
 					if (udev) {
 						if (dev->descriptor.iSerialNumber)
 							ret = usb_get_string_simple(udev, dev->descriptor.iSerialNumber, pbuf, 256);
+						else
+						{
+							*pbuf = 0x31;
+							ret = 1;
+						}
 						ret++;
 						usb_close(udev);
 					}
@@ -2949,10 +3067,10 @@ int usb_connection(int sockfd)
 				time_monopoly = time((time_t*)NULL);
 				if (conn_busy != conn_curt)
 				{
+					nvram_set("u2ec_busyip", inet_ntoa(conn_curt->ip));
 					last_busy_conn = conn_curt;
 					conn_busy->busy = CONN_IS_IDLE;
 					conn_curt->busy = CONN_IS_BUSY;
-					nvram_set("u2ec_busyip", inet_ntoa(conn_curt->ip));
 					conn_busy = conn_curt;
 				}
 			}
@@ -2989,8 +3107,8 @@ int usb_connection(int sockfd)
 			except_flag = 0;
 
 		conn_curt->time = time((time_t*)NULL);
-		semaphore_wait();
 		if (conn_busy != conn_curt) {
+			semaphore_wait();
 			if ((i = MFP_state(MFP_GET_STATE))) {
 				semaphore_post();
 				if (i == MFP_IN_LPRNG)
@@ -3004,20 +3122,24 @@ int usb_connection(int sockfd)
 					conn_curt->busy = CONN_IS_WAITING;
 				return 0;
 			} else {
+				nvram_set("u2ec_busyip", inet_ntoa(conn_curt->ip));
+				semaphore_post();
 				last_busy_conn = conn_curt;
 				conn_curt->busy = CONN_IS_BUSY;
-				nvram_set("u2ec_busyip", inet_ntoa(conn_curt->ip));
 				if ((struct u2ec_list_head*)conn_busy != &conn_info_list)
 					conn_busy->busy = CONN_IS_IDLE;
 			}
 		}
+		semaphore_wait();
 		if (!MFP_state(MFP_GET_STATE) && pirp_save->Irp > 0) {
 			if (!except_flag_1client)
 			{				
 				MFP_state(MFP_IN_U2EC);
 				nvram_set("u2ec_busyip", inet_ntoa(conn_curt->ip));
+				semaphore_post();
 			}
-			semaphore_post();
+			else
+				semaphore_post();
 			alarm(1);
 		} else if (MFP_state(MFP_GET_STATE) == MFP_IN_U2EC && except_flag_1client) {
 			MFP_state(MFP_IS_IDLE);
@@ -3314,6 +3436,7 @@ CLOSE_CONN:
 	{
 		PDEBUG("disable monopoly for closing connection\n");
 		ip_monopoly.s_addr = 0;
+		nvram_set("mfp_ip_monopoly", "");
 	}
 
 	if (conn_busy == conn_curt) {
@@ -3519,6 +3642,7 @@ static int handle_fifo(int *fd, fd_set *pfds, int *pfdm, int conn_fd)
 		MFP_state(MFP_IS_IDLE);
 		nvram_set("u2ec_busyip", "");
 		update_device();
+		semaphore_post();
 		FD_SET(conn_fd, pfds);
 		*pfdm = conn_fd > *pfdm ? conn_fd : *pfdm;
 		rtvl = 1;
@@ -3537,6 +3661,7 @@ static int handle_fifo(int *fd, fd_set *pfds, int *pfdm, int conn_fd)
 		MFP_state(MFP_IS_IDLE);
 		nvram_set("u2ec_busyip", "");
 		update_device();
+		semaphore_post();
 		if (!dev)
 		{
 			PDEBUG("\nReset connection for removing\n");
@@ -3557,11 +3682,13 @@ static int handle_fifo(int *fd, fd_set *pfds, int *pfdm, int conn_fd)
 	else if (c == 'c') {	// connect reset.
 		switch(MFP_state(MFP_GET_STATE)) {
 		case MFP_IN_LPRNG:
+			semaphore_post();
 			alarm(1);
 			break;
 		case MFP_IN_U2EC:
 			MFP_state(MFP_IS_IDLE);
 			nvram_set("u2ec_busyip", "");
+			semaphore_post();
 			u2ec_list_for_each(pos, &conn_info_list) {
 				if (((PCONNECTION_INFO)pos)->busy == CONN_IS_BUSY)
 					((PCONNECTION_INFO)pos)->busy = CONN_IS_IDLE;
@@ -3569,12 +3696,14 @@ static int handle_fifo(int *fd, fd_set *pfds, int *pfdm, int conn_fd)
 		case MFP_IS_IDLE:
 			u2ec_list_for_each_safe(pos, tmp, &conn_info_list) {
 				if (((PCONNECTION_INFO)pos)->busy == CONN_IS_RETRY) {
+					nvram_set("u2ec_busyip", inet_ntoa(((PCONNECTION_INFO)pos)->ip));
+					semaphore_post();
 					last_busy_conn = (PCONNECTION_INFO)pos;
 					((PCONNECTION_INFO)pos)->busy = CONN_IS_BUSY;
-					nvram_set("u2ec_busyip", inet_ntoa(((PCONNECTION_INFO)pos)->ip));
 					break;
 				}
 				else if (((PCONNECTION_INFO)pos)->busy == CONN_IS_WAITING) {
+					semaphore_post();
 					PDEBUG("\nReset connection.\n");
 					count_bulk_read = 0;
 					count_bulk_write = 0;
@@ -3596,8 +3725,9 @@ static int handle_fifo(int *fd, fd_set *pfds, int *pfdm, int conn_fd)
 					break;
 				}
 			}
+			semaphore_post();
 		}
-
+#if 0
 		u2ec_list_for_each_safe(pos, tmp, &conn_info_list) {
 			if (((PCONNECTION_INFO)pos)->irp == 0xc && (time((time_t*)NULL) - ((PCONNECTION_INFO)pos)->time) > U2EC_TIMEOUT) {
 				if (!need_to_udpate_device)
@@ -3623,6 +3753,7 @@ static int handle_fifo(int *fd, fd_set *pfds, int *pfdm, int conn_fd)
 				free(pos);
 			}
 		}
+#endif
 		if (need_to_udpate_device)
 		{
 			hotplug_debug("u2ec updating device for irp number 0xc...\n");
@@ -3696,7 +3827,7 @@ static int handle_fifo(int *fd, fd_set *pfds, int *pfdm, int conn_fd)
 			MFP_state(MFP_IS_IDLE);
 			nvram_set("u2ec_busyip", "");
 		}
-
+		semaphore_post();
 		alarm(0);
 
 		u2ec_list_for_each_safe(pos, tmp, &conn_info_list) 
@@ -3724,8 +3855,6 @@ static int handle_fifo(int *fd, fd_set *pfds, int *pfdm, int conn_fd)
 	}
 CANCEL:
 #endif
-	semaphore_post();
-
 	*fd = open(U2EC_FIFO, O_RDONLY|O_NONBLOCK);
 	FD_SET(*fd, pfds);
 	*pfdm = *fd > *pfdm ? *fd : *pfdm;
@@ -3743,6 +3872,7 @@ int main(int argc, char *argv[])
 	int		fdmax;			// maximum file descriptor number
 	int		index, rtvl;
 	FILE		*fp;
+	sigset_t sigs_to_catch;
 
 #if defined(U2EC_DEBUG) && defined(U2EC_ONPC)
 	/* Decode packets. */
@@ -3763,12 +3893,12 @@ int main(int argc, char *argv[])
 
 	printf("U2EC starting ...\n");
 
-	nvram_set("u2ec_device", "");
-	nvram_set("u2ec_busyip", "");
 	semaphore_create();
 #ifdef	SUPPORT_LPRng
 	semaphore_wait();
 	nvram_set("MFP_busy", "0");
+	nvram_set("u2ec_device", "");
+	nvram_set("u2ec_busyip", "");
 #if __BYTE_ORDER == __BIG_ENDIAN
 	nvram_commit();
 #endif
@@ -3779,6 +3909,10 @@ int main(int argc, char *argv[])
 
 	hotplug_debug("u2ec self updating...\n");
 	update_device();
+
+	sigemptyset(&sigs_to_catch);
+	sigaddset(&sigs_to_catch, SIGALRM);
+	sigprocmask(SIG_UNBLOCK, &sigs_to_catch, NULL);
 
 	signal(SIGALRM, multi_client);
 
@@ -3831,6 +3965,7 @@ int main(int argc, char *argv[])
 		{
 			PDEBUG("disable monopoly for timeout\n");
 			ip_monopoly.s_addr = 0;
+			nvram_set("mfp_ip_monopoly", "");
 
 			int u2ec_fifo = open(U2EC_FIFO, O_WRONLY|O_NONBLOCK);
 			write(u2ec_fifo, "c", 1);

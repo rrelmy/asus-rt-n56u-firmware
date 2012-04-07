@@ -63,7 +63,7 @@ function show_TOS_checkbox(){
 	if(document.DDNSForm.check_asus_ddns[0].checked){
 		//$("TOS_checkbox").style.display = "";
 		document.DDNSForm.asusddns_tos_agreement.value = "1";
-		$("ddnsname_input").style.display = "block";
+		$("ddnsname_input").style.display = "";
 		$("DDNSName").focus();
 		$("DDNSName").select();
 	}

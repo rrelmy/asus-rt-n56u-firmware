@@ -701,10 +701,10 @@ window.onunload  = function(){
 	if(document.form.rt_wpa_psk.value == "Please type Password")
 		document.form.rt_wpa_psk.value = "";
 
-	validate_string_ssid(document.form.rt_ssid) 
+	validate_string_ssid(document.form.rt_ssid);
 
 	if(auth_mode == "psk")
-		validate_psk(document.form.rt_wpa_psk)
+		validate_psk(document.form.rt_wpa_psk);
 	
 	var keyindex = document.form.rt_key.value;
 	var cur_key_obj = eval("parent.document.rt_form.rt_key"+keyindex);

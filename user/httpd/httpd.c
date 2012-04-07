@@ -1098,11 +1098,17 @@ int is_phyconnected(void)       // ASUS add
 //	ret = rtl8367m_wanPort_phyStatus();
 
 //	if (ret)
-        if (nvram_match("link_wan", "1"))
+	
+	if (nvram_match("link_wan", "1"))
 	{
 		ret = 1;
 		//nvram_set_x("", "wan_status_t", "Connected");
 	}
+#ifdef RTCONFIG_USB_MODEM
+	else if(is_usb_modem_ready()){
+		ret = 1;
+	}
+#endif
 	else
 	{
 		ret = 0;

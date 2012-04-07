@@ -24,7 +24,6 @@
  * SPECIFICALLY DISCLAIMS ANY IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS
  * FOR A SPECIFIC PURPOSE OR NONINFRINGEMENT CONCERNING THIS SOFTWARE.
  *
- * $Id: services.c,v 1.1.1.1 2007/01/25 12:52:21 jiahao_jhou Exp $
  */
 
 #include <stdio.h>
@@ -45,7 +44,7 @@
 int
 start_dhcpd(void)
 {
-	if (nvram_match("router_disable", "1") || nvram_invmatch("lan_proto", "dhcp"))
+	if (nvram_match("router_disable", "1") || !nvram_match("lan_proto", "dhcp"))
 		return 0;
 
 	FILE *fp;
@@ -79,10 +78,10 @@ start_dhcpd(void)
 		dhcp_lease_time = 86400;
 	fprintf(fp, "option lease %d\n", dhcp_lease_time);
 	snprintf(name, sizeof(name), "%s_wins", nvram_safe_get("dhcp_wins"));
-	if (nvram_invmatch(name, ""))
+	if (!nvram_match(name, ""))
 		fprintf(fp, "option wins %s\n", nvram_safe_get(name));
 	snprintf(name, sizeof(name), "%s_domain", nvram_safe_get("dhcp_domain"));
-	if (nvram_invmatch(name, ""))
+	if (!nvram_match(name, ""))
 		fprintf(fp, "option domain %s\n", nvram_safe_get(name));
 	fclose(fp);
 
@@ -112,7 +111,8 @@ stop_dhcpd(void)
 	if (pids("udhcpd"))
 	{
 		doSystem("killall -%d udhcpd", SIGUSR1);
-		doSystem("killall -%d udhcpd", SIGTERM);
+		sleep(1);
+		doSystem("killall udhcpd");
 	}
 
 	dprintf("done\n");
@@ -209,9 +209,19 @@ start_httpd(void)
 
 	if (nvram_match("wan_route_x", "IP_Routed"))
 	{
-#ifdef USB_MODEM
-		if(get_usb_modem_state())
-			ret = system("httpd ppp0 &");
+#ifdef RTCONFIG_USB_MODEM
+		if(get_usb_modem_state()){
+#ifdef RTCONFIG_USB_MODEM_WIMAX
+			if(nvram_match("modem_enable", "4")){
+				char cmd[64];
+				memset(cmd, 0, 64);
+				sprintf(cmd, "httpd %s &", WIMAX_INTERFACE);
+				ret = system(cmd);
+			}
+			else
+#endif
+				ret = system("httpd ppp0 &");
+		}
 		else
 #endif
 		if (nvram_match("wan0_proto", "dhcp") || nvram_match("wan0_proto", "static"))
@@ -249,8 +259,12 @@ start_rstats(int new)
 {
         if (nvram_match("wan_route_x", "IP_Routed") && nvram_match("rstats_enable", "1")) {
                 stop_rstats();
-                if (new) xstart("rstats", "--new");
-                else xstart("rstats");
+                if (new)
+//			xstart("rstats", "--new");
+			system("rstats --new");
+                else
+//			xstart("rstats");
+			system("rstats");
         }
 }
 
@@ -295,9 +309,19 @@ start_upnp()
 	system(cmdbuf);
 
 	wan_proto = nvram_safe_get("wan_proto");
-#ifdef USB_MODEM
-	if(get_usb_modem_state())
-		system("upnpd -f ppp0 br0 &");
+#ifdef RTCONFIG_USB_MODEM
+	if(get_usb_modem_state()){
+#ifdef RTCONFIG_USB_MODEM_WIMAX
+		if(nvram_match("modem_enable", "4")){
+			char cmd[64];
+			memset(cmd, 0, 64);
+			sprintf(cmd, "upnpd -f %s br0 &", WIMAX_INTERFACE);
+			system(cmd);
+		}
+		else
+#endif
+			system("upnpd -f ppp0 br0 &");
+	}
 	else
 #endif
 	if (strcmp(wan_proto, "pppoe") == 0 || 
@@ -391,10 +415,16 @@ start_lpd()
 void
 stop_lpd()
 {
+	int delay_count = 10;
+
 	if (pids("lpd"))
 	{
 		system("killall lpd");
 		unlink("/var/run/lpdparent.pid");
+        
+		while (pids("lpd") && (delay_count-- > 0))
+			sleep(1);
+
 	}
 }
 
@@ -420,8 +450,7 @@ start_services(void)
 {
 	printf("[rc] start services\n");
 
-	start_telnetd();
-	start_logger();
+	start_syslogd();
 
 	logmessage("RT-N56U", "bootloader version: %s", nvram_safe_get("blver"));
 	logmessage("RT-N56U", "firmware version: %s", nvram_safe_get("firmver_sub"));
@@ -431,46 +460,18 @@ start_services(void)
 	else
 		doSystem("hostname %s", nvram_safe_get("productid"));
 
-//	start_usb();
+        start_telnetd();
+	start_klogd();
 	start_dns();
 	start_8021x();
 	start_8021x_rt();
-#if 0
-#ifdef GUEST_ACCOUNT
-#ifdef RANGE_EXTENDER
-	if (nvram_match("wl_mode_EX", "re"))
-	{
-	}
-	else
-#endif
-	if (nvram_match("wl_guest_ENABLE", "1") && nvram_match("wl_mode_EX", "ap") && nvram_match("wan_nat_x", "1"))
-	{
-		sleep(5);
-		start_dhcpd_guest();
-		start_guest_nas(); 
-	}
-#endif
-#endif	// #if 0
-//	if (nvram_match("wan_proto", "static"))
-//		qos_get_wan_rate();
-
 	start_infosvr();
-//	start_u2ec();
-//	start_lpd();
-        
-	start_networkmap();
-
 #if (!defined(W7_LOGO) && !defined(WIFI_LOGO))
+	start_ots();
 	start_detect_internet();
-	restart_rstats();
 #endif
 	start_httpd();
-
 	start_watchdog();
-
-#ifndef WIFI_LOGO
-	start_lltd();
-#endif
 
 	if (nvram_match("lan_stp", "1") && !is_ap_mode())
 	{
@@ -478,6 +479,11 @@ start_services(void)
 		system("brctl setfd br0 15");
 		system("brctl sethello br0 2");
 	}
+
+	start_networkmap();
+#ifndef WIFI_LOGO
+	start_lltd();
+#endif
 
 #if (!defined(W7_LOGO) && !defined(WIFI_LOGO))
 #ifdef WEB_REDIRECT
@@ -490,16 +496,17 @@ start_services(void)
 		start_wanduck();
 	}
 #endif
+	restart_rstats();
 #endif
 
 #ifdef WSC
 	if (nvram_match("wps_band", "0"))
 	{
 #if (!defined(W7_LOGO) && !defined(WIFI_LOGO))
-	if (nvram_match("wsc_config_state", "0") && nvram_invmatch("wl_radio_x", "0") && nvram_invmatch("sw_mode_ex", "3"))
+	if (nvram_match("wsc_config_state", "0") && !nvram_match("wl_radio_x", "0") && !nvram_match("sw_mode_ex", "3"))
 											// psp fix
 #else
-	if (nvram_invmatch("sw_mode_ex", "3"))						// psp fix
+	if (!nvram_match("sw_mode_ex", "3"))						// psp fix
 #endif
 	{
 		start_wsc_pin_enrollee();
@@ -516,10 +523,10 @@ start_services(void)
 	else
 	{
 #if (!defined(W7_LOGO) && !defined(WIFI_LOGO))
-	if (nvram_match("rt_wsc_config_state", "0") && nvram_invmatch("rt_radio_x", "0")  && nvram_invmatch("sw_mode_ex", "3"))
+	if (nvram_match("rt_wsc_config_state", "0") && !nvram_match("rt_radio_x", "0")  && !nvram_match("sw_mode_ex", "3"))
 											// psp fix
 #else
-	if (nvram_invmatch("sw_mode_ex", "3"))						// psp fix
+	if (!nvram_match("sw_mode_ex", "3"))						// psp fix
 #endif
 	{
 		start_wsc_pin_enrollee_2g();

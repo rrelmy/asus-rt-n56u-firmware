@@ -68,11 +68,6 @@
 #include "debug.h"
 #include "initializers.h"
 
-#define ASUS_NVRAM
-#include <nvram/bcmnvram.h>
-
-#define atoi(str) simple_strtoul(((str != NULL) ? str : ""), NULL, 0)
-
 #ifdef CONFIG_USB_STORAGE_USBAT
 #include "shuttle_usbat.h"
 #endif
@@ -116,11 +111,6 @@ static unsigned int delay_use = 5;
 module_param(delay_use, uint, S_IRUGO | S_IWUSR);
 MODULE_PARM_DESC(delay_use, "seconds to delay before using a new device");
 
-extern int usb_plug_flag;
-extern int g3_flag;
-#define PLUG_ON		10
-#define PLUG_OFF	11
-#define HUB_RE_ENABLE	30
 
 /* These are used to make sure the module doesn't unload before all the
  * threads have exited.
@@ -960,12 +950,7 @@ static int storage_probe(struct usb_interface *intf,
 	struct us_data *us;
 	int result;
 	struct task_struct *th;
-	struct usb_device *dev;
-	char usb_path_nvram[16];
-	char nvram_name[32];
-	char nvram_value[256];
 
-	printk("[K] storage probe\n");	// tmp test
 	if (usb_usual_check_type(id, USB_US_TYPE_STOR))
 		return -ENXIO;
 
@@ -982,12 +967,6 @@ static int storage_probe(struct usb_interface *intf,
 		return -ENOMEM;
 	}
 
-        /*
-	 * Allow 16-byte CDBs and thus > 2TB
-	 *
-	 */
-        host->max_cmd_len = 16;
-
 	us = host_to_us(host);
 	memset(us, 0, sizeof(struct us_data));
 	mutex_init(&(us->dev_mutex));
@@ -999,45 +978,6 @@ static int storage_probe(struct usb_interface *intf,
 	result = associate_dev(us, intf);
 	if (result)
 		goto BadDevice;
-
-// USB_MODEM marked.
-	/*if (us->pusb_dev->actconfig->desc.bNumInterfaces > 1)	// patch for U2EC
-	{
-		if (	(us->pusb_dev->descriptor.idVendor != 0x0bc2) &&	// Seagate VID
-			(us->pusb_dev->descriptor.idVendor != 0x1058) &&	// WD VID
-			(us->pusb_dev->descriptor.idVendor != 0x059f) &&	// LaCie VID
-			(us->pusb_dev->descriptor.idVendor != atoi(nvram_get("usb_vid_allow")))	)
-		{
-			printk("We only support single-interface storage device!\n");
-			result = -ENOMEM;
-			goto BadDevice;
-		}
-	}//*/
-// 2011.03 James. {
-	struct usb_host_config *config;
-	struct usb_interface *interface;
-	struct usb_interface_descriptor *desc;
-	int i, isPrinter = 0;
-
-	dev = interface_to_usbdev(intf);
-	config = dev->actconfig;
-
-	for(i = 0; i < config->desc.bNumInterfaces; ++i){
-		interface = config->interface[i];
-		desc = &interface->cur_altsetting->desc;
-
-		if(desc->bInterfaceClass == 7){
-			isPrinter = 1;
-			break;
-		}
-	}
-
-	if(isPrinter == 1){
-		printk("We don't support the storage-interface of the printer device!\n");
-		result = -ENOMEM;
-		goto BadDevice;
-	}
-// 2011.03 James. }
 
 	/*
 	 * Get the unusual_devs entries and the descriptors
@@ -1089,59 +1029,6 @@ static int storage_probe(struct usb_interface *intf,
 	atomic_inc(&total_threads);
 	wake_up_process(th);
 
-        if(g3_flag == 0)
-        {
-		printk("[K] usb storage probe: send rc sd event\n");	// tmp test
-		usb_plug_flag = PLUG_ON;		// ASUS PLUG
-		dev = us->pusb_dev;
-
-		printk("[K] usb storage devpath: %s\n", dev->devpath);
-		nvram_set("usb_path", dev->devpath);
-		sprintf(usb_path_nvram, "usb_path%s", dev->devpath);
-
-		printk("[K] usb storage device. Vendor=%x ProdID=%x Manufacturer=%s Product=%s Serial=%s\n",
-			dev->descriptor.idVendor, dev->descriptor.idProduct,
-			dev->manufacturer ? dev->manufacturer : "",
-			dev->product ? dev->product : "",
-			dev->serial ? dev->serial : "");
-
-	if(!strcmp(nvram_get(usb_path_nvram), "")){
-		nvram_set(usb_path_nvram, "storage");
-
-		memset(nvram_name, 0x0, 32);
-		memset(nvram_value, 0x0, 256);
-		sprintf(nvram_name, "usb_path%s_vid", dev->devpath);
-		sprintf(nvram_value, "%04x", dev->descriptor.idVendor);
-		nvram_set(nvram_name, nvram_value);
-
-		memset(nvram_name, 0x0, 32);
-		memset(nvram_value, 0x0, 256);
-		sprintf(nvram_name, "usb_path%s_pid", dev->devpath);
-		sprintf(nvram_value, "%04x", dev->descriptor.idProduct);
-		nvram_set(nvram_name, nvram_value);
-
-		memset(nvram_name, 0x0, 32);
-		memset(nvram_value, 0x0, 256);
-		sprintf(nvram_name, "usb_path%s_manufacturer", dev->devpath);
-		sprintf(nvram_value, "%s", dev->manufacturer ? dev->manufacturer : "");
-		nvram_set(nvram_name, nvram_value);
-
-		memset(nvram_name, 0x0, 32);
-		memset(nvram_value, 0x0, 256);
-		sprintf(nvram_name, "usb_path%s_product", dev->devpath);
-		sprintf(nvram_value, "%s", dev->product ? dev->product : "");
-		nvram_set(nvram_name, nvram_value);
-
-		memset(nvram_name, 0x0, 32);
-		memset(nvram_value, 0x0, 256);
-		sprintf(nvram_name, "usb_path%s_serial", dev->devpath);
-		sprintf(nvram_value, "%s", dev->serial ? dev->serial : "");
-		nvram_set(nvram_name, nvram_value);
-
-                kill_proc(1, SIGTTIN, 1);
-	}
-        }
-
 	return 0;
 
 	/* We come here if there are any problems */
@@ -1155,44 +1042,6 @@ BadDevice:
 static void storage_disconnect(struct usb_interface *intf)
 {
 	struct us_data *us = usb_get_intfdata(intf);
-	struct usb_device *dev = us->pusb_dev;
-	char usb_path_nvram[10];
-	char nvram_name[32];
-
-        printk("[K] storage disconnect:%d\n", g3_flag);    // tmp test
-
-	printk("[K] storage devpath: %s\n", dev->devpath);
-	nvram_set("usb_path", "");
-	sprintf(usb_path_nvram, "usb_path%s", dev->devpath);
-if(!strcmp(nvram_get(usb_path_nvram), "storage")){
-	nvram_set(usb_path_nvram, "");
-
-	memset(nvram_name, 0x0, 32);
-	sprintf(nvram_name, "usb_path%s_vid", dev->devpath);
-	nvram_set(nvram_name, "");
-
-	memset(nvram_name, 0x0, 32);
-	sprintf(nvram_name, "usb_path%s_pid", dev->devpath);
-	nvram_set(nvram_name, "");
-
-	memset(nvram_name, 0x0, 32);
-	sprintf(nvram_name, "usb_path%s_manufacturer", dev->devpath);
-	nvram_set(nvram_name, "");
-
-	memset(nvram_name, 0x0, 32);
-	sprintf(nvram_name, "usb_path%s_product", dev->devpath);
-	nvram_set(nvram_name, "");
-
-	memset(nvram_name, 0x0, 32);
-	sprintf(nvram_name, "usb_path%s_serial", dev->devpath);
-	nvram_set(nvram_name, "");
-        if(g3_flag == 0)
-        {
-                usb_plug_flag = PLUG_OFF;
-                printk("[K] sd disconn\n");  // tmp test
-		kill_proc(1, SIGTTIN, 1);
-	}
-}
 
 	US_DEBUGP("storage_disconnect() called\n");
 	quiesce_and_remove_host(us);
@@ -1225,12 +1074,6 @@ static int __init usb_stor_init(void)
 	retval = usb_register(&usb_storage_driver);
 	if (retval == 0) {
 		printk(KERN_INFO "USB Mass Storage support registered.\n");
-
-		nvram_set("usb_path1_index", "0");
-		nvram_set("usb_path1_sddev", "");
-		nvram_set("usb_path2_index", "0");
-		nvram_set("usb_path2_sddev", "");
-
 		usb_usual_set_present(USB_US_TYPE_STOR);
 	}
 	return retval;

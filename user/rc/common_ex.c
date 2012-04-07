@@ -493,7 +493,6 @@ void convert_asus_values(int skipflag)
 	}
 #endif
 
-	nvram_set("httpd_die_reboot", "");
 	/* Clean MFG test values when boot */
 	nvram_set("asus_mfg", "0");
 	nvram_set("btn_rst", "");
@@ -501,7 +500,6 @@ void convert_asus_values(int skipflag)
 
 	cprintf("read from nvram\n");
 
-	/* Wireless Section */ /* removed by Jiahao */ /*add by magic*/
 	//2008.09 magic {
 	nvram_set("wl0_bss_enabled", nvram_safe_get("wl_bss_enabled"));
 	
@@ -626,7 +624,7 @@ void convert_asus_values(int skipflag)
 	nvram_set("wl0_wpa_gtk_rekey", nvram_safe_get("wl_wpa_gtk_rekey"));
 
 
-	if (nvram_invmatch("wl_mode_ex", "ap"))
+	if (!nvram_match("wl_mode_ex", "ap"))
 		nvram_set("wl_mode", nvram_safe_get("wl_mode_ex"));
 	else
 	{
@@ -681,7 +679,7 @@ void convert_asus_values(int skipflag)
 	/* Mac filter */
 	nvram_set("wl0_macmode", nvram_safe_get("wl_macmode"));
 
-	if (nvram_invmatch("wl_macmode", "disabled"))
+	if (!nvram_match("wl_macmode", "disabled"))
 	{
 		num = atoi(nvram_safe_get("wl_macnum_x"));
 		list[0]=0;
@@ -694,7 +692,7 @@ void convert_asus_values(int skipflag)
 		nvram_set("wl0_maclist", list);
 	}
 
-	if (nvram_invmatch("rt_macmode", "disabled"))
+	if (!nvram_match("rt_macmode", "disabled"))
 	{
 		num = atoi(nvram_safe_get("rt_macnum_x"));
 		list[0]=0;
@@ -710,7 +708,7 @@ void convert_asus_values(int skipflag)
 //2008.09 magic }
 
 	if (!skipflag) {
-#ifdef USB_MODEM
+#ifdef RTCONFIG_USB_MODEM
 		nvram_unset("system_ready");	// for notifying wanduck.
 		set_usb_modem_state(0);
 #endif
@@ -818,7 +816,7 @@ void convert_asus_values(int skipflag)
 
 	nvram_set("lan_hwaddr", nvram_safe_get("il0macaddr"));
 	mac_conv("wan_hwaddr_x", -1, macbuf);
-	if (nvram_invmatch("wan_hwaddr_x", "") && strcasecmp(macbuf, "FF:FF:FF:FF:FF:FF"))
+	if (!nvram_match("wan_hwaddr_x", "") && strcasecmp(macbuf, "FF:FF:FF:FF:FF:FF"))
 	{
 		nvram_set("wan_hwaddr", macbuf);
 		nvram_set("wan0_hwaddr", macbuf);
@@ -839,9 +837,9 @@ void convert_asus_values(int skipflag)
 
 	memset(servers, 0, sizeof(servers));
 
-	if (nvram_invmatch("ntp_server0", ""))
+	if (!nvram_match("ntp_server0", ""))
 		sprintf(servers, "%s%s ", servers, nvram_safe_get("ntp_server0"));
-	if (nvram_invmatch("ntp_server1", ""))
+	if (!nvram_match("ntp_server1", ""))
 		sprintf(servers, "%s%s ", servers, nvram_safe_get("ntp_server1"));
 
 	nvram_set("ntp_servers", servers);
@@ -859,7 +857,7 @@ void convert_asus_values(int skipflag)
 		nvram_set("router_disable", "1");
 	}
 #ifdef WIRELESS_WAN
-	else if (nvram_invmatch("wl_mode_ex", "ap") && nvram_invmatch("wl_mode_ex", "re")) // thanks for Oleg
+	else if (!nvram_match("wl_mode_ex", "ap") && !nvram_match("wl_mode_ex", "re")) // thanks for Oleg
 	{
 		char name[80], *next;
 		
@@ -900,9 +898,9 @@ void convert_asus_values(int skipflag)
 	{
 /*
 	nvram_set("usb_device", "");
-	nvram_set("usb_ftp_device", ""); 	// marked by Jiahao for WL500gP
+	nvram_set("usb_ftp_device", "");
 	nvram_set("usb_storage_device", "");
-	nvram_set("usb_web_device", "");	// following lines are added by Jiahao for WL500gP
+	nvram_set("usb_web_device", "");
 	nvram_set("usb_audio_device", "");
 	nvram_set("usb_webdriver_x", "");
 	nvram_set("usb_web_flag", "");
@@ -963,29 +961,26 @@ void convert_asus_values(int skipflag)
 		}
 	}
 	nvram_set("usb_path1_index", "0");
-	nvram_set("usb_path1_sddev", "");
 	nvram_set("usb_path1_add", "0");
 	nvram_set("usb_path1_vid", "");
 	nvram_set("usb_path1_pid", "");
 	nvram_set("usb_path1_manufacturer", "");
 	nvram_set("usb_path1_product", "");
+	nvram_set("usb_path1_removed", "0");
 	nvram_set("usb_path2_index", "0");
-	nvram_set("usb_path2_sddev", "");
 	nvram_set("usb_path2_add", "0");
-        nvram_set("usb_path2_vid", "");
-        nvram_set("usb_path2_pid", "");
-        nvram_set("usb_path2_manufacturer", "");
-        nvram_set("usb_path2_product", "");
+	nvram_set("usb_path2_vid", "");
+	nvram_set("usb_path2_pid", "");
+	nvram_set("usb_path2_manufacturer", "");
+	nvram_set("usb_path2_product", "");
+	nvram_set("usb_path2_removed", "0");
 
-#ifdef USB_MODEM
+#ifdef RTCONFIG_USB_MODEM
 	nvram_set("usb_path1_act", "");
 	nvram_set("usb_path2_act", "");
 #endif
 #ifdef DLM
-//	nvram_set("st_ftp_modex", nvram_safe_get("st_ftp_mode"));
-//	nvram_set("st_samba_modex", nvram_safe_get("st_samba_mode"));
 	nvram_set("st_samba_mode_x", "-1");
-//	nvram_set("apps_dl_ex", "-1");
 	nvram_set("apps_dms_ex", "0");
 	nvram_set("apps_itunes_ex", "0");
 	nvram_set("apps_smb_ex", "0");
@@ -998,12 +993,11 @@ void convert_asus_values(int skipflag)
 	if (!nvram_get("usb_vid_allow"))
 		nvram_set("usb_vid_allow", "0");
 #endif
-	nvram_set("networkmap_fullscan", "0");	// 2008.07 James.
 	}
 #endif
 
 #if 0
-	if (nvram_invmatch("sp_battle_ips", "0") && !skipflag)
+	if (!nvram_match("sp_battle_ips", "0") && !skipflag)
 	{
 		system("insmod ip_nat_starcraft.o");
 		system("insmod ipt_NETMAP.o");
@@ -1021,9 +1015,6 @@ void convert_asus_values(int skipflag)
 	nvram_unset("support_cdma");
 #endif
 	nvram_set("reboot", "");
-#ifdef WCN
-	nvram_set("reboot_WCN", "");
-#endif
 #ifdef WSC
 	nvram_unset("wps_start_flag");
 	nvram_unset("wps_oob_flag");
@@ -1037,11 +1028,10 @@ void convert_asus_values(int skipflag)
 	if (nvram_match("rt_wsc_config_state", "2"))
 		nvram_match("rt_wsc_config_state", "1");
 
-	if (nvram_invmatch("wsc_config_state", "0") || nvram_invmatch("rt_wsc_config_state", "0"))
+	if (!nvram_match("wsc_config_state", "0") || !nvram_match("rt_wsc_config_state", "0"))
 		nvram_set("x_Setting", "1");      
 
 	nvram_set("networkmap_fullscan", "0");	// 2008.07 James.
-	nvram_set("update_resolv", "free");
 	nvram_set("mac_clone_en", "0");
 #if (!defined(W7_LOGO) && !defined(WIFI_LOGO))
 	nvram_set("link_internet", "2");
@@ -1075,6 +1065,10 @@ void convert_asus_values(int skipflag)
 	nvram_unset("ddns_ipaddr");
 	nvram_unset("ddns_status");
 	nvram_unset("ddns_updated");
+
+	nvram_set("qos_ubw", "");
+	nvram_set("qos_ubw_status", "");
+	nvram_set("qos_ubw_reason", "");
 
 	}
 }
@@ -1142,7 +1136,7 @@ void write_rt2400_conf(void)
 	fprintf(fp, "FragThreshold=%s\n", nvram_safe_get("wl_frag")); 
 
 
-	if (nvram_invmatch("wl_wep_x","0"))
+	if (!nvram_match("wl_wep_x","0"))
 	{	
 		fprintf(fp, "DefaultKeyID=%s\n", nvram_safe_get("wl_key")); 	
 
@@ -1173,7 +1167,7 @@ void write_rt2400_conf(void)
 	else 
 	{
 		fprintf(fp, "AuthMode=open\n"); 
-		if (nvram_invmatch("wl_wep_x","0"))	
+		if (!nvram_match("wl_wep_x","0"))	
 			fprintf(fp, "EncrypType=wep\n");
 		else fprintf(fp, "EncrypType=none\n");
 	}
@@ -1208,7 +1202,7 @@ void update_lan_status(int isup)
 		{
 			if (nvram_match("lan_proto", "dhcp"))
 			{
-				if (nvram_invmatch("dhcp_gateway_x", ""))
+				if (!nvram_match("dhcp_gateway_x", ""))
 					nvram_set("lan_gateway_t", nvram_safe_get("dhcp_gateway_x"));
 				else nvram_set("lan_gateway_t", nvram_safe_get("lan_ipaddr"));
 			}
@@ -1290,6 +1284,11 @@ void update_wan_status(int isup)
 	memset(dns_str, 0, sizeof(dns_str));
 	proto = nvram_safe_get("wan_proto");
 
+#ifdef RTCONFIG_USB_MODEM
+	if(get_usb_modem_state())
+		nvram_set("wan_proto_t", "Modem");
+	else
+#endif
 	if (!strcmp(proto, "static")) nvram_set("wan_proto_t", "Static");
 	else if (!strcmp(proto, "dhcp")) nvram_set("wan_proto_t", "Automatic IP");
 	else if (!strcmp(proto, "pppoe")) nvram_set("wan_proto_t", "PPPoE");
@@ -1329,13 +1328,13 @@ void update_wan_status(int isup)
 		nvram_set("wan_subnet_t", wan_subnet);
 // 2010.09 James. }
 
-		if (nvram_invmatch("wan_dnsenable_x", "1"))
+		if (!nvram_match("wan_dnsenable_x", "1"))
 		{
-			if (nvram_invmatch("wan_dns1_x",""))
+			if (!nvram_match("wan_dns1_x",""))
 				sprintf(dns_str, "%s", nvram_safe_get("wan_dns1_x"));
 
 								
-			if (nvram_invmatch("wan_dns2_x",""))
+			if (!nvram_match("wan_dns2_x",""))
 				sprintf(dns_str, " %s", nvram_safe_get("wan_dns2_x"));
 												
 			nvram_set("wan_dns_t", dns_str);

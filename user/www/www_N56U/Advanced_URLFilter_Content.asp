@@ -62,11 +62,6 @@ function applyRule(){
 }
 
 function validForm(){
-	var starttime = eval(document.form.url_time_x_starthour.value + document.form.url_time_x_startmin.value);
-	var endtime = eval(document.form.url_time_x_endhour.value + document.form.url_time_x_endmin.value);
-	var starttime_1 = eval(document.form.url_time_x_starthour_1.value + document.form.url_time_x_startmin_1.value);
-	var endtime_1 = eval(document.form.url_time_x_endhour_1.value + document.form.url_time_x_endmin_1.value);
-	
 	
 	//alert(document.form.url_enable_x[0].checked+","+document.form.url_enable_x[1].checked+","+document.form.url_enable_x_1[0].checked+","+document.form.url_enable_x_1[1].checked+",<br>"+document.form.url_date_x_Sun.checked+","+document.form.url_date_x_Mon.checked+","+document.form.url_date_x_Tue.checked+","+document.form.url_date_x_Wed.checked+","+document.form.url_date_x_Thu.checked+","+document.form.url_date_x_Fri.checked+","+document.form.url_date_x_Sat.checked);
 	if(((document.form.url_enable_x[0].checked ==true) || (document.form.url_enable_x_1[0].checked ==true))
@@ -85,12 +80,15 @@ function validForm(){
 			return false;			
 	}	
 
-if(document.form.url_enable_x[0].checked == 1){	
+if(document.form.url_enable_x[0].checked == 1){
 	if(!validate_timerange(document.form.url_time_x_starthour, 0)
 			|| !validate_timerange(document.form.url_time_x_startmin, 1)
 			|| !validate_timerange(document.form.url_time_x_endhour, 2)
 			|| !validate_timerange(document.form.url_time_x_endmin, 3)
 			){return false;}
+
+	var starttime = eval(document.form.url_time_x_starthour.value + document.form.url_time_x_startmin.value);
+	var endtime = eval(document.form.url_time_x_endhour.value + document.form.url_time_x_endmin.value);
 
 	if(starttime > endtime){
 		alert("<#FirewallConfig_URLActiveTime_itemhint#>");
@@ -112,6 +110,9 @@ if(document.form.url_enable_x_1[0].checked == 1){
 			|| !validate_timerange(document.form.url_time_x_endhour_1, 2)
 			|| !validate_timerange(document.form.url_time_x_endmin_1, 3)
 			){return false;}
+
+	var starttime_1 = eval(document.form.url_time_x_starthour_1.value + document.form.url_time_x_startmin_1.value);
+	var endtime_1 = eval(document.form.url_time_x_endhour_1.value + document.form.url_time_x_endmin_1.value);
 		
 	if(starttime_1 > endtime_1){
 		alert("<#FirewallConfig_URLActiveTime_itemhint#>");

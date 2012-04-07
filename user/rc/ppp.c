@@ -24,7 +24,6 @@
  * SPECIFICALLY DISCLAIMS ANY IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS
  * FOR A SPECIFIC PURPOSE OR NONINFRINGEMENT CONCERNING THIS SOFTWARE.
  *
- * $Id: ppp.c,v 1.1.1.1 2007/01/25 12:52:21 jiahao_jhou Exp $
  */
 
 #include <stdio.h>
@@ -63,8 +62,6 @@ ppp_ifunit(char *ifname)
 int
 ipup_main(int argc, char **argv)
 {
-	dbg("%s() CP 1\n", __FUNCTION__);
-
 	FILE *fp;
 	char *wan_ifname = safe_getenv("IFNAME");
 	char *value;

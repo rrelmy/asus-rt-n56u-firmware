@@ -69,7 +69,7 @@ function checkPass(o, o1, o2)
 		document.form.action_mode.value = "  Save  ";
 		return true;
 	}
-	alert('<#JS_checkpass#>');
+	alert("<#JS_checkpass#>");
 	return false;
 }
 
@@ -363,7 +363,7 @@ function validate_duplicate_noalert(o, v, l, off){
 function validate_duplicate(o, v, l, off){	// 2008.01 James.	
 	for(var i = 0; i < o.options.length; i++){		
 		if(entry_cmp(o.options[i].text.substring(off).toLowerCase(), v.toLowerCase(), l) == 0){
-			alert('<#JS_duplicate#>');
+			alert("<#JS_duplicate#>");
 			
 			return false;
 		}
@@ -402,7 +402,7 @@ function validate_hwaddr(o)
 			for(i=0; i<o.value.length; i++)
 			{c=o.value.charAt(i);
 			if (!(c>='0'&&c<='9') && !(c>='a'&&c<='f') && !(c>='A'&&c<='F'))
-				{alert('<#JS_validmac#>');
+				{alert("<#JS_validmac#>");
 				o.value = "";
 				o.focus();
 				o.select();
@@ -412,7 +412,7 @@ function validate_hwaddr(o)
 		return true;
 		}
 	}
-	alert('<#JS_validmac#>');
+	alert("<#JS_validmac#>");
 	o.value = "";
 	o.focus();
 	o.select();
@@ -427,7 +427,7 @@ if (keyPressed==0)
 return true;
 else if (keyPressed>=0&&keyPressed<=126)
 return true;
-alert('<#JS_validchar#>');
+alert("<#JS_validchar#>");
 return false;
 }
 function is_string2(o) {
@@ -443,7 +443,7 @@ else if ((keyPressed>=48&&keyPressed<=57) ||
 (keyPressed==45)
 )
 return true;
-alert('<#JS_validchar#>');
+alert("<#JS_validchar#>");
 return false;
 }
 
@@ -695,7 +695,7 @@ else
 }
 else
 {if ( num<0 || num>255 || c!='.')
-{alert(o.value + ' <#JS_validip#>');
+{alert(o.value + " <#JS_validip#>");
 o.value = "";
 o.focus();
 o.select();
@@ -709,7 +709,7 @@ pos++;
 }
 }
 if (pos!=3 || num<0 || num>255)
-{alert(o.value + ' <#JS_validip#>');
+{alert(o.value + " <#JS_validip#>");
 o.value = "";
 o.focus();
 o.select();
@@ -721,7 +721,7 @@ if (v=='dhcp_start' || v=='dhcp_end' || v=='wan_ipaddr' || v=='dhcp1_start' || v
 	
 	//if(v1==255||v2==255||v3==255||v4==255||v1==0||v4==0||v1==127||v1==224)
 	if(v != 'wan_ipaddr' && (v1 == 255 || v4 == 255 || v1 == 0 || v4 == 0 || v1 == 127 || v1 == 224))
-{alert(o.value + ' <#JS_validip#>');
+{alert(o.value + " <#JS_validip#>");
 o.value = "";
 o.focus();
 o.select();
@@ -733,7 +733,7 @@ if ((v=='wan_ipaddr' &&  matchSubnet2(o.value, document.form.wan_netmask, docume
 (isModel3() == 'WL550gE' && v=='lan1_ipaddr' && matchSubnet2(o.value, document.form.lan1_netmask, document.form.wan_ipaddr.value, document.form.wan_netmask))
 )
 {
-	alert(o.value + ' <#JS_validip#>');
+	alert(o.value + " <#JS_validip#>");
 	if (v=='wan_ipaddr')
 	{document.form.wan_ipaddr.value = "10.1.1.1";
 	document.form.wan_netmask.value = "255.0.0.0";
@@ -754,7 +754,7 @@ if ((v=='wan_ipaddr' &&  matchSubnet2(o.value, document.form.wan_netmask, docume
 }
 else if(v=='lan_netmask' || v=='lan1_netmask')
 {if(v1==255&&v2==255&&v3==255&&v4==255)
-{alert(o.value + ' <#JS_validip#>');
+{alert(o.value + " <#JS_validip#>");
 o.value = "";
 o.focus();
 o.select();
@@ -767,7 +767,7 @@ if (requireWANIP(v) && (
 (isModel3() == 'WL550gE' && v=='wan_netmask' &&  matchSubnet2(document.form.wan_ipaddr.value, o, document.form.lan_ipaddr.value, document.form.lan_netmask)) ||
 (isModel3() == 'WL550gE' && v=='lan1_netmask' &&  matchSubnet2(document.form.lan1_ipaddr.value, o, document.form.wan_ipaddr.value, document.form.wan_netmask))
 ))
-{alert(o.value + ' <#JS_validip#>');
+{alert(o.value + " <#JS_validip#>");
 if (v=='wan_netmask')
 {document.form.wan_ipaddr.value = "10.1.1.1";
 document.form.wan_netmask.value = "255.0.0.0";
@@ -786,7 +786,7 @@ return false;
 }
 if(v=='lan1_ipaddr')
 {if(isModel3() == 'WL550gE' && matchSubnet(document.form.lan_ipaddr.value, document.form.lan1_ipaddr.value, 3))
-{alert(o.value + ' <#JS_validip#>');
+{alert(o.value + " <#JS_validip#>");
 o.value = "";
 o.focus();
 o.select();
@@ -795,7 +795,7 @@ return false;
 }
 else if(v=='lan_ipaddr' && isBand() != 'b')
 {if(isModel3() == 'WL550gE' && matchSubnet(document.form.lan_ipaddr.value, document.form.lan1_ipaddr.value, 3))
-{alert(o.value + ' <#JS_validip#>');
+{alert(o.value + " <#JS_validip#>");
 o.value = "";
 o.focus();
 o.select();
@@ -815,7 +815,7 @@ else if (v=='lan_ipaddr' && document.form.lan_netmask.value=="" )
 }
 else if (v=='dhcp_start')
 {if (!matchSubnet(document.form.lan_ipaddr.value, document.form.dhcp_start.value, 3))
-{alert(o.value + ' <#JS_validip#>');
+{alert(o.value + " <#JS_validip#>");
 o.focus();
 o.select();
 return false;
@@ -828,7 +828,7 @@ document.form.dhcp_end.value = tmp;
 }
 else if (v=='dhcp_end')
 {if (!matchSubnet(document.form.lan_ipaddr.value, document.form.dhcp_end.value, 3))
-{alert(o.value + ' <#JS_validip#>');
+{alert(o.value + " <#JS_validip#>");
 o.focus();
 o.select();
 return false;
@@ -845,7 +845,7 @@ document.form.lan1_netmask.value = mask;
 }
 else if (v=='dhcp1_start')
 {if (!matchSubnet(document.form.lan1_ipaddr.value, document.form.dhcp1_start.value, 3))
-{alert(o.value + ' <#JS_validip#>');
+{alert(o.value + " <#JS_validip#>");
 o.focus();
 o.select();
 return false;
@@ -858,7 +858,7 @@ document.form.dhcp1_end.value = tmp;
 }
 else if (v=='dhcp1_end')
 {if (!matchSubnet(document.form.lan1_ipaddr.value, document.form.dhcp1_end.value, 3))
-{alert(o.value + ' <#JS_validip#>');
+{alert(o.value + " <#JS_validip#>");
 o.focus();
 o.select();
 return false;
@@ -927,7 +927,7 @@ function validate_ipaddr_final(o, v){
 		}
 		else{
 			if(num < 0 || num > 255 || c != '.'){
-				alert(o.value+' <#JS_validip#>');
+				alert(o.value+" <#JS_validip#>");
 				
 				o.value = "";
 				o.focus();
@@ -949,7 +949,7 @@ function validate_ipaddr_final(o, v){
 	}
 	
 	if(pos!=3 || num<0 || num>255){
-		alert(o.value + ' <#JS_validip#>');
+		alert(o.value + " <#JS_validip#>");
 		o.value = "";
 		o.focus();
 		o.select();
@@ -966,7 +966,7 @@ function validate_ipaddr_final(o, v){
 			v == 'staticip' || v == 'rt_radius_ipaddr' ||
 			v == 'dhcp_dns1_x' || v == 'dhcp_gateway_x' || v == 'dhcp_wins_x'){
 		if((v!='wan_ipaddr')&& (v1==255||v4==255||v1==0||v4==0||v1==127||v1==224)){
-			alert(o.value + ' <#JS_validip#>');
+			alert(o.value + " <#JS_validip#>");
 			
 			o.value = "";
 			o.focus();
@@ -983,7 +983,7 @@ function validate_ipaddr_final(o, v){
 				(isModel3() == 'WL550gE' && v=='wan_ipaddr' && matchSubnet2(o.value, document.form.wan_netmask, document.form.lan1_ipaddr.value, document.form.lan1_netmask)) ||
 				(isModel3() == 'WL550gE' && v=='lan1_ipaddr' && matchSubnet2(o.value, document.form.lan1_netmask, document.form.wan_ipaddr.value, document.form.wan_netmask))
 				)){
-			alert(o.value + ' <#JS_validip#>');
+			alert(o.value + " <#JS_validip#>");
 			if(v == 'wan_ipaddr'){
 				document.form.wan_ipaddr.value = "10.1.1.1";
 				document.form.wan_netmask.value = "255.0.0.0";
@@ -1005,7 +1005,7 @@ function validate_ipaddr_final(o, v){
 	}
 	else if(v=='lan_netmask' || v=='lan1_netmask'){
 		if(v1==255&&v2==255&&v3==255&&v4==255){
-			alert(o.value + ' <#JS_validip#>');
+			alert(o.value + " <#JS_validip#>");
 			o.value = "";
 			o.focus();
 			o.select();
@@ -1021,7 +1021,7 @@ function validate_ipaddr_final(o, v){
 			(isModel3() == 'WL550gE' && v=='wan_netmask' &&  matchSubnet2(document.form.wan_ipaddr.value, o, document.form.lan_ipaddr.value, document.form.lan_netmask)) ||
 			(isModel3() == 'WL550gE' && v=='lan1_netmask' &&  matchSubnet2(document.form.lan1_ipaddr.value, o, document.form.wan_ipaddr.value, document.form.wan_netmask))
 			)){
-		alert(o.value + ' <#JS_validip#>');
+		alert(o.value + " <#JS_validip#>");
 		
 		if (v=='wan_netmask'){
 			document.form.wan_ipaddr.value = "10.1.1.1";
@@ -1043,7 +1043,7 @@ function validate_ipaddr_final(o, v){
 	
 	if(v=='lan1_ipaddr'){
 		if(isModel3() == 'WL550gE' && matchSubnet(document.form.lan_ipaddr.value, document.form.lan1_ipaddr.value, 3)){
-			alert(o.value + ' <#JS_validip#>');
+			alert(o.value + " <#JS_validip#>");
 			o.value = "";
 			o.focus();
 			o.select();
@@ -1052,7 +1052,7 @@ function validate_ipaddr_final(o, v){
 	}
 	else if(v=='lan_ipaddr' && isBand() != 'b'){
 		if(isModel3() == 'WL550gE' && matchSubnet(document.form.lan_ipaddr.value, document.form.lan1_ipaddr.value, 3)){
-			alert(o.value + ' <#JS_validip#>');
+			alert(o.value + " <#JS_validip#>");
 			o.value = "";
 			o.focus();
 			o.select();
@@ -1075,7 +1075,7 @@ function validate_ipaddr_final(o, v){
 	}
 	else if (v=='dhcp_start'){
 		if (!matchSubnet(document.form.lan_ipaddr.value, document.form.dhcp_start.value, 3)){
-			alert(o.value + ' <#JS_validip#>');
+			alert(o.value + " <#JS_validip#>");
 			o.focus();
 			o.select();
 			return false;
@@ -1083,7 +1083,7 @@ function validate_ipaddr_final(o, v){
 	}
 	else if (v=='dhcp_end'){
 		if (!matchSubnet(document.form.lan_ipaddr.value, document.form.dhcp_end.value, 3)){
-			alert(o.value + ' <#JS_validip#>');
+			alert(o.value + " <#JS_validip#>");
 			o.focus();
 			o.select();
 			return false;
@@ -1094,7 +1094,7 @@ function validate_ipaddr_final(o, v){
 	}
 	else if (v=='dhcp1_start'){
 		if (!matchSubnet(document.form.lan1_ipaddr.value, document.form.dhcp1_start.value, 3)){
-			alert(o.value + ' <#JS_validip#>');
+			alert(o.value + " <#JS_validip#>");
 			o.focus();
 			o.select();
 			return false;
@@ -1102,7 +1102,7 @@ function validate_ipaddr_final(o, v){
 	}
 	else if (v=='dhcp1_end'){
 		if (!matchSubnet(document.form.lan1_ipaddr.value, document.form.dhcp1_end.value, 3)){
-			alert(o.value + ' <#JS_validip#>');
+			alert(o.value + " <#JS_validip#>");
 			o.focus();
 			o.select();
 			return false;
@@ -1136,7 +1136,7 @@ if (portidx!=-1)
 {port = str.substring(portidx+1);
 len = portidx;
 if (port>65535)
-{alert(port + ' <#JS_validport#>');
+{alert(port + " <#JS_validport#>");
 o.value = "";
 o.focus();
 o.select();
@@ -1158,7 +1158,7 @@ else
 }
 else
 {if ( num<0 || num>255 || c!='.')
-{alert(o.value + ' <#JS_validip#>');
+{alert(o.value + " <#JS_validip#>");
 o.value = "";
 o.focus();
 o.select();
@@ -1169,7 +1169,7 @@ pos++;
 }
 }
 if (pos!=3 || num<0 || num>255)
-{alert(o.value + ' <#JS_validip#>');
+{alert(o.value + " <#JS_validip#>");
 o.value = "";
 o.focus();
 o.select();
@@ -1245,7 +1245,7 @@ else if (c=='*'&&num==-1)
 }
 else
 {if ( num<0 || num>255 || (c!='.'))
-{alert(o.value + ' <#JS_validip#>');
+{alert(o.value + " <#JS_validip#>");
 o.value = "";
 o.focus();
 o.select();
@@ -1256,7 +1256,7 @@ pos++;
 }
 }
 if (pos!=3 || num<0 || num>255)
-{alert(o.value + ' <#JS_validip#>');
+{alert(o.value + " <#JS_validip#>");
 o.value = "";
 o.focus();
 o.select();
@@ -1319,7 +1319,7 @@ function validate_portrange(o, v){
 			}
 			else{				
 				if (num>65535 || num==0 || (c!=':' && c!='>' && c!='<' && c!=',')){
-					alert(o.value + ' <#JS_validport#>');
+					alert(o.value + " <#JS_validport#>");
 					//o.value = "";
 					o.focus();
 					o.select();
@@ -1341,14 +1341,14 @@ function validate_portrange(o, v){
 		
 		if ((num>65535 && prev!=-3) || (num<1&&prev!=-2) || (prev>num) || (num>=65535&&prev==-2) || (num<=1&&prev==-3)){
 			if (num>65535){				
-				alert(o.value + ' <#JS_validport#>');
+				alert(o.value + " <#JS_validport#>");
 				
 				o.focus();
 				o.select();
 				return false;
 			}
 			else{				
-				alert(o.value + ' <#JS_validportrange#>');
+				alert(o.value + " <#JS_validportrange#>");
 				//o.value = "";
 				o.focus();
 				o.select();
@@ -1374,7 +1374,7 @@ function validate_portrange(o, v){
 					return false;
 				}
 				else{
-					alert(o.value + ' <#JS_validport#>');
+					alert(o.value + " <#JS_validport#>");
 
 					o.focus();
 					o.select();
@@ -1412,7 +1412,7 @@ if (c>='0'&&c<='9')
 }
 else
 {if (num>255)
-{alert(num + ' <#JS_validport#>');
+{alert(num + " <#JS_validport#>");
 o.value = "";
 o.focus();
 o.select();
@@ -1422,7 +1422,7 @@ num = 0;
 }
 }
 if (num>255)
-{alert(num + ' <#JS_validport#>');
+{alert(num + " <#JS_validport#>");
 o.value = "";
 o.focus();
 o.select();
@@ -2742,7 +2742,7 @@ rem=1;
 //if (ip==0x0 || (ip&lnm)==(lip&lnm))
 if (document.form.wan_ipaddr.value != '0.0.0.0' && (ip&lnm)==(lip&lnm))
 // 2008.03 James. patch for Oleg's patch. }
-{alert(o.value + ' <#JS_validip#>');
+{alert(o.value + " <#JS_validip#>");
 document.form.wan_ipaddr.value="10.1.1.1";
 document.form.wan_netmask.value="255.0.0.0";
 o.focus();
@@ -2753,7 +2753,7 @@ if (gw==0 || gw==0xffffffff || (ip&nm)==(gw&nm))
 {return true;
 }
 else
-{alert(o.value + ' <#JS_validip#>');
+{alert(o.value + " <#JS_validip#>");
 o.focus();
 o.select();
 return false;
@@ -2897,7 +2897,7 @@ if (!link.opener) link.opener = self;
 }
 
 function blur_body()
-{alert('<#JS_focus#>');
+{alert("<#JS_focus#>");
 }
 /* Used when WEP is changed */
 function changeWEPType()

@@ -54,7 +54,7 @@
 
 #iconClient{ background:url(images/map-iconClient.gif) no-repeat;	width:87px;	height:77px; cursor:pointer;}
 .iconPrinter{ background:url(images/map-iconPrinter.gif) no-repeat;	width:87px;	height:77px; cursor:pointer;}
-.iconHSDPA{ background:url(images/map-iconHSDPA.gif) no-repeat;	width:87px;	height:77px; cursor:pointer;}
+.iconModem{ background:url(images/map-iconModem.gif) no-repeat;	width:87px;	height:77px; cursor:pointer;}
 #iconWebcam{ background:url(images/map-iconWebcam.gif) no-repeat;	width:87px;	height:77px; cursor:pointer;}
 .iconNo{ background:url(images/map-iconNo.gif) no-repeat;	width:87px;	height:77px; float:left;}
 

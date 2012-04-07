@@ -382,9 +382,38 @@ pincheck(const char *a)
 }
 
 int
+pinvalidate(char *pin_string)
+{
+	unsigned long PIN = strtoul(pin_string, NULL, 10);
+	unsigned long int accum = 0;
+	unsigned int len = strlen(pin_string);
+
+	if (len != 4 && len != 8)
+		return  -1;
+
+	if (len == 8) {
+		accum += 3 * ((PIN / 10000000) % 10);
+		accum += 1 * ((PIN / 1000000) % 10);
+		accum += 3 * ((PIN / 100000) % 10);
+		accum += 1 * ((PIN / 10000) % 10);
+		accum += 3 * ((PIN / 1000) % 10);
+		accum += 1 * ((PIN / 100) % 10);
+		accum += 3 * ((PIN / 10) % 10);
+		accum += 1 * ((PIN / 1) % 10);
+
+		if (0 == (accum % 10))
+			return 0;
+	}
+	else if (len == 4)
+		return 0;
+
+	return -1;
+}
+
+int
 setPIN(const char *pin)
 {
-	if (pincheck(pin))
+	if (pincheck(pin) && !pinvalidate(pin))
 	{
 		FWrite(pin, OFFSET_PIN_CODE, 8);
 		char PIN[9];
@@ -668,7 +697,7 @@ int gen_ralink_config()
 	fprintf(fp, "TxRate=%d\n", 0);
 
 	//Channel
-//	if (nvram_invmatch("sw_mode_ex", "2") && nvram_invmatch("wl_channel", "0"))
+//	if (!nvram_match("sw_mode_ex", "2") && !nvram_match("wl_channel", "0"))
 	{
 		str = nvram_safe_get("wl_channel");
 
@@ -1063,10 +1092,10 @@ int gen_ralink_config()
 		(nvram_match("wl_auth_mode", "radius") && nvram_match("wl_wep_x", "0"))*/
 	)
 		fprintf(fp, "EncrypType=%s\n", "NONE");
-	else if (       (nvram_match("wl_auth_mode", "open") && nvram_invmatch("wl_wep_x", "0")) ||
+	else if (       (nvram_match("wl_auth_mode", "open") && !nvram_match("wl_wep_x", "0")) ||
 			nvram_match("wl_auth_mode", "shared") ||
 			nvram_match("wl_auth_mode", "radius")/* ||
-			(nvram_match("wl_auth_mode", "radius") && nvram_invmatch("wl_wep_x", "0"))*/
+			(nvram_match("wl_auth_mode", "radius") && !nvram_match("wl_wep_x", "0"))*/
 	)
 		fprintf(fp, "EncrypType=%s\n", "WEP");
 	else if (nvram_match("wl_crypto", "tkip"))
@@ -1280,7 +1309,7 @@ int gen_ralink_config()
 
 	//HT_EXTCHA
 #if 0
-//	if (nvram_invmatch("sw_mode_ex", "2") && nvram_invmatch("wl_channel", "0"))
+//	if (!nvram_match("sw_mode_ex", "2") && !nvram_match("wl_channel", "0"))
 	{
 		str = nvram_safe_get("HT_EXTCHA");
 		if (str)
@@ -1292,7 +1321,7 @@ int gen_ralink_config()
 		}
 	}
 #else
-//	if (nvram_invmatch("wl_channel", "0"))
+//	if (!nvram_match("wl_channel", "0"))
 		fprintf(fp, "HT_EXTCHA=%d\n", EXTCHA);
 #endif
 
@@ -1477,7 +1506,7 @@ int gen_ralink_config()
 
 	list[0]=0;
 	list[1]=0;
-	if (nvram_invmatch("wl_macmode", "disabled"))
+	if (!nvram_match("wl_macmode", "disabled"))
 	{
 		num = atoi(nvram_safe_get("wl_macnum_x"));
 		for (i=0;i<num;i++)
@@ -1551,7 +1580,7 @@ int gen_ralink_config()
 	//WdsEncrypType
 	if (nvram_match("wl_auth_mode", "open") && nvram_match("wl_wep_x", "0"))
 		fprintf(fp, "WdsEncrypType=%s\n", "NONE;NONE;NONE;NONE");
-	else if (nvram_match("wl_auth_mode", "open") && nvram_invmatch("wl_wep_x", "0"))
+	else if (nvram_match("wl_auth_mode", "open") && !nvram_match("wl_wep_x", "0"))
 		fprintf(fp, "WdsEncrypType=%s\n", "WEP;WEP;WEP;WEP");
 	else if (nvram_match("wl_auth_mode", "psk") && nvram_match("wl_wpa_mode", "2") && nvram_match("wl_crypto", "aes"))
 		fprintf(fp, "WdsEncrypType=%s\n", "AES;AES;AES;AES");
@@ -1582,7 +1611,7 @@ int gen_ralink_config()
 		fprintf(fp, "Wds2Key=\n");
 		fprintf(fp, "Wds3Key=\n");
 	}
-	else if (nvram_match("wl_auth_mode", "open") && nvram_invmatch("wl_wep_x", "0"))
+	else if (nvram_match("wl_auth_mode", "open") && !nvram_match("wl_wep_x", "0"))
 	{
 		fprintf(fp, "WdsDefaultKeyID=%s;%s;%s;%s\n", nvram_safe_get("wl_key"), nvram_safe_get("wl_key"), nvram_safe_get("wl_key"), nvram_safe_get("wl_key"));
 		sprintf(list, "wl_key%s", nvram_safe_get("wl_key"));
@@ -1673,7 +1702,7 @@ int gen_ralink_config()
 	fprintf(fp, "TGnWifiTest=0\n");
 
 /*
-	if (nvram_match("sw_mode_ex", "2") && nvram_invmatch("sta_ssid", ""))
+	if (nvram_match("sw_mode_ex", "2") && !nvram_match("sta_ssid", ""))
 	{
 		int flag_wep;
 
@@ -2183,7 +2212,7 @@ int gen_ralink_config_rt()
 	fprintf(fp, "TxRate=%d\n", 0);
 
 	//Channel
-//	if (nvram_invmatch("sw_mode_ex", "2") && nvram_invmatch("rt_channel", "0"))
+//	if (!nvram_match("sw_mode_ex", "2") && !nvram_match("rt_channel", "0"))
 	{
 		str = nvram_safe_get("rt_channel");
 
@@ -2573,10 +2602,10 @@ int gen_ralink_config_rt()
 		(nvram_match("rt_auth_mode", "radius") && nvram_match("rt_wep_x", "0"))*/
 	)
 		fprintf(fp, "EncrypType=%s\n", "NONE");
-	else if (       (nvram_match("rt_auth_mode", "open") && nvram_invmatch("rt_wep_x", "0")) ||
+	else if (       (nvram_match("rt_auth_mode", "open") && !nvram_match("rt_wep_x", "0")) ||
 			nvram_match("rt_auth_mode", "shared") ||
 			nvram_match("rt_auth_mode", "radius")/* ||
-			(nvram_match("rt_auth_mode", "radius") && nvram_invmatch("rt_wep_x", "0"))*/
+			(nvram_match("rt_auth_mode", "radius") && !nvram_match("rt_wep_x", "0"))*/
 	)
 		fprintf(fp, "EncrypType=%s\n", "WEP");
 	else if (nvram_match("rt_crypto", "tkip"))
@@ -2787,7 +2816,7 @@ int gen_ralink_config_rt()
 		HTBW_MAX = 0;
 
 	//HT_EXTCHA
-//	if (/*nvram_invmatch("sw_mode_ex", "2") && */nvram_invmatch("rt_channel", "0"))
+//	if (/*!nvram_match("sw_mode_ex", "2") && */!nvram_match("rt_channel", "0"))
 	{
 		str = nvram_safe_get("rt_HT_EXTCHA");
 		if (str)
@@ -2975,7 +3004,7 @@ int gen_ralink_config_rt()
 
 	list[0]=0;
 	list[1]=0;
-	if (nvram_invmatch("rt_macmode", "disabled"))
+	if (!nvram_match("rt_macmode", "disabled"))
 	{
 		num = atoi(nvram_safe_get("rt_macnum_x"));
 		for (i=0;i<num;i++)
@@ -3049,7 +3078,7 @@ int gen_ralink_config_rt()
 	//WdsEncrypType
 	if (nvram_match("rt_auth_mode", "open") && nvram_match("rt_wep_x", "0"))
 		fprintf(fp, "WdsEncrypType=%s\n", "NONE;NONE;NONE;NONE");
-	else if (nvram_match("rt_auth_mode", "open") && nvram_invmatch("rt_wep_x", "0"))
+	else if (nvram_match("rt_auth_mode", "open") && !nvram_match("rt_wep_x", "0"))
 		fprintf(fp, "WdsEncrypType=%s\n", "WEP;WEP;WEP;WEP");
 	else if (nvram_match("rt_auth_mode", "psk") && nvram_match("rt_wpa_mode", "2") && nvram_match("rt_crypto", "aes"))
 		fprintf(fp, "WdsEncrypType=%s\n", "AES;AES;AES;AES");
@@ -3080,7 +3109,7 @@ int gen_ralink_config_rt()
 		fprintf(fp, "Wds2Key=\n");
 		fprintf(fp, "Wds3Key=\n");
 	}
-	else if (nvram_match("rt_auth_mode", "open") && nvram_invmatch("rt_wep_x", "0"))
+	else if (nvram_match("rt_auth_mode", "open") && !nvram_match("rt_wep_x", "0"))
 	{
 		fprintf(fp, "WdsDefaultKeyID=%s;%s;%s;%s\n", nvram_safe_get("rt_key"), nvram_safe_get("rt_key"), nvram_safe_get("rt_key"), nvram_safe_get("rt_key"));
 		sprintf(list, "rt_key%s", nvram_safe_get("rt_key"));
@@ -3171,7 +3200,7 @@ int gen_ralink_config_rt()
 	fprintf(fp, "TGnWifiTest=0\n");
 
 /*
-	if (nvram_match("sw_mode_ex", "2") && nvram_invmatch("rt_sta_ssid", ""))
+	if (nvram_match("sw_mode_ex", "2") && !nvram_match("rt_sta_ssid", ""))
 	{
 		int flag_wep;
 
@@ -4035,12 +4064,21 @@ need_to_start_wps_2g()
 
 #if defined (W7_LOGO) || defined (WIFI_LOGO)
 int
-wps_pin(int pincode)
+wps_pin(const char *pincode)
 {
 	if (nvram_match("lan_ipaddr_t", "") && nvram_match("lan_ipaddr", ""))
 		return 0;
 
 	if (!need_to_start_wps_5g()) return 0;
+
+	if (!pincode || !(*pincode))
+		return 0;
+
+	if (strcmp(pincode, "0") && pinvalidate(pincode))
+	{
+		dbG("invalid pincode!\n");
+		return 0;
+	}
 
 	system("route delete 239.255.255.250 1>/dev/null 2>&1");
 	if (check_if_file_exist(WSCD_PIDFILE_5G))
@@ -4065,15 +4103,15 @@ wps_pin(int pincode)
 	dbg("WPS: PIN\n");					// PIN method
 	doSystem("iwpriv %s set WscMode=1", WIF);
 
-	if (pincode == 0)
+	if (!strcmp(pincode, "0"))
 	{
 		g_isEnrollee = 1;
-		doSystem("iwpriv %s set WscPinCode=%d", WIF, 0);
+		doSystem("iwpriv %s set WscPinCode=0", WIF);
 		doSystem("iwpriv %s set WscGetConf=%d", WIF, 1);	// Trigger WPS AP to do simple config with WPS Client
 	}
 	else
 	{
-		doSystem("iwpriv %s set WscPinCode=%d", WIF, pincode);
+		doSystem("iwpriv %s set WscPinCode=%s", WIF, pincode);
 		doSystem("iwpriv %s set WscGetConf=%d", WIF, 1);	// Trigger WPS AP to do simple config with WPS Client
 	}
 
@@ -4081,12 +4119,21 @@ wps_pin(int pincode)
 }
 
 int
-wps_pin_2g(int pincode)
+wps_pin_2g(const char *pincode)
 {
 	if (nvram_match("lan_ipaddr_t", "") && nvram_match("lan_ipaddr", ""))
 		return 0;
 
 	if (!need_to_start_wps_2g()) return 0;
+
+	if (!pincode || !(*pincode))
+		return 0;
+
+	if (strcmp(pincode, "0") && pinvalidate(pincode))
+	{
+		dbG("invalid pincode!\n");
+		return 0;
+	}
 
 	system("route delete 239.255.255.250 1>/dev/null 2>&1");
 	if (check_if_file_exist(WSCD_PIDFILE_2G))
@@ -4111,15 +4158,15 @@ wps_pin_2g(int pincode)
 	dbg("WPS: PIN\n");					// PIN method
 	doSystem("iwpriv %s set WscMode=1", WIF2G);
 
-	if (pincode == 0)
+	if (!strcmp(pincode, "0"))
 	{
 		g_isEnrollee = 1;
-		doSystem("iwpriv %s set WscPinCode=%d", WIF2G, 0);
+		doSystem("iwpriv %s set WscPinCode=0", WIF2G);
 		doSystem("iwpriv %s set WscGetConf=%d", WIF2G, 1);	// Trigger WPS AP to do simple config with WPS Client
 	}
 	else
 	{
-		doSystem("iwpriv %s set WscPinCode=%d", WIF2G, pincode);
+		doSystem("iwpriv %s set WscPinCode=%s", WIF2G, pincode);
 		doSystem("iwpriv %s set WscGetConf=%d", WIF2G, 1);	// Trigger WPS AP to do simple config with WPS Client
 	}
 
@@ -4249,33 +4296,51 @@ wps_pbc_both()
 }
 #else
 int
-wps_pin(int pincode)
+wps_pin(const char *pincode)
 {
 	if (!need_to_start_wps_5g()) return 0;
+
+	if (!pincode || !(*pincode))
+		return 0;
+
+	if (strcmp(pincode, "0") && pinvalidate(pincode))
+	{
+		dbG("invalid pincode!\n");
+		return 0;
+	}
 
 //	dbg("WPS: PIN\n");
 	doSystem("iwpriv %s set WscMode=1", WIF);
 
-	if (pincode == 0)
+	if (!strcmp(pincode, "0"))
 		doSystem("iwpriv %s set WscGetConf=%d", WIF, 1);	// Trigger WPS AP to do simple config with WPS Client
 	else
-		doSystem("iwpriv %s set WscPinCode=%d", WIF, pincode);
+		doSystem("iwpriv %s set WscPinCode=%s", WIF, pincode);
 
 	return 0;
 }
 
 int
-wps_pin_2g(int pincode)
+wps_pin_2g(const char *pincode)
 {
 	if (!need_to_start_wps_2g()) return 0;
+
+	if (!pincode || !(*pincode))
+		return 0;
+
+	if (strcmp(pincode, "0") && pinvalidate(pincode))
+	{
+		dbG("invalid pincode!\n");
+		return 0;
+	}
 
 //	dbg("WPS: PIN\n");
 	doSystem("iwpriv %s set WscMode=1", WIF2G);			// PIN method
 
-	if (pincode == 0)
+	if (!strcmp(pincode, "0"))
 		doSystem("iwpriv %s set WscGetConf=%d", WIF2G, 1);	// Trigger WPS AP to do simple config with WPS Client
 	else
-		doSystem("iwpriv %s set WscPinCode=%d", WIF2G, pincode);
+		doSystem("iwpriv %s set WscPinCode=%s", WIF2G, pincode);
 
 	return 0;
 }
@@ -4558,6 +4623,7 @@ wps_oob_both()
 
 //	nvram_set("x_Setting", "0");
 	nvram_set("wsc_config_state", "0");
+	nvram_set("rt_wsc_config_state", "0");
 #if defined (W7_LOGO) || defined (WIFI_LOGO)
 	nvram_set("wps_mode", "2");
 
@@ -5344,7 +5410,7 @@ wsc_user_commit()
 			doSystem("iwpriv %s set EncrypType=%s", WIF2G, "NONE");
 		}
 
-//		if (nvram_invmatch("rt_wep_x", "0"))
+//		if (!nvram_match("rt_wep_x", "0"))
 		if (flag_wep)
 		{
 			//KeyStr
@@ -5364,7 +5430,7 @@ wsc_user_commit()
 		doSystem("iwpriv %s set SSID=%s", WIF2G, nvram_safe_get("rt_ssid"));
 
 		nvram_set("rt_wsc_config_state", "1");
-		doSystem("iwpriv %s set WscConfStatus=%d", WIF2G, 1);   // AP is configured
+		doSystem("iwpriv %s set WscConfStatus=%d", WIF2G, 2);   // AP is configured
 	}
 
 	if (nvram_match("wsc_config_state", "2"))
@@ -5426,7 +5492,7 @@ wsc_user_commit()
 			doSystem("iwpriv %s set EncrypType=%s", WIF, "NONE");
 		}
 
-//		if (nvram_invmatch("wl_wep_x", "0"))
+//		if (!nvram_match("wl_wep_x", "0"))
 		if (flag_wep)
 		{
 			//KeyStr
@@ -5446,6 +5512,6 @@ wsc_user_commit()
 		doSystem("iwpriv %s set SSID=%s", WIF, nvram_safe_get("wl_ssid"));
 
 		nvram_set("wsc_config_state", "1");
-		doSystem("iwpriv %s set WscConfStatus=%d", WIF, 1);     // AP is configured
+		doSystem("iwpriv %s set WscConfStatus=%d", WIF, 2);     // AP is configured
 	}
 }

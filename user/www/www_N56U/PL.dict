@@ -20,8 +20,8 @@ LANG_SV=Svensk
 LANG_BR=Brazil
 LANG_JP=日本語
 [Malaysia Unifi]
-PPPConnection_x_Unifi=Unifi Support :
-PPPConnection_x_Unifi_Describe=Select 'Yes' to support Malaysia Unifi services.
+PPPConnection_x_Unifi=Obsługa Unifi:
+PPPConnection_x_Unifi_Describe=Wybierz (Tak), aby obsługiwać usługi Malaysia Unifi.
 [VPN Passthrough]
 VPN_PPTP_Passthrough=Okienko VPN PPTP
 VPN_L2TP_Passthrough=Okienko VPN L2TP
@@ -29,7 +29,7 @@ VPN_IPSec_Passthrough=Okienko VPN IPSec
 vpn_passthrough_itemname=Okienko VPN
 vpn_passthrough_desc=Włącz okienko VPN w celu umożliwienia przejścia połączenia wirtualnej sieci prywatnej (VPN) przez router do klientów sieci.
 [AiDisk account alert]
-enable_noaccount_alert=Po włączeniu, stanie się to problem połączenia z serwerem Samba i Download Master, jeśli nie ma istnieć konto.
+enable_noaccount_alert=Jeżeli próbujesz udostępnić pliki na dysku USB bez utworzenia konta udostępnianego za pośrednictwem AiDisk, wystąpią problemy z serwerem Samba i Download Master.
 [iTunes]
 iTunesMediaServer=iTunes Media Server
 [opmode strings]
@@ -39,14 +39,12 @@ OP_switch_button_hint2=Kliknij tu w celu podglądu
 OP_GW_item=Tryb współdzielenia IP(domyślna)
 OP_GW_desc1=W trybie Broadband share (Współdzielenie pasma), RT-N56U łączy się z Internetem przez PPPoE,Automatic IP (Automatyczny IP), PPTP, L2TP lub Static IP (Statyczny IP).
 OP_GW_desc2=Udostępnia radiowy sygnał bezprzewodowy. Wlączone są NAT, firewall i usługi udostępniania pasma klientom LAN. Obsługiwane są także UPnP i Dynamic DNS (Dynamiczny DNS) dla segmentu SOHO lub użytkowników domowych.
-OP_RT_item=Tryb routera bezprzewodowego/współdzielenia IP
-OP_RT_desc1=W trybie routera/współdzielenia IP, RT-N56U łączy się z Internetem za pomocą PPPoE, DHCP, PPTP, L2TP lub Statycznego IP i udostępnia sieć bezprzewodową urządzeniom klienckim sieci lokalnej.  W trybie tym NAT, firewall i serwer DHCP są włączone domyślnie. UPnP oraz dynamiczny DNS obsługiwane są dla użytkowników SOHO i domowych. 
-OP_RT_desc2=Tryb tan należy wybrać, kiedy pierwszy raz korzysta się takiego urządzenia lub aktualnie nie są wykorzystywane żadne routery przewodowe/bezprzewodowe.
-OP_RE_item=Tryb powtarzacza
-OP_RE_desc1=W trybie powtarzacza, RT-N56U podłącza się do istniejącego sygnału bezprzewodowego i zwiększa zasięg sygnału umożliwiając zwiększenie zasięgu sieci bezprzewodowej oraz uzyskanie wyższej jakości sygnału bezprzewodowego. 
-OP_AP_item=Tryb punktu dostępowego (AP)
-OP_AP_desc1=W trybie punktu dostępowego (AP), RT-N56U łączy się z routerem bezprzewodowym przez kabel sieciowy w celu zwiększenia zasięgu sygnału bezprzewodowego na innych klientów siec. W trybie tym funkcje firewall, współdzielenie IP oraz NAT są wyłączone domyślnie. 
-OP_AP_desc2=Tryb ten należy wybrać, kiedy jest się zaawansowanym użytkownikiem sieci, który rozumie różnice między routerem bezprzewodowym a punktem dostępowym, która polega na tym, że router bezprzewodowy oferuje funkcje tłumaczenia adresu sieciowego (NAT) oraz współdzielenia IP. 
+OP_RT_item=Router(Disable NAT)
+OP_RT_desc1=W trybie routera, użyj kabla Ethernet do połączenia RT-N56U z komputerem i utwórz połączenie z siecią bezprzewodową, a następnie wybierz ustawienia dla połączenia z siecią bezprzewodową. 
+OP_RT_desc2=RT-N56Uzwiększa zasięg działania sieci bezprzewodowej i umożliwia skonfigurowanie protokołu statycznego routingu. Wyłącza NAT (Network Address Translation (Translacja adresów sieciowych)), aby umożliwić komunikację i współdzielenie usług, pomiędzy klientami LAN i WAN. Uwaga: Należy określić reguły routingu w routerze hosta.
+OP_AP_item=Access Point
+OP_AP_desc1=W trybie AP, użyj kabla Ethernet do połączenia RT-N56U z siecią LAN, a następnie komputer utworzy połączenie sieci bezprzewodowej z RT-N56U. Wszyscy klienci sieciowi zostaną połączeni razem.
+OP_AP_desc2=Ten tryb udostępnia połączenie z Internetem klientom sieciowym, ale wyłącza firewall, współdzielenie IP i funkcje NAT.
 OP_Modem=Modem
 OP_WirelessClient=Klient bezprzewodowy
 OP_WirelessSignal=Istniejący sygnał bezprzewodowy
@@ -54,7 +52,7 @@ OP_WirelessSignal=Istniejący sygnał bezprzewodowy
 IPConnection_VSList_ftpport=FTP Server Port:
 Adm_System_telnetd=Enable Telnet Server?
 wps_start_btn=Rozpocząć
-USB_Application_account_alert=Nazwą konta użytkownika nie może być ‘root’, ‘Root’, ‘ROOT’, ‘admin’, ‘Admin’, ‘ADMIN’, ‘family’, ‘Family’, ‘FAMILY’! Proszę wpisać poprawną nazwę konta.
+USB_Application_account_alert=Nazwą konta użytkownika nie może być 'root', 'Root', 'ROOT', 'admin', 'Admin', 'ADMIN', 'family', 'Family', 'FAMILY'! Proszę wpisać poprawną nazwę konta.
 BasicConfig_USBStorageWhiteist_itemdesc=Zakres wartości dla tego pola wynosi od hex 1 do FFFF. Wpisz 0 (zero), aby wyłączyć tą funkcję.
 BasicConfig_USBStorageWhiteist_itemname=Lista uprawnionych urządzenia pamięci USB VID
 LANHostConfig_x_TimeZone_itemhint_2=Wybrane ustawienia strefy czasowej są inne niż wykryte przez urządzenie. Czy chcesz zmienić wykrytą strefę czasową?
@@ -1141,7 +1139,8 @@ TZ84=Nuku'alofa
 LANHostConfig_x_NTPServer_itemname=Serwer NTP:
 LANHostConfig_x_NTPServer_itemdesc=W celu zsynchronizowania czasu systemowego z zewnętrznym serwerem NTP.
 LANHostConfig_x_DDNSEnable_sectionname=Ustawienia DDNS.
-LANHostConfig_x_DDNSEnable_sectiondesc=Usługa dynamicznego DNS (DDNS) pozwala na przypisanie Internetowej nazwy domenowej do routera pracującego ze zmiennym adresem IP. Obsługiwane jest kilka rodzajów usługi DDNS.
+LANHostConfig_x_DDNSEnable_sectiondesc=Usługa dynamicznego DNS (DDNS) pozwala na przypisanie Internetowej nazwy domenowej do routera pracującego ze zmiennym adresem IP. Obsługiwane jest kilka rodzajów usługi DDNS.<p>
+LANHostConfig_x_DDNSEnable_sectiondesc2=Router sieci bezprzewodowej aktualnie wykorzystuje prywatny adres IP WAN (192.168.x.x, 10,x,x,x, lub 172.16.x.x). Router ten może znajdować się w środowisku wielu NAT, a w tym środowisku usługa DDNS nie może działać.
 LANHostConfig_x_DDNSEnable_itemname=Uruchomić klienta DDNS ?
 LANHostConfig_x_DDNSServer_itemname=Serwer:
 LANHostConfig_x_DDNSUserName_itemname=Nazwa użytkownika lub adres email:
@@ -1395,7 +1394,7 @@ BM_desc4=RT-N56U zarządza całym ruchem audio/video. Nigdy więcje opóźnień 
 BM_hint=Prędkośc połączenia uplink osiągneła bardzo dobry poziom. Sugerujemy nie włączanie funkcji EzQoS.
 BM_GB=Gaming Blaster
 BM_IA=Aplikacje internetowe
-BM_FTPS=AiDisk - server FTP
+BM_FTPS=FTP
 BM_VVS=Strumieniowe video i aplikacje VoIP
 BM_NoChange=Wybierz pożądany przez Ciebie aplikację.
 t2QOS2=Usługi zdefiniowane przez użytkownika.
@@ -1411,7 +1410,7 @@ LANHostConfig_x_DDNS_alarm_3=Rejestracja zakończona sukcesem.
 LANHostConfig_x_DDNS_alarm_4=Rejestracja nazwy użytkownika zakończona sukcesem.
 LANHostConfig_x_DDNS_alarm_5=Rejestracja nazwy hosta zakończona sukcesem.
 LANHostConfig_x_DDNS_alarm_6=Adres IP i nazwa hosta nie są zarejestrowane. Zarejestruj najpierw!
-LANHostConfig_x_DDNS_alarm_7=Nieprawidłowa nazwa hosta. Prawidłowy format to 'xxx.asuscomm.com' gdzie 'xxx' nie może być cyframi.
+LANHostConfig_x_DDNS_alarm_7=Nazwa hosta nie akceptuje prefiksu numeru i \".\" (na przykład \"123abc\" lub \"aaa.bbb\")
 LANHostConfig_x_DDNS_alarm_8=Nieprawidłowa domena! Prawidłowa domena to 'asuscomm.com'!
 LANHostConfig_x_DDNS_alarm_9=Nieprawidłowy adres IP!
 LANHostConfig_x_DDNS_alarm_10=Nieautoryzowana próba rejestracji!
@@ -1439,7 +1438,7 @@ HSDPAConfig_password_itemdesc=Wprowadź hasło.
 HSDPAConfig_usbadaptor_itemdesc=Wybierz adapter USB
 confirm_disableftp_dm=Wyłączenie Udostępnienie otoczenia sieciowego, wyłączy Download Master.
 LANHostConfig_IPRouters_itemdesc=Adres LAN IP routera RT-N56U. Domyślny adres to 192.168.1.1. Zakres adresów IP LAN: 192.168.0.1 - 192.168.255.254, 172.16.0.1 – 172.31.255.254, 10.0.0.1 – 10.255.255.254
-HSDPAConfig_hsdpa_mode_itemdesc=Choose the USB Modem mode according by your requirements and enviroments. We provide four mode below: Backup, Equal weight, Always high and Always low. W celu bezpiecznego odłączenia adaptera USB Modem, sprawdź <a href='/index.asp'>Indeks</a> i kliknij przycisk adaptera.
+HSDPAConfig_hsdpa_mode_itemdesc=Choose the USB Modem mode according by your requirements and enviroments. We provide four mode below: Backup, Equal weight, Always high and Always low. W celu bezpiecznego odłączenia adaptera USB Modem, sprawdź <a href='/index.asp' target=\'_blank\'>Indeks</a> i kliknij przycisk adaptera.
 Not_authpage_login_again=Aby zalogować ponownie, najpierw zamknij to okno.  
 GO_HSDPA_SETTING=Idź do ustawień USB Modem
 HSDPA_disable=If you want to change connection type，please refer to <a href="/Advanced_Modem_others.asp"><#GO_HSDPA_SETTING#></a>to disable adaptor.

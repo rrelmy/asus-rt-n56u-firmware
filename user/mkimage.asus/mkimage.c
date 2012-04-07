@@ -651,7 +651,10 @@ print_header (image_header_t *hdr)
 	printf ("Entry Point:  0x%08X\n", ntohl(hdr->ih_ep));
 	printf ("Kernel Size:  0x%08X\n", ntohl(hdr->ih_ksz));
 	printf ("Kernel Ver.:  %d.%d\n", hdr->tail.kernel.major, hdr->tail.kernel.minor);
-	printf ("FS Ver:       %d.%d\n", hdr->tail.fs.major, hdr->tail.fs.minor);
+	if (!hdr->tail.sub_fs)
+	printf ("FS Ver.:      %d.%d\n", hdr->tail.fs.major, hdr->tail.fs.minor);
+	else
+	printf ("FS Ver.:      %d.%d%c\n", hdr->tail.fs.major, hdr->tail.fs.minor, hdr->tail.sub_fs);
 //	printf ("Hardware Compatible List:\n");
 //	for(i=0; i<8; i++)
 //		printf("	%d: %d.%d\n", i+1, hdr->tail.hw[i].major, hdr->tail.hw[i].minor);	

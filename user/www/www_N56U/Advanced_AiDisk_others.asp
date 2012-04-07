@@ -37,11 +37,11 @@ function initial(){
         enable_auto_hint(17, 6);
         
         xfr();
-        
+        /*
         if(ddns_enable == '1' && ddns_server == 'WWW.ASUS.COM' && ddns_hostname.length > '.asuscomm.com'.length){
                 $("computer_name").readOnly = true;
                 $("computer_name").className = "devicepin";
-        }
+        }*/
 }
 
 function xfr(){

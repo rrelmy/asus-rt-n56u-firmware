@@ -37,6 +37,10 @@ genDevNode()
 	echo "# * Run both after creating and before removing the device." >> /etc/mdev.conf
 	echo "sd[a-z][1-9] 0:0 0660 */sbin/automount.sh \$MDEV" >> /etc/mdev.conf
 	echo "sd[a-z] 0:0 0660 */sbin/automount.sh \$MDEV" >> /etc/mdev.conf
+#	echo "sr[0-9] 0:0 0660 @/sbin/asus_sr \$MDEV \$ACTION" >> /etc/mdev.conf
+#	echo "ttyUSB[0-9] 0:0 0660 */sbin/asus_tty \$MDEV \$ACTION" >> /etc/mdev.conf
+#	echo "ttyACM[0-9] 0:0 0660 */sbin/asus_tty \$MDEV \$ACTION" >> /etc/mdev.conf
+#	echo "[1-2]-[1-2]:1.[0-9] 0:0 0660 */sbin/asus_usb_interface \$MDEV \$ACTION" >> /etc/mdev.conf
 #	if [ "$CONFIG_USB_SERIAL" = "y" ] || [ "$CONFIG_USB_SERIAL" = "m" ]; then
 #		echo "ttyUSB0 0:0 0660 @/sbin/autoconn3G.sh connect" >> /etc/mdev.conf
 #	fi

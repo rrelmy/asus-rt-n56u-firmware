@@ -25,7 +25,6 @@
  *
  * Low resolution timer interface linux specific implementation.
  *
- * $Id: linux_timer.c,v 1.1.1.1 2007/02/15 12:15:06 jiahao Exp $
  */
 
 /*

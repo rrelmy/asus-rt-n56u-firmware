@@ -109,7 +109,7 @@
 		{"x_StorageAction", "", validate_string, ARGV(""), FALSE, FALSE},														   
 
       		{"x_USBModel", "Status", NULL, ARGV("Storage","StorageModel"), FALSE, FALSE},
-/* 2005.12.22 Jiahao - start */     
+
       		{"st_usbpart1_t", "Status", NULL, ARGV("Storage","USBPart1"), FALSE, FALSE},
      
       		{"st_usbpart2_t", "Status", NULL, ARGV("Storage","USBPart2"), FALSE, FALSE},
@@ -119,7 +119,7 @@
       		{"st_usbpart4_t", "Status", NULL, ARGV("Storage","USBPart4"), FALSE, FALSE},
      
       		{"st_usb_status_t", "Status", NULL, ARGV("Storage","USBStatus"), FALSE, FALSE},
-/* 2005.12.22 Jiahao - end */
+
 		{"x_USBAction", "", validate_string, ARGV(""), FALSE, FALSE},
 		
 		//{"apps_dl", "", validate_range, ARGV("0","1"), FALSE, FALSE},
@@ -403,9 +403,7 @@
 		
 		{"x_BootloaderVersion", "Status", NULL, ARGV("general.log","BootloaderVer"), FALSE, FALSE},
 		
-		{"modem_enable", "", validate_range, ARGV("0","1"), FALSE, RESTART_REBOOT},
-
-		{"EVDO_on", "", validate_range, ARGV("0","1"), FALSE, RESTART_REBOOT},
+		{"modem_enable", "", validate_range, ARGV("0","4"), FALSE, RESTART_REBOOT},
 
 		{"Dev3G", "", validate_choice, ARGV(
 
@@ -700,7 +698,34 @@
 
 		{"wan_stb_x", "", validate_range, ARGV("0", "4"), FALSE, RESTART_REBOOT},	// 2008.03 James
 
-		{"unifi_malaysia", "", validate_range, ARGV("0", "1"), FALSE, RESTART_REBOOT}, //Cherry Cho added in 2011/6/13.
+		{"vlan_isp", "", validate_choice, ARGV( 
+						"none", 
+
+						"russia", 
+
+						"unifi_home", 
+
+						"unifi_biz", 
+
+						"singtel_mio", 
+
+						"singtel_others", 
+						
+						"manual", 
+	
+						0), FALSE, RESTART_REBOOT}, //Cherry Cho added in 2011/7/20
+
+		{"internet_vid", "", validate_range, ARGV("2", "4094"), FALSE, RESTART_REBOOT}, 
+
+		{"iptv_vid", "", validate_range, ARGV("2", "4094"), FALSE, RESTART_REBOOT}, 	
+
+		{"voip_vid", "", validate_range, ARGV("2", "4094"), FALSE, RESTART_REBOOT}, 
+
+		{"internet_prio", "", validate_range, ARGV("0", "7"), FALSE, RESTART_REBOOT}, 
+
+		{"iptv_prio", "", validate_range, ARGV("0", "7"), FALSE, RESTART_REBOOT}, 
+
+		{"voip_prio", "", validate_range, ARGV("0", "7"), FALSE, RESTART_REBOOT}, 
 			     
       { 0, 0, 0, 0, 0, 0}
       };

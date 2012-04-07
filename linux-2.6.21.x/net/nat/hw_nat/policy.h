@@ -101,7 +101,7 @@ struct l2_rule {
 	uint8_t mac[6];
 	struct {
 	    uint16_t v:1; /* compare VIDX */
-	    uint16_t rev:1; 
+	    uint16_t s:1; /* compare special tag */ 
 	    uint16_t e:1; /* compare ethernet type */
 	    uint16_t p:1; /* compare pppoe session id */
 	    uint16_t vid:12; /* vlan id */

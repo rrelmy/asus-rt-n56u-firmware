@@ -36,14 +36,14 @@ int do_detect()
 {
 	FILE *fp = NULL;
 	char line[80], cmd[128];
-	char *detect_host[] = {"8.8.8.8", "208.67.220.220", "208.67.222.222"};
+	char *detect_host[] = {"8.8.8.8", "208.67.220.220", "8.8.4.4", "208.67.222.222"};
 	int i;
 
 	if (di_debug) dbg("## detect internet status ##\n");
 
 	remove(DETECT_FILE);
-	i = rand_seed_by_time() % 3;
-	snprintf(cmd, sizeof(cmd), "/usr/sbin/tcpcheck 4 %s:53 %s:53 >%s", detect_host[i], detect_host[(i+1)%3], DETECT_FILE);
+	i = rand_seed_by_time() % 4;
+	snprintf(cmd, sizeof(cmd), "/usr/sbin/tcpcheck 4 %s:53 %s:53 >%s", detect_host[i], detect_host[(i+1)%4], DETECT_FILE);
 	if (di_debug) dbg("cmd: %s\n", cmd);
 	system(cmd);
 	if (di_debug) doSystem("cat %s", DETECT_FILE);

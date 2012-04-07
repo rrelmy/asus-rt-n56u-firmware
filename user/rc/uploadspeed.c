@@ -6,16 +6,17 @@
 #include <nvram/bcmnvram.h>
 
 /*
- 1 * * *				// case 1
- 2 * * 1.1.1.1 22.33 ms			// case 2
- 3 * 4.4.4.4 55.55 ms 66.66 ms		// case 3
- 4 * 7.7.7.7 88.88 ms *			// case 4
- 5 9.9.9.9 11.11 ms * *			// case 5
- 6 2.2.2.2 33.33 ms * 44.44 ms		// case 6
- 7 5.5.5.5 66.66 ms 77.77 ms *		// case 7
- 8 8.8.8.8 99.99 ms 11.11 ms 22.22 ms	// case 8
- 9 3.3.3.3 44.44 ms 55.55 ms		// case 9
-10 6.6.6.6 77.77 ms			// case 10
+ 1  * * *					// case 1
+ 2  * * 1.1.1.1  22.33 ms			// case 2
+ 3  * 4.4.4.4  55.55 ms  66.66 ms		// case 3
+ 4  * 7.7.7.7  88.88 ms *			// case 4
+ 5  9.9.9.9  11.11 ms * *			// case 5
+ 6  2.2.2.2  33.33 ms * 44.44 ms		// case 6
+ 7  5.5.5.5  66.66 ms  77.77 ms *		// case 7
+ 8  8.8.8.8  99.99 ms  11.11 ms  22.22 ms	// case 8
+ 9  3.3.3.3  44.44 ms  55.55 ms			// case 9
+10  6.6.6.6  77.77 ms				// case 10
+11  1.1.1.1  11.11 ms *				// case 11
 */
 
 #define DETECT_UL_SPD_FILE "/tmp/detect_ul_spd"
@@ -61,7 +62,7 @@ int detect_upload_speed(double *upload_speed_p)
 	for (i = 0; i < TTL_MAX; i++)
 		memset(&hop_ipaddr[i], 0, sizeof(hop_ipaddr[i]));
 
-	snprintf(str_cmd, sizeof(str_cmd), "traceroute -n -w 2 -m %d %s >%s", TTL_MAX, detect_ul_spd_ip, DETECT_UL_SPD_FILE);
+	snprintf(str_cmd, sizeof(str_cmd), "traceroute -n -w 2 -m %d %s %d > %s", TTL_MAX, detect_ul_spd_ip, PAYLOAD, DETECT_UL_SPD_FILE);
 	remove(DETECT_UL_SPD_FILE);
 
 	nvram_set("no_internet_detect", "1");
@@ -131,10 +132,13 @@ int detect_upload_speed(double *upload_speed_p)
 					num_of_delta = 2;
 					sscanf(buf, "%s %s %s %s %s %s %s", idx, ipaddr, delta1, ms1, empty1, delta2, ms2);
 				}
-				else				// case 7
+				else
 				{
-					num_of_delta = 2;
-					sscanf(buf, "%s %s %s %s %s %s %s", idx, ipaddr, delta1, ms1, delta2, ms2, empty1);
+					num_of_delta = count_of_ms(buf);
+					if (num_of_delta == 2)	// case 7
+						sscanf(buf, "%s %s %s %s %s %s %s", idx, ipaddr, delta1, ms1, delta2, ms2, empty1);
+					else			// case 11
+						sscanf(buf, "%s %s %s %s %s", idx, ipaddr, delta1, ms1, empty1);
 				}
 
 //				if (!strcmp(idx, "1"))		// skip first hop
@@ -208,17 +212,17 @@ int detect_upload_speed(double *upload_speed_p)
 		if (valid_hop > 2)
 		{
 			double_delta_avg = double_delta_total / valid_hop;
-			if ((valid_hop > 1) && (double_delta_max > double_delta_avg * 1.166))
-			{
-				fprintf(stderr, "skip delta:  %10.3f ms\n", double_delta_max);
-				valid_hop--;
-				double_delta_total -= double_delta_max;
-			}
-			if ((valid_hop > 1) && (double_delta_min * 1.166 < double_delta_avg))
+			if ((valid_hop > 2) && (double_delta_min * 1.166 < double_delta_avg))
 			{
 				fprintf(stderr, "skip delta:  %10.3f ms\n", double_delta_min);
 				valid_hop--;
 				double_delta_total -= double_delta_min;
+			}
+			if ((valid_hop > 2) && (double_delta_max > double_delta_avg * 1.166))
+			{
+				fprintf(stderr, "skip delta:  %10.3f ms\n", double_delta_max);
+				valid_hop--;
+				double_delta_total -= double_delta_max;
 			}
 		}
 
@@ -228,11 +232,11 @@ int detect_upload_speed(double *upload_speed_p)
 			fprintf(stderr, "total payload: %8d bytes\n", PAYLOAD * valid_hop);
 
 			if ((double_delta_total > 0.000) && ((PAYLOAD * valid_hop) > 0))
-				upload_speed = ((PAYLOAD * valid_hop) / double_delta_total * 1000000 / 1024) * 0.898;
+				upload_speed = ((PAYLOAD * valid_hop) / double_delta_total * 1000000 / 1024) * 0.900;
 			else
 				upload_speed = 0.000;
 
-			fprintf(stderr, "upload speed:%10.3f kb/s (89.8%%)\n", upload_speed);
+			fprintf(stderr, "upload speed:%10.3f kb/s (90.0%%)\n", upload_speed);
 		}
 		else
 		{

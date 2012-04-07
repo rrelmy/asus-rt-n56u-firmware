@@ -1296,7 +1296,7 @@ add_counter_to_entry(struct ipt_entry *e,
 		{
 			memset(wan_name,0,sizeof(wan_name));
 			memcpy(wan_name,e->ip.outiface, strlen(e->ip.outiface));
-			printk("ip_table: set wan_name=%s\n",wan_name);
+//			printk("ip_table: set wan_name=%s\n",wan_name);
 		}
 	}
 #endif

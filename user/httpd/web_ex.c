@@ -78,8 +78,6 @@ typedef unsigned char   bool;
 #include "wireless.h"    /* --Alicia, 08.09.23 */
 //#include <detectWAN.h>	//for detectWAN
 
-#define USB_MODEM // 2011.03 James.
-
 //#ifdef DLM
 #include <disk_io_tools.h>
 #include <disk_initial.h>
@@ -109,8 +107,6 @@ typedef unsigned char   bool;
 
 #include <syslog.h>
 #define logs(s) syslog(LOG_NOTICE, s)
-
-#define sys_reboot_rc() kill(1, SIGTERM)
 
 #ifdef WEBS
 #define init_cgi(query)
@@ -287,7 +283,7 @@ sys_reboot()
 {
 	dbG("[httpd] reboot\n");
 
-//	nvram_set("reboot", "1");
+	nvram_set("reboot", "1");
 	kill(1, SIGTERM);
 }
 
@@ -1610,6 +1606,35 @@ static int validate_asp_apply(webs_t wp, int sid, int groupFlag) {
 	return nvram_modified;
 }
 
+int
+pinvalidate(char *pin_string)
+{
+	unsigned long PIN = strtoul(pin_string, NULL, 10);
+	unsigned long int accum = 0;
+	unsigned int len = strlen(pin_string);
+
+	if (len != 4 && len != 8)
+		return  -1;
+
+	if (len == 8) {
+		accum += 3 * ((PIN / 10000000) % 10);
+		accum += 1 * ((PIN / 1000000) % 10);
+		accum += 3 * ((PIN / 100000) % 10);
+		accum += 1 * ((PIN / 10000) % 10);
+		accum += 3 * ((PIN / 1000) % 10);
+		accum += 1 * ((PIN / 100) % 10);
+		accum += 3 * ((PIN / 10) % 10);
+		accum += 1 * ((PIN / 1) % 10);
+
+		if (0 == (accum % 10))
+			return 0;
+	}
+	else if (len == 4)
+		return 0;
+
+	return -1;
+}
+
 static int update_variables_ex(int eid, webs_t wp, int argc, char_t **argv) {
 	int sid;
 //	char *value;
@@ -1766,7 +1791,7 @@ static int update_variables_ex(int eid, webs_t wp, int argc, char_t **argv) {
 			if (nvram_match("wps_enable", "0"))
 			{
 				nvram_set("wps_start_flag", "0");
-				csprintf("Stoping wscd...\n");
+				csprintf("Stopping wscd...\n");
 				doSystem("killall -%d watchdog", SIGTSTP);
 				//kill_pidfile_s("/var/run/watchdog.pid", SIGTSTP);
 			}
@@ -1781,23 +1806,33 @@ static int update_variables_ex(int eid, webs_t wp, int argc, char_t **argv) {
 			}
 			else
 			{
+				char *wps_pin = websGetVar(wp, "wps_pin", NULL);
 				nvram_set("wps_start_flag", "2");
 				if (nvram_match("wps_mode", "1"))
 				{
 					csprintf("WPS: PIN\n");
-					if (websGetVar(wp, "wps_pin", NULL) && strlen(websGetVar(wp, "wps_pin", NULL)) == 8)
+					if (wps_pin /*&& (strlen(wps_pin) == 8)*/)
 					{
-						csprintf("Pin: %s\n", websGetVar(wp, "wps_pin", NULL));
-						nvram_set("wps_pin_web", websGetVar(wp, "wps_pin", NULL));
+						if (!pinvalidate(wps_pin))
+						{
+							csprintf("Pin: %s\n", wps_pin);
+							nvram_set("wps_pin_web", wps_pin);
+						}
+						else
+						{
+							csprintf("Invalid pincode: %s\n", wps_pin ? wps_pin : "NULL");
+							goto WPS_refresh;
+						}
 					}
 					else
 						nvram_set("wps_pin_web", "");
 				}
 				else
-				csprintf("WPS: PBC\n");
-				
+					csprintf("WPS: PBC\n");
+
 				doSystem("killall -%d watchdog", SIGTSTP);
 				//kill_pidfile_s("/var/run/watchdog.pid", SIGTSTP);
+				sleep(3);
 			}
 
 			goto WPS_refresh;
@@ -1809,7 +1844,7 @@ static int update_variables_ex(int eid, webs_t wp, int argc, char_t **argv) {
 			else
 				 nvram_set("wps_band", "1");
 		}// end jerry5chang
-		else if (!strcmp(script, "Reset_OOB"))	// Jiahao
+		else if (!strcmp(script, "Reset_OOB"))
 		{
 			if (	nvram_match("wl_auth_mode", "shared") ||
 				nvram_match("wl_auth_mode", "wpa") ||
@@ -1837,8 +1872,24 @@ static int update_variables_ex(int eid, webs_t wp, int argc, char_t **argv) {
 				!nvram_match("wan_route_x", "IP_Routed"))
 				return 0;
 
-			csprintf("WPS: NM PBC\n");
+			csprintf("WPS: NM PBC 2.4G\n");
 			nvram_set("wps_start_flag", "3");
+			
+			doSystem("killall -%d watchdog", SIGTSTP);
+			//kill_pidfile_s("/var/run/watchdog.pid", SIGTSTP);
+			return 0;
+		}
+		else if (!strcmp(script, "WPS_push_button_5g"))
+		{
+			if (	nvram_match("wl_auth_mode", "shared") ||
+				nvram_match("wl_auth_mode", "wpa") ||
+				nvram_match("wl_auth_mode", "wpa2") ||
+				nvram_match("wl_auth_mode", "radius") ||
+				!nvram_match("wan_route_x", "IP_Routed"))
+				return 0;
+
+			csprintf("WPS: NM PBC 5G\n");
+			nvram_set("wps_start_flag", "4");
 			
 			doSystem("killall -%d watchdog", SIGTSTP);
 			//kill_pidfile_s("/var/run/watchdog.pid", SIGTSTP);
@@ -2049,7 +2100,19 @@ csprintf("*** Don't run asus_nvram_commit!\n");
 	return 0;
 }
 
-static void set_reboot_timestamp();
+extern long uptime(void);
+
+static void
+set_reboot_timestamp()
+{
+	time_t reboot_timestamp;
+	char reboot_timestampstr[32];
+
+	reboot_timestamp = uptime();
+	memset(reboot_timestampstr, 0, 32);
+	sprintf(reboot_timestampstr, "%lu", reboot_timestamp);
+	nvram_set("reboot_timestamp", reboot_timestampstr);
+}
 
 static int ej_notify_services(int eid, webs_t wp, int argc, char_t **argv) {
 	restart_tatal_time = 0;
@@ -2062,8 +2125,8 @@ static int ej_notify_services(int eid, webs_t wp, int argc, char_t **argv) {
 		no_run_str = 1;
 		if ((restart_needed_bits & RESTART_REBOOT) != 0) {
 			printf("*** Run notify_rc restart_reboot! \n");
+
 			set_reboot_timestamp();
-//			nvram_set("reboot", "1");
 			sys_reboot();
 		}
 		else if ((restart_needed_bits & RESTART_NETWORKING) != 0) {
@@ -2226,64 +2289,18 @@ char *Ch_conv(char *proto_name, int idx)
         }
 }
 
-static int enable_hwnat()
+static int check_hwnat(int eid, webs_t wp, int argc, char_t **argv)
 {
-	int qos_userspec_app_en = 0;
-	int rulenum = atoi(nvram_safe_get("qos_rulenum_x")), idx_class = 0;
-	int ret = 0;
+	DIR *dir_to_open = NULL;
 
-#if defined (W7_LOGO) || defined (WIFI_LOGO)
-		return 0;
-#endif
-
-	if (nvram_invmatch("sw_mode_ex", "1"))
-		return 0;
-
-	/* Allow hwnat with dual wan */
-	//if (    nvram_match("wan0_proto", "pptp") ||
-	//	nvram_match("wan0_proto", "l2tp"))
-	//	return 0;
-
-	/* Add class for User specify, 10:20(high), 10:40(middle), 10:60(low)*/
-	if (rulenum) {
-		for (idx_class=0; idx_class < rulenum; idx_class++)
-		{
-			if (atoi(Ch_conv("qos_prio_x", idx_class)) == 1)
-			{
-				qos_userspec_app_en = 1;
-				break;
-			}
-			else if (atoi(Ch_conv("qos_prio_x", idx_class)) == 6)
-			{
-				qos_userspec_app_en = 1;
-				break;
-			}
-		}
-	}
-/*
-	if (nvram_match("mr_enable_x", "1"))
-		ret += 1;
-
-	if (	nvram_match("qos_tos_prio", "1") ||
-		nvram_match("qos_pshack_prio", "1") ||
-		nvram_match("qos_service_enable", "1") ||
-		nvram_match("qos_shortpkt_prio", "1")	)
-		ret += 2;
-*/
-
-	if (	(nvram_invmatch("qos_manual_ubw","0") && nvram_invmatch("qos_manual_ubw","")) ||
-		(rulenum && qos_userspec_app_en)	)
-		ret = 1;
- 
-	return ret;
-}
-
-static int check_hwnat(int eid, webs_t wp, int argc, char_t **argv) {
-//	printf("####[hook] check_hwnat####");
-	if (!enable_hwnat())
-		websWrite(wp, "0");
-	else
+	dir_to_open = opendir("/sys/module/hw_nat");
+	if (dir_to_open)
+	{
+		closedir(dir_to_open);
 		websWrite(wp, "1");
+	}
+
+	websWrite(wp, "0");
 }
 
 static int is_dm_running()
@@ -2351,7 +2368,7 @@ static int detect_wan_connection(int eid, webs_t wp, int argc, char_t **argv) {
 	char *ping_cmd[] = {"ping", word, "-c", "1", NULL};
 	char *dns_list = NULL;
 	int i;
-	char *MORE_DNS = "8.8.8.8 208.67.220.220 208.67.222.222";
+	char *MORE_DNS = "8.8.8.8 208.67.220.220 8.8.4.4 208.67.222.222";
 	
 	memset(buf, 0, 128);
 	
@@ -2389,7 +2406,8 @@ static int detect_wan_connection(int eid, webs_t wp, int argc, char_t **argv) {
 				break;
 		}
 
-		dbg("Try to ping more dns: %s...\n", MORE_DNS);
+//		dbg("Try to ping more dns: %s...\n", MORE_DNS);
+		dbg("Try to check more dns: %s...\n", MORE_DNS);
 		int dns_test = 0;
 		foreach(word, MORE_DNS, next) {
 			if (dns_test == 0 && !strcmp(nvram_safe_get("dns_test"), "1")) {
@@ -2406,7 +2424,7 @@ static int detect_wan_connection(int eid, webs_t wp, int argc, char_t **argv) {
 			
 			for(i = 0; i < 2 && fgets(buf, 128, fp) != NULL; ++i) {
 				dbg("%d. Got the results: %s.\n", i+1, buf);
-				if (strstr(buf, "alive") || strstr(buf, " ms"))
+				if (strstr(buf, "alive")/* || strstr(buf, " ms")*/)
 					//got_ping = 1;
 					result += 4;
 				
@@ -2482,12 +2500,13 @@ static int detect_dhcp_pppoe(int eid, webs_t wp, int argc, char_t **argv) {
 			websWrite(wp, "%s", nvram_safe_get("wan_proto"));
 	}*/
 	// jerry5 edited for n56u
-#ifndef USB_MODEM
+#ifndef RTCONFIG_USB_MODEM
 	if (nvram_match("wan_proto","3g") && nvram_match("sw_mode","1"))
 #else
-	if(nvram_match("modem_enable", "1") && (nvram_match("usb_path1", "modem") || nvram_match("usb_path2", "modem")))
+	//if(!nvram_match("modem_enable", "0") && (nvram_match("usb_path1", "modem") || nvram_match("usb_path2", "modem")))
+	if(get_usb_modem_state())
 #endif
-		websWrite(wp, "3.5G HSDPA");
+		websWrite(wp, "modem");
 	else {
 		eprintf("discover all\n");			// tmp test
 		ret = discover_all();
@@ -2689,7 +2708,7 @@ static int wanlink_hook(int eid, webs_t wp, int argc, char_t **argv) {
 		unit = 0;
 	wan_prefix(unit, prefix);
 	
-#ifndef USB_MODEM
+#ifndef RTCONFIG_USB_MODEM
 	if (nvram_match("wan_proto", "3g"))
 	{
 		ppp_addr = nvram_safe_get("wan0_ipaddr");
@@ -2716,7 +2735,7 @@ static int wanlink_hook(int eid, webs_t wp, int argc, char_t **argv) {
 	}
 	else
 #else
-	if(nvram_match("modem_enable", "1") && (nvram_match("usb_path1", "modem") || nvram_match("usb_path2", "modem"))){
+	if(get_usb_modem_state()){
 		DIR *ppp_dir;
 		int got_ppp_link;
 		struct dirent *entry;
@@ -2942,9 +2961,9 @@ static int wanlink_hook(int eid, webs_t wp, int argc, char_t **argv) {
 	}
 	
 	//printf("[httpd] wan status str is %s\n", statusstr);	// tmp test
-#ifdef USB_MODEM
-	if(nvram_match("modem_enable", "1") && (nvram_match("usb_path1", "modem") || nvram_match("usb_path2", "modem")))
-		strcpy(type, "HSDPA");
+#ifdef RTCONFIG_USB_MODEM
+	if(get_usb_modem_state())
+		strcpy(type, "Modem");
 	else
 #endif
 	if (nvram_match(strcat_r(prefix, "proto", tmp), "pppoe"))
@@ -2968,10 +2987,10 @@ static int wanlink_hook(int eid, webs_t wp, int argc, char_t **argv) {
 	{
 		strcpy(type, "Static IP");
 	}
-#ifndef USB_MODEM
+#ifndef RTCONFIG_USB_MODEM
 	else if (nvram_match(strcat_r(prefix, "proto", tmp), "3g"))
 	{
-		strcpy(type, "HSDPA");
+		strcpy(type, "Modem");
 	}
 #endif
 	else // dhcp
@@ -2996,7 +3015,7 @@ static int wanlink_hook(int eid, webs_t wp, int argc, char_t **argv) {
 	
 // 2007.08 James {
 	memset(dns, 0, 128);
-	if (nvram_invmatch("wan_dnsenable_x", "1"))
+	if (!nvram_match("wan_dnsenable_x", "1"))
 	{
 		sprintf(dns, "%s %s", nvram_safe_get("wan_dns1_x"), nvram_safe_get("wan_dns2_x"));
 	}
@@ -3119,8 +3138,6 @@ unsigned int getpeerip(webs_t wp) {
 		return 0;
 	}
 }
-
-extern long uptime(void);
 
 static int login_state_hook(int eid, webs_t wp, int argc, char_t **argv) {
 	unsigned int ip, login_ip;
@@ -3476,6 +3493,9 @@ static int ej_wl_auth_list(int eid, webs_t wp, int argc, char_t **argv)
 	int i, firstRow;
 	char data[4096];
 	char mac[ETHER_ADDR_STR_LEN];	
+	RT_802_11_MAC_TABLE *mp;
+	RT_802_11_MAC_TABLE_2G *mp2;
+	char *value;
 	
 	memset(mac, 0, sizeof(mac));
 	
@@ -3489,11 +3509,39 @@ static int ej_wl_auth_list(int eid, webs_t wp, int argc, char_t **argv)
 
 	/* build wireless sta list */
 	firstRow = 1;
-	RT_802_11_MAC_TABLE *mp = (RT_802_11_MAC_TABLE *)wrq.u.data.pointer;
+	mp = (RT_802_11_MAC_TABLE *)wrq.u.data.pointer;
 	for (i=0; i<mp->Num; i++)
 	{
-		char *value;
+		if (firstRow == 1)
+			firstRow = 0;
+		else
+			websWrite(wp, ", ");
+		websWrite(wp, "[");
 
+		sprintf(mac, "%02X:%02X:%02X:%02X:%02X:%02X",
+				mp->Entry[i].Addr[0], mp->Entry[i].Addr[1],
+				mp->Entry[i].Addr[2], mp->Entry[i].Addr[3],
+				mp->Entry[i].Addr[4], mp->Entry[i].Addr[5]);
+		websWrite(wp, "\"%s\"", mac);
+		value = "YES";
+		websWrite(wp, ", \"%s\"", value);
+		value = "";
+		websWrite(wp, ", \"%s\"", value);
+		websWrite(wp, "]");
+	}
+
+	/* query wl for authenticated sta list */
+	memset(data, 0, 4096);
+	wrq.u.data.pointer = data;
+	wrq.u.data.length = 4096;
+	wrq.u.data.flags = 0;	
+	if (wl_ioctl(WIF2G, RTPRIV_IOCTL_GET_MAC_TABLE, &wrq) < 0)
+		goto exit;
+
+	/* build wireless sta list */
+	mp2 = (RT_802_11_MAC_TABLE_2G *)wrq.u.data.pointer;
+	for (i = 0; i<mp2->Num; i++)
+	{
 		if (firstRow == 1)
 			firstRow = 0;
 		else
@@ -3501,9 +3549,9 @@ static int ej_wl_auth_list(int eid, webs_t wp, int argc, char_t **argv)
 		websWrite(wp, "[");
 				
 		sprintf(mac, "%02X:%02X:%02X:%02X:%02X:%02X",
-				mp->Entry[i].Addr[0], mp->Entry[i].Addr[1],
-				mp->Entry[i].Addr[2], mp->Entry[i].Addr[3],
-				mp->Entry[i].Addr[4], mp->Entry[i].Addr[5]);
+				mp2->Entry[i].Addr[0], mp2->Entry[i].Addr[1],
+				mp2->Entry[i].Addr[2], mp2->Entry[i].Addr[3],
+				mp2->Entry[i].Addr[4], mp2->Entry[i].Addr[5]);
 		websWrite(wp, "\"%s\"", mac);
 		
 		value = "YES";
@@ -3859,6 +3907,7 @@ static int ej_available_disk_names_and_sizes(int eid, webs_t wp, int argc, char_
 	return 0;
 }
 
+#if 0
 static int ej_get_printer_info(int eid, webs_t wp, int argc, char_t **argv) {
 	FILE *lpfp;
 	char manufacturer[100], models[100], serialnos[100], pool[100];
@@ -3897,7 +3946,94 @@ static int ej_get_printer_info(int eid, webs_t wp, int argc, char_t **argv) {
 	websWrite(wp, "function printer_serialn() {\n return [%s];\n}\n", "");
 	websWrite(wp, "function printer_pool() {\n return [\"%s\"];\n}\n", pool);
 }
+#else
+#define MAX_PRINTER_NUM 2
 
+static int ej_get_printer_info(int eid, webs_t wp, int argc, char_t **argv){
+	int port_num = 0, first;
+	char tmp[64], prefix[] = "usb_pathX";
+	char printer_array[2][5][64];
+	for(port_num = 1; port_num <= MAX_PRINTER_NUM; ++port_num){
+		snprintf(prefix, sizeof(prefix), "usb_path%d", port_num);
+		memset(printer_array[port_num-1][0], 0, 64);
+		memset(printer_array[port_num-1][1], 0, 64);
+		memset(printer_array[port_num-1][2], 0, 64);
+		memset(printer_array[port_num-1][3], 0, 64);
+		memset(printer_array[port_num-1][4], 0, 64);
+		if(nvram_match(prefix, "printer")){
+			strncpy(printer_array[port_num-1][0], "printer", 64);
+			strncpy(printer_array[port_num-1][1], nvram_safe_get(strcat_r(prefix, "_manufacturer", tmp)), 64);
+			strncpy(printer_array[port_num-1][2], nvram_safe_get(strcat_r(prefix, "_product", tmp)), 64);
+			strncpy(printer_array[port_num-1][3], nvram_safe_get(strcat_r(prefix, "_serial", tmp)), 64);
+			if(!strcmp(printer_array[port_num-1][3], nvram_safe_get("u2ec_serial")))
+				strcpy(printer_array[port_num-1][4], "VirtualPool");
+			else
+				strcpy(printer_array[port_num-1][4], "");
+		}
+	}
+	websWrite(wp, "function printer_manufacturers(){\n");
+	websWrite(wp, "    return [");
+	first = 1;
+	for(port_num = 1; port_num <= MAX_PRINTER_NUM; ++port_num){
+		if(strlen(printer_array[port_num-1][0]) > 0)
+			websWrite(wp, "\"%s\"", printer_array[port_num-1][1]);
+		else
+			websWrite(wp, "\"\"");
+		if(first){
+			--first;
+			websWrite(wp, ", ");
+		}
+	}
+	websWrite(wp, "];\n");
+	websWrite(wp, "}\n\n");
+	websWrite(wp, "function printer_models(){\n");
+	websWrite(wp, "    return [");
+	first = 1;
+	for(port_num = 1; port_num <= MAX_PRINTER_NUM; ++port_num){
+		if(strlen(printer_array[port_num-1][0]) > 0)
+			websWrite(wp, "\"%s\"", printer_array[port_num-1][2]);
+		else
+			websWrite(wp, "\"\"");
+		if(first){
+			--first;
+			websWrite(wp, ", ");
+		}
+	}
+	websWrite(wp, "];\n");
+	websWrite(wp, "}\n\n");
+	websWrite(wp, "function printer_serialn(){\n");
+	websWrite(wp, "    return [");
+	first = 1;
+	for(port_num = 1; port_num <= MAX_PRINTER_NUM; ++port_num){
+		if(strlen(printer_array[port_num-1][0]) > 0)
+			websWrite(wp, "\"%s\"", printer_array[port_num-1][3]);
+		else
+			websWrite(wp, "\"\"");
+		if(first){
+			--first;
+			websWrite(wp, ", ");
+		}
+	}
+	websWrite(wp, "];\n");
+	websWrite(wp, "}\n\n");
+	websWrite(wp, "function printer_pool(){\n");
+	websWrite(wp, "    return [");
+	first = 1;
+	for(port_num = 1; port_num <= MAX_PRINTER_NUM; ++port_num){
+		if(strlen(printer_array[port_num-1][0]) > 0)
+			websWrite(wp, "\"%s\"", printer_array[port_num-1][4]);
+		else
+			websWrite(wp, "\"\"");
+		if(first){
+			--first;
+			websWrite(wp, ", ");
+		}
+	}
+	websWrite(wp, "];\n");
+	websWrite(wp, "}\n\n");
+	return 0;
+}
+#endif
 int ej_shown_time(int eid, webs_t wp, int argc, char **argv) {
 	time_t t1;
 	
@@ -3958,18 +4094,6 @@ int ej_shown_language_option(int eid, webs_t wp, int argc, char **argv) {
 	fclose(fp);
 
 	return 0;
-}
-
-static void
-set_reboot_timestamp()
-{
-	time_t reboot_timestamp;
-	char reboot_timestampstr[32];
-
-	reboot_timestamp = uptime();
-	memset(reboot_timestampstr, 0, 32);
-	sprintf(reboot_timestampstr, "%lu", reboot_timestamp);
-	nvram_set("reboot_timestamp", reboot_timestampstr);
 }
 
 static int
@@ -4036,8 +4160,10 @@ apply_cgi(webs_t wp, char_t *urlPrefix, char_t *webDir, int arg,
 		nvram_set("w_Setting", "1");	// J++
 		eval("early_convert");
 		nvram_commit_safe();
+
 		set_reboot_timestamp();
 		sys_reboot();
+
 		return (0);
 	}
 	else if (!strcmp(value, " Restart "))
@@ -4045,8 +4171,10 @@ apply_cgi(webs_t wp, char_t *urlPrefix, char_t *webDir, int arg,
 		dbG("[httpd] action mode: %s\n", value);
 
 		websApply(wp, "Restarting.asp");
+
 		set_reboot_timestamp();
 		sys_reboot();
+
 		return (0);
 	}
 	else if (!strcmp(value, "Restore"))
@@ -4055,8 +4183,10 @@ apply_cgi(webs_t wp, char_t *urlPrefix, char_t *webDir, int arg,
 
 		websApply(wp, "Restarting.asp");
 		sys_default();
+
 		set_reboot_timestamp();
 		sys_reboot();
+
 		return (0);
 	}
 	else
@@ -4159,7 +4289,7 @@ apply_cgi(webs_t wp, char_t *urlPrefix, char_t *webDir, int arg,
 		/* Add for EMI Test page */
 		if (strcmp(script, ""))
 		{
-#ifdef DLM	// 2005.12.23 Jiahao add for 500gP
+#ifdef DLM
 			if (!strcmp(script, "usbfs_check"))
 			{
 				nvram_set("st_tool_t", "/bin/fscheck");
@@ -4815,7 +4945,6 @@ do_upgrade_post(char *url, FILE *stream, int len, char *boundary)
 	char /*version[MAX_VERSION_LEN], */cmpHeader;
 	
 	eval("/sbin/stopservice", "99");
-	nvram_set("reboot", "0");
 
 	/* Look for our part */
 	while (len > 0) 
@@ -4976,8 +5105,7 @@ do_upgrade_cgi(char *url, FILE *stream)
 		websApply(stream, "Restarting.asp");
 #endif
 		set_reboot_timestamp();
-		/* can't nvram 'coz there's watchdog already */
-		sys_reboot_rc();
+		sys_reboot();
 	}	
 	else    
 	{
@@ -5123,8 +5251,8 @@ do_upload_cgi(char *url, FILE *stream)
 	{
 		websApply(stream, "Uploading.asp"); 
 		sys_upload("/tmp/settings_u.prf");
-		sys_nvram_set("httpd_die_reboot=1");
 		nvram_commit_safe();
+
 		set_reboot_timestamp();
 		sys_reboot();
 	}	
@@ -6080,7 +6208,7 @@ int ej_get_share_tree(int eid, webs_t wp, int argc, char **argv) {
 	return 0;
 }
 
-#ifndef USB_MODEM
+#ifndef RTCONFIG_USB_MODEM
 int ej_start3g(int eid, webs_t wp, int argc, char **argv) {
 
 	printf("[httpd start 3g process\n]");	// tmp test
@@ -6990,7 +7118,6 @@ dbg("%s, %s, %s.\n", new_lan_ip_str, new_dhcp_start_str, new_dhcp_end_str);
 	nvram_commit_safe();
 	
 	set_reboot_timestamp();
-//	nvram_set("reboot", "1");
 	sys_reboot();
 	return 0;
 }
@@ -7459,7 +7586,7 @@ struct ej_handler ej_handlers[] = {
 	{ "delete_sharedfolder", ej_delete_sharedfolder},	/*y*/
 	{ "modify_sharedfolder", ej_modify_sharedfolder},	/* no ccc*/
 	{ "set_share_mode", ej_set_share_mode},
-#ifndef USB_MODEM
+#ifndef RTCONFIG_USB_MODEM
 	{ "start3g", ej_start3g},
 	{ "stop3g", ej_stop3g},
 #endif

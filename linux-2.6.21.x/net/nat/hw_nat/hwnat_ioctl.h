@@ -59,6 +59,7 @@
 #define HW_NAT_KA_INTERVAL		(0x19)
 #define HW_NAT_UB_LIFETIME		(0x1a)
 #define HW_NAT_BIND_LIFETIME		(0x1b)
+#define HW_NAT_BIND_DIRECTION		(0x1c)
 
 #define HW_NAT_DEVNAME			"hwnat0"
 #define HW_NAT_MAJOR			(220)
@@ -108,6 +109,7 @@ struct hwnat_tuple {
 
 struct hwnat_args {
     unsigned int    	debug:3;
+    unsigned int    	bind_dir:2; /* 0=upstream, 1=downstream, 2=bi-direction */
     unsigned int    	entry_state:2; /* invalid=0, unbind=1, bind=2, fin=3 */
     enum hwnat_status	result;
     unsigned int    	entry_num:16;
@@ -125,10 +127,10 @@ struct hwnat_qos_args {
     unsigned int    	vpri:3;
     unsigned int        ac:2;
     unsigned int        mode:2;
-    unsigned int        weight0:3;/*WRR 4 queue weight*/
-    unsigned int        weight1:3;
-    unsigned int        weight2:3;
-    unsigned int        weight3:3;
+    unsigned int        weight0:4;/*WRR 4 queue weight*/
+    unsigned int        weight1:4;
+    unsigned int        weight2:4;
+    unsigned int        weight3:4;
     enum hwnat_status	result;
 
 };

@@ -25,7 +25,7 @@ var qos_service_enable_x = parseInt('<% nvram_get_x("PrinterStatus", "qos_servic
 var qos_tos = parseInt('<% nvram_get_x("PrinterStatus", "qos_tos_prio"); %>');		    //VOIP
 
 var qosflag = [0, 0, 0, 0];
-var Bar_name = ['game', 'internet', 'aidisk', 'streaming'];
+var Bar_name = ['game', 'internet', 'FTP', 'streaming'];
 var qosDesp = new Array();
 
 qosDesp[0] = "";
@@ -34,8 +34,8 @@ qosDesp[2] = "<#BM_desc2#>";
 qosDesp[3] = "<#BM_desc3#>";
 qosDesp[4] = "<#BM_desc4#>";
 
-var qos_ubw = parseInt("<% nvram_get_x("PrinterStatus", "qos_ubw"); %>");
-var qos_manual_ubw = parseInt("<% nvram_get_x("PrinterStatus", "qos_manual_ubw"); %>");
+var qos_ubw = parseInt('<% nvram_get_x("PrinterStatus", "qos_ubw"); %>');
+var qos_manual_ubw = parseInt('<% nvram_get_x("PrinterStatus", "qos_manual_ubw"); %>');
 var check_hwnat = '<% check_hwnat(); %>';
 var hwnat = '<% nvram_get_x("",  "hwnat"); %>';
 
@@ -131,7 +131,7 @@ function show_all_bar(){
 	
 	$('game').style.width = BarPercent+"%";
 	$('internet').style.width = BarPercent+"%";
-	$('aidisk').style.width = BarPercent+"%";
+	$('FTP').style.width = BarPercent+"%";
 	$('streaming').style.width = BarPercent+"%";
 }
 
@@ -199,8 +199,8 @@ function unload_body(){
 	$("internet_btn").onmouseover = function(){};
 	$("internet_btn").onmouseout = function(){};
 	
-	$("aidisk_btn").onmouseover = function(){};
-	$("aidisk_btn").onmouseout = function(){};
+	$("FTP_btn").onmouseover = function(){};
+	$("FTP_btn").onmouseout = function(){};
 	
 	$("streaming_btn").onmouseover = function(){};
 	$("streaming_btn").onmouseout = function(){};
@@ -285,7 +285,7 @@ function is_number_sp(event, o){
 			<div id="qospipe">				
 				<div class="qosbar" id="game"><#Game#></div>
 				<div class="qosbar" id="internet"><#Internet#></div>
-				<div class="qosbar" id="aidisk">AiDisk</div>
+				<div class="qosbar" id="FTP">FTP</div>
 				<div class="qosbar" id="streaming"><#Stream#></div>
 				<div id="p2p"><#NoQoSsetting#></div>
 			</div>
@@ -295,7 +295,7 @@ function is_number_sp(event, o){
 					<tr align="center">
 						<td id="game_btn" width="100" class="qosbutton1" onmouseover="showDescription(1, this);" onmouseout="showDescription(0, this);" onclick="setBW(0);"><a href="#"></a></td>
 						<td id="internet_btn" width="100" class="qosbutton2" onmouseover="showDescription(2, this);" onmouseout="showDescription(0, this);" onclick="setBW(1);"><a href="#"></a></td>
-						<td id="aidisk_btn" width="100" class="qosbutton3" onmouseover="showDescription(3, this);" onmouseout="showDescription(0, this);" onclick="setBW(2);"><a href="#"></a></td>
+						<td id="FTP_btn" width="100" class="qosbutton3" onmouseover="showDescription(3, this);" onmouseout="showDescription(0, this);" onclick="setBW(2);"><a href="#"></a></td>
 						<td id="streaming_btn" width="100" class="qosbutton4" onmouseover="showDescription(4, this);" onmouseout="showDescription(0, this);" onclick="setBW(3);"><a href="#"></a></td>
 					</tr>
 
@@ -313,10 +313,10 @@ function is_number_sp(event, o){
 			<div id="qosenableblock">
 				<input type="radio" name="ubw_method" value="0" onClick="openHint(20, 1);">
         <a class="hintstyle" href="javascript:void(0);" onClick="openHint(20, 1);"><#BM_measured_uplink_speed#></a>
-				<span id="qos_ubw"><% nvram_get_x("PrinterStatus", "qos_ubw"); %> KB/s</span><br>
+				<span id="qos_ubw"><% nvram_get_x("PrinterStatus", "qos_ubw"); %> Kb/s</span><br>
 				<input type="radio" name="ubw_method" value="1" onClick="openHint(20, 2);">
         	<a class="hintstyle" href="javascript:void(0);" onClick="openHint(20, 2);"><#BM_manual_uplink_speed#></a>
-				<input type="text" maxlength="10" name="qos_manual_ubw" onKeyPress="return is_number_sp(event, this);" class="input" size="8" value="<% nvram_get_x("PrinterStatus", "qos_manual_ubw"); %>"> KB/s
+				<input type="text" maxlength="10" name="qos_manual_ubw" onKeyPress="return is_number_sp(event, this);" class="input" size="8" value="<% nvram_get_x("PrinterStatus", "qos_manual_ubw"); %>"> Kb/s
 			</div>
 
 			<div class="apply1"><a href="javascript:submitQoS();"><#CTL_onlysave#></a></div>

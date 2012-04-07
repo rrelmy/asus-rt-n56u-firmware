@@ -42,6 +42,8 @@ wan_nat_x = '<% nvram_get_x("IPConnection", "wan_nat_x"); %>';
 wan_proto = '<% nvram_get_x("Layer3Forwarding",  "wan_proto"); %>';
 
 Dev3G = '<% nvram_get_x("General",  "d3g"); %>';
+modem_model_name1 = '<% nvram_get_x("", "usb_path1_product"); %>';
+modem_model_name2 = '<% nvram_get_x("", "usb_path2_product"); %>';
 
 <% disk_pool_mapping_info(); %>
 <% available_disk_names_and_sizes(); %>
@@ -53,7 +55,6 @@ var all_disk_interface = foreign_disk_interface_names().concat(blank_disk_interf
 
 var flag = '<% get_parameter("flag"); %>';
 var disk_number = foreign_disks().length+blank_disks().length;
-var device_number = Math.min(2, disk_number+printer_models().length);
 
 var leases = [<% dhcp_leases(); %>];	// [[hostname, MAC, ip, lefttime], ...]
 var arps = [<% get_arp_table(); %>];		// [[ip, x, x, MAC, x, type], ...]
@@ -102,11 +103,13 @@ function set_default_choice(){
 			$("statusframe").src = "/device-map/clients.asp";
 		else if(flag == "Router2g")
 			$("statusframe").src = "/device-map/router2g.asp";
+		else if(flag == "Router5g")
+			$("statusframe").src = "/device-map/router.asp";
 		else{
 			clickEvent($("iconRouter"));
 			return;
 		}
-		if(flag == "Router2g")
+		if(flag == "Router2g" || flag == "Router5g" )
 			icon_name = "iconRouter";
 		else
 			icon_name = "icon"+flag;
@@ -206,10 +209,6 @@ function show_client_status(){
 function show_device(){
 	var usb_path1 = '<% nvram_get_x("", "usb_path1"); %>';
 	var usb_path2 = '<% nvram_get_x("", "usb_path2"); %>';
-	//if(wan_proto == "3g" && Dev3G != ""){
-	//	usb_path1 = 'HSDPA';
-	//}
-	// show the front usb device
 	
 	switch(usb_path1){
 		case "storage":
@@ -222,11 +221,14 @@ function show_device(){
 		case "printer":
 			printer_html(0, 0);
 			break;
+		case "modem":
+			modem_html(0, 0);
+			break;
+		case "WIMAX":
+			WIMAX_html(0, 0);
+			break;
 		case "audio":
 		case "webcam":
-		case "HSDPA":
-			HSDPA_html(0, 0);
-			break;
 		default:
 			no_device_html(0);
 	}
@@ -241,17 +243,19 @@ function show_device(){
 				}
 			break;
 		case "printer":
-			printer_html(1, 0);
+			printer_html(1, 1);
+			break;
+		case "modem":
+			modem_html(1, 0);
+			break;
+		case "WIMAX":
+			WIMAX_html(1, 0);
 			break;
 		case "audio":
 		case "webcam":
-		case "HSDPA":
-			HSDPA_html(1, 0);
-			break;
 		default:
 			no_device_html(1);
 	}
-		
 }
 
 function disk_html(device_order, all_disk_order){
@@ -315,7 +319,7 @@ function printer_html(device_seat, printer_order){
 		printer_status = '<#CTL_Disabled#>';
 	
 	icon_html_code += '<a href="device-map/printer.asp" target="statusframe">\n';
-	icon_html_code += '    <div id="iconPrinter_'+printer_order+'" class="iconPrinter" onclick="clickEvent(this);"></div>\n';
+	icon_html_code += '    <div id="iconPrinter'+printer_order+'" class="iconPrinter" onclick="clickEvent(this);"></div>\n';
 	icon_html_code += '</a>\n';
 	
 	dec_html_code += printer_name+'<br>\n';
@@ -325,22 +329,62 @@ function printer_html(device_seat, printer_order){
 	device_dec.innerHTML = dec_html_code;
 }
 
-function HSDPA_html(device_seat, HSDPA_order){
-	var HSDPA_name = Dev3G;
-	var HSDPA_status = "Connected";
+var selectedModemOrder = "";
+
+function setSelectedModemOrder(selectedModemId){
+	this.selectedModemOrder = parseInt(selectedModemId.substring(selectedModemId.length-1));
+}
+
+function getSelectedModemOrder(){
+	return this.selectedModemOrder;
+}
+
+function modem_html(device_seat, modem_order){
+	//var modem_name = Dev3G;  //Viz 2011.09
+	var modem_name1 = modem_model_name1;
+	var modem_name2 = modem_model_name2;
+	var modem_status = "Connected";
 	var device_icon = $("deviceIcon_"+device_seat);
 	var device_dec = $("deviceDec_"+device_seat);
 	var icon_html_code = '';
 	var dec_html_code = '';
 	
-	icon_html_code += '<a href="device-map/hsdpa.asp" target="statusframe">\n';
-	icon_html_code += '    <div id="iconHSDPA_'+HSDPA_order+'" class="iconHSDPA" onclick="clickEvent(this);"></div>\n';
+	icon_html_code += '<a href="device-map/modem.asp" target="statusframe">\n';
+	icon_html_code += '    <div id="iconModem'+device_seat+'" class="iconModem" onclick="setSelectedModemOrder(this.id);clickEvent(this);"></div>\n';
 	icon_html_code += '</a>\n';
 	
-	dec_html_code += HSDPA_name+'<br>\n';
-	//dec_html_code += '<span class="style1"><strong>'+HSDPA_status+'</strong></span>\n';
+	//dec_html_code += modem_name+'<br>\n'; //Viz 2011.09
+	if(device_seat==0)
+		dec_html_code += modem_name1+'<br>\n';
+	else	
+		dec_html_code += modem_name2+'<br>\n';
+	//dec_html_code += '<span class="style1"><strong>'+modem_status+'</strong></span>\n';
 	//dec_html_code += '<br>\n';
 	//dec_html_code += '<img src="images/signal_'+3+'.gif" align="middle">';
+	
+	device_icon.innerHTML = icon_html_code;
+	device_dec.innerHTML = dec_html_code;
+}
+
+function WIMAX_html(device_seat, WIMAX_order){
+	var WIMAX_status;
+	var device_icon = $("deviceIcon_"+device_seat);
+	var device_dec = $("deviceDec_"+device_seat);
+	var icon_html_code = '';
+	var dec_html_code = '';
+	
+	if(wimax_link_status == 2)
+		WIMAX_status = "Connected";
+	else
+		WIMAX_status = "Disconnected";
+	
+	icon_html_code += '<a href="device-map/wimax.asp" target="statusframe">\n';
+	icon_html_code += '    <div id="iconWIMAX'+device_seat+'" class="icon4G" onclick="clickEvent(this);"></div>\n';
+	icon_html_code += '</a>\n';
+	
+	dec_html_code += wimax_model_name+'<br>\n';
+	dec_html_code += '<span class="style1"><strong id="wimax_icon_status">'+WIMAX_status+'</strong></span>\n';
+	dec_html_code += '<br>\n';
 	
 	device_icon.innerHTML = icon_html_code;
 	device_dec.innerHTML = dec_html_code;
@@ -363,12 +407,20 @@ function no_device_html(device_seat){
 var avoidkey;
 var lastClicked;
 var lastName;
+var clicked_device_order;
+
+function get_clicked_device_order(){
+	return clicked_device_order;
+}
 
 function clickEvent(obj){
 	var icon;
 	var ContainerWidth;
 	var Containerpadding;
 	var stitle;
+	var seat;
+
+	clicked_device_order = -1;
 
 	if(obj.id == "iflock"){
 		obj = $("iconRouter");
@@ -403,14 +455,17 @@ function clickEvent(obj){
 		stitle = "<#statusTitle_USB_Disk#>";
 		$("statusframe").src = "/device-map/disk.asp";
 	}
-	else if(obj.id.indexOf("HSDPA") > 0){
-		icon = "iconHSDPA";
+	else if(obj.id.indexOf("Modem") > 0){
+		icon = "iconModem";
 		ContainerWidth = "300px";
 		Containerpadding = "5px";
 		stitle = "<#menu5_4_4#>";
-		$("statusframe").src = "/device-map/hsdpa.asp";
+		$("statusframe").src = "/device-map/modem.asp";
 	}
 	else if(obj.id.indexOf("Printer") > 0){
+		seat = obj.id.indexOf("Printer")+7;
+		clicked_device_order = parseInt(obj.id.substring(seat, seat+1));
+		
 		icon = "iconPrinter";
 		ContainerWidth = "300px";
 		Containerpadding = "5px";
@@ -488,7 +543,7 @@ function MapUnderAPmode(){// if under AP mode, disable the Internet icon and sho
 		$("iconInternet").style.cursor = "default";
 		
 		$("iconInternet").onmouseover = function(){
-			writetxt('<#underAPmode#>');
+			writetxt("<#underAPmode#>");
 		}
 		$("iconInternet").onmouseout = function(){
 			writetxt(0);

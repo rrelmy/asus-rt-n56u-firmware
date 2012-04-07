@@ -296,7 +296,7 @@ function wan_netmask_check_NUI(o) {
 	if (document.form.wan_ipaddr.value != '0.0.0.0' && (wip&lnm)==(lip&lnm))
 	// 2008.03 James. patch for Oleg's patch. }
 	{
-		alert(o.value + ' <#JS_validip#>');
+		alert(o.value + " <#JS_validip#>");
 		document.getElementById(o.name+"_div").style.border = "2px solid #CE1E1E";
 		return false;
 	}
@@ -307,7 +307,7 @@ function wan_netmask_check_NUI(o) {
 	}
 	else
 	{
-		alert(o.value + ' <#JS_validip#>');
+		alert(o.value + " <#JS_validip#>");
 		document.getElementById(o.name+"_div").style.border = "2px solid #CE1E1E";
 		return false;
 	}
@@ -376,7 +376,7 @@ function validate_ipaddr_final(o,v){
 			if(requireWANIP(v) && (
 			(matchSubnet2(document.form.wan_ipaddr.value, o, document.form.lan_ipaddr.value, document.form.lan_netmask))
 			)){
-				alert(o.value + ' <#JS_validip#>');
+				alert(o.value + " <#JS_validip#>");
 				document.getElementById(o.name+"_div").style.border = "2px solid #CE1E1E";
 				return false;
 			}

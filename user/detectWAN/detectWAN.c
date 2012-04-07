@@ -149,7 +149,11 @@ chk_udhcpc()
 				system("killall -SIGUSR1 udhcpc");
 
 				try_count = 0;
-				while (!pids("wanduck") && (++try_count < 6))
+				while (pids("wanduck") && (++try_count < 10))
+					sleep(1);
+
+				try_count = 0;
+				while (!pids("wanduck") && (++try_count < 10))
 				{
 					sleep(3);
 					system("/sbin/start_wanduck");

@@ -9,8 +9,6 @@
 # SPECIFICALLY DISCLAIMS ANY IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS
 # FOR A SPECIFIC PURPOSE OR NONINFRINGEMENT CONCERNING THIS SOFTWARE.
 #
-# $Id: Makefile,v 1.1.1.1 2007/01/25 12:52:21 jiahao_jhou Exp $
-#
 
 -include $(LINUX_CONFIG)
 -include $(CONFIG_CONFIG)
@@ -26,7 +24,7 @@ INSTALLDIR = $(ROOTDIR)/romfs
 CONF_H  = $(ROOTDIR)/$(LINUXDIR)/include/linux/autoconf.h
 UCONF_H = $(ROOTDIR)/config/autoconf.h
 
-CFLAGS += -s -DASUS_NVRAM -DRPPPPOE -DBTN_SETUP -DWL500GP -DDHCP_PPTP -DQOS -DASUS_EXT -DGPQOS -DASUS_DDNS -DWSC -DGUEST_ACCOUNT -DWEB_REDIRECT -DWEBSTRFILTER -DUSB_SUPPORT -DU2EC -DDLM -DPRINTER_SUPPORT -DCONTENTFILTER -DHTTPD_CHECK #-DUSB_MODEM# -DUSBTPT
+CFLAGS += -s -DASUS_NVRAM -DRPPPPOE -DBTN_SETUP -DWL500GP -DDHCP_PPTP -DQOS -DASUS_EXT -DGPQOS -DASUS_DDNS -DWSC -DGUEST_ACCOUNT -DWEB_REDIRECT -DWEBSTRFILTER -DUSB_SUPPORT -DU2EC -DDLM -DPRINTER_SUPPORT -DCONTENTFILTER -DHTTPD_CHECK #-DUSBTPT
 #CFLAGS += -I. -I$(SHDIR)/include -I$(ROOTDIR)/linux-2.6.21.x/include -I$(ROOTDIR)/linux-2.6.21.x/drivers/flash -I$(HTTPDIR)/ -I$(ROOTDIR)/linux-2.6.21.x/drivers/char -I$(ROOTDIR)/linux-2.6.21.x/drivers/net/raeth -I$(ROOTDIR)/linux-2.6.21.x/include/linux -I$(MTDDIR)
 CFLAGS += -I. -I$(SHDIR)/include -I$(ROOTDIR)/linux-2.6.21.x/include -I$(ROOTDIR)/linux-2.6.21.x/drivers/flash -I$(HTTPDIR)/ -I$(ROOTDIR)/linux-2.6.21.x/drivers/char -I$(ROOTDIR)/linux-2.6.21.x/drivers/net/raeth -I$(MTDDIR) -I$(ROOTDIR)/user/busybox/include -I$(SHDIR)
 
@@ -37,6 +35,9 @@ CFLAGS += -DSR3
 #CFLAGS += -DMR
 
 LDFLAGS = -L. -L$(SHDIR)/prebuilt -lcrypto_asus -L$(SHDIR) -lshared -L$(NETDIR) -lnetconf -lm
+
+CFLAGS += -I$(ROOTDIR)/user/libdisk
+LDFLAGS += -L$(ROOTDIR)/user/libdisk -ldisk
 
 EXEC = rc
 
@@ -155,7 +156,6 @@ romfs:
 	cd $(INSTALLDIR)/sbin && ln -sf rc ledoff
 #	cd $(INSTALLDIR)/sbin && ln -sf rc start3g
 #	cd $(INSTALLDIR)/sbin && ln -sf rc stop3g
-# Jiahao
 	cd $(INSTALLDIR)/sbin && ln -sf rc 8367m
 #	cd $(INSTALLDIR)/sbin && ln -sf rc ar8316
 	cd $(INSTALLDIR)/sbin && ln -sf rc getWANStatus
@@ -213,6 +213,8 @@ romfs:
 	cd $(INSTALLDIR)/sbin && ln -sf rc cpu
 
 	cd $(INSTALLDIR)/sbin && ln -sf rc asus_lp
+	cd $(INSTALLDIR)/sbin && ln -sf rc asus_sd
+	cd $(INSTALLDIR)/sbin && ln -sf rc asus_sg
 	cd $(INSTALLDIR)/sbin && ln -sf rc asus_sr
 	cd $(INSTALLDIR)/sbin && ln -sf rc asus_tty
 	cd $(INSTALLDIR)/sbin && ln -sf rc asus_usb_interface

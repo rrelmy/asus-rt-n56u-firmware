@@ -23,7 +23,7 @@ configure:
 	)
 
 clean:
-	$(MAKE) -C source clean
+	$(MAKE) -C source distclean
 	rm -rf install
 	rm -f libjpeg.so.62.0.0
 	rm -f config_done

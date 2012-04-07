@@ -68,11 +68,7 @@ const char * pidfilename = "/var/run/minidlna.pid";
 char uuidvalue[] = "uuid:00000000-0000-0000-0000-000000000000";
 char modelname[MODELNAME_MAX_LEN] = ROOTDEV_MODELNAME;
 char modelnumber[MODELNUMBER_MAX_LEN] = MINIDLNA_VERSION;
-#if 0
-char serialnumber[SERIALNUMBER_MAX_LEN] = "00000000";
-#else
-char serialnumber[SERIALNUMBER_MAX_LEN] = "000000000000";
-#endif
+char serialnumber[SERIALNUMBER_MAX_LEN] = "000000000000000";
 #if PNPX
 char pnpx_hwid[] = "VEN_0000&amp;DEV_0000&amp;REV_01 VEN_0033&amp;DEV_0001&amp;REV_01";
 #endif
@@ -83,6 +79,9 @@ char presentationurl[PRESENTATIONURL_MAX_LEN];
 
 int n_lan_addr = 0;
 struct lan_addr_s lan_addr[MAX_LAN_ADDR];
+
+/* Path of the Unix socket used to communicate with MiniSSDPd */
+const char * minissdpdsocketpath = "/var/run/minissdpd.sock";
 
 /* UPnP-A/V [DLNA] */
 sqlite3 * db;

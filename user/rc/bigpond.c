@@ -22,7 +22,6 @@
  * SPECIFICALLY DISCLAIMS ANY IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS
  * FOR A SPECIFIC PURPOSE OR NONINFRINGEMENT CONCERNING THIS SOFTWARE.
  *
- * $Id: bigpond.c,v 1.1.1.1 2007/01/25 12:52:21 jiahao_jhou Exp $
  */
 
 #include <stdio.h>
@@ -49,11 +48,11 @@ start_bpalogin(void)
 	char authdomain[80];
 	char buf[254];
 
-	if (nvram_invmatch("wan_heartbeat_x", "")) {
+	if (!nvram_match("wan_heartbeat_x", "")) {
 		snprintf(authserver, sizeof(authserver), "%s", nvram_safe_get("wan_heartbeat_x"));
 		snprintf(authdomain, sizeof(authdomain), "%s", "");
 	}
-	else if (nvram_invmatch("wan0_domain", " ") && nvram_invmatch("wan0_domain", ""))
+	else if (!nvram_match("wan0_domain", " ") && !nvram_match("wan0_domain", ""))
 	{	
 		snprintf(authserver, sizeof(authserver), "%s", "sm-server");
 		snprintf(authdomain, sizeof(authdomain), "%s", nvram_safe_get("wan0_domain"));

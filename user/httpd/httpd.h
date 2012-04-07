@@ -19,7 +19,6 @@
  *
  * Copyright (C) 2001 ASUSTeK Inc.
  *
- * $Id: httpd.h,v 1.1.1.1 2007/02/15 12:13:18 jiahao Exp $
  */
 
 #ifndef _httpd_h_
@@ -28,6 +27,8 @@
 #if defined(DEBUG) && defined(DMALLOC)
 #include <dmalloc.h>
 #endif
+
+#include <usb_info.h>
 
 /* Basic authorization userid and passwd limit */
 #define AUTH_MAX 64

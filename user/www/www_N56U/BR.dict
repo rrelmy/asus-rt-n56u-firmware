@@ -20,8 +20,8 @@ LANG_SV=Swedish
 LANG_BR=Português do Brasil
 LANG_JP=日本語
 [Malaysia Unifi]
-PPPConnection_x_Unifi=Unifi Support :
-PPPConnection_x_Unifi_Describe=Select 'Yes' to support Malaysia Unifi services.
+PPPConnection_x_Unifi=Suporte Unifi:
+PPPConnection_x_Unifi_Describe=Escolha \"sim\" para apoiar os serviços Malásia Unifi.
 [VPN Passthrough]
 VPN_PPTP_Passthrough=VPN PPTP Passthrough
 VPN_L2TP_Passthrough=VPN L2TP Passthrough
@@ -29,7 +29,7 @@ VPN_IPSec_Passthrough=VPN IPSec Passthrough
 vpn_passthrough_itemname=VPN Passthrough
 vpn_passthrough_desc=Enable VPN Passthrough to allow a Virtual Private Network (VPN) connection to pass through the router to the network clients.
 [AiDisk account alert]
-enable_noaccount_alert=Quando ativado, ele vai acontecer problema de conexão ao servidor Samba e Download Master, se não houver existir qualquer conta.
+enable_noaccount_alert=Se você tentar compartilhar os arquivos em seu disco USB, sem criar uma conta compartilhada via AiDisk, ocorrerão problemas no servidor Samba e Mestre Download.
 [iTunes]
 iTunesMediaServer=Servidor de mídia iTunes
 [opmode strings]
@@ -40,10 +40,8 @@ OP_GW_item=Modo de compartilhamento IP (padrão)
 OP_GW_desc1=No modo de compartilhamento de banda larga o RT-N56U pode conectar-se a Internet através de PPPoE, IP dinâmico, PPTP, L2TP e IP fixo.
 OP_GW_desc2=Ele fornece o sinal de rádio wireless. O NAT, o firewall e os serviços de compartilhamento de banda larga para clientes da LAN estão ativados. Ele também suporta UPnP e DNS dinâmico para o mercado SOHO ou usuário doméstico.
 OP_RT_item=Roteador Sem Fio
-OP_RT_desc1=No modo Roteador / modo compartilhamento de IP, o RT-N56U se conecta à Internet via PPPoE, DHCP, PPTP, L2TP, ou IP Estático e compartilha a rede sem fio para dispositivos de cliente LAN. Neste modo, NAT, firewall, e servidor DHCP são habilitados por padrão. UPnP e DNS Dinâmico são suportados para SOHO e usuários residenciais.
+OP_RT_desc1=No modo Roteador, o RT-N56U se conecta à Internet via PPPoE, DHCP, PPTP, L2TP, ou IP Estático e compartilha a rede sem fio para dispositivos de cliente LAN. Neste modo, NAT, firewall, e servidor DHCP são habilitados por padrão. UPnP e DNS Dinâmico são suportados para SOHO e usuários residenciais.
 OP_RT_desc2=Selecione este modo se você for um usuário iniciante ou se não estiver atualmente usando nenhum roteador com/sem fio.
-OP_RE_item=Modo repetidor
-OP_RE_desc1=No modo repetidor, o RT-N56U conecta de forma sem fio a uma rede sem fio existente para extender a cobertura sem fio. Neste modo, o firewall, compartilhamento de IP e funções NAT são desabilitadas.
 OP_AP_item=Modo de Ponto de Acesso(AP)
 OP_AP_desc1=No modo de Ponto de Acesso(AP), o RT-N56U se conecta a um roteador sem fio pelo cabo de Ethernet para extender a cobertura do sinal sem fio para outros clientes de rede. Neste modo, o firewall, compartilhamento de IP, e funções NAT são desabilitadas por padrão.
 OP_AP_desc2=Selecione este modo se você for um usuário avançado de rede que entende a difereçna entre um roteador sem fio e um ponto de acesso, que é um roqeador sem fio que fornece Conversão de endereços de rede (NAT) e funções de compartilhamento de IP.
@@ -54,7 +52,7 @@ OP_WirelessSignal=Sinal sem fio existente
 IPConnection_VSList_ftpport=Porta do Servidor FTP:
 Adm_System_telnetd=Ativar servidor Telnet ?
 wps_start_btn=Iniciar
-USB_Application_account_alert=O nome do usuário não pode ser ‘root’, ‘Root’, ‘ROOT’, ‘admin’, ‘Admin’, ‘ADMIN’, ‘family’, ‘Family’, ‘FAMILY’ ! Por favor digite um nome de usuário válido !
+USB_Application_account_alert=O nome do usuário não pode ser 'root', 'Root', 'ROOT', 'admin', 'Admin', 'ADMIN', 'family', 'Family', 'FAMILY' ! Por favor digite um nome de usuário válido !
 BasicConfig_USBStorageWhiteist_itemdesc=O intervalo para este campo é 1 a FFFF (hexadecimal). Digite 0 para desativar esta função.
 BasicConfig_USBStorageWhiteist_itemname=Lista branca VID de dispositivo de armazenamento USB
 LANHostConfig_x_TimeZone_itemhint_2=O fuso horário selecionado é diferente do fuso horário detectado. Você gostaria de alterar para o fuso horário detectado ?
@@ -157,7 +155,7 @@ BasicConfig_HWNAT_alert=A função NAT está em conflito com a configuração at
 BasicConfig_HWNAT_itemname=Ativar NAT ?
 LANHostConfig_x_Password_itemdesc=A senha não pode ser maior que 16 caracteres.
 CableStatus=Estado do cabo
-HowToSharebyFTP5=Utilize um aplicativo de cliente FTP com suporte a UTF-8 para mostrar os caracteres orientais como Chinês tradicional ou simplificado. Um exemplo de aplicativo de cliente FTP é  <a href='http://filezilla-project.org/' target='_blank'> Filezilla </ a>, você pode modificar a codificação de caracteres no Site Manager/Avançado opção.
+HowToSharebyFTP5=Utilize um aplicativo de cliente FTP com suporte a UTF-8 para mostrar os caracteres orientais como Chinês tradicional ou simplificado. Um exemplo de aplicativo de cliente FTP é  <a href='http://filezilla-project.org/' target='_blank'> Filezilla </a>, você pode modificar a codificação de caracteres no Site Manager/Avançado opção.
 WLANConfig11n_nmode_limition_hint=O RT-N56U irá alterar a criptografia WEP ou TKIP para AES no modo [Apenas n] para garantir que os clientes possam se conectar adequadamente.
 WLANConfig11n_automode_limition_hint=No modo Auto com criptografia WEP ou TKIP o RT-N56U suporta uma taxa de transmissão máxima de 54 Mbps.
 BM_desc_upload=EZQoS detecta automaticamente sua velocidade de uplink para ajustar sua banda de rede. Se você puder obter a exata velocidade da sua rede através de outro modo como um teste online de velocidade nós recomendamos que você digite esta velocidade em <a href='Advanced_QOSUserSpec_Content.asp'>advanced setting page</a>
@@ -526,7 +524,7 @@ Game=Jogo
 Internet=Internet
 Stream=Stream
 EzQoS_helptitle=Sobre o EzQoS
-EZQoSDesc1=O EZQoS fornece 4 tipos de aplicações mais comuns de Internet e possibilita uma configuração fácil da Qualidade do Serviço (QoS). O QoS garante um desempenho melhor na velocidade de download e permite que você mude a configuração da banda em diferentes cenários.<p>Exemplo: Uma aplicação selecionada manterá sua qualidade sem atrasos mesmo quando você utiliza P2P.</p><p>Se a sua velocidade de uplink alcançou 40 MB/s, sugerimos que você não ative o EZQoS para economizar recursos do sistema.</p>
+EZQoSDesc1=O EZQoS fornece 4 tipos de aplicações mais comuns de Internet e possibilita uma configuração fácil da Qualidade do Serviço (QoS). O QoS garante um desempenho melhor na velocidade de download e permite que você mude a configuração da banda em diferentes cenários.<p>Exemplo: Uma aplicação selecionada manterá sua qualidade sem atrasos mesmo quando você utiliza P2P.</p><p>Se a sua velocidade de uplink alcançou 40 Mb/s, sugerimos que você não ative o EZQoS para economizar recursos do sistema.</p>
 EZQoSDesc2=Para uma configuração mais profissional e detalhada por favor digite
 Day=dias
 Hour=horas
@@ -577,7 +575,7 @@ yoursharesetting=A configuração da sua pasta compartilhada é
 noDDNS=Você ainda não iniciou o serviço de DNS Dinâmico.
 neednotDDNS=Pular a configuração de DNS Dinâmico.
 asusddns_inputhint=Digite um nome
-"[WPS]		"=
+[WPS]
 WPS_PBCbutton_hint=Clique em mim e no botão WPS do cliente. Você terá uma rede sem fio em apenas 2 minutos.
 WPS_PBCbutton_hint_notEnable=Primeiro ative o WPS.
 WPS_PBCbutton_hint_waiting=WPS está sendo processado aguarde o cliente conectar-se.
@@ -851,7 +849,7 @@ PASS_new=Nova senha:
 PASS_retype=Digite novamente a nova senha:
 PASS_changepasswd=Mude a senha do sistema
 FW_desc1=Siga as instruções abaixo:
-FW_desc2=Verifique se há uma nova versão de firmware disponível em <a href="http://support.asus.com.tw/download/download.aspx?product=11&model=RT-N56U&SLanguage=en-us" target="blank">Site da ASUS</a>.
+FW_desc2=Verifique se há uma nova versão de firmware disponível <a href="http://support.asus.com.tw/download/download.aspx?product=11&model=RT-N56U&SLanguage=en-us" target="blank">Site da ASUS</a>.
 FW_desc3=Faça o download da versão adequada em sua máquina local.
 FW_desc4=Especifique o caminho e o nome do arquivo que foi baixado em [Arquivo do novo firmware]. 
 FW_desc5=Clique em [Upload] para fazer o upload do arquivo do RT-N56U. O processo de upload demora aproximadamente três minutos.
@@ -1141,7 +1139,8 @@ TZ84=Nuku'alofa
 LANHostConfig_x_NTPServer_itemname=Servidor NTP
 LANHostConfig_x_NTPServer_itemdesc=Para sincronizar o horário do seu sistema com o servidor NTP.
 LANHostConfig_x_DDNSEnable_sectionname=Configuração do DNS Dinâmico (DDNS)
-LANHostConfig_x_DDNSEnable_sectiondesc=O DNS dinâmico permite que você acesse um computador em sua rede local através de um domínio de Internet mesmo quando conectado por um IP dinâmico. Atualmente diversos serviços de DNS dinâmico estão incorporados no RT-N56U. Você pode clicar em Experimentar Gratuitamente para assinar gratuitamente uma conta deste serviço.
+LANHostConfig_x_DDNSEnable_sectiondesc=O DNS dinâmico permite que você acesse um computador em sua rede local através de um domínio de Internet mesmo quando conectado por um IP dinâmico. Atualmente diversos serviços de DNS dinâmico estão incorporados no RT-N56U. Você pode clicar em Experimentar Gratuitamente para assinar gratuitamente uma conta deste serviço.<p>
+LANHostConfig_x_DDNSEnable_sectiondesc2=O roteador sem fio usa atualmente um endereço IP WAN privado (192.168.x.x, 10,x,x,x ou 172.16.x.x). Este roteador pode estar no ambiente múltiplo NAT e o serviço DDNS pode não operar neste ambiente.
 LANHostConfig_x_DDNSEnable_itemname=Ativar o cliente DNS dinâmico ?
 LANHostConfig_x_DDNSServer_itemname=Servidor:
 LANHostConfig_x_DDNSUserName_itemname=Nome do usuário ou E-mail:
@@ -1180,7 +1179,7 @@ WLANConfig11b_DataRateAll_itemdesc=Este campo permite que você selecione uma ta
 WLANConfig11b_MultiRateAll_itemname=Taxa de multicast (Mbps):
 WLANConfig11b_MultiRateAll_itemdesc=Selecione a taxa de transmissão de multicast. Nós recomendamos que você selecione Auto para o desempenho máximo.
 WLANConfig11b_x_Mode11g_itemname=Modo de rede sem fio:
-WLANConfig11b_x_Mode11g_itemdesc=Este item permite que você selecione uma da opções para o Modo de Rede Sem Fio da sua interface 802.11n.<p>[Auto]: Permite que clientes 802.11n e 802.11g e 802.11b conectem-se ao RT-56U.</p><p>[b/g Mixed]: Permite que clientes 802.11b/g/n conectem-se ao RT-N56U mas os clientes 802.11n terão conexão de apenas 54 Mbps.</p><p>[n Only]: desempenho máximo mas não permite que clientes 802.11g e 802.11b conectem-se ao RT-N56U.</p><p>Clique em Proteção b/g para garantir o tráfego de clientes 11g e 11b.</p>
+WLANConfig11b_x_Mode11g_itemdesc=Este item permite que você selecione uma das opções para o Modo de Rede Sem Fio da sua interface 802.11n.<p>[Auto]: Permite que clientes 802.11n e 802.11g e 802.11b conectem-se ao RT-N56U.</p><p>[b/g Mixed]: Permite que clientes 802.11b/g/n conectem-se ao RT-N56U mas os clientes 802.11n terão conexão de apenas 54 Mbps.</p><p>[n Only]: desempenho máximo mas não permite que clientes 802.11g e 802.11b conectem-se ao RT-N56U.</p><p>Clique em Proteção b/g para garantir o tráfego de clientes 11g e 11b.</p>
 WLANConfig11b_ChannelBW_itemname=Banda do canal:
 WLANConfig11b_ChannelBW_itemdesc=Selecionar uma largura de banda maior do canal oferece uma maior velocidade de transmissão.
 WLANConfig11b_EChannel_itemname=Canal estendido:
@@ -1411,7 +1410,7 @@ LANHostConfig_x_DDNS_alarm_3=Registro realizado com sucesso.
 LANHostConfig_x_DDNS_alarm_4=Registrado ao nome de host original realizado com sucesso.
 LANHostConfig_x_DDNS_alarm_5=Registrado ao novo nome de host realizado com sucesso.
 LANHostConfig_x_DDNS_alarm_6=O IP e o nome do host não estão registrados. Por favor registre-se primeiro.
-LANHostConfig_x_DDNS_alarm_7=Nome de host inválido ! O fomato deve ser 'xxx.asuscomm.com' onde xxx não podem ser caracteres numéricos.
+LANHostConfig_x_DDNS_alarm_7=O nome do host pode não aceitar um prefixo com número e \".\" (assim como \"123abc\" ou \"aaa.bbb\")
 LANHostConfig_x_DDNS_alarm_8=Domínio inválido ! O formato deve ser 'xxx.asuscomm.com'.
 LANHostConfig_x_DDNS_alarm_9=Endereço IP inválido !
 LANHostConfig_x_DDNS_alarm_10=Requisição de registro não autorizada !
@@ -1441,7 +1440,7 @@ confirm_disableftp_dm=Desative o compartilhamento do Ambiente de Rede impedirá 
 LANHostConfig_IPRouters_itemdesc=O endereço IP da LAN do RT-N56U. O valor padrão é 192.168.1.1. O intervalo de endereço IP da LAN: 192.168.0.1 - 192.168.255.254, 172.16.0.1 - 172.31.255.254 e 10.0.0.1 - 10.255.255.254
 HSDPAConfig_hsdpa_mode_itemdesc=Conecte um modem USB 3G/3,5G no RT-N56U e transforme seu roteador em um roteador móvel.
 Not_authpage_login_again=Se você quer acessar novamente por favor feche esta janela primeiro.
-GO_HSDPA_SETTING=Ir para a configuração do USB Modem.
+GO_HSDPA_SETTING=Ir para a configuração do USB Modem
 HSDPA_disable=Se você quiser mudar o tipo de conexão por favor consulte <a href="/Advanced_Modem_others.asp"><#GO_HSDPA_SETTING#></a>para desativar o modem USB.
 [new strings - translated]
 GO_2G=Ir para a configuração do 2.4 GHz

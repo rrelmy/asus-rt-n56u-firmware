@@ -255,7 +255,7 @@ function switchAccount(protocol){
 				$("mode").value = "account";
 				
 				if(this.accounts.length <= 0){
-					alert('<#enable_noaccount_alert#>');	/*Viz add 2011.05*/
+					alert("<#enable_noaccount_alert#>");	/*Viz add 2011.05*/
 				}
 				
 				showLoading();

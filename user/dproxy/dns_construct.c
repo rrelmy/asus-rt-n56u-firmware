@@ -17,6 +17,7 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
+#include <string.h>
 #include "dns_construct.h"
 
 #if 0	//CMC for alignment 8/3/2001
@@ -72,7 +73,7 @@ int dns_construct_name(char *name, char *encoded_name)
 int dns_construct_header(dns_request_t *m)
 {
   char *ptr = m->original_buf;
-  int dummy;
+  int dummy = 0;
 
   SET_UINT16_TO_N( ptr, m->message.header.id, dummy );
   SET_UINT16_TO_N( ptr, m->message.header.flags.flags, dummy );

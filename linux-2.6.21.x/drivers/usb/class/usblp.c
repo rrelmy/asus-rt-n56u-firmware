@@ -1503,7 +1503,7 @@ static int usblp_probe(struct usb_interface *intf,
 			info("proc:get usblpid error!!");
 
 		printk("[K] usblp_probe\n"); // tmp test
-		set_usb_plug_flag(PRT_PLUG_ON);
+		/*set_usb_plug_flag(PRT_PLUG_ON);
 		printk("[K] usblp devpath: %s\n", dev->devpath);
 		sprintf(usb_path_nvram, "usb_path%s", dev->devpath);
 		nvram_set(usb_path_nvram, "printer");
@@ -1534,7 +1534,7 @@ static int usblp_probe(struct usb_interface *intf,
 		sprintf(nvram_value, "%s", dev->product ? dev->product : "");
 		nvram_set(nvram_name, nvram_value);
 
-		kill_proc(1, SIGTTIN, 1);	/* ASUS_HOTPLUG */
+		kill_proc(1, SIGTTIN, 1);//*/	// ASUS_HOTPLUG
 	}
 outpan:
 	// End PaN 
@@ -1757,8 +1757,8 @@ static void usblp_disconnect(struct usb_interface *intf)
 	mutex_unlock (&usblp_mutex);
 
 	printk("[K] usblp_disconnect\n"); // tmp test
-	set_usb_plug_flag(PRT_PLUG_OFF);
-	kill_proc(1, SIGTTIN, 1);	/* ASUS_HOTPLUG */
+	/*set_usb_plug_flag(PRT_PLUG_OFF);
+	kill_proc(1, SIGTTIN, 1);//*/	// ASUS_HOTPLUG
 }
 
 static int usblp_suspend (struct usb_interface *intf, pm_message_t message)

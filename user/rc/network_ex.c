@@ -22,7 +22,6 @@
  * SPECIFICALLY DISCLAIMS ANY IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS
  * FOR A SPECIFIC PURPOSE OR NONINFRINGEMENT CONCERNING THIS SOFTWARE.
  *
- * $Id: network_ex.c,v 1.1.1.1 2007/01/25 12:52:21 jiahao_jhou Exp $
  */
 
 #include <stdio.h>
@@ -94,7 +93,7 @@ int start_pppd(char *prefix)
 	{
 		fprintf(fp, "plugin pptp.so\n");
 		fprintf(fp, "pptp_server '%s'\n",
-			nvram_invmatch("wan_heartbeat_x", "") ?
+			!nvram_match("wan_heartbeat_x", "") ?
 			nvram_safe_get("wan_heartbeat_x") :
 			nvram_safe_get(strcat_r(prefix, "pppoe_gateway", tmp)));
 		/* see KB Q189595 -- historyless & mtu */
@@ -108,12 +107,12 @@ int start_pppd(char *prefix)
 	{
 		fprintf(fp, "plugin rp-pppoe.so");
 
-		if (nvram_invmatch(strcat_r(prefix, "pppoe_service", tmp), "")) {
+		if (!nvram_match(strcat_r(prefix, "pppoe_service", tmp), "")) {
 			fprintf(fp, " rp_pppoe_service '%s'",
 				nvram_safe_get(strcat_r(prefix, "pppoe_service", tmp)));
 		}
 
-		if (nvram_invmatch(strcat_r(prefix, "pppoe_ac", tmp), "")) {
+		if (!nvram_match(strcat_r(prefix, "pppoe_ac", tmp), "")) {
 			fprintf(fp, " rp_pppoe_ac '%s'",
 				nvram_safe_get(strcat_r(prefix, "pppoe_ac", tmp)));
 		}
@@ -129,7 +128,7 @@ int start_pppd(char *prefix)
 		nvram_match(strcat_r(prefix, "pppoe_demand", tmp), "1")	)
 	{
 		fprintf(fp, "idle %s ", nvram_safe_get(strcat_r(prefix, "pppoe_idletime", tmp)));
-		if (nvram_invmatch(strcat_r(prefix, "pppoe_txonly_x", tmp), "0")) {
+		if (!nvram_match(strcat_r(prefix, "pppoe_txonly_x", tmp), "0")) {
 			fprintf(fp, "tx_only ");
 		}
 		fprintf(fp, "demand\n");
@@ -138,10 +137,10 @@ int start_pppd(char *prefix)
 	fprintf(fp, "maxfail 0\n");
 	fprintf(fp, "holdoff 10\n");	// pppd re-call-time(s)
 
-	if (nvram_invmatch(strcat_r(prefix, "dnsenable_x", tmp), "0"))
+	if (!nvram_match(strcat_r(prefix, "dnsenable_x", tmp), "0"))
 		fprintf(fp, "usepeerdns\n");
 
-	if (nvram_invmatch(strcat_r(prefix, "proto", tmp), "l2tp"))
+	if (!nvram_match(strcat_r(prefix, "proto", tmp), "l2tp"))
 		fprintf(fp, "persist\n");
 
 	fprintf(fp, "ipcp-accept-remote ipcp-accept-local noipdefault\n");
@@ -193,14 +192,14 @@ int start_pppd(char *prefix)
 			"hide-avps no\n"
 			"section cmd\n\n",
 			options,
-                        nvram_invmatch("wan_heartbeat_x", "") ?
+                        !nvram_match("wan_heartbeat_x", "") ?
                                 nvram_safe_get("wan_heartbeat_x") :
                                 nvram_safe_get(strcat_r(prefix, "pppoe_gateway", tmp)),
-			nvram_invmatch(strcat_r(prefix, "hostname", tmp), "") ?	// ham 0509
+			!nvram_match(strcat_r(prefix, "hostname", tmp), "") ?	// ham 0509
 				nvram_safe_get(strcat_r(prefix, "hostname", tmp)) : "localhost",
-			nvram_invmatch(strcat_r(prefix, "pppoe_maxfail", tmp), "") ?
+			!nvram_match(strcat_r(prefix, "pppoe_maxfail", tmp), "") ?
 				nvram_safe_get(strcat_r(prefix, "pppoe_maxfail", tmp)) : "32767",
-			nvram_invmatch(strcat_r(prefix, "pppoe_holdoff", tmp), "") ?
+			!nvram_match(strcat_r(prefix, "pppoe_holdoff", tmp), "") ?
 				nvram_safe_get(strcat_r(prefix, "pppoe_holdoff", tmp)) : "10");
 
 		fclose(fp);

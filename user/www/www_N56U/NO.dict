@@ -20,8 +20,8 @@ LANG_SV=Svensk
 LANG_BR=Brazil
 LANG_JP=日本語
 [Malaysia Unifi]
-PPPConnection_x_Unifi=Unifi Support :
-PPPConnection_x_Unifi_Describe=Select 'Yes' to support Malaysia Unifi services.
+PPPConnection_x_Unifi=Støtte til Unifi:
+PPPConnection_x_Unifi_Describe=Velg (Ja) for å støtte Malaysia Unifi-tjenester.
 [VPN Passthrough]
 VPN_PPTP_Passthrough=VPN PPTP Gjennomgang
 VPN_L2TP_Passthrough=VPN L2TP Gjennomgang
@@ -29,7 +29,7 @@ VPN_IPSec_Passthrough=VPN IPSec Gjennomgang
 vpn_passthrough_itemname=VPN Gjennomgang
 vpn_passthrough_desc=Aktiver VPN Gjennomgang for å tillate en VPN-tilkobling (Virtual Private Network) å gå gjennom ruteren til nettverksklientene.
 [AiDisk account alert]
-enable_noaccount_alert=Når den er aktivert, vil det skje tilknytning problem å Samba server og ned Master hvis det ikke er foreligger noen konto.
+enable_noaccount_alert=Hvis du prøver å dele filene på USB-disken din uten å opprette en delt konto med AiDisk, vil det oppstå problemer med Samba Server og Download Master.
 [iTunes]
 iTunesMediaServer=iTunes-medieserver
 [opmode strings]
@@ -39,14 +39,12 @@ OP_switch_button_hint2=Klikk her for å vise
 OP_GW_item=IP-delingsmodus (Standard)
 OP_GW_desc1=I Bredbånd-delingsmodusen, kobler RT-N56U til Internett via PPPoE, automatis IP, PPTP, L2TP eller statisk IP.
 OP_GW_desc2=Den gir deg et trådløst radiosignal. NAT, brannmur og bredbåndsdelingstjenester for LAN-klienter er aktivert. Det støtter også UPnP og Dynamisk DNS for SOHO eller hjemmebruker.
-OP_RT_item=Trådløs ruter
-OP_RT_desc1=In Router mode / IP sharing mode, RT-N56U connects to the Internet via PPPoE, DHCP, PPTP, L2TP, or Static IP and shares the wireless network to LAN client devices. In this mode, NAT, firewall, and DHCP server are enabled by default. UPnP and Dynamic DNS are supported for SOHO and home users. 
-OP_RT_desc2=Select this mode if you are a first-time user or you are not currently using any wired/wireless routers.
-OP_RE_item=Repeater mode
-OP_RE_desc1=In Repeater mode, RT-N56U wirelessly connects to an existing wireless network to extend the wireless coverage.In this mode, the firewall, IP sharing, and NAT functions are disabled.
-OP_AP_item=AP-modus
-OP_AP_desc1=In Access Point (AP) mode, RT-N56U connects to a wireless router through an Ethernet cable to extend the wireless signal coverage to other network clients. In this mode,  the firewall, IP sharing, and NAT functions are disabled by default.
-OP_AP_desc2=Select this mode if you are an advanced network user who understands the difference between a wireless router and an access point, which is that a wireless router provides the Network Address Translation (NAT) and IP sharing functions. 
+OP_RT_item=Ruter (Deaktiver NAT)
+OP_RT_desc1=I rutermodusen, bruk en Ethernet-kabel til å koble RT-N56U til med datamaskinen og opprett en trådløs nettverkstilkobling, velg deretter innstillingene for din trådløse nettverkstilkobling. 
+OP_RT_desc2=RT-N56U forlenger det trådløse nettverksdekningsområdet og lar deg konfigurere den statiske ruteprotokollen. Den deaktiverer NAT (Network Address Translation) for å tillate kommunikasjon og delingstjenester blant LAN- og WAN-klienter. Merk: Du må spesifisere rutereglene i vertsruteren.
+OP_AP_item=Tilgangspunkt
+OP_AP_desc1=I Internettleverandør-modus, bruk en Ethernet-kabel til å koble RT-N56U til med LAN, deretter kan datamaskinen opprette en trådløs nettverkstilkobling til RT-N56U. Alle nettverksklientene må slås sammen med en bru.
+OP_AP_desc2=Denne modusen leverer en Internettilkobling for nettverksklienter, men deaktiverer brannmuren, IP-deling og NAT-funksjoner.
 OP_Modem=Modem
 OP_WirelessClient=Wireless Client
 OP_WirelessSignal=Existing wireless signal
@@ -54,7 +52,7 @@ OP_WirelessSignal=Existing wireless signal
 IPConnection_VSList_ftpport=FTP-serverport:
 Adm_System_telnetd=Aktiver Telnet-server?
 wps_start_btn=Start
-USB_Application_account_alert=Brukers konto kan ikke være ‘root’, ‘Root’, ‘ROOT’, ‘admin’, ‘Admin’, ‘ADMIN’, ‘family’, ‘Family’, ‘FAMILY’ ! Angi en gyldig konto.
+USB_Application_account_alert=Brukers konto kan ikke være 'root', 'Root', 'ROOT', 'admin', 'Admin', 'ADMIN', 'family', 'Family', 'FAMILY' ! Angi en gyldig konto.
 BasicConfig_USBStorageWhiteist_itemdesc=Området for dette feltet er heks 1 til FFFF. Angi 0 (null) for å deaktivere denne funksjonen.
 BasicConfig_USBStorageWhiteist_itemname=USB-lagringsenhet VID-hvitliste
 LANHostConfig_x_TimeZone_itemhint_2=Den valgte tidssoneinnstillingen er forskjellig fra hva enheten har registrert. Vil du endre den registrerte tidssonen?
@@ -390,7 +388,7 @@ menu1=Nettverkskart
 menu2=Medieserver
 menu3=AiDisk
 menu4=EzQoS<br/> Båndbredde<br/> Administrasjon
-menu5=<div style=\"padding-top:3px;\">Avansert<br/>innstilling</div>
+menu5=Avansert<br/>innstilling
 menu5_title=Avansert innstilling
 menu5_1=Trådløs
 menu5_2=LAN
@@ -526,7 +524,7 @@ Game=Spill
 Internet=Internett
 Stream=Direkteoverfør
 EzQoS_helptitle=Om EzQoS
-EZQoSDesc1=EZQoS leverer 4 typer populære Internett-applikasjoner og lar deg enkelt konfigurere dine Quality of Service (QoS)-innstillinger. QoS sørger for ytelsen til Internett-nedlastingshastigheten og lar deg endre innstillingene for dette i ulike scenarier.<p>F.eks. Applikasjonen du velger vil bevare kvaliteten og vil ikke være forsinket selv om du bruker P2P.</p><p>Hvis opp-hastigheten din har nådd 40 MB/s, foreslår vi at du ikke aktiverer EzQoS for sparing av systemressurser.</p>
+EZQoSDesc1=EZQoS leverer 4 typer populære Internett-applikasjoner og lar deg enkelt konfigurere dine Quality of Service (QoS)-innstillinger. QoS sørger for ytelsen til Internett-nedlastingshastigheten og lar deg endre innstillingene for dette i ulike scenarier.<p>F.eks. Applikasjonen du velger vil bevare kvaliteten og vil ikke være forsinket selv om du bruker P2P.</p><p>Hvis opp-hastigheten din har nådd 40 Mb/s, foreslår vi at du ikke aktiverer EzQoS for sparing av systemressurser.</p>
 EZQoSDesc2=For en mer profesjonell og detaljert konfigurasjon, legg inn
 Day=dager
 Hour=timer
@@ -577,7 +575,7 @@ yoursharesetting=Din delmappeinnstilling er
 noDDNS=Du har ikke startet DDNS-tjenesten ennå.
 neednotDDNS=Hopp over ASUS DDNS-innstilling.
 asusddns_inputhint=Tast inn navnet
-[WPS] 
+[WPS]
 WPS_PBCbutton_hint=Klikk på meg og WPS-knappen på klienten. Sett opp en enkel trådløs tilkobling innen 2 minutter.
 WPS_PBCbutton_hint_notEnable=Aktiver WPS først.
 WPS_PBCbutton_hint_waiting=WPS pågår, venter på at klient skal koble til.
@@ -1141,7 +1139,8 @@ TZ84=Nuku'alofa
 LANHostConfig_x_NTPServer_itemname=NTP-server:
 LANHostConfig_x_NTPServer_itemdesc=For å synkronisere systemtiden din med NTP-serveren.
 LANHostConfig_x_DDNSEnable_sectionname=DDNS-innstilling
-LANHostConfig_x_DDNSEnable_sectiondesc=Dynamisk DNS (DDNS) lar deg tilordne et Internett-domenenavn til en datamaskin med en dynamisk IP-adresse. For øyeblikket er flere DDNS-tjenester bygd inn i RT-N56U. Du kan klikke på Gratis prøveversjon under for å starte med en gratis prøvekonto.
+LANHostConfig_x_DDNSEnable_sectiondesc=Dynamisk DNS (DDNS) lar deg tilordne et Internett-domenenavn til en datamaskin med en dynamisk IP-adresse. For øyeblikket er flere DDNS-tjenester bygd inn i RT-N56U. Du kan klikke på Gratis prøveversjon under for å starte med en gratis prøvekonto.<p>
+LANHostConfig_x_DDNSEnable_sectiondesc2=Den trådløse ruterens bruker for øyeblikket en privat WAN IP-adresse (192.168.x.x, 10,x,x,x, eller 172.16.x.x). Denne ruteren kan være i NAT-multimiljøet og DDNS-tjenester fungerer ikke i dette miljøet.
 LANHostConfig_x_DDNSEnable_itemname=Aktiver DDNS-klienten?
 LANHostConfig_x_DDNSServer_itemname=Server:
 LANHostConfig_x_DDNSUserName_itemname=Brukernavn eller e-postadresse:
@@ -1411,7 +1410,7 @@ LANHostConfig_x_DDNS_alarm_3=Registreringen var vellykket.
 LANHostConfig_x_DDNS_alarm_4=Registrerte det originale vertsnavnet uten feil.
 LANHostConfig_x_DDNS_alarm_5=Registrerte det nye vertsnavnet uten feil.
 LANHostConfig_x_DDNS_alarm_6=IP og vertsnavn er ikke registrert, registrer dette først.
-LANHostConfig_x_DDNS_alarm_7=Ugyldig vertsnavn! Formatet bør være 'xxx.asuscomm.com' og 'xxx' kan ikke bare bestå av tall.
+LANHostConfig_x_DDNS_alarm_7=Vertsnavnet kan ikke godta nummerprefiks og \".\" (som \"123abc\" eller \"aaa.bbb\")
 LANHostConfig_x_DDNS_alarm_8=Ugyldig domene! Formatet bør være 'xxx.asuscomm.com'.
 LANHostConfig_x_DDNS_alarm_9=Ugyldig IP-adresse!
 LANHostConfig_x_DDNS_alarm_10=Uautorisert registreringsforespørsel!
@@ -1441,7 +1440,7 @@ confirm_disableftp_dm=Deaktivering nettverksnabolagdel vil føre til at Download
 LANHostConfig_IPRouters_itemdesc=LAN IP-adressen til RT-N56U. Standardverdien er 192.168.1.1. Området til LAN IP-adressen: 192.168.0.1 - 192.168.255.254, 172.16.0.1 – 172.31.255.254, 10.0.0.1 – 10.255.255.254
 HSDPAConfig_hsdpa_mode_itemdesc=Koble 3G/3.5G USB-adapteren inn i RT-N56U og gjør den til en mobil ruter.
 Not_authpage_login_again=Hvis du vil logge på igjen, må du først lukke dette vinduet. 
-GO_HSDPA_SETTING=Gå til USB Modem-innstilling.
+GO_HSDPA_SETTING=Gå til USB Modem-innstilling
 HSDPA_disable=Hvis du vil endre tilkoblingstype，henvis til <a href="/Advanced_Modem_others.asp"><#GO_HSDPA_SETTING#></a>for å deaktivere adapter.
 [new strings - translated]
 GO_2G=Gå til 2.4 GHz-innstillingen

@@ -26,8 +26,11 @@
 wan_route_x = '<% nvram_get_x("IPConnection", "wan_route_x"); %>';
 wan_nat_x = '<% nvram_get_x("IPConnection", "wan_nat_x"); %>';
 wan_proto = '<% nvram_get_x("Layer3Forwarding",  "wan_proto"); %>';
+qos_enabled = '<% nvram_get_x("",  "qos_enable"); %>';
+preferred_lang = '<% nvram_get_x("",  "preferred_lang"); %>';
+chk_hwnat = '<% check_hwnat(); %>';
 
-//	<% nvram("wan_ifname,lan_ifname,wl_ifname,wan_proto,web_svg,rstats_enable,rstats_colors"); %>
+<% nvram("wan_ifname,lan_ifname,wl_ifname,wan_proto,web_svg,rstats_enable,rstats_colors"); %>
 
 var cprefix = 'bw_24';
 var updateInt = 120;
@@ -109,6 +112,18 @@ ref.initX = function()
 
 function init()
 {
+	if(qos_enabled=="0" && preferred_lang=="JP"){
+		$('QoS_disabledesc').style.display="";
+	}else{
+		$('QoS_disabledesc').style.display="none";
+	}	
+
+	if(chk_hwnat=="1" && preferred_lang=="JP"){
+		$('HWNAT_disabledesc').style.display="";
+	}else{
+		$('HWNAT_disabledesc').style.display="none";
+	}
+
 	if (nvram.rstats_enable != '1') return;
 
 	try {
@@ -213,6 +228,13 @@ function Zoom(func){
 		  <table width="100%"  border="1" align="center" cellpadding="4" cellspacing="0" bordercolor="#6b8fa3" class="FormTable">
         <tr>
         <td>
+        <div>
+        	<div id="QoS_disabledesc" align="left" style="color:#FF3300;">
+        		<#TM_Note1#>
+        	</div>
+        	<div id="HWNAT_disabledesc" align="left" style="color:#FF3300;">
+        		<#TM_Note2#>
+        	</div>        	
           <div align="right">
               <select onchange="switchPage(this.options[this.selectedIndex].value)" class="top-input">
 								<option><#switchpage#></option>
@@ -223,6 +245,8 @@ function Zoom(func){
               <input type="button" value="+" onclick="Zoom('in');" class="button" name="button">
               <input type="button" value="-" onclick="Zoom('out');" class="button" name="button">
 					</div>
+				</div>
+				
 					<div id="tab-area"></div>
 			<!--========= svg =========-->
 <!--[if IE]>
@@ -236,8 +260,8 @@ function Zoom(func){
 </object>
       			<!--========= svg =========-->
       			
-                    </td>
-        	    </tr>
+        </td>
+       </tr>
         	    
   		     <tr>
 							<td colspan="2" >

@@ -20,7 +20,7 @@ LANG_SV=Svensk
 LANG_BR=Brazil
 LANG_JP=日本語
 [Malaysia Unifi]
-PPPConnection_x_Unifi=Unifi Support :
+PPPConnection_x_Unifi=Unifi Support:
 PPPConnection_x_Unifi_Describe=選擇 「是」 可以支援 Malaysia Unifi 的服務。
 [VPN Passthrough]
 VPN_PPTP_Passthrough=VPN PPTP Passthrough
@@ -29,7 +29,7 @@ VPN_IPSec_Passthrough=VPN IPSec Passthrough
 vpn_passthrough_itemname=VPN Passthrough
 vpn_passthrough_desc=啟用 VPN Passthrough 功能，讓 Virtual Private Network (VPN) 服務所需要用到的協定允許通過。
 [AiDisk account alert]
-enable_noaccount_alert=啟用後，若不新增帳號會導致網芳與 Download Master 連線出現問題。
+enable_noaccount_alert=若您在沒有使用AiDisk 創建一個共享賬號的情況下試圖在USB 磁碟中分享文件，Samba 服務器與下載大師（Download Master）會出現問題。
 [iTunes]
 iTunesMediaServer=iTunes媒體伺服器
 [opmode strings]
@@ -39,14 +39,12 @@ OP_switch_button_hint2=按我觀看
 OP_GW_item=IP分享模式(預設)
 OP_GW_desc1=在「IP分享」模式下，RT-N56U可使用PPPoE、PPTP、L2TP、自動取得IP或固定IP的方式由WAN端進行網際網路連線。
 OP_GW_desc2=並且提供無線網路、網路位址轉換（NAT - Network Address Translation）及DHCP以建構一個區域網路（LAN）讓用戶可以分享IP。另外，也支援一些對家庭用戶相當有用的功能，像是通用隨插即用（UPnP）及動態DNS（DDNS）。
-OP_RT_item=Router mode (無線路由器模式)
-OP_RT_desc1=在Router / IP sharing mode (無線路由器 / 無線IP分享模式)下, RT-N56U 可使用PPPoE、自動取得IP、固定IP或PPTP/L2TP等方式連線到Internet(WAN), 並將IP分享給區域網路(LAN)內的用戶端。在本模式下NAT, 防火牆, 及IP分享功能預設為啟動。用戶也可以使用UPnP及動態DNS等進階功能。
-OP_RT_desc2=若您第一次使用無線路由器請選澤這個模式。
-OP_RE_item=Repeater mode (中繼模式)
-OP_RE_desc1=在Repeater mode (中繼模式)下，RT-N56U 可以延伸您使用環境內其他基地台的訊號，以提供無線用戶更好的訊號品質。
-OP_AP_item=Access Point mode (無線存取點)
-OP_AP_desc1=在Access Point mode (無線存取點)模式下，RT-N56U 必需使用網路線連接到既存的路由器。此模式能以最穩定的方式延伸無線網路訊號或者替有線路由器增加無線存取的能力。 
-OP_AP_desc2=NAT, 防火牆, 及IP分享功能在此模式下會被關閉。切換到此模式前建議使用者能夠分遍出無線路由器及無線存取點的差別。
+OP_RT_item=路由器(取消NAT)
+OP_RT_desc1=在「路由器」模式下，您可能已經建構了一個區域網路（LAN），建議您將RT-N56U的廣域網路（WAN）連接埠以網路線連接到您的區域網路，並選擇適當的網際網路設定以建立連線。
+OP_RT_desc2=路由器模式主要目的在延伸你的區域網路，並允許設定靜態路由通訊協定，但關閉網路位址轉換（NAT）以允許RT-N56U下的用戶與原本區域網路的用戶互相通訊與共享服務 (<span style='color:#EE0000'>注意：必須在原本的路由器上加入靜態路由規則</span>)。
+OP_AP_item=無線網路基地台
+OP_AP_desc1=在「無線網路基地台」模式下，建議您以網路線將RT-N56U的任何一個連接埠連接到您的區域網路，取得IP並進行連線。此時，四組區域網路（LAN）連接埠與廣域網路（WAN）連接埠及無線網路橋接在一起。
+OP_AP_desc2=基地台模式主要在提供無線網路訊號，但關閉IP分享功能、防火牆與網路位址轉換（NAT）。
 OP_Modem=數據機
 OP_WirelessClient=無線用戶端
 OP_WirelessSignal=既有無線訊號
@@ -54,7 +52,7 @@ OP_WirelessSignal=既有無線訊號
 IPConnection_VSList_ftpport=FTP伺服器埠號:
 Adm_System_telnetd=啟用Telnet伺服器?
 wps_start_btn=起始
-USB_Application_account_alert=用戶賬號不能為‘root’, ‘Root’, ‘ROOT’, ‘admin’, ‘Admin’, ‘ADMIN’, ‘family’, ‘Family’, ‘FAMILY’請輸入有效的賬號名稱！
+USB_Application_account_alert=用戶賬號不能為'root', 'Root', 'ROOT', 'admin', 'Admin', 'ADMIN', 'family', 'Family', 'FAMILY'請輸入有效的賬號名稱！
 BasicConfig_USBStorageWhiteist_itemdesc=此欄位範圍為十六進位 1 到 FFFF。輸入 0（零）以關閉此功能。
 BasicConfig_USBStorageWhiteist_itemname=USB儲存設備VID白名單
 LANHostConfig_x_TimeZone_itemhint_2=您選擇的時區設置與路由器偵測到的不同。您想要更改為路由器偵測到的時區嗎？
@@ -126,6 +124,7 @@ QIS_resetModem_desc3=拔掉電源線並在兩分鐘後重新插上。
 QIS_resetModem2_desc1=將電源線重新連接到您的數據機並等待約一分鐘。然後點選重新偵測。
 QIS_wireless_desc1=輸入 8~63 個字元（字母、數字或其組合）或64個十六進位字元組成的網路金鑰。若您不想進行網路加密設定，請保持網路金鑰一欄空白。<span style='font-weight:bolder;'>預設的無線加密方式為 WPA-Auto-Personal - AES + TKIP。</span>
 [Traffic Monitor]
+TM_Note=To monitor LAN traffic, please enable your EZQoS function.
 Date=日期
 Scale=標度
 Last30days=過去30天
@@ -526,7 +525,7 @@ Game=網路遊戲
 Internet=網際網路
 Stream=線上影音
 EzQoS_helptitle=關於EZQoS頻寬管理
-EZQoSDesc1=EZQoS頻寬管理提供四種常用的網路應用類型，透過簡易的設定方式，確保這些應用的連線速度在網路塞車的情況下，維持一定的水準。<p>例如：在開啟P2P的情況下，仍可讓您所選擇的應用，保有較高的網路使用權，而不會受到P2P的影響出現延遲。</p><p>若您的上傳頻寬速度高於40MB/s，建議您不需要啟用EzQoS功能，以節省系統資源。</p>
+EZQoSDesc1=EZQoS頻寬管理提供四種常用的網路應用類型，透過簡易的設定方式，確保這些應用的連線速度在網路塞車的情況下，維持一定的水準。<p>例如：在開啟P2P的情況下，仍可讓您所選擇的應用，保有較高的網路使用權，而不會受到P2P的影響出現延遲。</p><p>若您的上傳頻寬速度高於40Mb/s，建議您不需要啟用EzQoS功能，以節省系統資源。</p>
 EZQoSDesc2=若需要更專業詳盡的設定，請選擇
 Day=天
 Hour=時
@@ -829,7 +828,7 @@ JS_validip=不是有效的IP位址！
 JS_itemlimit1=本表僅允許
 JS_itemlimit2=項目！
 JS_duplicate=此項已納入清單中。
-JS_validmac=請輸入完整包含12個16進位制字母的MAC位址，0~9，A~F不包括"："。
+JS_validmac=請輸入完整包含12個16進位制字母的 MAC 位址，0~9，A~F不包括':'。
 JS_validstr1=本字串無法起自
 JS_validstr2=本字串無法包含
 JS_validSSID1=SSID不能包含「
@@ -1142,7 +1141,8 @@ TZ84=努瓜婁發
 LANHostConfig_x_NTPServer_itemname=NTP伺服器：
 LANHostConfig_x_NTPServer_itemdesc=RT-N56U可與NTP伺服器同步，維持系統時間的正確。
 LANHostConfig_x_DDNSEnable_sectionname=DDNS設定：
-LANHostConfig_x_DDNSEnable_sectiondesc=動態DNS（DDNS）讓您即使在沒有靜態IP位址的情況下，仍可將伺服器連同特有名稱一併匯出至網際網路上。目前，在 RT-N56U 之中已有數台嵌入的DDNS客戶端。您可點選下方的「免費試用」，來啟用一個免費試用帳號。
+LANHostConfig_x_DDNSEnable_sectiondesc=動態DNS（DDNS）讓您即使在沒有靜態IP位址的情況下，仍可將伺服器連同特有名稱一併匯出至網際網路上。目前，在 RT-N56U 之中已有數台嵌入的DDNS客戶端。您可點選下方的「免費試用」，來啟用一個免費試用帳號。<p>
+LANHostConfig_x_DDNSEnable_sectiondesc2=目前無線路由器使用一個私人的 WAN IP 位址（192.168.x.x, 10.x.x.x, or 172.16.x.x）。此路由器可能處於多層 NAT網路中，而 DDNS 服務不能在此環境下工作。請連絡您的網路管理人員處理此問題。
 LANHostConfig_x_DDNSEnable_itemname=啟用DDNS Client？
 LANHostConfig_x_DDNSServer_itemname=伺服器：
 LANHostConfig_x_DDNSUserName_itemname=用戶名稱或E-mail帳號：
@@ -1412,7 +1412,7 @@ LANHostConfig_x_DDNS_alarm_3=註冊成功。
 LANHostConfig_x_DDNS_alarm_4=原主機名稱更新成功。
 LANHostConfig_x_DDNS_alarm_5=新主機名稱註冊成功。
 LANHostConfig_x_DDNS_alarm_6=IP與主機名稱尚未註冊，請先註冊。
-LANHostConfig_x_DDNS_alarm_7=主機名稱錯誤，格式須為'xxx.asuscomm.com'，且'xxx'的字首不能為數字。
+LANHostConfig_x_DDNS_alarm_7=主機名稱開頭不能為數字且名稱中間不能有 \".\"符號（如 \"123abc\" 或 \"aaa.bbb\" ）
 LANHostConfig_x_DDNS_alarm_8=網域名稱錯誤，格式須為'xxx.asuscomm.com'。
 LANHostConfig_x_DDNS_alarm_9=註冊失敗(IP位址格式不正確)。
 LANHostConfig_x_DDNS_alarm_10=不合法的註冊請求。
@@ -1439,9 +1439,9 @@ HSDPAConfig_username_itemdesc=請輸入您的帳號。
 HSDPAConfig_password_itemdesc=請輸入您的密碼。
 HSDPAConfig_usbadaptor_itemdesc=請選擇您使用的USB網卡。
 confirm_disableftp_dm=停用網路芳鄰功能，將會暫時無法使用下載大師。
-HSDPAConfig_hsdpa_mode_itemdesc=接上USB數據卡，讓你的RT-N56U變身為行動網路基地台。若需移除數據卡，請至<a href='/index.asp'>首頁</a>，點選數據卡圖示，選擇安全移除，以避免功能異常。
+HSDPAConfig_hsdpa_mode_itemdesc=接上USB數據卡，讓你的RT-N56U變身為行動網路基地台。若需移除數據卡，請至<a href='/index.asp' target=\'_blank\'>首頁</a>，點選數據卡圖示，選擇安全移除，以避免功能異常。
 Not_authpage_login_again=請先關閉視窗，再重新登入。
-GO_HSDPA_SETTING=前往USB Modem設定。
+GO_HSDPA_SETTING=前往USB Modem設定
 HSDPA_disable=若需要更改連線類型，請先至<a href="/Advanced_Modem_others.asp">USB Modem設定</a>停用USB網卡
 [new strings - translated]
 GO_2G=前往2.4GHz設定

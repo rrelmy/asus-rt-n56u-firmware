@@ -53,7 +53,7 @@ configure:
 	)
 
 clean:
-	$(MAKE) -C source clean
+	$(MAKE) -C source distclean
 	rm -rf install
 	rm -f config_done
 

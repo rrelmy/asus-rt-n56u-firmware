@@ -20,7 +20,7 @@ configure:
 	)
 
 clean:
-	$(MAKE) -C source clean
+	$(MAKE) -C source distclean
 	rm -rf install
 	rm -f libogg.so.0.7.1
 	rm -f config_done

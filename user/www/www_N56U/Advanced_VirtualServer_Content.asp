@@ -62,7 +62,7 @@ var clients_info = getclients();
 var VSList = [<% get_nvram_list("IPConnection", "VSList"); %>];
 
 function initial(){
-	show_banner(1);
+	show_banner(2);
 	show_menu(5,3,4);
 	show_footer();
 	
@@ -109,26 +109,28 @@ function change_wizard(o, id){
 		$("KnownGames").value = 0;
 		
 		for(var i = 0; i < wItem.length; ++i){
-			if(wItem[i][0] != null && o.value == i){
-				if(wItem[i][2] == "TCP")
-					document.form.vts_proto_x_0.options[0].selected = 1;
-				else if(wItem[i][2] == "UDP")
-					document.form.vts_proto_x_0.options[1].selected = 1;
-				else if(wItem[i][2] == "BOTH")
-					document.form.vts_proto_x_0.options[2].selected = 1;
-				else
-					document.form.vts_proto_x_0.options[3].selected = 1;
-				
-				document.form.vts_ipaddr_x_0.value = client_ip;
-				document.form.vts_port_x_0.value = wItem[i][1];
-				document.form.vts_desc_x_0.value = wItem[i][0]+" Server";				
-				break;
-			}
+					if(wItem[i][0] != null && o.value == i){
+							if(wItem[i][2] == "TCP")
+								document.form.vts_proto_x_0.options[0].selected = 1;
+							else if(wItem[i][2] == "UDP")
+								document.form.vts_proto_x_0.options[1].selected = 1;
+							else if(wItem[i][2] == "BOTH")
+								document.form.vts_proto_x_0.options[2].selected = 1;
+							else
+								document.form.vts_proto_x_0.options[3].selected = 1;				
+						
+						document.form.vts_ipaddr_x_0.value = client_ip;
+						document.form.vts_port_x_0.value = wItem[i][1];
+						document.form.vts_desc_x_0.value = wItem[i][0]+" Server";				
+						break;
+					}
 		}
-		if(document.form.KnownApps.options[1].selected == 1)
-			document.form.vts_lport_x_0.value = "21";
-		else
+		if(document.form.KnownApps.options[1].selected == 1){
+				document.form.vts_port_x_0.value = document.form.port_ftp.value;
+				document.form.vts_lport_x_0.value = "21";
+		}else{
 			document.form.vts_lport_x_0.value = "";
+		}	
 	}
 	else if(id == "KnownGames"){
 		$("KnownApps").value = 0;

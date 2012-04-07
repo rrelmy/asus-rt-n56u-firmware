@@ -20,8 +20,8 @@ LANG_SV=Svensk
 LANG_BR=Brazil
 LANG_JP=日本語
 [Malaysia Unifi]
-PPPConnection_x_Unifi=Unifi Support :
-PPPConnection_x_Unifi_Describe=Select 'Yes' to support Malaysia Unifi services.
+PPPConnection_x_Unifi=UniFi サポート：
+PPPConnection_x_Unifi_Describe=Telekom Malaysia UniFi service をサポートするには、「はい」を選択します。
 [VPN Passthrough]
 VPN_PPTP_Passthrough=VPN PPTP パススルー
 VPN_L2TP_Passthrough=VPN L2TP パススルー
@@ -29,7 +29,7 @@ VPN_IPSec_Passthrough=VPNIPSec パススルー
 vpn_passthrough_itemname=VPN パススルー
 vpn_passthrough_desc=VPNパススルーを有効にすると、Virtual Private Network (VPN) 接続でルーターをネットワーククライアントにパススルーできます。
 [AiDisk account alert]
-enable_noaccount_alert=有効にすると、アカウントが存在しない場合はSambaサーバーとダウンロードマスターで接続の問題が発生します。
+enable_noaccount_alert=AiDiskを通じて共有アカウントを作成せずにUSBディスク内のファイルを共有する場合、Sambaサーバーとダウンロードマスターで問題が発生します。
 [iTunes]
 iTunesMediaServer=iTunes Media Server
 [opmode strings]
@@ -39,14 +39,12 @@ OP_switch_button_hint2=ここをクリックして参照
 OP_GW_item=IP共有モード（デフォルト）
 OP_GW_desc1=ブロードバンド共有モードでは、RT-N56UはPPPoE、Automatic IP、PPTP、L2TP、Static IPを通じてインターネットに接続されます。
 OP_GW_desc2=ワイヤレス信号を提供します。LANクライアント用のブロードバンド共有サービス、ファイアウォール、NATが有効です。また、SOHOまたはホームユーザー用のDynamic DNS、UPnPもサポートしています。
-OP_RT_item=ワイヤレスルーター/ IP共有モード
-OP_RT_desc1=ルーターモード/IP共有モードでは、RT-N56UはPPPoE、DHCP、 PPTP、L2TP、静的IPでインターネットに接続しワイヤレスネットワークをLANクライアントデバイスと共有します。このモードでは、NAT、ファイアウォール、DHCPサーバーがデフォルトで有効に設定されています。UPnP、Dynamic DNSもSOHO、ホームユーザー用にサポートしています。
-OP_RT_desc2=初めて使用する場合、または有線/無線ルーターを使用していない場合は、このモードを選択します。
-OP_RE_item=リピーターモード
-OP_RE_desc1=リピーダーモードでは、RT-N56Uは既存のワイヤレスネットワークに自動接続し、ワイヤレス信号の受信範囲を拡張します。このモードでは、ファイアウォール、IPの共有、NAT機能は無効になります。
+OP_RT_item=ルーター（NAT無効）
+OP_RT_desc1=ルーターモードでは、RT-N56Uをイーサネットケーブルでコンピューターに接続し、ワイヤレスネットワーク接続を構築し、構築後ワイヤレスネットワーク接続を選択します。
+OP_RT_desc2=RT-N56Uはワイヤレス信号の受信範囲を拡張し、静的経路プロトコルを設定します。NAT機能は無効になり、LANクライアントとWANクライアント間のコミュニケーションと共有サービスを可能にします。注：経路設定ルールをホストルーターで指定する必要があります。
 OP_AP_item=アクセスポイント（AP）モード
-OP_AP_desc1=アクセスポイント（AP）モードでは、RT-N56Uはイーサネットケーブルを通じてワイヤレスルーターに接続し、ワイヤレス信号の受信範囲を他のネットワーククライアントに拡張します。このモードでは、ファイアウォール、IPの共有、NAT機能は初期設定で無効になります。
-OP_AP_desc2=ワイヤレスルーターとアクセスポイントの違いを理解する上級者向けのモードです。ワイヤレスルーターはNetwork Address Translation (NAT) とIP共有機能を提供します。
+OP_AP_desc1=アクセスポイント（AP）モードでは、RT-N56Uはイーサネットケーブルを通じてLANに接続します。接続するとコンピューターはRT-N56Uへのワイヤレスネットワークを構築します。全てのネットワーククライアントはブリッジされます。
+OP_AP_desc2=このモードではネットワーククライアント用のインターネット接続を提供します。このモードでは、ファイアウォール、IPの共有、NAT機能は無効になります。
 OP_Modem=モデム
 OP_WirelessClient=ワイヤレスクライアント
 OP_WirelessSignal=既存のワイヤレス信号
@@ -126,6 +124,8 @@ QIS_resetModem_desc3=電源コードをモデムから抜き、2分間後、コ�
 QIS_resetModem2_desc1=電源コードをモデムに接続し、1分ほど待機します。ASUS製ルーターはモデムから新しいIPを取得します。
 QIS_wireless_desc1=ネットワークキーを8～63文字（アルファベット、数字、またはその組み合わせ）、または64文字の16進数で入力します。ネットワークセキュリティを設定しない場合は、ネットワークキーのフィールドを空欄にします。<span style='font-weight:bolder;'>デフォルトのワイヤレスセキュリティはWPA-Auto-Personal - AES + TKIPです。</span>
 [Traffic Monitor]
+TM_Note1=LAN のトラフィックをモニタリングするには、EZQoS 機能を有効にしてください
+TM_Note2=LAN のトラフィックをモニタリングするには、Hardware NAT 機能を無効にしてください
 Date=日
 Scale=単位
 Last30days=日前
@@ -389,7 +389,7 @@ HowToSharebyFTP4=（LANでのみアクセス可能）
 menu1=ネットワークマップ
 menu2=UPnP メディアサーバー
 menu3=AiDisk
-menu4=EzQoS帯域管理
+menu4=<div style=\"padding-top:12px;\">EzQoS帯域管理</div>
 menu5=<div style=\"padding-top:10px;\">詳細設定</div>
 menu5_title=詳細設定
 menu5_1=ワイヤレス
@@ -526,7 +526,7 @@ Game=ゲーム
 Internet=インターネット
 Stream=ストリーム
 EzQoS_helptitle=EzQoSについて
-EZQoSDesc1=EZQoSは4つのタイプのよく使用されるインターネットアプリケーションを提供し、Quality of Service (QoS)の設定を簡単に行うことができます。QoSはインターネットダウンロードスピードのパフォーマンスを向上させ、また各状況に応じた設定が可能です。<p>例：選択したアプリケーションのクオリティを保証し、  P2P使用時でもラグが生じません。</p><p>アップリンクスピードが40MB/s い達した場合、システムリソース保護のため、EzQoSを有効にしないことをお勧めします。</p>
+EZQoSDesc1=EZQoSは4つのタイプのよく使用されるインターネットアプリケーションを提供し、Quality of Service (QoS)の設定を簡単に行うことができます。QoSはインターネットダウンロードスピードのパフォーマンスを向上させ、また各状況に応じた設定が可能です。<p>例：選択したアプリケーションのクオリティを保証し、  P2P使用時でもラグが生じません。</p><p>アップリンクスピードが40Mb/s い達した場合、システムリソース保護のため、EzQoSを有効にしないことをお勧めします。</p>
 EZQoSDesc2=より専門的な設定を行う場合は次へ：
 Day=日
 Hour=時間
@@ -577,7 +577,7 @@ yoursharesetting=共有フォルダーの設定は
 noDDNS=DDNSサービスをまだ開始していません。
 neednotDDNS=ASUS DDNS設定をスピップする
 asusddns_inputhint=名前を入力します。
-[WPS]	 
+[WPS]
 WPS_PBCbutton_hint=こことクライアントのWPSボタンをクリックします。2分でワイヤレス接続が構築することができます。
 WPS_PBCbutton_hint_notEnable=WPSをまず有効にします
 WPS_PBCbutton_hint_waiting=WPSはタスク実行中です。クライアントの接続を待機しています
@@ -1141,7 +1141,8 @@ TZ84=ヌクアロファ
 LANHostConfig_x_NTPServer_itemname=NTPサーバー：
 LANHostConfig_x_NTPServer_itemdesc=システム時間とNTPサーバーを同期
 LANHostConfig_x_DDNSEnable_sectionname=DDNS設定
-LANHostConfig_x_DDNSEnable_sectiondesc=Dynamic DNS (DDNS) は、動的IPアドレスでインターネットドメイン名をコンピューターに割り当てます。現在、複数のDDNSサービスがRT-N56Uに組み込まれており、「無料お試し」をクリックすれば、無料お試し版のアカウントを使用することができます。
+LANHostConfig_x_DDNSEnable_sectiondesc=Dynamic DNS (DDNS) は、動的IPアドレスでインターネットドメイン名をコンピューターに割り当てます。現在、複数のDDNSサービスがRT-N56Uに組み込まれており、「無料お試し」をクリックすれば、無料お試し版のアカウントを使用することができます。<p>
+LANHostConfig_x_DDNSEnable_sectiondesc2=The wireless router currently uses a private WAN IP address (192.168.x.x, 10,x,x,x, or 172.16.x.x). This router may be in the multiple-NAT environment and DDNS service cannot work in this environment.
 LANHostConfig_x_DDNSEnable_itemname=DDNSクライアントを有効にしますか？
 LANHostConfig_x_DDNSServer_itemname=サーバー：
 LANHostConfig_x_DDNSUserName_itemname=ユーザー名またはEメールアドレス：
@@ -1411,7 +1412,7 @@ LANHostConfig_x_DDNS_alarm_3=登録成功
 LANHostConfig_x_DDNS_alarm_4=オリジナルのホスト名を登録しました
 LANHostConfig_x_DDNS_alarm_5=新しいホスト名を登録しました
 LANHostConfig_x_DDNS_alarm_6=IPとホスト名が未登録です。登録してください
-LANHostConfig_x_DDNS_alarm_7=不適切なホスト名です！「xxx.asuscomm.com」の形式で入力し、「xxx」は数字以外の文字も必要です。
+LANHostConfig_x_DDNS_alarm_7=不適切なホスト名です！「xxx」はプレフィックスと\".\"ではありません。例：\"123abc\"と\"aaa.bbb\"
 LANHostConfig_x_DDNS_alarm_8=不適切なAPアドレスです！フォーマットは「xxx.asuscomm.com」です!
 LANHostConfig_x_DDNS_alarm_9=不適切なAPアドレスです！
 LANHostConfig_x_DDNS_alarm_10=認証されていない登録リクエストです！

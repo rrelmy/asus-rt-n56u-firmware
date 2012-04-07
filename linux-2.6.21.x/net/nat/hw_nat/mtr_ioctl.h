@@ -52,6 +52,7 @@
 
 #define MTR_CLEAN_TBL                     (16)
 #define MTR_GET_CHIP_VER		  (17)
+#define MTR_GET_ALL_ENTRIES               (18)
 
 #define MTR_DEVNAME                     "mtr0"
 #define MTR_MAJOR                       (250)
@@ -74,35 +75,25 @@ enum MtrResult {
 	MTR_TBL_FULL=2
 };
 
-enum Rt2880ChipVer { //MTR feature not support in RT2880-Shuttle & RT2880-MP
-	RT2880_MP2=0x200,
-};
-
-enum RalinkChipId {
-    RT2880=0,
-    RT3052=1,
-    RT2883=2,
-    RT3883=3,
-    RT3350=4,
-    RT3352=5,
-    RT6855=6
-};
 
 struct mtr_args {
     unsigned char  mac[6];
     enum MtrResult result;
     unsigned long  ip_s; /* Start Ip Address */
     unsigned long  ip_e; /* End Ip Address */
-    unsigned short port_s; /* start dst port number */
-    unsigned short port_e; /* end dst port number */
     unsigned long  mg_num; /* meter group */
-    unsigned char  proto; /* ip protocol */
     unsigned short token_rate;
     unsigned short bk_size;
     unsigned char  mtr_mode; /* Byte meter/Pkt meter mode */
+    enum MtrInterval mtr_intval;
     unsigned int   chip_ver;
     unsigned int   chip_id;
-    enum MtrInterval mtr_intval;
+};
+
+struct mtr_list_args {
+    enum MtrResult   result;
+    unsigned int     num_of_entries:16;
+    struct mtr_args  entries[0];
 };
 
 int MtrRegIoctlHandler(void);

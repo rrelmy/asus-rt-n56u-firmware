@@ -88,11 +88,11 @@ function corrected_timezone(){
 
 	if(StrIndex > 0){		
 		if(timezone != today.toString().substring(StrIndex, StrIndex+5)){
-			$("timezone_hint").style.display = "block";
-			$("timezone_hint").innerHTML = "<#LANHostConfig_x_TimeZone_itemhint#>";
+			/*$("timezone_hint").style.display = "block";
+			$("timezone_hint").innerHTML = "<#LANHostConfig_x_TimeZone_itemhint#>";*/
 		}
 		else
-			return;			
+			return;
 	}
 	else
 		return;	

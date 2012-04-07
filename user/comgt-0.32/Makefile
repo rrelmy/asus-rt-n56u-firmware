@@ -35,16 +35,16 @@ romfs:
 	$(ROMFSINST) scripts/command /etc_ro/ppp/3g
 	$(ROMFSINST) scripts/dump /etc_ro/ppp/3g
 	$(ROMFSINST) scripts/operator /etc_ro/ppp/3g
+	$(ROMFSINST) scripts/getinfo /etc_ro/ppp/3g
 	$(ROMFSINST) scripts/sigmon /sbin
 	$(ROMFSINST) scripts/read_sms /sbin
 	$(ROMFSINST) scripts/send_sms /sbin
 
 clean:
-	-rm *.o 
-	-rm $(CPROG) 
-	-rm *~
-	-rm $(SCRIPTSRC)*~
-
+	-rm -f *.o 
+	-rm -f $(CPROG) 
+	-rm -f *~
+	-rm -f $(SCRIPTSRC)*~
 
 comgt: comgt.o
 	$(CC) comgt.o $(LDFLAGS) -o comgt

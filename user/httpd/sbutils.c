@@ -19,7 +19,6 @@
  * of the SiliconBackplane-based Broadcom chips.
  *
  * Copyright(c) 2001 ASUSTeK Inc..
- * $Id: sbutils.c,v 1.1.1.1 2007/02/15 12:13:18 jiahao Exp $
  */
 
 #include <nvram/typedefs.h>

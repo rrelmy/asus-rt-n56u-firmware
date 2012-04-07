@@ -20,13 +20,6 @@
 #include <linux/usb.h>
 #include "usb.h"
 
-extern int g3_flag;
-extern int g3_plug_flag;
-extern int usb_plug_flag;
-#define G3_PLUG_ON      21
-#define G3_PLUG_OFF     22
-#define HUB_RE_ENABLE   30
-
 static inline const char *plural(int n)
 {
 	return (n == 1 ? "" : "s");
@@ -157,30 +150,9 @@ static int choose_configuration(struct usb_device *udev)
 	return i;
 }
 
-static int probe_count = 0;
-
 static int generic_probe(struct usb_device *udev)
 {
 	int err, c;
-
-        printk("[K] generic probe:%d, %d, %d\n", g3_flag, probe_count, g3_plug_flag);      // tmp test
-
-	/* probe_count: ignore first insmod */
-        if((g3_flag == 1) && (probe_count > 0))
-        {
-        	if(g3_plug_flag == 0)
-        	{
-			printk("[K] send rc 3g on\n");	// tmp test
-                	g3_plug_flag = 1;
-                	usb_plug_flag = G3_PLUG_ON;        // ASUS PLUG
-                	kill_proc(1, SIGTTIN, 1);
-        	}
-		else
-			printk("[K] ignore send 3g on\n");	// tmp test
-        }
-
-	if(probe_count < 128)
-		++probe_count;
 
 	/* put device-specific files into sysfs */
 	usb_create_sysfs_dev_files(udev);
@@ -207,24 +179,6 @@ static int generic_probe(struct usb_device *udev)
 
 static void generic_disconnect(struct usb_device *udev)
 {
-        printk("[K] generic disconnect:%d\n", g3_flag); // tmp test
-
-        if(g3_flag == 1)
-        {
-/*
-		if(usb_plug_flag == HUB_RE_ENABLE)
-		{
-			printk("[K] hub re_enable, ignore sending event\n");	// tmp test
-		} 
-		else
-		{
-*/
-		printk("[K] send 3g plug-off event\n");	// tmp test
-        	usb_plug_flag = G3_PLUG_OFF;        // ASUS PLUG
-        	kill_proc(1, SIGTTIN, 1);
-//		}
-        }
-
 	usb_notify_remove_device(udev);
 
 	/* if this is only an unbind, not a physical disconnect, then

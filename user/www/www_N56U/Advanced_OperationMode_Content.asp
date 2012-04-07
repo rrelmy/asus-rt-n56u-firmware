@@ -35,7 +35,7 @@ var ssid_5g = '<% nvram_char_to_ascii("WLANConfig11b", "wl_ssid"); %>';
 var wireless = [<% wl_auth_list(); %>];	// [[MAC, associated, authorized], ...]
 
 function initial(){
-	show_banner(1);
+	show_banner(2);
 	
 	show_menu(5,6,1);
 	

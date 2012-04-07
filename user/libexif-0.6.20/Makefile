@@ -23,7 +23,7 @@ configure:
 	)
 
 clean:
-	$(MAKE) -C source clean
+	$(MAKE) -C source distclean
 	rm -rf install
 	rm -f libexif.so.12.3.2
 	rm -f config_done

@@ -22,7 +22,6 @@
  * SPECIFICALLY DISCLAIMS ANY IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS
  * FOR A SPECIFIC PURPOSE OR NONINFRINGEMENT CONCERNING THIS SOFTWARE.
  *
- * $Id: rc.c,v 1.1.1.1 2007/01/25 12:52:21 jiahao_jhou Exp $
  */
 
 #include <stdio.h>
@@ -165,10 +164,6 @@ set_wan0_vars(void)
 		nvram_set(strcat_r(prefix, "desc", tmp), "Default Connection");
 		nvram_set(strcat_r(prefix, "primary", tmp), "1");
 	}
-
-	// ex init
-	nvram_set("auto_dhcp_dns", "");
-	nvram_set("auto_dhcp_dns2", "");
 }
 
 static void
@@ -380,10 +375,10 @@ rc_signal(int sig)
 			dbG("[rc] catch signal SIGUSR1\n");
 			signalled = SERVICE;
 		}
-		else if (sig == SIGTTIN) {
+		/*else if (sig == SIGTTIN) {
 			dbG("[rc] catch signal SIGTTIN\n");
 			signalled = HOTPLUG;
-		}
+		}//*/
 	}
 }
 
@@ -586,7 +581,7 @@ void restart_qos()
 	else	
 		strcpy (net_name, nvram_safe_get("wan0_ifname"));
 
-	if (nvram_invmatch("qos_manual_ubw","") && nvram_invmatch("qos_manual_ubw","0") && (atoi(nvram_safe_get("qos_manual_ubw")) > 0))
+	if (!nvram_match("qos_manual_ubw","") && !nvram_match("qos_manual_ubw","0") && (atoi(nvram_safe_get("qos_manual_ubw")) > 0))
 		nvram_set("qos_ubw_real", nvram_safe_get("qos_manual_ubw"));
 	else
 		nvram_set("qos_ubw_real", nvram_safe_get("qos_ubw"));
@@ -825,7 +820,7 @@ static void handle_notifications(void) {
 		{
 			dbg("rc rebooting the system.\n");
 
-			nvram_set("reboot", "1");
+			sys_exit();
 
 			return;
 		}
@@ -840,6 +835,15 @@ static void handle_notifications(void) {
 			signalled = RESTART;
 #endif
 			return;
+		}
+		else if(!strcmp(entry->d_name, "restart_wan_line")){
+usb_dbg("service_handle: Start to restart_wan_line.\n");
+			stop_wan();
+			start_wan();
+
+			stop_httpd();
+			start_httpd();
+usb_dbg("service_handle: End to restart_wan_line.\n");
 		}
 		else if (strcmp(entry->d_name, "restart_cifs") == 0)
 		{
@@ -872,16 +876,6 @@ static void handle_notifications(void) {
 						stop_ftp();
 						sleep(1);
 						run_ftp();
-					}
-					
-//					if (nvram_match("dms_running", "1")) {
-					if (pids("minidlna") || pids("ushare")) {
-						stop_dms();
-#ifdef CONFIG_USER_MTDAAPD
-						stop_mt_daapd();
-#endif
-						sleep(1);
-						run_dms();
 					}
 				}
 			}
@@ -1277,7 +1271,14 @@ void convert_misc_values()
 	nvram_set("wan0_netmask", "255.0.0.0");
 	nvram_set("wanx_netmask", "255.0.0.0");
 	nvram_set("wan_netmask_t", "255.0.0.0");
+#else
+	nvram_unset("wanx_ipaddr");
+	nvram_unset("wanx_netmask");
+	nvram_unset("wanx_gateway");
+	nvram_unset("wanx_dns");
+	nvram_unset("wanx_lease");
 #endif
+	nvram_set("qos_enable", "0");
 
 	/* Setup wan0 variables if necessary */
 	set_wan0_vars();
@@ -1354,7 +1355,7 @@ main_loop(void)
 	signal(SIGUSR2, rc_signal);
 	signal(SIGINT, rc_signal);
 	signal(SIGALRM, rc_signal);
-	signal(SIGTTIN, rc_signal);	// usb storage
+//	signal(SIGTTIN, rc_signal);	// usb storage
 //	signal(SIGTSTP, ipdown_main_sp);// for ppp ip-down
 	sigemptyset(&sigset);
 
@@ -1435,7 +1436,7 @@ main_loop(void)
 			usb_cur_state = nvram_safe_get("usb_dev_state");
 			printf("\n## rc recv HOTPLUG:%s\n", usb_cur_state);	// tmp test
 
-#ifndef USB_MODEM
+#ifndef RTCONFIG_USB_MODEM
 			if (!nvram_match("wan_proto", "3g"))
 				track_set("501");
 			else
@@ -1453,7 +1454,7 @@ usb_dbg("# rc: USB PLUG ON: ignore SIGTTIN.\n");
 					break;
 				}
 				memset(product_id, 0, sizeof(product_id));
-#ifndef USB_MODEM
+#ifndef RTCONFIG_USB_MODEM
 				printf("chk bus_plugged\n");			// tmp test
 				bus_plugged = get_dev_info(&dev_class, productID, veid, prid);
 				printf("bus_plggued = %d, dev_class = %d\n", bus_plugged, dev_class);	// tmp test
@@ -1461,7 +1462,7 @@ usb_dbg("# rc: USB PLUG ON: ignore SIGTTIN.\n");
 
 				start_usbled();
 
-#ifndef USB_MODEM
+#ifndef RTCONFIG_USB_MODEM
 				if (dev_class == 0x35)   // USB_CLS_3GDEV
 				{
 					nvram_set("usb_path1", "HSDPA");
@@ -1683,7 +1684,7 @@ usb_dbg("# rc: End of PRT PLUG OFF\n");
 			start_services();
 			start_usb();
 
-#ifdef USB_MODEM
+#ifdef RTCONFIG_USB_MODEM
 			nvram_set("system_ready", "1");	// for notifying wanduck.
 #endif
 RC_END:
@@ -1776,7 +1777,7 @@ main(int argc, char **argv)
 		return udhcpc_main(argc, argv);
 #ifdef ASUS_EXT
 	/* hotplug [event] */
-	else if (!strcmp(base, "hotplug_usb_mass"))      // added by Jiahao for WL500gP
+	else if (!strcmp(base, "hotplug_usb_mass"))
 	{
 		return hotplug_usb_mass("");
 	}
@@ -1794,7 +1795,7 @@ main(int argc, char **argv)
 		return create_swap_file(argv[1]);
 	else if (!strcmp(base, "run_apps"))
 		return run_apps();
-	else if (!strcmp(base, "run_ftpsamba"))	 // added by Jiahao for WL500gP
+	else if (!strcmp(base, "run_ftpsamba"))
 	{
 		run_ftpsamba();
 
@@ -1822,9 +1823,6 @@ main(int argc, char **argv)
 	}
 	else if (!strcmp(base, "stop_dms")) {
 		stop_dms();
-#ifdef CONFIG_USER_MTDAAPD
-		stop_mt_daapd();
-#endif
 
 		return 0;
 	}
@@ -2049,18 +2047,18 @@ main(int argc, char **argv)
 		if (nvram_match("wps_band", "0"))
 		{
 		if (argc == 2)
-			return wps_pin(atoi(argv[1]));
+			return wps_pin(argv[1]);
 		else if (argc == 1)
-			return wps_pin(0);
+			return wps_pin("0");
 		else
 			return EINVAL;
 		}
 		else
 		{
 		if (argc == 2)
-			return wps_pin_2g(atoi(argv[1]));
+			return wps_pin_2g(argv[1]);
 		else if (argc == 1)
-			return wps_pin_2g(0);
+			return wps_pin_2g("0");
 		else
 			return EINVAL;
 		}
@@ -2145,8 +2143,6 @@ main(int argc, char **argv)
 	}
 	else if (!strcmp(base, "restart_dhcpd"))
 	{
-		dbg("rc update_resolvconf\n");
-		update_resolvconf();
 		dbg("rc restart_dhcpd\n");
 		restart_dhcpd();
                 
@@ -2186,19 +2182,51 @@ main(int argc, char **argv)
 	}
 	else if (!strcmp(base, "ejusb1"))
 	{
+#ifdef RTCONFIG_USB_MODEM
+		if(!strcmp(nvram_safe_get("usb_path1"), "modem") && get_usb_modem_state()){
+#ifdef RTCONFIG_USB_MODEM_WIMAX
+			if(nvram_match("modem_enable", "4")){
+				system("killall madwimax");
+				system("killall udhcpc");
+			}
+			else
+#endif
+				system("killall pppd");
+			return 0;
+		}
+#endif
+
 		remove_usb_mass("1");
 
 		if (count_sddev_mountpoint())
 			restart_apps();
 
+		nvram_set("usb_path1_removed", "1");
+
 		return 0;
 	}
 	else if (!strcmp(base, "ejusb2"))
 	{
+#ifdef RTCONFIG_USB_MODEM
+		if(!strcmp(nvram_safe_get("usb_path2"), "modem") && get_usb_modem_state()){
+#ifdef RTCONFIG_USB_MODEM_WIMAX
+			if(nvram_match("modem_enable", "4")){
+				system("killall madwimax");
+				system("killall udhcpc");
+			}
+			else
+#endif
+				system("killall pppd");
+			return 0;
+		}
+#endif
+
 		remove_usb_mass("2");
 
 		if (count_sddev_mountpoint())
 			restart_apps();
+
+		nvram_set("usb_path2_removed", "1");
 
 		return 0;
 	}
@@ -2263,7 +2291,7 @@ main(int argc, char **argv)
 		LED_CONTROL(LED_POWER, LED_ON);
 		return 0;
 	}
-#ifndef USB_MODEM
+#ifndef RTCONFIG_USB_MODEM
 	else if (!strcmp(base, "start3g"))
 	{
 		rc_start_3g();
@@ -2397,7 +2425,7 @@ main(int argc, char **argv)
 	}
 #endif
 // 2011.02 James. 3G. {
-#ifdef USB_MODEM
+#ifdef RTCONFIG_USB_MODEM
 	else if(!strcmp(base, "asus_lp")){
 		if(argc != 3){
 			printf("Usage: asus_lp [device_name] [action]\n");
@@ -2405,6 +2433,22 @@ main(int argc, char **argv)
 		}
 
 		return asus_lp(argv[1], argv[2]);
+	}
+	else if(!strcmp(base, "asus_sd")){
+		if(argc != 3){
+			printf("Usage: asus_sd [device_name] [action]\n");
+			return 0;
+		}
+
+		return asus_sd(argv[1], argv[2]);
+	}
+	else if(!strcmp(base, "asus_sg")){
+		if(argc != 3){
+			printf("Usage: asus_sg [device_name] [action]\n");
+			return 0;
+		}
+
+		return asus_sg(argv[1], argv[2]);
 	}
 	else if(!strcmp(base, "asus_sr")){
 		if(argc != 3){

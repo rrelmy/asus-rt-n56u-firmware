@@ -20,8 +20,8 @@ LANG_SV=Svensk
 LANG_BR=Brazil
 LANG_JP=日本語
 [Malaysia Unifi]
-PPPConnection_x_Unifi=Unifi Support :
-PPPConnection_x_Unifi_Describe=Select 'Yes' to support Malaysia Unifi services.
+PPPConnection_x_Unifi=Unifi support:
+PPPConnection_x_Unifi_Describe=Välj (Ja) för att stödja Malaysia Unifi tjänster.
 [VPN Passthrough]
 VPN_PPTP_Passthrough=VPN PPTP Genompassering
 VPN_L2TP_Passthrough=VPN L2TP Genompassering
@@ -29,7 +29,7 @@ VPN_IPSec_Passthrough=VPN IPSec Genompassering
 vpn_passthrough_itemname=VPN Genompassering
 vpn_passthrough_desc=Aktivera VPN genompassering för att tillåta ett Virtual Private Network (VPN/virtuellt privat nätverk) anslutning passera genom routern till nätverksklienterna.
 [AiDisk account alert]
-enable_noaccount_alert=När funktionen är aktiverad, kommer det att hända anslutningsproblem till Samba servern och Download Master om det inte finns något konto.
+enable_noaccount_alert=Om du försöker att dela filerna på din USB-disk utan att ha skapar ett delningskonto via AiDisk kommer problem att uppstå för Samba-servern och Download Master.
 [iTunes]
 iTunesMediaServer=iTunes medietjänst
 [opmode strings]
@@ -39,14 +39,12 @@ OP_switch_button_hint2=Klicka här för att visa
 OP_GW_item=IP-delningsläge (standard)
 OP_GW_desc1=I Bredbandsdelningsläge ansluter RT-N56U till Internet via PPPoE, automatisk IP, PPTP, L2TP, eller statisk IP.
 OP_GW_desc2=Den ger dig en trådlös radiosignal. NAT, brandvägg och bredbandsdelningstjänster för LAN-klienter har aktiverats. Den stöder också UPnP och dynamisk DNS för SOHO eller hemanvändare.
-OP_RT_item=Trådlös router
-OP_RT_desc1=In Router mode / IP sharing mode, RT-N56U connects to the Internet via PPPoE, DHCP, PPTP, L2TP, or Static IP and shares the wireless network to LAN client devices. In this mode, NAT, firewall, and DHCP server are enabled by default. UPnP and Dynamic DNS are supported for SOHO and home users. 
-OP_RT_desc2=Select this mode if you are a first-time user or you are not currently using any wired/wireless routers.
-OP_RE_item=Repeater mode
-OP_RE_desc1=In Repeater mode, RT-N56U wirelessly connects to an existing wireless network to extend the wireless coverage.In this mode, the firewall, IP sharing, and NAT functions are disabled.
-OP_AP_item=AP/åtkomstpunkt
-OP_AP_desc1=In Access Point (AP) mode, RT-N56U connects to a wireless router through an Ethernet cable to extend the wireless signal coverage to other network clients. In this mode,  the firewall, IP sharing, and NAT functions are disabled by default.
-OP_AP_desc2=Select this mode if you are an advanced network user who understands the difference between a wireless router and an access point, which is that a wireless router provides the Network Address Translation (NAT) and IP sharing functions. 
+OP_RT_item=Router (inaktivera NAT)
+OP_RT_desc1=I routerläge, använd en ethernetkabel för att ansluta din dator till RT-N56U och skapa en trådlös nätverksanslutning. Gör sedan inställningarna för din trådlösa nätverksanslutning. 
+OP_RT_desc2=RT-N56U utökar din trådlösa nätverkstäckning och låter dig konfigurera det statiska routingprotokollet. Den inaktiverar NAT (Network Address Translation) för att möjliggöra kommunikation och delningstjänster mellan LAN- och WAN-klienter. Obs: Du måste ange routingreglerna i gästroutern.
+OP_AP_item=Anslutningspunkt
+OP_AP_desc1=I AP-läge, använd en ethernetkabel för att anslutna RT-N56U till ditt LAN och sedan till din dator för att skapa en trådlös nätverksanslutning till RT-N56U. Alla nätverksklienter sammankopplas.
+OP_AP_desc2=Detta läge ger Internetanslutning för nätverksklienter men inaktiverar brandväggen, IP-delning och NAT-funktionerna.
 OP_Modem=Modem
 OP_WirelessClient=Wireless Client
 OP_WirelessSignal=Existing wireless signal
@@ -157,7 +155,7 @@ BasicConfig_HWNAT_alert=Hårdvaru-NAT-funktionen är i konflikt med routerns nuv
 BasicConfig_HWNAT_itemname=Aktivera HW NAT?
 LANHostConfig_x_Password_itemdesc=Lösenordet får inte vara längre än 16 tecken.
 CableStatus=Kabelstatus
-HowToSharebyFTP5=Använd en FTP-klientapplikation med UTF-8-stöd för att visa icke-alfabetiska tecken, t.ex. traditionell eller förenklad kinesiska. En sådan FTP-klientapplikation är <a href='_blank'>Filezilla</a>, där du kan modifiera teckenkdning i Wepplatshanteraren/Avancerade alternativ.
+HowToSharebyFTP5=Använd en FTP-klientapplikation med UTF-8-stöd för att visa icke-alfabetiska tecken, t.ex. traditionell eller förenklad kinesiska. En sådan FTP-klientapplikation är <a href='_blank'>Filezilla</a>, där du kan modifiera teckenkdning i Wepplatshanteraren/ Avancerade alternativ.
 WLANConfig11n_nmode_limition_hint=RT-N56U byter från WEP- eller TKIP-kryptering till AES i [n Endast] läge för att garantera att klienterna ansluts ordentligt.
 WLANConfig11n_automode_limition_hint=I Autoläge med WEP-eller TKIP-kryptering stöder RT-N56U en max överföringshastighet på 54 Mbps.
 BM_desc_upload=EZQoS upptäcker automatiskt din upplänkshastighet för att hjälpa dig justera nätverkets bandbredd. Om du kan upptäcka exakt upplänkshastighet på annat sätt, t.ex. med hjälp av hastighetstest online rekommenderar vi att du anger värdet på <a href='Advanced_QOSUserSpec_Content.asp'>sidan för avancerade inställningar</a>
@@ -577,7 +575,7 @@ yoursharesetting=Inställningen för din delade mapp är
 noDDNS=Du har inte startat DDNS-tjänsten ännu.
 neednotDDNS=Hoppa over ASUS DDNS-inställning.
 asusddns_inputhint=Ange namnet
-[WPS] 
+[WPS]
 WPS_PBCbutton_hint=Klicka på mig och klientens WPS-knapp. Du får enkelt en trådlös anslutning inom två minuter.
 WPS_PBCbutton_hint_notEnable=Aktivera WPS först.
 WPS_PBCbutton_hint_waiting=WPS är igång, väntar på att klienten ska anslutas.
@@ -1141,7 +1139,8 @@ TZ84=Nuku'alofa
 LANHostConfig_x_NTPServer_itemname=NTP-server:
 LANHostConfig_x_NTPServer_itemdesc=Synkronisera ditt system med en NTP-server.
 LANHostConfig_x_DDNSEnable_sectionname=DDNS-inställningar
-LANHostConfig_x_DDNSEnable_sectiondesc=Dynamisk DNS (DDNS) gör det möjligt att tilldela ett domännamn till en dator med en dynamisk IP-adress. För närvarande är ett flertal DDNS-tjänster inbäddade i RT-N56U. Klicka på Free Trial nedan för att börja med ett gratis testkonto.
+LANHostConfig_x_DDNSEnable_sectiondesc=Dynamisk DNS (DDNS) gör det möjligt att tilldela ett domännamn till en dator med en dynamisk IP-adress. För närvarande är ett flertal DDNS-tjänster inbäddade i RT-N56U. Klicka på Free Trial nedan för att börja med ett gratis testkonto.<p>
+LANHostConfig_x_DDNSEnable_sectiondesc2=Den trådlösa routern använder för närvarande en privat WAN-IP-adress (192.168.x.x, 10,x,x,x, eller 172.16.x.x). Den här routern kanske finnas i en miljö med ett flertal NAT och DDNS-tjänsten kan inte fungera i den miljön.
 LANHostConfig_x_DDNSEnable_itemname=Aktivera DDNS-klienten?
 LANHostConfig_x_DDNSServer_itemname=Server:
 LANHostConfig_x_DDNSUserName_itemname=Användarnamn och e-postadress:
@@ -1411,7 +1410,7 @@ LANHostConfig_x_DDNS_alarm_3=Registrering lyckades.
 LANHostConfig_x_DDNS_alarm_4=Det ursprungliga värdnamnet registrerades.
 LANHostConfig_x_DDNS_alarm_5=Det nya värdnamnet registrerades.
 LANHostConfig_x_DDNS_alarm_6=IP och värdnamn har inte registrerats. Registrera först.
-LANHostConfig_x_DDNS_alarm_7=Ogiltigt värdnamn! Formatet ska vara 'xxx.asuscomm.com' och 'xxx' får inte bestå av endast siffror.
+LANHostConfig_x_DDNS_alarm_7=Värdnamnet kan inte innehålla sifferprefix och \".\" (t.ex. \"123abc\" eller \"aaa.bbb\") 
 LANHostConfig_x_DDNS_alarm_8=Ogiltig domän! Formatet ska vara 'xxx.asuscomm.com'.
 LANHostConfig_x_DDNS_alarm_9=Ogiltig IP-adress!
 LANHostConfig_x_DDNS_alarm_10=Obehörig registreringsbegäran!

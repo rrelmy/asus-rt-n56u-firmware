@@ -27,6 +27,7 @@
 struct usb_bus *bus;
 struct usb_device *dev;
 char str_product[128];
+char str_vidpid[128];
 int verbose = 1;
 char *EndpointType[4] = { "Control", "Isochronous", "Bulk", "Interrupt" };
 
@@ -225,10 +226,19 @@ int print_device(struct usb_device *dev, int level)
 		{
 			ret = usb_get_string_simple(udev, dev->descriptor.iSerialNumber, string, sizeof(string));
 			if (ret > 0)
+			{
 				PDEBUG("%.*s  - Serial Number    : %s\n", level * 2, "                    ", string);
+				nvram_set("u2ec_serial", string);
+			}
+			else
+				nvram_set("u2ec_serial", "");
     		}
+
     		usb_close(udev);
 	}
+
+	sprintf(str_vidpid, "%04x%04x", dev->descriptor.idVendor, dev->descriptor.idProduct);
+	nvram_set("u2ec_vidpid", str_vidpid);
 
 	PDEBUG("%.*s  - Length	   : %2d%s\n", level * 2, "                    ", dev->descriptor.bLength, dev->descriptor.bLength == USB_DT_DEVICE_SIZE ? "" : " (!!!)");
 	PDEBUG("%.*s  - DescriptorType   : %02x\n", level * 2, "                    ", dev->descriptor.bDescriptorType);
@@ -366,5 +376,7 @@ RETRY:
 
 	dev = NULL;
 	nvram_set("u2ec_device", "");
+	nvram_set("u2ec_serial", "");
+	nvram_set("u2ec_vidpid", "");
 	return 1;
 }

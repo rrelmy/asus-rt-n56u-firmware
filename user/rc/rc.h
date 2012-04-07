@@ -24,7 +24,6 @@
  * SPECIFICALLY DISCLAIMS ANY IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS
  * FOR A SPECIFIC PURPOSE OR NONINFRINGEMENT CONCERNING THIS SOFTWARE.
  *
- * $Id: rc.h,v 1.1.1.1 2007/01/25 12:52:21 jiahao_jhou Exp $
  */
 
 #ifndef _rc_h_
@@ -35,23 +34,11 @@
 #include <sys/socket.h>
 #include <arpa/inet.h>
 
-//#define USB_MODEM
-//#define DEBUG_USB
+#define DEBUG_USB
 
 #define IFUP (IFF_UP | IFF_RUNNING | IFF_BROADCAST | IFF_MULTICAST)
 
-#ifdef DEBUG_USB
-#define usb_dbg(fmt, args...) do{ \
-		FILE *fp = fopen("/tmp/usb.log", "a+"); \
-		if(fp){ \
-			fprintf(fp, "[usb_dbg: %s]", __FUNCTION__); \
-			fprintf(fp, fmt, ## args); \
-			fclose(fp); \
-		} \
-	}while(0)
-#else
-#define usb_dbg(fmt, args...)
-#endif
+#include <usb_info.h>
 
 #define sin_addr(s) (((struct sockaddr_in *)(s))->sin_addr)
 
@@ -94,6 +81,8 @@ extern int hotplug_net(void);
 extern int wan_ifunit(char *ifname);
 extern int wan_primary_ifunit(void);
 extern int update_resolvconf(void);
+extern int add_dns(const char *ifname);
+extern int del_dns(const char *ifname);
 
 /* services */
 extern int start_dhcpd(void);
@@ -157,4 +146,5 @@ enum BTNSETUP_STATE
 })
 
 #define MACSIZE 12
+#define MAX_CONNTRACK_DM "16384"
 #endif /* _rc_h_ */

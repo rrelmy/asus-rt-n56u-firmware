@@ -194,7 +194,10 @@ extern int test_mounted_disk_size_status(char *diskpath) {
 extern char *get_upper_str(const char *const str) {
 	int len, i;
 	char *target;
-	
+
+	if(str == NULL || strlen(str) <= 0)
+		return NULL;
+
 	len = strlen(str);
 	target = (char *)malloc(sizeof(char)*(len+1));
 	if (target == NULL) {
@@ -210,7 +213,11 @@ extern char *get_upper_str(const char *const str) {
 
 extern int upper_strcmp(const char *const str1, const char *const str2) {
 	int len1, len2, i;
-	
+
+	if(str1 == NULL || strlen(str1) <= 0
+			|| str2 == NULL || strlen(str2) <= 0)
+		return -1;
+
 	len1 = strlen(str1);
 	len2 = strlen(str2);
 	if (len1 != len2)
@@ -226,7 +233,12 @@ extern int upper_strcmp(const char *const str1, const char *const str2) {
 
 extern int upper_strncmp(const char *const str1, const char *const str2, int max_len) {
 	int i;
-	
+
+	if(str1 == NULL || strlen(str1) <= 0
+			|| str2 == NULL || strlen(str2) <= 0
+			|| max_len <= 0)
+		return -1;
+
 	for (i = 0; i < max_len; ++i) {
 		if (toupper(str1[i]) != toupper(str2[i]))
 			return i+1;
@@ -238,7 +250,11 @@ extern int upper_strncmp(const char *const str1, const char *const str2, int max
 extern char *upper_strstr(const char *const str1, const char *const str2) {
 	char *line, *line_end, *line_str;
 	int len, ret;
-	
+
+	if(str1 == NULL || strlen(str1) <= 0
+			|| str2 == NULL || strlen(str2) <= 0)
+		return NULL;
+
 	line = (char *)str1;
 	while (line != NULL) {
 		line_end = strchr(line, '\n');
@@ -250,7 +266,7 @@ extern char *upper_strstr(const char *const str1, const char *const str2) {
 		line_str = (char *)malloc(sizeof(char)*(len+1));
 		if (line_str == NULL) {
 			csprintf("upper_strstr: Can't malloc memory!\n");
-			return 0;
+			return NULL;
 		}
 		strncpy(line_str, line, len);
 		line_str[len] = 0;

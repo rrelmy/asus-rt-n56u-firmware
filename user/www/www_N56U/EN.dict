@@ -20,7 +20,7 @@ LANG_SV=Svensk
 LANG_BR=Brazil
 LANG_JP=日本語
 [Malaysia Unifi]
-PPPConnection_x_Unifi=Unifi Support :
+PPPConnection_x_Unifi=Unifi Support:
 PPPConnection_x_Unifi_Describe=Select 'Yes' to support Malaysia Unifi services.
 [VPN Passthrough]
 VPN_PPTP_Passthrough=VPN PPTP Passthrough
@@ -29,7 +29,7 @@ VPN_IPSec_Passthrough=VPN IPSec Passthrough
 vpn_passthrough_itemname=VPN Passthrough
 vpn_passthrough_desc=Enable VPN Passthrough to allow a Virtual Private Network (VPN) connection to pass through the router to the network clients.
 [AiDisk account alert]
-enable_noaccount_alert=When enabled, it will happen connection problem to Samba server and Download Master if there is not exist any  account.
+enable_noaccount_alert= If you try to share the files in your USB disk without creating a shared account via AiDisk, problems will occur to the Samba Server and Download Master.
 [iTunes]
 iTunesMediaServer=iTunes Media Server
 [opmode strings]
@@ -37,16 +37,14 @@ BasicConfig_EnableiTunesServer_itemname=Enable iTunes Server?
 OP_switch_button_hint1=The operation mode switch is located at the bottom panel of the RT-N56U.
 OP_switch_button_hint2=Click here to view
 OP_GW_item=IP Sharing mode(Default)
-OP_GW_desc1=In the Broadband share mode, RT-N56U connects to the Internet via PPPoE,Automatic IP, PPTP, L2TP, or Static IP.
+OP_GW_desc1=In the Brodaband share mode, RT-N56U connects to the Internet via PPPoE,Automatic IP, PPTP, L2TP, or Static IP.
 OP_GW_desc2=It provides you with wireless radio signal. The NAT, firewall, and broadband sharing services for LAN clients are enabled. It also supports UPnP and Dynamic DNS for SOHO or home user.
-OP_RT_item=Wireless Router / IP sharing mode
-OP_RT_desc1=In Router mode / IP sharing mode, RT-N56U connects to the Internet via PPPoE, DHCP, PPTP, L2TP, or Static IP and shares the wireless network to LAN client devices. In this mode, NAT, firewall, and DHCP server are enabled by default. UPnP and Dynamic DNS are supported for SOHO and home users. 
-OP_RT_desc2=Select this mode if you are a first-time user or you are not currently using any wired/wireless routers.
-OP_RE_item=Repeater mode
-OP_RE_desc1=In Repeater mode, RT-N56U wirelessly connects to an existing wireless network to extend the wireless coverage.In this mode, the firewall, IP sharing, and NAT functions are disabled.
-OP_AP_item=Access Point(AP) mode
-OP_AP_desc1=In Access Point (AP) mode, RT-N56U connects to a wireless router through an Ethernet cable to extend the wireless signal coverage to other network clients. In this mode,  the firewall, IP sharing, and NAT functions are disabled by default.
-OP_AP_desc2=Select this mode if you are an advanced network user who understands the difference between a wireless router and an access point, which is that a wireless router provides the Network Address Translation (NAT) and IP sharing functions. 
+OP_RT_item=Router(Disable NAT)
+OP_RT_desc1=In the router mode, use an Ethernet cable to connect RT-N56U with your computer and create a wireless network connection, then select the settings for your wireless network connection. 
+OP_RT_desc2=RT-N56Uextends your wireless network coverage and allows you to configure the static routing protocol. It disables NAT (Network Address Translation) to allow communication and sharing services among LAN and WAN clients. Note: You need to specify the routing rules in the host router.
+OP_AP_item=Access Point
+OP_AP_desc1=In the AP mode, use an Ethernet cable to connect RT-N56U with your LAN then your computer can create a wireless network connection to RT-N56U. All the network clients will be bridged together.
+OP_AP_desc2=This mode provides Internet connection for network clients, but disables the firewall, IP sharing, and NAT functions.
 OP_Modem=Modem
 OP_WirelessClient=Wireless Client
 OP_WirelessSignal=Existing wireless signal
@@ -54,7 +52,7 @@ OP_WirelessSignal=Existing wireless signal
 IPConnection_VSList_ftpport=FTP Server Port:
 Adm_System_telnetd=Enable Telnet Server?
 wps_start_btn=Start
-USB_Application_account_alert=User's account cannot be‘root’, ‘Root’, ‘ROOT’, ‘admin’, ‘Admin’, ‘ADMIN’, ‘family’, ‘Family’, ‘FAMILY’ ! Please enter a valid account.
+USB_Application_account_alert=User's account cannot be'root', 'Root', 'ROOT', 'admin', 'Admin', 'ADMIN', 'family', 'Family', 'FAMILY' ! Please enter a valid account.
 BasicConfig_USBStorageWhiteist_itemdesc=The range for this field is hex 1 to FFFF. Enter 0 (zero) to disable this feature.
 BasicConfig_USBStorageWhiteist_itemname=USB Storage Device VID whitelist
 LANHostConfig_x_TimeZone_itemhint_2=The selected time zone setting is different from what the device has detected. Do you want change to the detected time zone?
@@ -88,11 +86,11 @@ WLANConfig11b_Wireless_Speed_itemname_3=Uses 40MHz coexistent bandwidth to maxim
 hwnat_desc=Enable Hardware NAT to offer internet speed with maximum throughput over 900Mbps when appropriately supported by you internet service provider. But please note that enabling Hardware NAT may conflict with QoS related functions.
 [error_page.htm]
 web_redirect_reason6=IP conflict detected. Click Next to get a new IP address.
-web_redirect_case6_desc1=Router’s updated IP address:
+web_redirect_case6_desc1=Router's updated IP address:
 web_redirect_case6_desc2=After clicking Next, please ensure that you update the IP address settings for each related service such as Virtual server or DMZ.
 error_page_lanip_changed_desc1=The IP address is being renewed. If this process takes more than two minutes, please follow these three steps to renew the IP manually: (1) unplug the network cable; (2) wait for about ten seconds; and (3) plug it back again to get a new IP address.
 [QIS]
-QIS_autoMAC_desc1=Starting to clone the computer’s MAC address into the router…
+QIS_autoMAC_desc1=Starting to clone the computer's MAC address into the router…
 QIS_autoMAC_desc2=Please wait...
 QIS_autoMAC_desc3=Verify the WAN IP address
 QIS_autoMAC_result_desc1=AJAX failed to run. Wait for about three seconds for AJAX to run again.
@@ -526,7 +524,7 @@ Game=Game
 Internet=Internet
 Stream=Stream
 EzQoS_helptitle=About EzQoS
-EZQoSDesc1=EZQoS provides 4 types of popular Internet applications and enables you to easily configure your Quality of Service (QoS) settings. QoS ensures the performance of the Internet download speed and enables you to change its settings in different scenarios.<p>EX. Application you choose will remain the quality and will not lag even when you use P2P.</p><p>If your uplink speed has reached 40MB/s, we suggest you need not enable EzQoS for saving system resource.</p>
+EZQoSDesc1=EZQoS provides 4 types of popular Internet applications and enables you to easily configure your Quality of Service (QoS) settings. QoS ensures the performance of the Internet download speed and enables you to change its settings in different scenarios.<p>EX. Application you choose will remain the quality and will not lag even when you use P2P.</p><p>If your uplink speed has reached 40Mb/s, we suggest you need not enable EzQoS for saving system resource.</p>
 EZQoSDesc2=For more professional and detailed configuration, please enter
 Day=days
 Hour=hours
@@ -577,7 +575,7 @@ yoursharesetting=Your share folder setting is
 noDDNS=You have not started the DDNS service yet.
 neednotDDNS=Skip ASUS DDNS setting.
 asusddns_inputhint=Key in the name
-[WPS]		
+[WPS]
 WPS_PBCbutton_hint=Click me and WPS button of client. Having a easy wireless connection within 2 minutes.
 WPS_PBCbutton_hint_notEnable=Enable WPS first.
 WPS_PBCbutton_hint_waiting=WPS is in process, waiting for client to connect.
@@ -1141,7 +1139,8 @@ TZ84=Nuku'alofa
 LANHostConfig_x_NTPServer_itemname=NTP Server:
 LANHostConfig_x_NTPServer_itemdesc=To synchronize your system time with NTP Server.
 LANHostConfig_x_DDNSEnable_sectionname=DDNS Setting
-LANHostConfig_x_DDNSEnable_sectiondesc=Dynamic DNS (DDNS) allows you to assign an Internet domain name to a computer with a dynamic IP address. Currently, several DDNS services are embedded in RT-N56U. You can click Free Trial below to start with a free trial account.
+LANHostConfig_x_DDNSEnable_sectiondesc=Dynamic DNS (DDNS) allows you to assign an Internet domain name to a computer with a dynamic IP address. Currently, several DDNS services are embedded in RT-N56U. You can click Free Trial below to start with a free trial account.<p>
+LANHostConfig_x_DDNSEnable_sectiondesc2=The wireless router currently uses a private WAN IP address (192.168.x.x, 10,x,x,x, or 172.16.x.x). This router may be in the multiple-NAT environment and DDNS service cannot work in this environment.
 LANHostConfig_x_DDNSEnable_itemname=Enable the DDNS Client?
 LANHostConfig_x_DDNSServer_itemname=Server:
 LANHostConfig_x_DDNSUserName_itemname=User Name or E-mail Address:
@@ -1411,7 +1410,7 @@ LANHostConfig_x_DDNS_alarm_3=Registration is successful.
 LANHostConfig_x_DDNS_alarm_4=Registered the original hostname successfully.
 LANHostConfig_x_DDNS_alarm_5=Registered the new hostname successfully.
 LANHostConfig_x_DDNS_alarm_6=The IP and hostname are not registered, please register first.
-LANHostConfig_x_DDNS_alarm_7=Invalid Hostname! The format should be 'xxx.asuscomm.com' and 'xxx' is not a number prefix.
+LANHostConfig_x_DDNS_alarm_7=The host name cannot accept number prefix and \".\" (such as \"123abc\" or \"aaa.bbb\") 
 LANHostConfig_x_DDNS_alarm_8=Invalid Domain! The format should be 'xxx.asuscomm.com'.
 LANHostConfig_x_DDNS_alarm_9=Invalid IP Address!
 LANHostConfig_x_DDNS_alarm_10=Unauthorized registration request!
@@ -1441,7 +1440,7 @@ confirm_disableftp_dm=Disable Network Neighborhood Share will cause your Downloa
 LANHostConfig_IPRouters_itemdesc=The LAN IP address of RT-N56U. The default value is 192.168.1.1. The range of LAN IP address: 192.168.0.1 - 192.168.255.254, 172.16.0.1 – 172.31.255.254, 10.0.0.1 – 10.255.255.254
 HSDPAConfig_hsdpa_mode_itemdesc=Pluging the USB adapter into RT-N56U and make it become mobile router.
 Not_authpage_login_again=If you want to login again, please close this window first. 
-GO_HSDPA_SETTING=Go to USB Modem setting.
+GO_HSDPA_SETTING=Go to USB Modem setting
 HSDPA_disable=If you want to change connection type，please refer to <a href="/Advanced_Modem_others.asp"><#GO_HSDPA_SETTING#></a>to disable adaptor.
 [new strings - translated]
 GO_2G=Go to 2.4GHz setting

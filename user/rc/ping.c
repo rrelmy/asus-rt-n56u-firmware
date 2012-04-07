@@ -124,11 +124,11 @@ pinger()
 	/* Compute ICMP checksum here */
 	icp->icmp_cksum = in_cksum( icp, cc );
 
-	if (nvram_invmatch("lan_gateway_t", ""))
+	if (!nvram_match("lan_gateway_t", ""))
 		strcpy(dst_ip_addr_str, nvram_safe_get("lan_gateway_t"));
-	else if (nvram_invmatch("lan_dns_t", ""))
+	else if (!nvram_match("lan_dns_t", ""))
 		strcpy(dst_ip_addr_str, nvram_safe_get("lan_dns_t"));
-	else if (nvram_invmatch("lan_ipaddr_t", ""))
+	else if (!nvram_match("lan_ipaddr_t", ""))
 	{
 		inet_aton(nvram_safe_get("lan_ipaddr_t"), &ip_dst);
 		ip_dst.s_addr = ip_dst.s_addr | 0xfe000000;
