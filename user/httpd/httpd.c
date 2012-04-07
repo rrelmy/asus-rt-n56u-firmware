@@ -458,7 +458,7 @@ match_one( const char* pattern, int patternlen, const char* string )
     return 0;
     }
 
-
+#if 0
 void
 do_file(char *path, FILE *stream)
 {
@@ -471,6 +471,35 @@ do_file(char *path, FILE *stream)
 		fputc(c, stream);
 	fclose(fp);
 }
+#else
+int do_fwrite(const char *buffer, int len, FILE *stream)
+{
+	int n = len;
+	int r = 0;
+ 
+	while (n > 0) {
+		r = fwrite(buffer, 1, n, stream);
+		if ((r == 0) && (errno != EINTR)) return -1;
+		buffer += r;
+		n -= r;
+	}
+
+	return r;
+}
+ 
+void do_file(char *path, FILE *stream)
+{
+	FILE *fp;
+	char buf[1024];
+	int nr;
+
+	if ((fp = fopen(path, "r")) != NULL) {
+		while ((nr = fread(buf, 1, sizeof(buf), fp)) > 0)
+			do_fwrite(buf, nr, stream);
+		fclose(fp);
+	}
+}
+#endif
 
 int is_firsttime(void);
 
@@ -700,6 +729,7 @@ handle_request(void)
 							|| !strcmp(url, "status.asp")
 // 2010.09 James. }
 							|| !strcmp(url, "httpd_check.htm")
+//							|| !strcmp(url, "ajax_status.asp")
 							)
 					) {
 				turn_off_auth_timestamp = request_timestamp;
@@ -809,7 +839,7 @@ handle_request(void)
 				nvram_match("no_internet_detect", "0") &&
 //				nvram_match("x_Setting", "1") &&
 				is_phyconnected() &&
-				(strstr(file, "result_of_get_changed_status.asp") || strstr(file, "result_of_get_changed_status_QIS.asp") || strstr(file, "detectWAN2.asp"))
+				(strstr(file, "result_of_get_changed_status.asp") || strstr(file, "result_of_get_changed_status_QIS.asp") || strstr(file, "detectWAN2.asp") /*|| strstr(file, "ajax_status.asp")*/)
 			)
 			{
 				detect_timestamp_old = detect_timestamp;

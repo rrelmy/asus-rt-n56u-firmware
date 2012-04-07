@@ -1,6 +1,6 @@
 /* @(#) external common resources (variables and constants)
  *
- * Copyright 2008 Pavel V. Cherenkov (pcherenkov@gmail.com)
+ * Copyright 2008-2011 Pavel V. Cherenkov (pcherenkov@gmail.com)
  *
  *  This file is part of udpxy.
  *
@@ -35,7 +35,9 @@ const size_t CMD_RESTART_LEN     = sizeof(CMD_RESTART);
 const size_t CMD_RTP_LEN         = sizeof(CMD_RTP);
 
 const char UDPXY_COPYRIGHT_NOTICE[] =
-    "udpxy and udpxrec are Copyright (C) 2009 Pavel V. Cherenkov and licensed under GNU GPLv3";
+    "udpxy and udpxrec are Copyright (C) 2008-2011 Pavel V. Cherenkov and licensed under GNU GPLv3";
+const char UDPXY_CONTACT[] =
+    "Contact by email: pcherenkov@gmail.com; ICQ # 7197767";
 
 #ifndef TRACE_MODULE
   const char COMPILE_MODE[] = "lean";
@@ -44,7 +46,9 @@ const char UDPXY_COPYRIGHT_NOTICE[] =
 #endif
 
 const char   g_udpxy_app[]        = "udpxy";
+#ifdef HAVE_UDPXREC
 const char   g_udpxrec_app[]      = "udpxrec";
+#endif
 
 const char IPv4_ALL[] = "0.0.0.0";
 

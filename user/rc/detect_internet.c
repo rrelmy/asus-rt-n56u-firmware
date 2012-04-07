@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <signal.h>
 #include <unistd.h>
+#include <sys/types.h>
+#include <shutils.h>
 #include <nvram/bcmnvram.h>
 #include <time.h>
 #include <stdlib.h>
@@ -37,12 +39,12 @@ int do_detect()
 	char *detect_host[] = {"8.8.8.8", "208.67.220.220", "208.67.222.222"};
 	int i;
 
-	if (di_debug) fprintf(stderr, "## detect internet status ##\n");
+	if (di_debug) dbg("## detect internet status ##\n");
 
 	remove(DETECT_FILE);
 	i = rand_seed_by_time() % 3;
 	snprintf(cmd, sizeof(cmd), "/usr/sbin/tcpcheck 4 %s:53 %s:53 >%s", detect_host[i], detect_host[(i+1)%3], DETECT_FILE);
-	if (di_debug) fprintf(stderr, "cmd: %s\n", cmd);
+	if (di_debug) dbg("cmd: %s\n", cmd);
 	system(cmd);
 	if (di_debug) doSystem("cat %s", DETECT_FILE);
 
@@ -54,7 +56,7 @@ int do_detect()
 			{
 				if (strstr(line, "alive"))
 				{
-					if (di_debug) fprintf(stderr, "got response!\n");
+					if (di_debug) dbg("got response!\n");
 					fclose(fp);
 					return 1;
 				}
@@ -64,11 +66,11 @@ int do_detect()
 		}
 
 		fclose(fp);
-		if (di_debug) fprintf(stderr, "no response!\n");
+		if (di_debug) dbg("no response!\n");
 		return 0;
 	}
 
-	if (di_debug) fprintf(stderr, "fopen %s error!\n", DETECT_FILE);
+	if (di_debug) dbg("fopen %s error!\n", DETECT_FILE);
 	return 0;
 }
 
@@ -85,7 +87,7 @@ alarmtimer(unsigned long sec, unsigned long usec)
 
 static void catch_sig_detect_internet(int sig)
 {
-	if (di_debug) fprintf(stderr, "[di] catch_sig_detect_internet\n");
+	if (di_debug) dbg("[di] catch_sig_detect_internet\n");
 
 	int ret;
 	time_t now;
@@ -97,14 +99,14 @@ static void catch_sig_detect_internet(int sig)
 
 	if (sig == SIGALRM)
 	{
-		if (di_debug) fprintf(stderr, "[di] SIGALRM\n");
+		if (di_debug) dbg("[di] SIGALRM\n");
 
 		now = uptime();
 
 		if (di_debug)
 		{
-			fprintf(stderr, "detect_timestamp rc: %s\n", nvram_safe_get("detect_timestamp"));
-			fprintf(stderr, "timeout: %d\n", (unsigned long)(now - strtoul(nvram_safe_get("detect_timestamp"), NULL, 10)));
+			dbg("detect_timestamp rc: %s\n", nvram_safe_get("detect_timestamp"));
+			dbg("timeout: %d\n", (unsigned long)(now - strtoul(nvram_safe_get("detect_timestamp"), NULL, 10)));
 		}
 
 		if (!nvram_get("login_timestamp") || nvram_match("login_timestamp", ""))
@@ -121,11 +123,11 @@ static void catch_sig_detect_internet(int sig)
 			if (di_debug)
 			{
 				if (no_login_timestamp)
-					fprintf(stderr, "sleep for no login timestamp!");
+					dbg("sleep for no login timestamp!");
 				else if (no_detect_timestamp)
-					fprintf(stderr, "sleep for no detect timestamp!");
+					dbg("sleep for no detect timestamp!");
 				else if (no_detect_for_timeout)
-					fprintf(stderr, "sleep for timeout!");
+					dbg("sleep for timeout!");
 			}
 
 			alarmtimer(0, 0);
@@ -134,7 +136,7 @@ static void catch_sig_detect_internet(int sig)
 
 		if (nvram_match("no_internet_detect", "1"))
 		{
-			if (di_debug) fprintf(stderr, "pause for wan rate detection!\n");
+			if (di_debug) dbg("pause for wan rate detection!\n");
 
 			alarm(1);
 			return;
@@ -142,7 +144,7 @@ static void catch_sig_detect_internet(int sig)
 
 		if (!is_phyconnected() || !has_wan_ip() || !found_default_route())
 		{
-			if (di_debug) fprintf(stderr, "link down, no WAN IP, or no default route!\n");
+			if (di_debug) dbg("link down, no WAN IP, or no default route!\n");
 
 			nvram_set("link_internet", "0");
 			alarm(5);
@@ -151,13 +153,13 @@ static void catch_sig_detect_internet(int sig)
 
 		if (do_detect() == 1)
 		{
-			if (di_debug) fprintf(stderr, "internet connection ok!\n");
+			if (di_debug) dbg("internet connection ok!\n");
 			nvram_set("link_internet", "1");
 			link_internet = 1;
 		}
 		else
 		{
-			if (di_debug) fprintf(stderr, "no connection!\n");
+			if (di_debug) dbg("no connection!\n");
 			nvram_set("link_internet", "0");
 			link_internet = 0;
 		}
@@ -169,7 +171,7 @@ static void catch_sig_detect_internet(int sig)
 	}
 	else if (sig == SIGTERM)
 	{
-		if (di_debug) fprintf(stderr, "[di] SIGTERM\n");
+		if (di_debug) dbg("[di] SIGTERM\n");
 
 		alarmtimer(0, 0);
 		remove("/var/run/detect_internet.pid");
@@ -182,7 +184,7 @@ static void catch_sig_detect_internet(int sig)
 		else
 			di_debug = 0;
 
-		if (di_debug) fprintf(stderr, "[di] SIGUSR1\n");
+		if (di_debug) dbg("[di] SIGUSR1\n");
 		alarmtimer(1, 0);
 	}
 }
@@ -207,13 +209,13 @@ detect_internet(int argc, char *argv[])
 		di_debug = 0;
 
 	if (SIG_ERR == signal(SIGTERM, catch_sig_detect_internet))
-		fprintf(stderr, "signal SIGTERM error\n");
+		dbg("signal SIGTERM error\n");
 
 	if (SIG_ERR == signal(SIGALRM, catch_sig_detect_internet))
-		fprintf(stderr, "signal SIGALRM error\n");
+		dbg("signal SIGALRM error\n");
 
 	if (SIG_ERR == signal(SIGUSR1, catch_sig_detect_internet))
-		fprintf(stderr, "signal SIGUSR1 error\n");
+		dbg("signal SIGUSR1 error\n");
 
 	alarmtimer(1, 0);
 

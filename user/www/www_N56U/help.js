@@ -161,7 +161,9 @@ helptitle[17] = [["", ""],
 				["<#BasicConfig_EnableDownloadShare_itemname#>", "apps_dl_share"],
 				["<#BasicConfig_EnableMediaServer_itemname#>", "upnp_enable"],
                                 ["<#ShareNode_Seeding_itemname#>", "apps_seed"],
-                                ["<#ShareNode_MaxUpload_itemname#>", "apps_upload_max"]];
+                                ["<#ShareNode_MaxUpload_itemname#>", "apps_upload_max"],
+                                ["<#BasicConfig_USBStorageWhiteist_itemname#>", "usb_vid_allow"],
+                                ["<#ShareNode_FTPLANG_itemname#>", "ftp_lang"]];
 				
 // MAC filter
 helptitle[18] = [["", ""],
@@ -220,7 +222,7 @@ helpcontent[0] = new Array("",
 						   "<#WLANConfig11b_ChannelBW_itemdesc#><br/><#WLANConfig11b_Wireless_Speed_itemname_3#>",
 						   "<#WLANConfig11b_EChannel_itemdesc#>",
 							 productid+" <#WLANConfig11b_WLband_itemdesc#>",
-							 "<#WLANConfig11b_TxPower_itemdesc#>",
+							 "<#WLANConfig11b_TxPower_itemdesc#>(<#JS_validrange#> 0 <#JS_validrange_to#> 100)",
 							 "<#WLANConfig11b_WEPKey_itemtype1#><br/><#WLANConfig11b_WEPKey_itemtype2#>",
 							 "<#WLANConfig11b_WEPKey_itemtype1#><br/><#WLANConfig11b_WEPKey_itemtype2#>",
 							 "<#WLANConfig11b_WEPKey_itemtype1#><br/><#WLANConfig11b_WEPKey_itemtype2#>",
@@ -365,7 +367,9 @@ helpcontent[17] = new Array("",
 							"<#JS_basiconfig3#>",
 							"<#JS_basiconfig8#>",
 							"<#ShareNode_Seeding_itemdesc#>",
-							"<#ShareNode_MaxUpload_itemdesc#>");
+							"<#ShareNode_MaxUpload_itemdesc#>",
+							"<#BasicConfig_USBStorageWhiteist_itemdesc#>",
+							"<#ShareNode_FTPLANG_itemdesc#>");
 // MAC filter
 helpcontent[18] = new Array("",
 							"<#FirewallConfig_MFMethod_itemdesc#>",

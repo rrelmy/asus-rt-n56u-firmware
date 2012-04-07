@@ -221,7 +221,7 @@ apply(void)	// step 2 of 2-step dhcp lease application for RT-N13 repeater mode 
 	system("mii_mgr -s -p 3 -r 0 -v 0x3900");	// link down switch port 3
 	system("mii_mgr -s -p 4 -r 0 -v 0x3900");	// link down switch port 4
 
-	fprintf(stderr, "Apply lease %s/%s from %s to %s\n",
+	dbg("Apply lease %s/%s from %s to %s\n",
 		nvram_safe_get("lan_ipaddr_t"),
 		nvram_safe_get("lan_netmask_t"),
 		nvram_safe_get("lan_gateway_t"),
@@ -238,7 +238,7 @@ apply(void)	// step 2 of 2-step dhcp lease application for RT-N13 repeater mode 
 		nvram_safe_get("lan_ipaddr_t"),
 		nvram_safe_get("lan_netmask_t"));
 
-	//fprintf(stderr, "sleep for 1 second...\n");
+	//dbg("sleep for 1 second...\n");
 	sleep(1);
 
 	system("mii_mgr -s -p 0 -r 0 -v 0x3100");	// link up switch port 0

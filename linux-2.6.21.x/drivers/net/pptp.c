@@ -241,7 +241,7 @@ struct pptp_gre_header {
   u32 seq;		/* sequence number.  Present if S==1 */
   u32 ack;		/* seq number of highest packet recieved by */
   				/*  sender in this session */
-} __packed;
+} __attribute__ ((__packed__));
 #define PPTP_HEADER_OVERHEAD (2+sizeof(struct pptp_gre_header))
 
 #if LINUX_VERSION_CODE < KERNEL_VERSION(2,6,0)
@@ -283,7 +283,7 @@ static int lookup_chan_dst(u16 call_id, __be32 d_addr)
 	struct pppox_sock *sock;
 	struct pptp_opt *opt;
 	int i;
-
+	
 #if LINUX_VERSION_CODE > KERNEL_VERSION(2,6,0)
 	rcu_read_lock();
 #else
@@ -330,7 +330,7 @@ static int add_chan(struct pppox_sock *sock)
 	}
 	else if (test_bit(sock->proto.pptp.src_addr.call_id,callid_bitmap))
 		goto exit;
-
+	
 #if LINUX_VERSION_CODE > KERNEL_VERSION(2,6,0)
 	rcu_assign_pointer(callid_sock[sock->proto.pptp.src_addr.call_id],sock);
 #else
@@ -363,8 +363,8 @@ static void del_chan(struct pppox_sock *sock)
 	synchronize_rcu();
 #else
 	callid_sock[sock->proto.pptp.src_addr.call_id] = NULL;
-#endif
 	write_unlock_bh(&chan_lock);
+#endif
 }
 
 static int pptp_xmit(struct ppp_channel *chan, struct sk_buff *skb)

@@ -94,7 +94,10 @@ local2remote(const char *buf)
 		return xfr_buf;
 	}
 	else
+	{
+		free(xfr_buf);
 		return NULL;
+	}
 }
 
 char * 
@@ -111,5 +114,8 @@ remote2local(const char *buf)
 		return xfr_buf;
 	}
 	else
+	{
+		free(xfr_buf);
 		return NULL;
+	}
 }

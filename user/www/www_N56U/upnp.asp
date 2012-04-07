@@ -125,11 +125,11 @@ function update_UPnP(){
 	  					<div class="upnp_btn"><a id="applyUPnP" href='javascript:submitUPnP(apps_dms);'></a></div>
 					</td>
   			</tr>
-  			<tr id="updateUPnP">
-  					<td class="upnp" width="250">
+  			<tr id="updateUPnP" style="display:none;">
+  				<td class="upnp" width="250">
 	  					<div width="20" height="20" align="absmiddle"/>
 					</td>
-  					<td height="100" align="left" class="upnp">
+  				<td height="100" align="left" class="upnp">
 	  					<div class="upnp_btn"><a href='javascript:update_UPnP();'><#CTL_refresh#></a></div>
 					</td>
 			</tr>

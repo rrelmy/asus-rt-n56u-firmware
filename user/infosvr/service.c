@@ -23,7 +23,7 @@
 #include <netconf.h>
 #include <shutils.h>
 
-#define WCLIENT 1
+//#define WCLIENT 1
 
 #define IFUP (IFF_UP|IFF_RUNNING|IFF_BROADCAST|IFF_MULTICAST)
 

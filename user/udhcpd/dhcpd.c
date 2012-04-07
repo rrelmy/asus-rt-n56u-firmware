@@ -80,10 +80,11 @@ static void exit_server(int retval)
 	exit(retval);
 }
 
+
 /* Signal handler */
 static void signal_handler(int sig)
 {
-	if (send(signal_pipe[1], &sig, sizeof(sig), MSG_DONTWAIT) < 0) {
+	if (write(signal_pipe[1], &sig, sizeof(sig)) < 0) {
 		LOG(LOG_ERR, "Could not send signal: %s", 
 			strerror(errno));
 	}
@@ -152,16 +153,20 @@ int main(int argc, char *argv[])
 	pidfile_write_release(pid_fd);
 #endif
 
+	/* ensure that stdin/stdout/stderr are never returned by pipe() */
+	if (fcntl(STDIN_FILENO, F_GETFL) == -1)
+		(void) open("/dev/null", O_RDONLY);
+	if (fcntl(STDOUT_FILENO, F_GETFL) == -1)
+		(void) open("/dev/null", O_WRONLY);
+	if (fcntl(STDERR_FILENO, F_GETFL) == -1)
+		(void) open("/dev/null", O_WRONLY);
 
-	socketpair(AF_UNIX, SOCK_STREAM, 0, signal_pipe);
+	/* setup signal handlers */
+	pipe(signal_pipe);
 	signal(SIGUSR1, signal_handler);
 	signal(SIGTERM, signal_handler);
 
-#ifndef BRCM_UDHCPD
 	timeout_end = uptime() + server_config.auto_time;
-#else
-	timeout_end = time(0) + server_config.auto_time;
-#endif
 	while(1) { /* loop until universe collapses */
 
 		if (server_socket < 0)
@@ -174,11 +179,7 @@ int main(int argc, char *argv[])
 		FD_SET(server_socket, &rfds);
 		FD_SET(signal_pipe[0], &rfds);
 		if (server_config.auto_time) {
-#ifndef BRCM_UDHCPD
 			tv.tv_sec = timeout_end - uptime();
-#else
-			tv.tv_sec = timeout_end - time(0);
-#endif
 			tv.tv_usec = 0;
 		}
 		if (!server_config.auto_time || tv.tv_sec > 0) {
@@ -189,11 +190,7 @@ int main(int argc, char *argv[])
 
 		if (retval == 0) {
 			write_leases();
-#ifndef BRCM_UDHCPD
 			timeout_end = uptime() + server_config.auto_time;
-#else
-			timeout_end = time(0) + server_config.auto_time;
-#endif
 			continue;
 		} else if (retval < 0 && errno != EINTR) {
 			DEBUG(LOG_INFO, "error on select");
@@ -208,11 +205,7 @@ int main(int argc, char *argv[])
 				LOG(LOG_INFO, "Received a SIGUSR1");
 				write_leases();
 				/* why not just reset the timeout, eh */
-#ifndef BRCM_UDHCPD
 				timeout_end = uptime() + server_config.auto_time;
-#else
-				timeout_end = time(0) + server_config.auto_time;
-#endif				
 				continue;
 			case SIGTERM:
 				LOG(LOG_INFO, "Received a SIGTERM");
@@ -234,6 +227,16 @@ int main(int argc, char *argv[])
 			continue;
 		}
 		
+		server_id = get_option(&packet, DHCP_SERVER_ID);
+		if (server_id) {
+			memcpy(&server_id_align, server_id, 4);
+			if (server_id_align != server_config.server) {
+				/* client talks to somebody else */
+				DEBUG(LOG_INFO,"server ID %08x doesn't match, ignoring", ntohl(server_id_align));
+				continue;
+			}
+		}
+
 		/* ADDME: look for a static lease */
 		lease = find_lease_by_chaddr(packet.chaddr);
 		switch (state[0]) {
@@ -248,17 +251,14 @@ int main(int argc, char *argv[])
 			DEBUG(LOG_INFO, "received REQUEST");
 
 			requested = get_option(&packet, DHCP_REQUESTED_IP);
-			server_id = get_option(&packet, DHCP_SERVER_ID);
 			hostname = get_option(&packet, DHCP_HOST_NAME);
 
 			if (requested) memcpy(&requested_align, requested, 4);
-			if (server_id) memcpy(&server_id_align, server_id, 4);
 		
 			if (lease) { /*ADDME: or static lease */
 				if (server_id) {
 					/* SELECTING State */
-					DEBUG(LOG_INFO, "server_id = %08x", ntohl(server_id_align));
-					if (server_id_align == server_config.server && requested && 
+					if (requested && 
 					    requested_align == lease->yiaddr) {
 						sendACK(&packet, lease->yiaddr);
 					}
@@ -290,6 +290,8 @@ int main(int argc, char *argv[])
 			/* what to do if we have no record of the client */
 			} else if (server_id) {
 				/* SELECTING State */
+				if (requested)
+					sendNAK(&packet);
 
 			} else if (requested) {
 				/* INIT-REBOOT State */
@@ -314,20 +316,12 @@ int main(int argc, char *argv[])
 			DEBUG(LOG_INFO,"received DECLINE");
 			if (lease) {
 				memset(lease->chaddr, 0, 16);
-#ifndef BRCM_UDHCPD
 				lease->expires = uptime() + server_config.decline_time;
-#else
-				lease->expires = time(0) + server_config.decline_time;
-#endif
 			}			
 			break;
 		case DHCPRELEASE:
 			DEBUG(LOG_INFO,"received RELEASE");
-#ifndef BRCM_UDHCPD
 			if (lease) lease->expires = uptime();
-#else
-			if (lease) lease->expires = time(0);
-#endif
 			break;
 		case DHCPINFORM:
 			DEBUG(LOG_INFO,"received INFORM");

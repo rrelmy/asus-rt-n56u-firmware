@@ -296,6 +296,9 @@ renew(void)
 	//	nvram_safe_get(strcat_r(prefix, "ipaddr", tmp)), 
 	//	nvram_safe_get(strcat_r(prefix, "gateway", tmp)));
 
+ 	if (unit == 0)
+ 		update_wan_status(1);
+
 	wanmessage("");
 
 	dprintf("done\n");

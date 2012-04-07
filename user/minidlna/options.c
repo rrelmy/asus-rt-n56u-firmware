@@ -1,11 +1,33 @@
-/* $Id: options.c,v 1.11 2009/11/19 03:22:35 jmaggard Exp $ */
+/* $Id: options.c,v 1.14 2011/02/17 23:17:24 jmaggard Exp $ */
 /* MiniUPnP project
  * http://miniupnp.free.fr/ or http://miniupnp.tuxfamily.org/
  * author: Ryan Wagoner
- * (c) 2006 Thomas Bernard 
- * This software is subject to the conditions detailed
- * in the LICENCE file provided within the distribution */
-
+ *
+ * Copyright (c) 2006, Thomas Bernard
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *     * Redistributions of source code must retain the above copyright
+ *       notice, this list of conditions and the following disclaimer.
+ *     * Redistributions in binary form must reproduce the above copyright
+ *       notice, this list of conditions and the following disclaimer in the
+ *       documentation and/or other materials provided with the distribution.
+ *     * The name of the author may not be used to endorse or promote products
+ *       derived from this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ */
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -28,12 +50,14 @@ static const struct {
 	{ UPNPSYSTEM_UPTIME, "system_uptime" },
 	{ UPNPUUID, "uuid"},
 	{ UPNPSERIAL, "serial"},
+	{ UPNPMODEL_NAME, "model_name"},
 	{ UPNPMODEL_NUMBER, "model_number"},
 	{ UPNPFRIENDLYNAME, "friendly_name"},
 	{ UPNPMEDIADIR, "media_dir"},
 	{ UPNPALBUMART_NAMES, "album_art_names"},
 	{ UPNPINOTIFY, "inotify" },
 	{ UPNPDBDIR, "db_dir" },
+	{ UPNPLOGDIR, "log_dir" },
 	{ ENABLE_TIVO, "enable_tivo" },
 	{ ENABLE_DLNA_STRICT, "strict_dlna" }
 };

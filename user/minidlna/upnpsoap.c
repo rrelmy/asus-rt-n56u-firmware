@@ -1,14 +1,50 @@
 /* MiniDLNA project
- * http://minidlna.sourceforge.net/
- * (c) 2008-2009 Justin Maggard
  *
- * This software is subject to the conditions detailed
- * in the LICENCE file provided within the distribution 
+ * http://sourceforge.net/projects/minidlna/
  *
- * Portions of the code from the MiniUPnP Project
- * (c) Thomas Bernard licensed under BSD revised license
- * detailed in the LICENSE.miniupnpd file provided within
- * the distribution.
+ * MiniDLNA media server
+ * Copyright (C) 2008-2009  Justin Maggard
+ *
+ * This file is part of MiniDLNA.
+ *
+ * MiniDLNA is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2 as
+ * published by the Free Software Foundation.
+ *
+ * MiniDLNA is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with MiniDLNA. If not, see <http://www.gnu.org/licenses/>.
+ *
+ * Portions of the code from the MiniUPnP project:
+ *
+ * Copyright (c) 2006-2007, Thomas Bernard
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *     * Redistributions of source code must retain the above copyright
+ *       notice, this list of conditions and the following disclaimer.
+ *     * Redistributions in binary form must reproduce the above copyright
+ *       notice, this list of conditions and the following disclaimer in the
+ *       documentation and/or other materials provided with the distribution.
+ *     * The name of the author may not be used to endorse or promote products
+ *       derived from this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
  */
 #include <stdio.h>
 #include <stdlib.h>
@@ -150,9 +186,17 @@ static void
 GetSearchCapabilities(struct upnphttp * h, const char * action)
 {
 	static const char resp[] =
-		"<u:%sResponse "
-		"xmlns:u=\"%s\">"
-		"<SearchCaps>dc:title,dc:creator,upnp:class,upnp:artist,upnp:album,@refID</SearchCaps>"
+		"<u:%sResponse xmlns:u=\"%s\">"
+		"<SearchCaps>"
+		  "dc:creator,"
+		  "dc:title,"
+		  "upnp:album,"
+		  "upnp:actor,"
+		  "upnp:artist,"
+		  "upnp:class,"
+		  "upnp:genre,"
+		  "@refID"
+		"</SearchCaps>"
 		"</u:%sResponse>";
 
 	char body[512];
@@ -229,6 +273,10 @@ mime_to_ext(const char * mime, char * buf)
 				strcpy(buf, "wav");
 			else if( strncmp(mime+6, "L16", 3) == 0 )
 				strcpy(buf, "pcm");
+			else if( strcmp(mime+6, "3gpp") == 0 )
+				strcpy(buf, "3gp");
+			else if( strcmp(mime, "application/ogg") == 0 )
+				strcpy(buf, "ogg");
 			else
 				strcpy(buf, "dat");
 			break;
@@ -289,22 +337,25 @@ mime_to_ext(const char * mime, char * buf)
 #define FILTER_RES_RESOLUTION                    0x00000400
 #define FILTER_RES_SAMPLEFREQUENCY               0x00000800
 #define FILTER_RES_SIZE                          0x00001000
-#define FILTER_UPNP_ALBUM                        0x00002000
-#define FILTER_UPNP_ALBUMARTURI                  0x00004000
-#define FILTER_UPNP_ALBUMARTURI_DLNA_PROFILEID   0x00008000
-#define FILTER_UPNP_ARTIST                       0x00010000
-#define FILTER_UPNP_GENRE                        0x00020000
-#define FILTER_UPNP_ORIGINALTRACKNUMBER          0x00040000
-#define FILTER_UPNP_SEARCHCLASS                  0x00080000
+#define FILTER_UPNP_ACTOR                        0x00002000
+#define FILTER_UPNP_ALBUM                        0x00004000
+#define FILTER_UPNP_ALBUMARTURI                  0x00008000
+#define FILTER_UPNP_ALBUMARTURI_DLNA_PROFILEID   0x00010000
+#define FILTER_UPNP_ARTIST                       0x00020000
+#define FILTER_UPNP_GENRE                        0x00040000
+#define FILTER_UPNP_ORIGINALTRACKNUMBER          0x00080000
+#define FILTER_UPNP_SEARCHCLASS                  0x00100000
 
 static u_int32_t
-set_filter_flags(char * filter)
+set_filter_flags(char * filter, enum client_types client)
 {
 	char *item, *saveptr = NULL;
 	u_int32_t flags = 0;
 
 	if( !filter || (strlen(filter) <= 1) )
 		return 0xFFFFFFFF;
+	if( client == ESamsungTV )
+		flags |= FILTER_DLNA_NAMESPACE;
 	item = strtok_r(filter, ",", &saveptr);
 	while( item != NULL )
 	{
@@ -343,6 +394,8 @@ set_filter_flags(char * filter)
 		else if( strcmp(item, "upnp:albumArtURI") == 0 )
 		{
 			flags |= FILTER_UPNP_ALBUMARTURI;
+			if( client == ESamsungTV )
+				flags |= FILTER_UPNP_ALBUMARTURI_DLNA_PROFILEID;
 		}
 		else if( strcmp(item, "upnp:albumArtURI@dlna:profileID") == 0 )
 		{
@@ -352,6 +405,10 @@ set_filter_flags(char * filter)
 		else if( strcmp(item, "upnp:artist") == 0 )
 		{
 			flags |= FILTER_UPNP_ARTIST;
+		}
+		else if( strcmp(item, "upnp:actor") == 0 )
+		{
+			flags |= FILTER_UPNP_ACTOR;
 		}
 		else if( strcmp(item, "upnp:genre") == 0 )
 		{
@@ -453,7 +510,7 @@ parse_sort_criteria(char * sortCriteria, int * error)
 		}
 		else if( strcasecmp(item, "dc:title") == 0 )
 		{
-			strcat(order, "d.TITLE");
+			strcat(order, "d.TITLE COLLATE naturalsort");
 			title_sorted = 1;
 		}
 		else if( strcasecmp(item, "dc:date") == 0 )
@@ -489,7 +546,7 @@ parse_sort_criteria(char * sortCriteria, int * error)
 	}
 	/* Add a "tiebreaker" sort order */
 	if( !title_sorted )
-		strcat(order, ", TITLE ASC");
+		strcat(order, ", d.TITLE COLLATE naturalsort ASC");
 
 	return order;
 }
@@ -579,16 +636,7 @@ callback(void *args, int argc, char **argv, char **azColName)
 	passed_args->returned++;
 
 	if( dlna_pn )
-	{
-		if( passed_args->client == ESonyBravia )
-		{
-			/* BRAVIA KDL-##*X### series TVs do natively support AVC/AC3 in TS, but
-			   require profile to be renamed (applies to _T and _ISO variants also) */
-			modifyString(dlna_pn, "AVC_TS_MP_SD_AC3", "AVC_TS_HD_50_AC3", 0);
-			modifyString(dlna_pn, "AVC_TS_MP_HD_AC3", "AVC_TS_HD_50_AC3", 0);
-		}
 		sprintf(dlna_buf, "DLNA.ORG_PN=%s", dlna_pn);
-	}
 	else if( passed_args->flags & FLAG_DLNA )
 		strcpy(dlna_buf, dlna_no_conv);
 	else
@@ -631,13 +679,18 @@ callback(void *args, int argc, char **argv, char **azColName)
 					strcpy(mime+8, "mkv");
 				}
 			}
-			else if( passed_args->client == ESonyBDP )
+			else if( passed_args->client == ESonyBDP || passed_args->client == ESonyBravia )
 			{
-				if( strcmp(mime+6, "x-matroska") == 0 ||
-				    strcmp(mime+6, "mpeg") == 0 )
+				if( passed_args->client == ESonyBDP &&
+				    (strcmp(mime+6, "x-matroska") == 0 ||
+				     strcmp(mime+6, "mpeg") == 0) )
 				{
 					strcpy(mime+6, "divx");
 				}
+				/* BRAVIA KDL-##*X### series TVs do natively support AVC/AC3 in TS, but
+				   require profile to be renamed (applies to _T and _ISO variants also) */
+				modifyString(dlna_pn, "AVC_TS_MP_SD_AC3", "AVC_TS_HD_50_AC3", 0);
+				modifyString(dlna_pn, "AVC_TS_MP_HD_AC3", "AVC_TS_HD_50_AC3", 0);
 			}
 		}
 		else if( *mime == 'a' )
@@ -680,10 +733,17 @@ callback(void *args, int argc, char **argv, char **azColName)
 			memcpy(passed_args->resp+passed_args->size, &str_buf, ret+1);
 			passed_args->size += ret;
 		}
-		if( artist && (passed_args->filter & FILTER_UPNP_ARTIST) ) {
-			ret = snprintf(str_buf, 512, "&lt;upnp:artist&gt;%s&lt;/upnp:artist&gt;", artist);
-			memcpy(passed_args->resp+passed_args->size, &str_buf, ret+1);
-			passed_args->size += ret;
+		if( artist ) {
+			if( (*mime == 'a') && (passed_args->filter & FILTER_UPNP_ARTIST) ) {
+				ret = snprintf(str_buf, 512, "&lt;upnp:artist&gt;%s&lt;/upnp:artist&gt;", artist);
+				memcpy(passed_args->resp+passed_args->size, &str_buf, ret+1);
+				passed_args->size += ret;
+			}
+			else if( (*mime == 'v') && (passed_args->filter & FILTER_UPNP_ACTOR) ) {
+				ret = snprintf(str_buf, 512, "&lt;upnp:actor&gt;%s&lt;/upnp:actor&gt;", artist);
+				memcpy(passed_args->resp+passed_args->size, &str_buf, ret+1);
+				passed_args->size += ret;
+			}
 		}
 		if( album && (passed_args->filter & FILTER_UPNP_ALBUM) ) {
 			ret = snprintf(str_buf, 512, "&lt;upnp:album&gt;%s&lt;/upnp:album&gt;", album);
@@ -706,21 +766,19 @@ callback(void *args, int argc, char **argv, char **azColName)
 		if( album_art && atoi(album_art) )
 		{
 			/* Video and audio album art is handled differently */
-			if( *mime == 'v' && (passed_args->filter & FILTER_RES) && (passed_args->client != EXbox) ) {
+			if( *mime == 'v' && (passed_args->filter & FILTER_RES) && !(passed_args->flags & FLAG_MS_PFS) ) {
 				ret = sprintf(str_buf, "&lt;res protocolInfo=\"http-get:*:image/jpeg:DLNA.ORG_PN=JPEG_TN\"&gt;"
 				                       "http://%s:%d/AlbumArt/%s-%s.jpg"
 				                       "&lt;/res&gt;",
 				                       lan_addr[0].str, runtime_vars.port, album_art, detailID);
 				memcpy(passed_args->resp+passed_args->size, &str_buf, ret+1);
 				passed_args->size += ret;
-			}
-			else if( passed_args->filter & FILTER_UPNP_ALBUMARTURI ) {
+			} else if( passed_args->filter & FILTER_UPNP_ALBUMARTURI ) {
 				ret = sprintf(str_buf, "&lt;upnp:albumArtURI");
 				memcpy(passed_args->resp+passed_args->size, &str_buf, ret+1);
 				passed_args->size += ret;
- 				/* Quick hack to have album covers on Samsung UExxC6700 */
- 				if( ( passed_args->filter & FILTER_UPNP_ALBUMARTURI_DLNA_PROFILEID ) || ( passed_args->client == ESamsungTV ) ) {
- 					ret = sprintf(str_buf, " dlna:profileID=\"%s\" xmlns:dlna=\"urn:schemas-dlna-org:metadata-1-0/\"", "JPEG_TN");
+				if( passed_args->filter & FILTER_UPNP_ALBUMARTURI_DLNA_PROFILEID ) {
+					ret = sprintf(str_buf, " dlna:profileID=\"%s\" xmlns:dlna=\"urn:schemas-dlna-org:metadata-1-0/\"", "JPEG_TN");
 					memcpy(passed_args->resp+passed_args->size, &str_buf, ret+1);
 					passed_args->size += ret;
 				}
@@ -730,6 +788,27 @@ callback(void *args, int argc, char **argv, char **azColName)
 				passed_args->size += ret;
 			}
 		}
+#ifdef PFS_HACK
+		if( (passed_args->flags & FLAG_MS_PFS) && *mime == 'i' ) {
+			ret = snprintf(str_buf, 512, "&lt;upnp:album&gt;%s&lt;/upnp:album&gt;", "[No Keywords]");
+			memcpy(passed_args->resp+passed_args->size, &str_buf, ret+1);
+			passed_args->size += ret;
+
+			if( tn && atoi(tn) ) {
+				ret = snprintf(str_buf, 512, "&lt;upnp:albumArtURI&gt;"
+				                             "http://%s:%d/Thumbnails/%s.jpg"
+			        	                     "&lt;/upnp:albumArtURI&gt;",
+			                	             lan_addr[0].str, runtime_vars.port, detailID);
+			} else {
+				ret = snprintf(str_buf, 512, "&lt;upnp:albumArtURI&gt;"
+				                             "http://%s:%d/Resized/%s.jpg?width=160,height=160"
+			        	                     "&lt;/upnp:albumArtURI&gt;",
+			                	             lan_addr[0].str, runtime_vars.port, detailID);
+			}
+			memcpy(passed_args->resp+passed_args->size, &str_buf, ret+1);
+			passed_args->size += ret;
+		}
+#endif
 		if( passed_args->filter & FILTER_RES ) {
 			mime_to_ext(mime, ext);
 			if( (passed_args->client == EFreeBox) && tn && atoi(tn) ) {
@@ -754,7 +833,7 @@ callback(void *args, int argc, char **argv, char **azColName)
 				passed_args->size += ret;
 			}
 			if( bitrate && (passed_args->filter & FILTER_RES_BITRATE) ) {
-				if( passed_args->client == EXbox )
+				if( passed_args->flags & FLAG_MS_PFS )
 					ret = sprintf(str_buf, "bitrate=\"%d\" ", atoi(bitrate)/1024);
 				else
 					ret = sprintf(str_buf, "bitrate=\"%s\" ", bitrate);
@@ -911,19 +990,16 @@ BrowseContentDirectory(struct upnphttp * h, const char * action)
 	if( !BrowseFlag || (strcmp(BrowseFlag, "BrowseDirectChildren") && strcmp(BrowseFlag, "BrowseMetadata")) )
 	{
 		SoapError(h, 402, "Invalid Args");
-		if( h->req_client == EXbox )
-			ObjectId = malloc(1);
+		if( h->reqflags & FLAG_MS_PFS )
+			ObjectId = sqlite3_malloc(1);
 		goto browse_error;
 	}
-	if( !ObjectId )
+	if( !ObjectId && !(ObjectId = GetValueFromNameValueList(&data, "ContainerID")) )
 	{
-		if( !(ObjectId = GetValueFromNameValueList(&data, "ContainerID")) )
-		{
-			SoapError(h, 701, "No such object error");
-			if( h->req_client == EXbox )
-				ObjectId = malloc(1);
-			goto browse_error;
-		}
+		SoapError(h, 701, "No such object error");
+		if( h->reqflags & FLAG_MS_PFS )
+			ObjectId = sqlite3_malloc(1);
+		goto browse_error;
 	}
 	memset(&args, 0, sizeof(args));
 
@@ -931,7 +1007,7 @@ BrowseContentDirectory(struct upnphttp * h, const char * action)
 	args.resp = resp;
 	args.size = sprintf(resp, "%s", resp0);
 	/* See if we need to include DLNA namespace reference */
-	args.filter = set_filter_flags(Filter);
+	args.filter = set_filter_flags(Filter, h->req_client);
 	if( args.filter & FILTER_DLNA_NAMESPACE )
 	{
 		ret = sprintf(str_buf, DLNA_NAMESPACE);
@@ -946,14 +1022,23 @@ BrowseContentDirectory(struct upnphttp * h, const char * action)
 	args.requested = RequestedCount;
 	args.client = h->req_client;
 	args.flags = h->reqflags;
-	if( h->req_client == EXbox )
+	if( h->reqflags & FLAG_MS_PFS )
 	{
-		if( strcmp(ObjectId, "16") == 0 )
-			ObjectId = strdup(IMAGE_DIR_ID);
-		else if( strcmp(ObjectId, "15") == 0 )
-			ObjectId = strdup(VIDEO_DIR_ID);
+		if( strchr(ObjectId, '$') || (strcmp(ObjectId, "0") == 0) )
+		{
+			ObjectId = sqlite3_mprintf("%s", ObjectId);
+		}
 		else
-			ObjectId = strdup(ObjectId);
+		{
+			ptr = sql_get_text_field(db, "SELECT OBJECT_ID from OBJECTS"
+			                             " where OBJECT_ID in "
+			                             "('"MUSIC_ID"$%s', '"VIDEO_ID"$%s', '"IMAGE_ID"$%s')",
+			                             ObjectId, ObjectId, ObjectId);
+			if( ptr )
+				ObjectId = ptr;
+			else
+				ObjectId = sqlite3_mprintf("%s", ObjectId);
+		}
 	}
 	DPRINTF(E_DEBUG, L_HTTP, "Browsing ContentDirectory:\n"
 	                         " * ObjectID: %s\n"
@@ -992,10 +1077,15 @@ BrowseContentDirectory(struct upnphttp * h, const char * action)
 			if( strncmp(ObjectId, MUSIC_PLIST_ID, strlen(MUSIC_PLIST_ID)) == 0 )
 			{
 				if( strcmp(ObjectId, MUSIC_PLIST_ID) == 0 )
-					asprintf(&orderBy, "order by d.TITLE");
+					asprintf(&orderBy, "order by d.TITLE COLLATE naturalsort");
 				else
 					asprintf(&orderBy, "order by length(OBJECT_ID), OBJECT_ID");
 			}
+			else
+#ifdef __sparc__ /* Sorting takes too long on slow processors with very large containers */
+				if( totalMatches < 10000 )
+#endif
+				asprintf(&orderBy, "order by d.TITLE COLLATE naturalsort");
 		}
 		/* If it's a DLNA client, return an error for bad sort criteria */
 		if( (args.flags & FLAG_DLNA) && ret )
@@ -1041,9 +1131,9 @@ browse_error:
 	if( orderBy )
 		free(orderBy);
 	free(resp);
-	if( h->req_client == EXbox )
+	if( h->reqflags & FLAG_MS_PFS )
 	{
-		free(ObjectId);
+		sqlite3_free(ObjectId);
 	}
 }
 
@@ -1086,10 +1176,13 @@ SearchContentDirectory(struct upnphttp * h, const char * action)
 		StartingIndex = atoi(ptr);
 	if( !ContainerID )
 	{
-		SoapError(h, 701, "No such object error");
-		if( h->req_client == EXbox )
-			ContainerID = malloc(1);
-		goto search_error;
+		if( !(ContainerID = GetValueFromNameValueList(&data, "ObjectID")) )
+		{
+			SoapError(h, 701, "No such object error");
+			if( h->reqflags & FLAG_MS_PFS )
+				ContainerID = sqlite3_malloc(1);
+			goto search_error;
+		}
 	}
 	memset(&args, 0, sizeof(args));
 
@@ -1097,7 +1190,7 @@ SearchContentDirectory(struct upnphttp * h, const char * action)
 	args.resp = resp;
 	args.size = sprintf(resp, "%s", resp0);
 	/* See if we need to include DLNA namespace reference */
-	args.filter = set_filter_flags(Filter);
+	args.filter = set_filter_flags(Filter, h->req_client);
 	if( args.filter & FILTER_DLNA_NAMESPACE )
 	{
 		ret = sprintf(str_buf, DLNA_NAMESPACE);
@@ -1112,26 +1205,29 @@ SearchContentDirectory(struct upnphttp * h, const char * action)
 	args.requested = RequestedCount;
 	args.client = h->req_client;
 	args.flags = h->reqflags;
-	if( h->req_client == EXbox )
+	if( h->reqflags & FLAG_MS_PFS )
 	{
-		if( strcmp(ContainerID, "4") == 0 )
-			ContainerID = strdup("1$4");
-		else if( strcmp(ContainerID, "5") == 0 )
-			ContainerID = strdup("1$5");
-		else if( strcmp(ContainerID, "6") == 0 )
-			ContainerID = strdup("1$6");
-		else if( strcmp(ContainerID, "7") == 0 )
-			ContainerID = strdup("1$7");
-		else if( strcmp(ContainerID, "F") == 0 )
-			ContainerID = strdup(MUSIC_PLIST_ID);
+		if( strchr(ContainerID, '$') || (strcmp(ContainerID, "0") == 0) )
+		{
+			ContainerID = sqlite3_mprintf("%s", ContainerID);
+		}
 		else
-			ContainerID = strdup(ContainerID);
+		{
+			ptr = sql_get_text_field(db, "SELECT OBJECT_ID from OBJECTS"
+			                             " where OBJECT_ID in "
+			                             "('"MUSIC_ID"$%s', '"VIDEO_ID"$%s', '"IMAGE_ID"$%s')",
+			                             ContainerID, ContainerID, ContainerID);
+			if( ptr )
+				ContainerID = ptr;
+			else
+				ContainerID = sqlite3_mprintf("%s", ContainerID);
+		}
 		#if 0 // Looks like the 360 already does this
 		/* Sort by track number for some containers */
 		if( orderBy &&
-		    ((strncmp(ContainerID, "1$5", 3) == 0) ||
-		     (strncmp(ContainerID, "1$6", 3) == 0) ||
-		     (strncmp(ContainerID, "1$7", 3) == 0)) )
+		    ((strncmp(ContainerID, MUSIC_GENRE_ID, 3) == 0) ||
+		     (strncmp(ContainerID, MUSIC_ARTIST_ID, 3) == 0) ||
+		     (strncmp(ContainerID, MUSIC_ALBUM_ID, 3) == 0)) )
 		{
 			DPRINTF(E_DEBUG, L_HTTP, "Old sort order: %s\n", orderBy);
 			sprintf(str_buf, "d.TRACK, ");
@@ -1153,7 +1249,7 @@ SearchContentDirectory(struct upnphttp * h, const char * action)
 
 	if( strcmp(ContainerID, "0") == 0 )
 		*ContainerID = '*';
-	else if( strcmp(ContainerID, "1$4") == 0 )
+	else if( strcmp(ContainerID, MUSIC_ALL_ID) == 0 )
 		groupBy[0] = '\0';
 	if( !SearchCriteria )
 	{
@@ -1170,8 +1266,10 @@ SearchContentDirectory(struct upnphttp * h, const char * action)
 		SearchCriteria = modifyString(SearchCriteria, "dc:title", "d.TITLE", 0);
 		SearchCriteria = modifyString(SearchCriteria, "dc:creator", "d.CREATOR", 0);
 		SearchCriteria = modifyString(SearchCriteria, "upnp:class", "o.CLASS", 0);
+		SearchCriteria = modifyString(SearchCriteria, "upnp:actor", "d.ARTIST", 0);
 		SearchCriteria = modifyString(SearchCriteria, "upnp:artist", "d.ARTIST", 0);
 		SearchCriteria = modifyString(SearchCriteria, "upnp:album", "d.ALBUM", 0);
+		SearchCriteria = modifyString(SearchCriteria, "upnp:genre", "d.GENRE", 0);
 		SearchCriteria = modifyString(SearchCriteria, "exists true", "is not NULL", 0);
 		SearchCriteria = modifyString(SearchCriteria, "exists false", "is NULL", 0);
 		SearchCriteria = modifyString(SearchCriteria, "@refID", "REF_ID", 0);
@@ -1235,7 +1333,11 @@ SearchContentDirectory(struct upnphttp * h, const char * action)
 	ret = 0;
 	if( totalMatches < 10000 )
 #endif
-		orderBy = parse_sort_criteria(SortCriteria, &ret);
+		if ( SortCriteria )
+			orderBy = parse_sort_criteria(SortCriteria, &ret);
+		else
+			asprintf(&orderBy, "order by d.TITLE COLLATE naturalsort");
+
 	/* If it's a DLNA client, return an error for bad sort criteria */
 	if( (args.flags & FLAG_DLNA) && ret )
 	{
@@ -1279,9 +1381,9 @@ search_error:
 	if( newSearchCriteria )
 		free(newSearchCriteria);
 	free(resp);
-	if( h->req_client == EXbox )
+	if( h->reqflags & FLAG_MS_PFS )
 	{
-		free(ContainerID);
+		sqlite3_free(ContainerID);
 	}
 }
 

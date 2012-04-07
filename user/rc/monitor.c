@@ -50,9 +50,9 @@ void print_reftime()
 {
 	gettimeofday(&tv_now, NULL);
 	if ((tv_now.tv_usec - tv_ref.tv_usec) >= 0)
-		fprintf(stderr, "sec: %ld, msec: %ld\n", tv_now.tv_sec-tv_ref.tv_sec, (tv_now.tv_usec-tv_ref.tv_usec)/1000);
+		dbg("sec: %ld, msec: %ld\n", tv_now.tv_sec-tv_ref.tv_sec, (tv_now.tv_usec-tv_ref.tv_usec)/1000);
 	else
-		fprintf(stderr, "sec: %ld, msec: %ld\n", tv_now.tv_sec-tv_ref.tv_sec-1, (1000000+tv_now.tv_usec-tv_ref.tv_usec)/1000);
+		dbg("sec: %ld, msec: %ld\n", tv_now.tv_sec-tv_ref.tv_sec-1, (1000000+tv_now.tv_usec-tv_ref.tv_usec)/1000);
 }
 */
 
@@ -75,7 +75,7 @@ apcli_restart()
 
 	if (!is_URE())
 	{
-		fprintf(stderr, "apcli_restart: Not in AP(-Client) mode!\n");
+		dbg("apcli_restart: Not in AP(-Client) mode!\n");
 		return;
 	}
 
@@ -212,7 +212,7 @@ apcli_restart()
 
 	apcli_set("ApCliEnable=1");
 	nvram_set("sta_authorized", "0");
-	fprintf(stderr, "Connecting to %s", nvram_safe_get("sta_ssid"));
+	dbg("Connecting to %s", nvram_safe_get("sta_ssid"));
 }
 
 int
@@ -220,7 +220,7 @@ get_apcli_status()
 {
 	if (!is_URE())
 	{
-		fprintf(stderr, "get_apcli_status: Not in AP(-Client) mode!\n");
+		dbg("get_apcli_status: Not in AP(-Client) mode!\n");
 		return 1;
 	}
 
@@ -250,13 +250,13 @@ get_apcli_status()
 			if (	nvram_match("sta_connected", "1") &&
 				(nvram_match("sta_authorized", "1") || nvram_match("sta_authorized", "2")) )
 			{
-				fprintf(stderr, "Connected with: \"%s\" (%s)\n", 
+				dbg("Connected with: \"%s\" (%s)\n", 
 					info.b.essid, iw_sawap_ntop(&info.ap_addr, buffer));
 				return 2;
 			}
 			else
 			{
-				fprintf(stderr, "Connecting to \"%s\" (%s)\n", 
+				dbg("Connecting to \"%s\" (%s)\n", 
 					info.b.essid, iw_sawap_ntop(&info.ap_addr, buffer));
 				return 1;
 			}
@@ -265,13 +265,13 @@ get_apcli_status()
 		{
 			if (nvram_match("sta_connected", "1"))
 			{
-				fprintf(stderr, "Connected with: \"%s\" (%s)\n",
+				dbg("Connected with: \"%s\" (%s)\n",
 					info.b.essid, iw_sawap_ntop(&info.ap_addr, buffer));
       				return 2;
       			}
       			else
       			{
-				fprintf(stderr, "Connecting to \"%s\" (%s)\n", 
+				dbg("Connecting to \"%s\" (%s)\n", 
 					info.b.essid, iw_sawap_ntop(&info.ap_addr, buffer));
 				return 1;
       			}
@@ -279,7 +279,7 @@ get_apcli_status()
       	}
       	else
       	{
-      		fprintf(stderr, "Disconnected...\n");
+      		dbg("Disconnected...\n");
       		return 0;
       	}
 }
@@ -404,7 +404,7 @@ site_survey_for_channel(const char *ssid, int *HT_EXT)
 {
 	if (!is_URE())
 	{
-		fprintf(stderr, "site_survey_for_channel: Not in AP(-Client) mode!\n");
+		dbg("site_survey_for_channel: Not in AP(-Client) mode!\n");
 		memset(channel_to_check, 0x0, 15);
 		return -1;
 	}
@@ -445,21 +445,21 @@ site_survey_for_channel(const char *ssid, int *HT_EXT)
 	{
 		spinlock_unlock(0);
 
-		fprintf(stderr, "Site Survey fails\n");
+		dbg("Site Survey fails\n");
 		return -1;
 	}
 	spinlock_unlock(SPINLOCK_SiteSurvey);
 
-	fprintf(stderr, "Look for SSID: %s\n", ssid);
-	fprintf(stderr, "Please wait");
+	dbg("Look for SSID: %s\n", ssid);
+	dbg("Please wait");
 	sleep(1);
-	fprintf(stderr, ".");
+	dbg(".");
 	sleep(1);
-	fprintf(stderr, ".");
+	dbg(".");
 	sleep(1);
-	fprintf(stderr, ".");
+	dbg(".");
 	sleep(1);
-	fprintf(stderr, ".\n");
+	dbg(".\n");
 
 	memset(data, 0x0, 8192);
 	strcpy(data, "");
@@ -469,7 +469,7 @@ site_survey_for_channel(const char *ssid, int *HT_EXT)
 
 	if (wl_ioctl(WIF, RTPRIV_IOCTL_GSITESURVEY, &wrq) < 0)
 	{
-		fprintf(stderr, "errors in getting site survey result\n");
+		dbg("errors in getting site survey result\n");
 		return -1;
 	}
 
@@ -522,8 +522,8 @@ site_survey_for_channel(const char *ssid, int *HT_EXT)
 	memset(header, 0x0, sizeof(header));
 //	sprintf(header, "%-3s%-33s%-18s%-8s%-15s%-9s%-8s%-2s\n", "Ch", "SSID", "BSSID", "Enc", "Auth", "Siganl(%)", "W-Mode", "NT");
 	sprintf(header, "%-3s%-33s%-18s%-9s%-16s%-9s%-8s%-2s%-3s\n", "Ch", "SSID", "BSSID", "Enc", "Auth", "Siganl(%)", "W-Mode", "NT", " CC");
-//	fprintf(stderr, "\n%s", header);
-	fprintf(stderr, "\n%-3s%-33s%-18s%-9s%-16s%-9s%-8s%-2s%-3s%-3s\n", "Ch", "SSID", "BSSID", "Enc", "Auth", "Siganl(%)", "W-Mode", "NT", " CC", " EC");
+//	dbg("\n%s", header);
+	dbg("\n%-3s%-33s%-18s%-9s%-16s%-9s%-8s%-2s%-3s%-3s\n", "Ch", "SSID", "BSSID", "Enc", "Auth", "Siganl(%)", "W-Mode", "NT", " CC", " EC");
 
 	if (wrq.u.data.length > 0)
 	{
@@ -578,8 +578,8 @@ site_survey_for_channel(const char *ssid, int *HT_EXT)
 						}
 					}
 
-//					fprintf(stderr, "%-3s%-33s%-18s%-8s%-15s%-9s%-8s%-2s\n",
-					fprintf(stderr, "%-3s%-33s%-18s%-9s%-16s%-9s%-8s%-2s %-2s %d\n",
+//					dbg("%-3s%-33s%-18s%-8s%-15s%-9s%-8s%-2s\n",
+					dbg("%-3s%-33s%-18s%-9s%-16s%-9s%-8s%-2s %-2s %d\n",
 						ssap->SiteSurvey[i].channel,
 						(char*)ssap->SiteSurvey[i].ssid,
 						ssap->SiteSurvey[i].bssid,
@@ -595,7 +595,7 @@ site_survey_for_channel(const char *ssid, int *HT_EXT)
 				else
 				{
 					ht_extcha = -1;
-					fprintf(stderr, "%-3s%-33s%-18s%-9s%-16s%-9s%-8s%-2s %-2s\n",
+					dbg("%-3s%-33s%-18s%-9s%-16s%-9s%-8s%-2s %-2s\n",
 						ssap->SiteSurvey[i].channel,
 						(char*)ssap->SiteSurvey[i].ssid,
 						ssap->SiteSurvey[i].bssid,
@@ -659,12 +659,12 @@ site_survey_for_channel(const char *ssid, int *HT_EXT)
 					}
 				}
 			}
-			fprintf(stderr, "\n");
+			dbg("\n");
 		}
 
 		if (count_ap)
 		{
-			fprintf(stderr, "Found (hidden) AP...\n");
+			dbg("Found (hidden) AP...\n");
 			return 0;
 		}
 		else if (idx != -1)
@@ -688,10 +688,10 @@ match_subnet(const char *ip1, const char *sb1, const char *ip2, const char *sb2)
 
 	if (sb1 && sb2 && ip1 && ip2)
 	{
-		fprintf(stderr, "ip1: %s\n", ip1);
-		fprintf(stderr, "sb1: %s\n", sb1);
-		fprintf(stderr, "ip2: %s\n", ip2);
-		fprintf(stderr, "sb2: %s\n", sb2);
+		dbg("ip1: %s\n", ip1);
+		dbg("sb1: %s\n", sb1);
+		dbg("ip2: %s\n", ip2);
+		dbg("sb2: %s\n", sb2);
 	}
 
 	if (sb1 && sb2)
@@ -748,7 +748,7 @@ apcli_connect(int apply_new_profile)
 
 	if (!is_URE())
 	{
-		fprintf(stderr, "apcli_connect: Not in AP(-Client) mode!\n");
+		dbg("apcli_connect: Not in AP(-Client) mode!\n");
 		alarm(APCLI_PERIOD);
 		return;
 	}
@@ -768,17 +768,17 @@ apcli_connect(int apply_new_profile)
 
 		if (!channel)	// special mode for hidden AP
 		{
-			fprintf(stderr, "Activate workaround for hidden AP...\n");
+			dbg("Activate workaround for hidden AP...\n");
 
 			for (i = 1; i <= channel_to_check[0]; i++)
 			{
 				if (channel_to_check[i])
 				{
-					fprintf(stderr, "Change to channel: %d\n", i);
+					dbg("Change to channel: %d\n", i);
 
 					if (ht_extcha_to_check[i] != -1)
 					{
-						fprintf(stderr, "HT_EXTCHA: %d\n", ht_extcha_to_check[i]);
+						dbg("HT_EXTCHA: %d\n", ht_extcha_to_check[i]);
 //						sprintf(tmpstr, "HtBw=%d", 1);
 //						ap_set(tmpstr);
 						sprintf(tmpstr, "HtExtcha=%d", ht_extcha_to_check[i]);
@@ -791,15 +791,15 @@ apcli_connect(int apply_new_profile)
 //					apcli_restart();
 					count_apcli_restart++;
 					sleep(1);
-					fprintf(stderr, ".");
+					dbg(".");
 					sleep(1);
-					fprintf(stderr, ".");
+					dbg(".");
 					sleep(1);
-					fprintf(stderr, ".");
+					dbg(".");
 					sleep(1);
-					fprintf(stderr, ".");
+					dbg(".");
 					sleep(1);
-					fprintf(stderr, ".\n");
+					dbg(".\n");
 
 					if (get_apcli_status())
 						break;
@@ -812,11 +812,11 @@ apcli_connect(int apply_new_profile)
 
 			if (channel != get_channel())
 			{				
-				fprintf(stderr, "Change to channel: %d\n", channel);
+				dbg("Change to channel: %d\n", channel);
 
 				if (HT_EXT != -1)
 				{
-					fprintf(stderr, "HT_EXTCHA: %d\n", HT_EXT);
+					dbg("HT_EXTCHA: %d\n", HT_EXT);
 //					sprintf(tmpstr, "HtBw=%d", 1);
 //					ap_set(tmpstr);
 					sprintf(tmpstr, "HtExtcha=%d", HT_EXT);
@@ -842,17 +842,17 @@ apcli_connect(int apply_new_profile)
 
 		if (!channel)	// special mode for hidden AP
 		{
-			fprintf(stderr, "Activate workaround for hidden AP...\n");
+			dbg("Activate workaround for hidden AP...\n");
 
 			for (i = 1; i <= channel_to_check[0]; i++)
 			{
 				if (channel_to_check[i])
 				{
-					fprintf(stderr, "Change to channel: %d\n", i);
+					dbg("Change to channel: %d\n", i);
 
 					if (ht_extcha_to_check[i] != -1)
 					{
-						fprintf(stderr, "HT_EXTCHA: %d\n", ht_extcha_to_check[i]);
+						dbg("HT_EXTCHA: %d\n", ht_extcha_to_check[i]);
 //						sprintf(tmpstr, "HtBw=%d", 1);
 //						ap_set(tmpstr);
 						sprintf(tmpstr, "HtExtcha=%d", ht_extcha_to_check[i]);
@@ -865,15 +865,15 @@ apcli_connect(int apply_new_profile)
 					apcli_restart();
 					count_apcli_restart++;
 					sleep(1);
-					fprintf(stderr, ".");
+					dbg(".");
 					sleep(1);
-					fprintf(stderr, ".");
+					dbg(".");
 					sleep(1);
-					fprintf(stderr, ".");
+					dbg(".");
 					sleep(1);
-					fprintf(stderr, ".");
+					dbg(".");
 					sleep(1);
-					fprintf(stderr, ".\n");
+					dbg(".\n");
 
 					if (get_apcli_status())
 						break;
@@ -886,11 +886,11 @@ apcli_connect(int apply_new_profile)
 
 			if (channel != get_channel())
 			{				
-				fprintf(stderr, "Change to channel: %d\n", channel);
+				dbg("Change to channel: %d\n", channel);
 
 				if (HT_EXT != -1)
 				{
-					fprintf(stderr, "HT_EXTCHA: %d\n", HT_EXT);
+					dbg("HT_EXTCHA: %d\n", HT_EXT);
 //					sprintf(tmpstr, "HtBw=%d", 1);
 //					ap_set(tmpstr);
 					sprintf(tmpstr, "HtExtcha=%d", HT_EXT);
@@ -906,15 +906,15 @@ apcli_connect(int apply_new_profile)
 				apcli_restart();
 				count_apcli_restart++;
 				sleep(1);
-				fprintf(stderr, ".");
+				dbg(".");
 				sleep(1);
-				fprintf(stderr, ".");
+				dbg(".");
 				sleep(1);
-				fprintf(stderr, ".");
+				dbg(".");
 				sleep(1);
-				fprintf(stderr, ".");
+				dbg(".");
 				sleep(1);
-				fprintf(stderr, ".\n");
+				dbg(".\n");
 			}
 		}
 		else
@@ -948,14 +948,14 @@ void catch_sig_apcli(int sig)
 	}
 	else if (sig == SIGUSR2)
 	{
-		fprintf(stderr, "receive SIGUSR2 from wireless driver!\n");
+		dbg("receive SIGUSR2 from wireless driver!\n");
 
 		if (nvram_match("sta_auth_mode", "psk"))
 		{
 			if ( !(	nvram_match("sta_connected", "1") &&
 				(nvram_match("sta_authorized", "1") || nvram_match("sta_authorized", "2")) ) )
 			{
-				fprintf(stderr, "this SIGUSR2 should be ignored!\n");
+				dbg("this SIGUSR2 should be ignored!\n");
 				return;
 			}
 		}
@@ -963,7 +963,7 @@ void catch_sig_apcli(int sig)
 		{
 			if (nvram_invmatch("sta_connected", "1"))
 			{
-				fprintf(stderr, "this SIGUSR2 should be ignored!\n");
+				dbg("this SIGUSR2 should be ignored!\n");
 				return;
 			}
 		}
@@ -977,15 +977,15 @@ void catch_sig_apcli(int sig)
 		}
 		else
 		{
-			fprintf(stderr, "perform dhcp lease release\n");
+			dbg("perform dhcp lease release\n");
 			kill_pidfile_s("/var/run/udhcpc_lan.pid", SIGUSR2);	// perform lease release
-			fprintf(stderr, "perform dhcp lease renew\n");
+			dbg("perform dhcp lease renew\n");
 			kill_pidfile_s("/var/run/udhcpc_lan.pid", SIGUSR1);	// perform lease renew
 		}
 	}
 	else if (sig == SIGTSTP)
 	{
-		fprintf(stderr, "catch_sig_apcli: Stops timer!\n");
+		dbg("catch_sig_apcli: Stops timer!\n");
 		alarmtimer_apcli(0, 0);
 
 		if (is_URE())
@@ -1012,7 +1012,7 @@ void catch_sig_apcli(int sig)
 		}
 		else
 		{
-			fprintf(stderr, "catch_sig_apcli: Not in AP(-Client) mode!!\n");
+			dbg("catch_sig_apcli: Not in AP(-Client) mode!!\n");
 			alarm(APCLI_PERIOD);
 		}
 	}
@@ -1032,7 +1032,7 @@ void catch_sig_apcli(int sig)
 		}
 		else
 		{
-			fprintf(stderr, "catch_sig_apcli: Not in AP(-Client) mode!!\n");
+			dbg("catch_sig_apcli: Not in AP(-Client) mode!!\n");
 			alarm(APCLI_PERIOD);
 		}
 	}

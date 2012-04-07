@@ -1,14 +1,50 @@
 /* MiniDLNA project
- * http://minidlna.sourceforge.net/
- * (c) 2008-2009 Justin Maggard
  *
- * This software is subject to the conditions detailed
- * in the LICENCE file provided within the distribution 
+ * http://sourceforge.net/projects/minidlna/
  *
- * Portions of the code from the MiniUPnP Project
- * (c) Thomas Bernard licensed under BSD revised license
- * detailed in the LICENSE.miniupnpd file provided within
- * the distribution.
+ * MiniDLNA media server
+ * Copyright (C) 2008-2009  Justin Maggard
+ *
+ * This file is part of MiniDLNA.
+ *
+ * MiniDLNA is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2 as
+ * published by the Free Software Foundation.
+ *
+ * MiniDLNA is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with MiniDLNA. If not, see <http://www.gnu.org/licenses/>.
+ *
+ * Portions of the code from the MiniUPnP project:
+ *
+ * Copyright (c) 2006-2007, Thomas Bernard
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *     * Redistributions of source code must retain the above copyright
+ *       notice, this list of conditions and the following disclaimer.
+ *     * Redistributions in binary form must reproduce the above copyright
+ *       notice, this list of conditions and the following disclaimer in the
+ *       documentation and/or other materials provided with the distribution.
+ *     * The name of the author may not be used to endorse or promote products
+ *       derived from this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
  */
 #include <stdlib.h>
 #include <unistd.h>
@@ -45,6 +81,7 @@
 #endif
 //#define MAX_BUFFER_SIZE 4194304 // 4MB -- Too much?
 #define MAX_BUFFER_SIZE 2147483647 // 2GB -- Too much?
+#define MIN_BUFFER_SIZE 65536
 
 #include "icons.c"
 
@@ -240,6 +277,7 @@ intervening space) by either an integer or the keyword "infinite". */
 				{
 					h->req_client = EXbox;
 					h->reqflags |= FLAG_MIME_AVI_AVI;
+					h->reqflags |= FLAG_MS_PFS;
 				}
 				else if(strncmp(p, "PLAYSTATION", 11)==0)
 				{
@@ -269,6 +307,11 @@ intervening space) by either an integer or the keyword "infinite". */
 					h->req_client = EPopcornHour;
 					h->reqflags |= FLAG_MIME_FLAC_FLAC;
 				}
+				else if(strstrc(p, "Microsoft-IPTV-Client", '\r'))
+				{
+					h->req_client = EMediaRoom;
+					h->reqflags |= FLAG_MS_PFS;
+				}
 				else if(strstrc(p, "DLNADOC/1.50", '\r'))
 				{
 					h->req_client = EStandardDLNA150;
@@ -290,7 +333,13 @@ intervening space) by either an integer or the keyword "infinite". */
 					h->reqflags |= FLAG_DLNA;
 					h->reqflags |= FLAG_MIME_AVI_DIVX;
 				}
-				else if(strstrc(p, "Blu-ray Disc Player", '\r'))
+				/* X-AV-Client-Info: av=5.0; cn="Sony Corporation"; mn="Blu-ray Disc Player"; mv="2.0" */
+				/* X-AV-Client-Info: av=5.0; cn="Sony Corporation"; mn="BLU-RAY HOME THEATRE SYSTEM"; mv="2.0"; */
+				/* Sony SMP-100 needs the same treatment as their BDP-S370 */
+				/* X-AV-Client-Info: av=5.0; cn="Sony Corporation"; mn="Media Player"; mv="2.0" */
+				else if(strstrc(p, "Blu-ray Disc Player", '\r') ||
+				        strstrc(p, "BLU-RAY HOME THEATRE SYSTEM", '\r') ||
+				        strstrc(p, "Media Player", '\r'))
 				{
 					h->req_client = ESonyBDP;
 					h->reqflags |= FLAG_DLNA;
@@ -516,7 +565,7 @@ Send501(struct upnphttp * h)
 static const char *
 findendheaders(const char * s, int len)
 {
-	while(len-->0)
+	while(len-- > 0)
 	{
 		if(s[0]=='\r' && s[1]=='\n' && s[2]=='\r' && s[3]=='\n')
 			return s;
@@ -536,13 +585,9 @@ sendXMLdesc(struct upnphttp * h, char * (f)(int *))
 	{
 		DPRINTF(E_ERROR, L_HTTP, "Failed to generate XML description\n");
 		Send500(h);
-		free(desc);
 		return;
 	}
-	else
-	{
-		BuildResp_upnphttp(h, desc, len);
-	}
+	BuildResp_upnphttp(h, desc, len);
 	SendResp_upnphttp(h);
 	CloseSocket_upnphttp(h);
 	free(desc);
@@ -752,9 +797,10 @@ ProcessHttpQuery_upnphttp(struct upnphttp * h)
 			/* If it's a Xbox360, we might need a special friendly_name to be recognized */
 			if( (h->req_client == EXbox) && !strchr(friendly_name, ':') )
 			{
-				strncat(friendly_name, ": 1", FRIENDLYNAME_MAX_LEN-4);
+				i = strlen(friendly_name);
+				snprintf(friendly_name+i, FRIENDLYNAME_MAX_LEN-i, ": 1");
 				sendXMLdesc(h, genRootDesc);
-				friendly_name[strlen(friendly_name)-3] = '\0';
+				friendly_name[i] = '\0';
 			}
 			else
 			{
@@ -1038,7 +1084,7 @@ SendResp_upnphttp(struct upnphttp * h)
 	n = send(h->socket, h->res_buf, h->res_buflen, 0);
 	if(n<0)
 	{
-		DPRINTF(E_ERROR, L_HTTP, "send(res_buf): %s", strerror(errno));
+		DPRINTF(E_ERROR, L_HTTP, "send(res_buf): %s\n", strerror(errno));
 	}
 	else if(n < h->res_buflen)
 	{
@@ -1076,22 +1122,51 @@ send_file(struct upnphttp * h, int sendfd, off_t offset, off_t end_offset)
 {
 	off_t send_size;
 	off_t ret;
+	char *buf = NULL;
+	int try_sendfile = 1;
 
 	while( offset < end_offset )
 	{
-		send_size = ( ((end_offset - offset) < MAX_BUFFER_SIZE) ? (end_offset - offset + 1) : MAX_BUFFER_SIZE);
-		ret = sendfile(h->socket, sendfd, &offset, send_size);
-		if( ret == -1 )
+		if( try_sendfile )
 		{
-			DPRINTF(E_DEBUG, L_HTTP, "sendfile error :: error no. %d [%s]\n", errno, strerror(errno));
+			send_size = ( ((end_offset - offset) < MAX_BUFFER_SIZE) ? (end_offset - offset + 1) : MAX_BUFFER_SIZE);
+			ret = sendfile(h->socket, sendfd, &offset, send_size);
+			if( ret == -1 )
+			{
+				DPRINTF(E_DEBUG, L_HTTP, "sendfile error :: error no. %d [%s]\n", errno, strerror(errno));
+				/* If sendfile isn't supported on the filesystem, don't bother trying to use it again. */
+				if( errno == EOVERFLOW || errno == EINVAL )
+					try_sendfile = 0;
+				else if( errno != EAGAIN )
+					break;
+			}
+			else
+			{
+				//DPRINTF(E_DEBUG, L_HTTP, "sent %lld bytes to %d. offset is now %lld.\n", ret, h->socket, offset);
+				continue;
+			}
+		}
+		/* Fall back to regular I/O */
+		if( !buf )
+			buf = malloc(MIN_BUFFER_SIZE);
+		send_size = ( ((end_offset - offset) < MIN_BUFFER_SIZE) ? (end_offset - offset + 1) : MIN_BUFFER_SIZE);
+		lseek(sendfd, offset, SEEK_SET);
+		ret = read(sendfd, buf, send_size);
+		if( ret == -1 ) {
+			DPRINTF(E_DEBUG, L_HTTP, "read error :: error no. %d [%s]\n", errno, strerror(errno));
 			if( errno != EAGAIN )
 				break;
 		}
-		/*else
-		{
-			DPRINTF(E_DEBUG, L_HTTP, "sent %lld bytes to %d. offset is now %lld.\n", ret, h->socket, offset);
-		}*/
+		ret = write(h->socket, buf, ret);
+		if( ret == -1 ) {
+			DPRINTF(E_DEBUG, L_HTTP, "write error :: error no. %d [%s]\n", errno, strerror(errno));
+			if( errno != EAGAIN )
+				break;
+		}
+		offset+=ret;
 	}
+	if( buf )
+		free(buf);
 }
 
 void
@@ -1783,17 +1858,11 @@ SendResp_dlnafile(struct upnphttp * h, char * object)
 
 	if( h->reqflags & FLAG_CAPTION )
 	{
-		sprintf(sql_buf, "SELECT 1 from CAPTIONS where ID = '%lld'", id);
-		ret = sql_get_table(db, sql_buf, &result, &rows, NULL);
-		if( ret == SQLITE_OK )
+		if( sql_get_int_field(db, "SELECT ID from CAPTIONS where ID = '%lld'", id) > 0 )
 		{
-			if( rows )
-			{
-				sprintf(hdr_buf, "CaptionInfo.sec: http://%s:%d/Captions/%lld.srt\r\n",
-				                 lan_addr[0].str, runtime_vars.port, id);
-				strcat(header, hdr_buf);
-			}
-			sqlite3_free_table(result);
+			sprintf(hdr_buf, "CaptionInfo.sec: http://%s:%d/Captions/%lld.srt\r\n",
+			                 lan_addr[0].str, runtime_vars.port, id);
+			strcat(header, hdr_buf);
 		}
 	}
 

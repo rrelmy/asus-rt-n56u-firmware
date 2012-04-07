@@ -201,9 +201,6 @@ GIDSET_TYPE groups[NGROUPS_MAX];/* groups the user is in */
 int ngroups;			/* How many groups valid in groups */
 
 static struct timeval start_time;	/* Time when link was started. */
-/* connect time fix 20101203 start */
-static time_t start_time2;
-/* connect time fix 20101203 end */
 
 static struct pppd_stats old_link_stats;
 struct pppd_stats link_stats;
@@ -309,17 +306,6 @@ struct protent *protocols[] = {
 #if !defined(PPP_DRV_NAME)
 #define PPP_DRV_NAME	"ppp"
 #endif /* !defined(PPP_DRV_NAME) */
-
-/* connect time fix 20101203 start */
-#include <sys/sysinfo.h>
-long uptime(void)
-{
-	struct sysinfo info;
-	sysinfo(&info);
-
-	return info.uptime;
-}
-/* connect time fix 20101203 end */
 
 int
 main(argc, argv)
@@ -555,9 +541,6 @@ main(argc, argv)
 
 	check_time();
 	gettimeofday(&start_time, NULL);
-/* connect time fix 20101203 start */
-	start_time2 = uptime();
-/* connect time fix 20101203 end */
 	script_unsetenv("CONNECT_TIME");
 	script_unsetenv("BYTES_SENT");
 	script_unsetenv("BYTES_RCVD");
@@ -1264,11 +1247,7 @@ update_link_stats(u)
     if (!get_ppp_stats(u, &link_stats)
 	|| gettimeofday(&now, NULL) < 0)
 	return;
-#if 0
     link_connect_time = now.tv_sec - start_time.tv_sec;
-#else
-    link_connect_time = (uptime() - start_time2);
-#endif
     link_stats_valid = 1;
 
     link_stats.bytes_in  -= old_link_stats.bytes_in;

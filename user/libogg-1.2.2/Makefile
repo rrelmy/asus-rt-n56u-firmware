@@ -22,7 +22,13 @@ configure:
 clean:
 	$(MAKE) -C source clean
 	rm -rf install
+	rm -f libogg.so.0.7.1
 	rm -f config_done
 
 romfs:
-	echo "do nothing"
+#	echo "do nothing"
+	cp install/lib/libogg.so.0.7.1 .
+	$(ROMFSINST) /lib/libogg.so.0.7.1
+	cd $(INSTALLDIR)/lib && ln -sf libogg.so.0.7.1 libogg.so.0
+	cd $(INSTALLDIR)/lib && ln -sf libogg.so.0.7.1 libogg.so
+

@@ -34,7 +34,7 @@ int lease_expired(struct dhcpOfferedAddr *lease);
 struct dhcpOfferedAddr *oldest_expired_lease(void);
 struct dhcpOfferedAddr *find_lease_by_chaddr(u_int8_t *chaddr);
 struct dhcpOfferedAddr *find_lease_by_yiaddr(u_int32_t yiaddr);
-u_int32_t find_address(int check_expired);
+u_int32_t find_address(u_int8_t *chaddr, int check_expired);
 int check_ip(u_int32_t addr);
 
 

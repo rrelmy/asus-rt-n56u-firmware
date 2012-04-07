@@ -15,7 +15,13 @@ LANG_TR=Türkçe
 LANG_TH=ไทย
 LANG_MS=Malaysia
 [untranslate]
-LANHostConfig_x_TimeZone_itemhint_2=我们检测到您所在的时区与当前路由器系统设置不同。是否需要使用检测到的时区？
+IPConnection_VSList_ftpport=FTP伺服器埠号:
+Adm_System_telnetd=Enable Telnet Server?
+wps_start_btn=起始
+USB_Application_account_alert=用户账号不能为‘root’, ‘Root’, ‘ROOT’, ‘admin’, ‘Admin’, ‘ADMIN’, ‘family’, ‘Family’, ‘FAMILY’请输入有效的账号名称！
+BasicConfig_USBStorageWhiteist_itemdesc=此栏位范围为十六进制 1 到 FFFF。输入 0（零）以关闭此功能。
+BasicConfig_USBStorageWhiteist_itemname=USB 存储设备 VID 白名单
+LANHostConfig_x_TimeZone_itemhint_2=您选择的时区设置与设备侦测到的不同。您想要更改为设备侦测到的时区吗？
 RouterConfig_GWMulticast_Multicast_all_itemdesc=开启此功能以控制网络信息流通量，并避免产生广播风暴。广播风暴会导致网速变慢，甚至网络瘫痪。此项目的有效值范围为 1 至 1024。输入 0（零）可关闭此功能。
 RouterConfig_GWMulticast_unknownUni_itemname=未知单播风暴控制（Mbps）：
 RouterConfig_GWMulticast_unknownMul_itemname=未知多播风暴控制（Mbps）：

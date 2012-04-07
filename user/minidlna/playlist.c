@@ -1,19 +1,19 @@
-/*  MiniDLNA media server
- *  Copyright (C) 2009-2010  Justin Maggard
+/* MiniDLNA media server
+ * Copyright (C) 2009-2010  Justin Maggard
  *
- *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
+ * This file is part of MiniDLNA.
  *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * MiniDLNA is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2 as
+ * published by the Free Software Foundation.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * MiniDLNA is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with MiniDLNA. If not, see <http://www.gnu.org/licenses/>.
  */
 #include <stdio.h>
 #include <string.h>
@@ -169,7 +169,7 @@ retry:
 				             " (OBJECT_ID, PARENT_ID, CLASS, DETAIL_ID, NAME, REF_ID) "
 				             "SELECT"
 				             " '%s$%llX$%d', '%s$%llX', CLASS, DETAIL_ID, NAME, OBJECT_ID from OBJECTS"
-				             " where DETAIL_ID = %lld and OBJECT_ID glob '64$*'",
+				             " where DETAIL_ID = %lld and OBJECT_ID glob '" BROWSEDIR_ID "$*'",
 				             MUSIC_PLIST_ID, plID, plist.track,
 				             MUSIC_PLIST_ID, plID,
 				             detailID);

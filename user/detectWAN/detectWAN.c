@@ -122,6 +122,27 @@ chk_udhcpc()
 			return;
 		}
 
+		if (nvram_match("wan_route_x", "IP_Routed"))
+		{
+			if (!strcmp(get_wan_ipaddr(), "0.0.0.0"))
+			{
+				if (nvram_match("dw_debug", "1"))
+					fprintf(stderr, "[detectWAN] invalid gateway ip\n");
+
+				return;
+			}
+		}
+		else
+		{
+			if (!strcmp(get_lan_ipaddr(), "0.0.0.0"))
+			{
+				if (nvram_match("dw_debug", "1"))
+					fprintf(stderr, "[detectWAN] invalid gateway ip\n");
+
+				return;
+			}
+		}
+
 		if (nvram_match("dhcp_renew", "1"))
 		{
 			if (nvram_match("dw_debug", "1"))

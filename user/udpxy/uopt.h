@@ -1,6 +1,6 @@
 /* @(#) option definitions and associated structures for udpxy
  *
- * Copyright 2008 Pavel V. Cherenkov
+ * Copyright 2008-2011 Pavel V. Cherenkov (pcherenkov@gmail.com)
  *
  *  This file is part of udpxy.
  *
@@ -29,7 +29,7 @@
 #include "udpxy.h"
 
 static const int MIN_CLIENT_COUNT       = 1;
-static const int MAX_CLIENT_COUNT       = 16;
+static const int MAX_CLIENT_COUNT       = 5000;
 static const int DEFAULT_CLIENT_COUNT   = 3;
 
 static const ssize_t MIN_MCACHE_LEN    = 4 * 1024;
@@ -63,6 +63,7 @@ struct udpxy_opt {
 };
 
 
+#ifdef HAVE_UDPXREC
 /* udpxrec options
  */
 struct udpxrec_opt {
@@ -92,6 +93,7 @@ struct udpxrec_opt {
     char*   pidfile;        /* file to store app's PID              */
     char*   dstfile;        /* file to save (video stream) to       */
 };
+#endif
 
 #ifdef __cplusplus
     extern "C" {
@@ -109,6 +111,7 @@ void
 free_uopt( struct udpxy_opt* uo );
 
 
+#ifdef HAVE_UDPXREC
 /* populate udpxrec options with default/initial values
  */
 void
@@ -120,16 +123,18 @@ init_recopt( struct udpxrec_opt* ro );
 void
 free_recopt( struct udpxrec_opt* ro );
 
-/* set verbose output on
- */
-void
-set_verbose( flag_t* verbose );
-
 
 /* print udpxrec options to stream
  */
 void
 fprint_recopt( FILE* stream, struct udpxrec_opt* ro );
+#endif
+
+
+/* set verbose output on
+ */
+void
+set_verbose( flag_t* verbose );
 
 
 #ifdef __cplusplus

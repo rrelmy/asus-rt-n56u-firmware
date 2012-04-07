@@ -240,11 +240,7 @@ void write_leases(void)
 	FILE *fp;
 	unsigned int i;
 	char buf[255];
-#ifdef BRCM_UDHCPD
-	time_t curr = time(0);
-#else
 	time_t curr = uptime();
-#endif
 	unsigned long lease_time;
 	
 	if (!(fp = fopen(server_config.lease_file, "w"))) {
@@ -270,7 +266,7 @@ void write_leases(void)
 		}
 	}
 	fclose(fp);
-
+	
 	if (server_config.notify_file) {
 		sprintf(buf, "%s %s", server_config.notify_file, server_config.lease_file);
 		system(buf);
@@ -292,11 +288,7 @@ void read_leases(char *file)
 		/* ADDME: is it a static lease */
 		if (lease.yiaddr >= server_config.start && lease.yiaddr <= server_config.end) {
 			lease.expires = ntohl(lease.expires);
-#ifdef BRCM_UDHCPD
-			if (!server_config.remaining) lease.expires -= time(0);
-#else
 			if (!server_config.remaining) lease.expires -= uptime();
-#endif
 			if (!(add_lease(lease.chaddr, lease.yiaddr, lease.expires))) {
 				LOG(LOG_WARNING, "Too many leases while loading %s\n", file);
 				break;

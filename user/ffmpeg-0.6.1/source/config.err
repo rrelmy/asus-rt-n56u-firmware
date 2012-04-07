@@ -1,4 +1,4 @@
-# ./configure --cross-prefix=mipsel-linux- --enable-cross-compile --arch=mips --target-os=linux --prefix=/root/RT-N56U/source/user/ffmpeg-0.6.1/source/../install --enable-pthreads --disable-avdevice --disable-swscale --disable-ffmpeg --disable-ffplay --disable-ffprobe --disable-ffserver --disable-swscale-alpha --disable-encoders --disable-decoders --disable-bsfs --disable-indevs --disable-outdevs --disable-devices --disable-filters --disable-muxers --disable-parsers --disable-protocols --enable-protocol=file --disable-aandct --disable-dct --disable-fft --disable-golomb --disable-lpc --disable-mdct --disable-rdft --disable-vaapi --disable-vdpau --disable-dxva2
+# ./configure --cross-prefix=mipsel-linux- --enable-cross-compile --arch=mips --target-os=linux --prefix=/root/RT-N56U/source/user/ffmpeg-0.6.1/source/../install --enable-pthreads --disable-debug --disable-avdevice --disable-swscale --disable-ffmpeg --disable-ffplay --disable-ffprobe --disable-ffserver --disable-swscale-alpha --disable-encoders --disable-decoders --disable-bsfs --disable-indevs --disable-outdevs --disable-devices --disable-filters --disable-muxers --disable-parsers --disable-protocols --enable-protocol=file --disable-aandct --disable-dct --disable-fft --disable-golomb --disable-lpc --disable-mdct --disable-rdft --disable-vaapi --disable-vdpau --disable-dxva2
 AR=/opt/buildroot-gcc342/bin/mipsel-linux-uclibc-ar
 ARCH=mips
 ARCH_CONFIG=/root/RT-N56U/source/config.arch
@@ -47,8 +47,8 @@ AS='/opt/buildroot-gcc342/bin/mipsel-linux-uclibc-as '
 BASH=/bin/sh
 BASHOPTS=cmdhist:extquote:force_fignore:hostcomplete:interactive_comments:progcomp:promptvars:sourcepath
 BASH_ALIASES=()
-BASH_ARGC=([0]="34")
-BASH_ARGV=([0]="--disable-dxva2" [1]="--disable-vdpau" [2]="--disable-vaapi" [3]="--disable-rdft" [4]="--disable-mdct" [5]="--disable-lpc" [6]="--disable-golomb" [7]="--disable-fft" [8]="--disable-dct" [9]="--disable-aandct" [10]="--enable-protocol=file" [11]="--disable-protocols" [12]="--disable-parsers" [13]="--disable-muxers" [14]="--disable-filters" [15]="--disable-devices" [16]="--disable-outdevs" [17]="--disable-indevs" [18]="--disable-bsfs" [19]="--disable-decoders" [20]="--disable-encoders" [21]="--disable-swscale-alpha" [22]="--disable-ffserver" [23]="--disable-ffprobe" [24]="--disable-ffplay" [25]="--disable-ffmpeg" [26]="--disable-swscale" [27]="--disable-avdevice" [28]="--enable-pthreads" [29]="--prefix=/root/RT-N56U/source/user/ffmpeg-0.6.1/source/../install" [30]="--target-os=linux" [31]="--arch=mips" [32]="--enable-cross-compile" [33]="--cross-prefix=mipsel-linux-")
+BASH_ARGC=([0]="35")
+BASH_ARGV=([0]="--disable-dxva2" [1]="--disable-vdpau" [2]="--disable-vaapi" [3]="--disable-rdft" [4]="--disable-mdct" [5]="--disable-lpc" [6]="--disable-golomb" [7]="--disable-fft" [8]="--disable-dct" [9]="--disable-aandct" [10]="--enable-protocol=file" [11]="--disable-protocols" [12]="--disable-parsers" [13]="--disable-muxers" [14]="--disable-filters" [15]="--disable-devices" [16]="--disable-outdevs" [17]="--disable-indevs" [18]="--disable-bsfs" [19]="--disable-decoders" [20]="--disable-encoders" [21]="--disable-swscale-alpha" [22]="--disable-ffserver" [23]="--disable-ffprobe" [24]="--disable-ffplay" [25]="--disable-ffmpeg" [26]="--disable-swscale" [27]="--disable-avdevice" [28]="--disable-debug" [29]="--enable-pthreads" [30]="--prefix=/root/RT-N56U/source/user/ffmpeg-0.6.1/source/../install" [31]="--target-os=linux" [32]="--arch=mips" [33]="--enable-cross-compile" [34]="--cross-prefix=mipsel-linux-")
 BASH_CMDS=()
 BASH_LINENO=([0]="0")
 BASH_SOURCE=([0]="./configure")
@@ -65,7 +65,7 @@ mov2textsub_bsf
 noise_bsf
 remove_extradata_bsf
 text2movsub_bsf'
-BUILD_START_STRING='Mon, 24 Jan 2011 17:03:51 +0800'
+BUILD_START_STRING='Tue, 15 Mar 2011 18:17:08 +0800'
 BUSYBOX_CONFIG=/root/RT-N56U/source/user/busybox/.config
 CC='/opt/buildroot-gcc342/bin/mipsel-linux-uclibc-gcc '
 CCACHE_DIR=/var/cache/ccache
@@ -245,8 +245,6 @@ COMPONENT_LIST='
 '
 CONFIGURE_HOST='"/opt/buildroot-gcc342/bin"/mipsel-linux-uclibc-'
 CONFIG_32BIT=y
-CONFIG_ADDGROUP=y
-CONFIG_ADDUSER=y
 CONFIG_AIO=y
 CONFIG_ARCH_FLATMEM_ENABLE=y
 CONFIG_ASH=y
@@ -274,6 +272,7 @@ CONFIG_BASE_FULL=y
 CONFIG_BASE_SMALL=0
 CONFIG_BINFMT_ELF=y
 CONFIG_BINFMT_ELF_AOUT=y
+CONFIG_BITREVERSE=y
 CONFIG_BLK_DEV_INITRD=y
 CONFIG_BLK_DEV_LOOP=y
 CONFIG_BLK_DEV_RAM=y
@@ -306,6 +305,7 @@ CONFIG_CPU_MIPS32_R2=y
 CONFIG_CPU_MIPSR2=y
 CONFIG_CPU_SUPPORTS_32BIT_KERNEL=y
 CONFIG_CPU_SUPPORTS_HIGHMEM=y
+CONFIG_CRC32=y
 CONFIG_CRC_CCITT=y
 CONFIG_CROSSCOMPILE=y
 CONFIG_CROSS_COMPILER_PATH='"/opt/buildroot-gcc342/bin"'
@@ -330,8 +330,6 @@ CONFIG_DEFAULT_NOOP=y
 CONFIG_DEFAULT_TCP_CONG='"cubic"'
 CONFIG_DEFCONFIG_LIST='"/lib/modules/NAME_RELEASE/.config"'
 CONFIG_DEFSETTING_8M64M=y
-CONFIG_DELGROUP=y
-CONFIG_DELUSER=y
 CONFIG_DHCPC_DEFAULT_SCRIPT='""'
 CONFIG_DHCPD_LEASES_FILE='""'
 CONFIG_DMA_ENGINE=y
@@ -340,7 +338,6 @@ CONFIG_DMA_NONCOHERENT=y
 CONFIG_DMESG=y
 CONFIG_DPROXY=y
 CONFIG_ECHO=y
-CONFIG_EJECT=y
 CONFIG_ELF_CORE=y
 CONFIG_EMBEDDED=y
 CONFIG_ENABLE_MUST_CHECK=y
@@ -368,19 +365,15 @@ CONFIG_FAT_FS=y
 CONFIG_FDISK_SUPPORT_LARGE_DISKS=y
 CONFIG_FEATURE_2_4_MODULES=y
 CONFIG_FEATURE_2_6_MODULES=y
-CONFIG_FEATURE_ADDUSER_TO_GROUP=y
 CONFIG_FEATURE_ALLOW_EXEC=y
 CONFIG_FEATURE_AUTOWIDTH=y
 CONFIG_FEATURE_BUFFERS_USE_MALLOC=y
 CONFIG_FEATURE_COPYBUF_KB=4
-CONFIG_FEATURE_DEL_USER_FROM_GROUP=y
 CONFIG_FEATURE_DEVPTS=y
 CONFIG_FEATURE_DMESG_PRETTY=y
 CONFIG_FEATURE_EDITING=y
 CONFIG_FEATURE_EDITING_HISTORY=20
 CONFIG_FEATURE_EDITING_MAX_LEN=1024
-CONFIG_FEATURE_EJECT_SCSI=y
-CONFIG_FEATURE_FANCY_PING=y
 CONFIG_FEATURE_FANCY_TAIL=y
 CONFIG_FEATURE_FAST_TOP=y
 CONFIG_FEATURE_FIND_DEPTH=y
@@ -419,7 +412,6 @@ CONFIG_FEATURE_MDEV_EXEC=y
 CONFIG_FEATURE_MOUNT_FLAGS=y
 CONFIG_FEATURE_MOUNT_FSTAB=y
 CONFIG_FEATURE_NETSTAT_PRG=y
-CONFIG_FEATURE_NETSTAT_WIDE=y
 CONFIG_FEATURE_SH_IS_ASH=y
 CONFIG_FEATURE_SUID=y
 CONFIG_FEATURE_SYSLOG=y
@@ -428,7 +420,6 @@ CONFIG_FEATURE_TELNETD_STANDALONE=y
 CONFIG_FEATURE_TOP_CPU_GLOBAL_PERCENTS=y
 CONFIG_FEATURE_TOP_CPU_USAGE_PERCENTAGE=y
 CONFIG_FEATURE_USE_TERMIOS=y
-CONFIG_FEATURE_VERBOSE_CP_MESSAGE=y
 CONFIG_FEATURE_VI_8BIT=y
 CONFIG_FEATURE_VI_COLON=y
 CONFIG_FEATURE_VI_DOT_CMD=y
@@ -461,9 +452,7 @@ CONFIG_GENERIC_HWEIGHT=y
 CONFIG_GENERIC_IRQ_PROBE=y
 CONFIG_GENERIC_TIME=y
 CONFIG_GREP=y
-CONFIG_GUNZIP=y
 CONFIG_GZIP=y
-CONFIG_HALT=y
 CONFIG_HAS_IOMEM=y
 CONFIG_HAS_IOPORT=y
 CONFIG_HAVE_DOT_CONFIG=y
@@ -700,7 +689,7 @@ CONFIG_NET_SK_FILTER=y
 CONFIG_NET_WIRELESS=y
 CONFIG_NF_CONNTRACK=y
 CONFIG_NF_CONNTRACK_ENABLED=y
-CONFIG_NF_CONNTRACK_FTP=y
+CONFIG_NF_CONNTRACK_FTP=m
 CONFIG_NF_CONNTRACK_H323=y
 CONFIG_NF_CONNTRACK_IPV4=y
 CONFIG_NF_CONNTRACK_PPTP=y
@@ -709,7 +698,7 @@ CONFIG_NF_CONNTRACK_SUPPORT=y
 CONFIG_NF_CT_ACCT=y
 CONFIG_NF_CT_PROTO_GRE=y
 CONFIG_NF_NAT=y
-CONFIG_NF_NAT_FTP=y
+CONFIG_NF_NAT_FTP=m
 CONFIG_NF_NAT_H323=y
 CONFIG_NF_NAT_NEEDED=y
 CONFIG_NF_NAT_PPTP=y
@@ -718,7 +707,7 @@ CONFIG_NLS=y
 CONFIG_NLS_CODEPAGE_437=y
 CONFIG_NLS_CODEPAGE_936=y
 CONFIG_NLS_CODEPAGE_950=y
-CONFIG_NLS_DEFAULT='"UTF8"'
+CONFIG_NLS_DEFAULT='"utf8"'
 CONFIG_NLS_ISO8859_1=y
 CONFIG_NLS_UTF8=y
 CONFIG_NOUSB=y
@@ -727,7 +716,6 @@ CONFIG_NR_LDISCS=16
 CONFIG_NSLOOKUP=y
 CONFIG_N_HDLC=y
 CONFIG_PACKET=y
-CONFIG_PACKET_MMAP=y
 CONFIG_PAGE_SIZE_4KB=y
 CONFIG_PANIC=y
 CONFIG_PARTITION_ADVANCED=y
@@ -747,11 +735,9 @@ CONFIG_PPPOL2TP=y
 CONFIG_PPP_ASYNC=y
 CONFIG_PPP_BSDCOMP=y
 CONFIG_PPP_DEFLATE=y
-CONFIG_PPP_FILTER=y
 CONFIG_PPP_MPPE=y
-CONFIG_PPP_MULTILINK=y
 CONFIG_PPP_SYNC_TTY=y
-CONFIG_PPTP_KERNEL=y
+CONFIG_PPTP=y
 CONFIG_PREEMPT_NONE=y
 CONFIG_PREFIX='"../../romfs"'
 CONFIG_PRINTK=y
@@ -765,12 +751,8 @@ CONFIG_PWD=y
 CONFIG_RAETH=y
 CONFIG_RAETH_CHECKSUM_OFFLOAD=y
 CONFIG_RAETH_GMAC2=y
+CONFIG_RAETH_JUMBOFRAME=y
 CONFIG_RALINKAPP=y
-CONFIG_RALINKAPP_ATED=y
-CONFIG_RALINKAPP_FLASH=y
-CONFIG_RALINKAPP_GPIO=y
-CONFIG_RALINKAPP_HWNAT=y
-CONFIG_RALINKAPP_REG_RW=y
 CONFIG_RALINKAPP_SCRIPTS=y
 CONFIG_RALINK_GPIO=y
 CONFIG_RALINK_RAM_SIZE=128
@@ -869,7 +851,6 @@ CONFIG_STACKTRACE_SUPPORT=y
 CONFIG_SWAP=y
 CONFIG_SWAPONOFF=y
 CONFIG_SWAP_IO_SPACE=y
-CONFIG_SYNC=y
 CONFIG_SYN_COOKIES=y
 CONFIG_SYSCTL=y
 CONFIG_SYSCTL_SYSCALL=y
@@ -902,7 +883,6 @@ CONFIG_UMOUNT=y
 CONFIG_UNAME=y
 CONFIG_UNIX=y
 CONFIG_UNIX98_PTYS=y
-CONFIG_UNZIP=y
 CONFIG_UPTIME=y
 CONFIG_USB=m
 CONFIG_USB_ARCH_HAS_EHCI=y
@@ -968,11 +948,12 @@ CROSS_COMPILE=/opt/buildroot-gcc342/bin/mipsel-linux-uclibc-
 CRTI='-nostartfiles /root/RT-N56U/source/lib/crt0.o'
 CRTN=
 CURDIR=/root/RT-N56U/source/user/ffmpeg-0.6.1
+CVSROOT=:pserver:jiahao@192.168.39.250:/home/user/PROJECT
 CVS_RSH=ssh
 CXX='/opt/buildroot-gcc342/bin/mipsel-linux-uclibc-g++ '
 CXXFLAGS='-O2 -fomit-frame-pointer -pipe  -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source  '
 CXXLIBS='-Wl,-Bstatic -Wl,-Bstatic -lstdc++ -Wl,-Bdynamic -Wl,-Bdynamic -lc -lgcc '
-DBUS_SESSION_BUS_ADDRESS=unix:abstract=/tmp/dbus-uzCX1kpoPs,guid=7573644a81ddb7228771eb5e00000050
+DBUS_SESSION_BUS_ADDRESS=unix:abstract=/tmp/dbus-G5MCwXFYDw,guid=fd40096b64bec6b251aba6c80000f0b9
 DECODER_LIST='aasc_decoder
 amv_decoder
 anm_decoder
@@ -1482,7 +1463,7 @@ libxvid_encoder'
 ENDIAN=little
 EUID=0
 EXTRA_CFLAGS='-Dlinux '
-FFMPEG_CONFIGURATION='--cross-prefix=mipsel-linux- --enable-cross-compile --arch=mips --target-os=linux --prefix=/root/RT-N56U/source/user/ffmpeg-0.6.1/source/../install --enable-pthreads --disable-avdevice --disable-swscale --disable-ffmpeg --disable-ffplay --disable-ffprobe --disable-ffserver --disable-swscale-alpha --disable-encoders --disable-decoders --disable-bsfs --disable-indevs --disable-outdevs --disable-devices --disable-filters --disable-muxers --disable-parsers --disable-protocols --enable-protocol=file --disable-aandct --disable-dct --disable-fft --disable-golomb --disable-lpc --disable-mdct --disable-rdft --disable-vaapi --disable-vdpau --disable-dxva2'
+FFMPEG_CONFIGURATION='--cross-prefix=mipsel-linux- --enable-cross-compile --arch=mips --target-os=linux --prefix=/root/RT-N56U/source/user/ffmpeg-0.6.1/source/../install --enable-pthreads --disable-debug --disable-avdevice --disable-swscale --disable-ffmpeg --disable-ffplay --disable-ffprobe --disable-ffserver --disable-swscale-alpha --disable-encoders --disable-decoders --disable-bsfs --disable-indevs --disable-outdevs --disable-devices --disable-filters --disable-muxers --disable-parsers --disable-protocols --enable-protocol=file --disable-aandct --disable-dct --disable-fft --disable-golomb --disable-lpc --disable-mdct --disable-rdft --disable-vaapi --disable-vdpau --disable-dxva2'
 FFSERVERLDFLAGS=-Wl,-E
 FILTER_LIST='aspect_filter
 crop_filter
@@ -1503,8 +1484,8 @@ GDMSESSION=gnome
 GDM_KEYBOARD_LAYOUT=us
 GDM_LANG=en_US.UTF-8
 GNOME_DESKTOP_SESSION_ID=this-is-deprecated
-GNOME_KEYRING_CONTROL=/tmp/keyring-jgDnSC
-GNOME_KEYRING_PID=1684
+GNOME_KEYRING_CONTROL=/tmp/keyring-s1tRPV
+GNOME_KEYRING_PID=20843
 GROUPS=()
 GTK_RC_FILES=/etc/gtk/gtkrc:/root/.gtkrc-1.2-gnome2
 G_BROKEN_FILENAMES=1
@@ -1667,6 +1648,7 @@ LC_ALL=C
 LD=/opt/buildroot-gcc342/bin/mipsel-linux-uclibc-ld
 LDFLAGS='-Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src'
 LDLIBS='-lc -lgcc '
+LD_LIBRARY_PATH=/lib:/usr/lib:/usr/local/lib
 LESSOPEN='|/usr/bin/lesspipe.sh %s'
 LIBAES=-laes
 LIBATM=-latm
@@ -1848,7 +1830,7 @@ PATHS_LIST='
 '
 PIPESTATUS=([0]="0")
 POSIXLY_CORRECT=y
-PPID=24042
+PPID=8476
 PRODUCT=
 PROTOCOL_LIST='file_protocol
 gopher_protocol
@@ -1872,10 +1854,10 @@ QT_IM_MODULE=xim
 RANLIB=/opt/buildroot-gcc342/bin/mipsel-linux-uclibc-ranlib
 RELFILES='boot/boot.bin boot/boot.elf images/image.bin images/flash.bin linux-2.6.21.x/linux'
 ROMFSDIR=/root/RT-N56U/source/romfs
-ROMFSINST=romfs-inst.sh
+ROMFSINST=/root/RT-N56U/source/tools/romfs-inst.sh
 ROOTDIR=/root/RT-N56U/source
 SCRIPTSDIR=/root/RT-N56U/source/config/scripts
-SESSION_MANAGER=local/unix:@/tmp/.ICE-unix/1691,unix/unix:/tmp/.ICE-unix/1691
+SESSION_MANAGER=local/unix:@/tmp/.ICE-unix/20850,unix/unix:/tmp/.ICE-unix/20850
 SHELL=/bin/bash
 SHELLOPTS=braceexpand:hashall:interactive-comments:posix
 SHFLAGS='-shared -Wl,-soname,$$(@F)'
@@ -1931,12 +1913,12 @@ VENDOR=
 VENDOR_CFLAGS=
 VERSIONPKG=3.2.0
 VERSIONSTR='Ralink/RT3883 Version 3.2.0'
-WINDOWID=33554435
-WINDOWPATH=1
-XAUTHORITY=/var/run/gdm/auth-for-root-rOLVqG/database
-XDG_SESSION_COOKIE=5b29ef13e925d6cebc1e72210000001e-1295830107.679778-1312092821
+WINDOWID=39845891
+WINDOWPATH=7
+XAUTHORITY=/var/run/gdm/auth-for-root-4TivQz/database
+XDG_SESSION_COOKIE=5b29ef13e925d6cebc1e72210000001e-1300184037.902188-1701840070
 XMODIFIERS=@im=none
-_='# ./configure --cross-prefix=mipsel-linux- --enable-cross-compile --arch=mips --target-os=linux --prefix=/root/RT-N56U/source/user/ffmpeg-0.6.1/source/../install --enable-pthreads --disable-avdevice --disable-swscale --disable-ffmpeg --disable-ffplay --disable-ffprobe --disable-ffserver --disable-swscale-alpha --disable-encoders --disable-decoders --disable-bsfs --disable-indevs --disable-outdevs --disable-devices --disable-filters --disable-muxers --disable-parsers --disable-protocols --enable-protocol=file --disable-aandct --disable-dct --disable-fft --disable-golomb --disable-lpc --disable-mdct --disable-rdft --disable-vaapi --disable-vdpau --disable-dxva2'
+_='# ./configure --cross-prefix=mipsel-linux- --enable-cross-compile --arch=mips --target-os=linux --prefix=/root/RT-N56U/source/user/ffmpeg-0.6.1/source/../install --enable-pthreads --disable-debug --disable-avdevice --disable-swscale --disable-ffmpeg --disable-ffplay --disable-ffprobe --disable-ffserver --disable-swscale-alpha --disable-encoders --disable-decoders --disable-bsfs --disable-indevs --disable-outdevs --disable-devices --disable-filters --disable-muxers --disable-parsers --disable-protocols --enable-protocol=file --disable-aandct --disable-dct --disable-fft --disable-golomb --disable-lpc --disable-mdct --disable-rdft --disable-vaapi --disable-vdpau --disable-dxva2'
 aac_adtstoasc_bsf_select=aac_parser
 aac_decoder_select='mdct rdft aac_parser'
 aac_demuxer=yes
@@ -2036,7 +2018,7 @@ datadir_default='${prefix}/share/ffmpeg'
 daud_demuxer=yes
 dca_decoder_select=mdct
 dct=no
-debug=yes
+debug=no
 decoders_if_any='aasc_decoder
 amv_decoder
 anm_decoder
@@ -3110,892 +3092,892 @@ type mktemp
 mktemp is /bin/mktemp
 check_ld
 check_cc
-BEGIN /tmp/ffconf.ERx5dseQ.c
+BEGIN /tmp/ffconf.SKhk17jP.c
     1	int main(void){ return 0; }
-END /tmp/ffconf.ERx5dseQ.c
-mipsel-linux-gcc -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -c -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
-mipsel-linux-gcc -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -o /tmp/ffconf.sAoH9i2C /tmp/ffconf.hyh2rGhV.o
+END /tmp/ffconf.SKhk17jP.c
+mipsel-linux-gcc -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -c -o /tmp/ffconf.BJYw4EUC.o /tmp/ffconf.SKhk17jP.c
+mipsel-linux-gcc -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -o /tmp/ffconf.yJAKbHfR /tmp/ffconf.BJYw4EUC.o
 check_cflags -std=c99
 check_cc -std=c99
-BEGIN /tmp/ffconf.ERx5dseQ.c
+BEGIN /tmp/ffconf.SKhk17jP.c
     1	int x;
-END /tmp/ffconf.ERx5dseQ.c
-mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -c -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
+END /tmp/ffconf.SKhk17jP.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -c -o /tmp/ffconf.BJYw4EUC.o /tmp/ffconf.SKhk17jP.c
 check_cc -D_FILE_OFFSET_BITS=64
-BEGIN /tmp/ffconf.ERx5dseQ.c
+BEGIN /tmp/ffconf.SKhk17jP.c
     1	#include <stdlib.h>
-END /tmp/ffconf.ERx5dseQ.c
-mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -D_FILE_OFFSET_BITS=64 -c -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
+END /tmp/ffconf.SKhk17jP.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -D_FILE_OFFSET_BITS=64 -c -o /tmp/ffconf.BJYw4EUC.o /tmp/ffconf.SKhk17jP.c
 check_cc -D_LARGEFILE_SOURCE
-BEGIN /tmp/ffconf.ERx5dseQ.c
+BEGIN /tmp/ffconf.SKhk17jP.c
     1	#include <stdlib.h>
-END /tmp/ffconf.ERx5dseQ.c
-mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -D_LARGEFILE_SOURCE -c -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
+END /tmp/ffconf.SKhk17jP.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -D_LARGEFILE_SOURCE -c -o /tmp/ffconf.BJYw4EUC.o /tmp/ffconf.SKhk17jP.c
 check_host_cflags -std=c99
 check_host_cc -std=c99
-BEGIN /tmp/ffconf.ERx5dseQ.c
+BEGIN /tmp/ffconf.SKhk17jP.c
     1	int x;
-END /tmp/ffconf.ERx5dseQ.c
-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -O3 -g -Wall -std=c99 -c -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
+END /tmp/ffconf.SKhk17jP.c
+gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -O3 -g -Wall -std=c99 -c -o /tmp/ffconf.BJYw4EUC.o /tmp/ffconf.SKhk17jP.c
 check_cpp_condition stdlib.h defined(__PIC__) || defined(__pic__) || defined(PIC)
 check_cpp
-BEGIN /tmp/ffconf.ERx5dseQ.c
+BEGIN /tmp/ffconf.SKhk17jP.c
     1	#include <stdlib.h>
     2	#if !(defined(__PIC__) || defined(__pic__) || defined(PIC))
     3	#error "unsatisfied condition: defined(__PIC__) || defined(__pic__) || defined(PIC)"
     4	#endif
-END /tmp/ffconf.ERx5dseQ.c
-mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -E -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
+END /tmp/ffconf.SKhk17jP.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -E -o /tmp/ffconf.BJYw4EUC.o /tmp/ffconf.SKhk17jP.c
 check_cflags -fomit-frame-pointer
 check_cc -fomit-frame-pointer
-BEGIN /tmp/ffconf.ERx5dseQ.c
+BEGIN /tmp/ffconf.SKhk17jP.c
     1	int x;
-END /tmp/ffconf.ERx5dseQ.c
-mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -c -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
+END /tmp/ffconf.SKhk17jP.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -c -o /tmp/ffconf.BJYw4EUC.o /tmp/ffconf.SKhk17jP.c
 check_cc
-BEGIN /tmp/ffconf.ERx5dseQ.c
+BEGIN /tmp/ffconf.SKhk17jP.c
     1	int ff_extern;
-END /tmp/ffconf.ERx5dseQ.c
-mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -c -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
+END /tmp/ffconf.SKhk17jP.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -c -o /tmp/ffconf.BJYw4EUC.o /tmp/ffconf.SKhk17jP.c
 check_cc
-BEGIN /tmp/ffconf.ERx5dseQ.c
+BEGIN /tmp/ffconf.SKhk17jP.c
     1	void foo(void) { __asm__ volatile ("" ::); }
-END /tmp/ffconf.ERx5dseQ.c
-mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -c -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
+END /tmp/ffconf.SKhk17jP.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -c -o /tmp/ffconf.BJYw4EUC.o /tmp/ffconf.SKhk17jP.c
 check_cc
-BEGIN /tmp/ffconf.ERx5dseQ.c
+BEGIN /tmp/ffconf.SKhk17jP.c
     1	void foo(char * restrict p);
-END /tmp/ffconf.ERx5dseQ.c
-mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -c -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
+END /tmp/ffconf.SKhk17jP.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -c -o /tmp/ffconf.BJYw4EUC.o /tmp/ffconf.SKhk17jP.c
 check_cc
-BEGIN /tmp/ffconf.ERx5dseQ.c
+BEGIN /tmp/ffconf.SKhk17jP.c
     1	struct { int x; } __attribute__((packed)) x;
-END /tmp/ffconf.ERx5dseQ.c
-mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -c -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
+END /tmp/ffconf.SKhk17jP.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -c -o /tmp/ffconf.BJYw4EUC.o /tmp/ffconf.SKhk17jP.c
 check_cc
-BEGIN /tmp/ffconf.ERx5dseQ.c
+BEGIN /tmp/ffconf.SKhk17jP.c
     1	union { int x; } __attribute__((may_alias)) x;
-END /tmp/ffconf.ERx5dseQ.c
-mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -c -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
+END /tmp/ffconf.SKhk17jP.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -c -o /tmp/ffconf.BJYw4EUC.o /tmp/ffconf.SKhk17jP.c
 check_cc
-BEGIN /tmp/ffconf.ERx5dseQ.c
+BEGIN /tmp/ffconf.SKhk17jP.c
     1	unsigned int endian = 'B' << 24 | 'I' << 16 | 'G' << 8 | 'E';
-END /tmp/ffconf.ERx5dseQ.c
-mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -c -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
+END /tmp/ffconf.SKhk17jP.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -c -o /tmp/ffconf.BJYw4EUC.o /tmp/ffconf.SKhk17jP.c
 check_asm loongson "dmult.g $1, $2, $3"
 check_as
-BEGIN /tmp/ffconf.ERx5dseQ.c
+BEGIN /tmp/ffconf.SKhk17jP.c
     1	void foo(void){ __asm__ volatile("dmult.g $1, $2, $3"); }
-END /tmp/ffconf.ERx5dseQ.c
-mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -fPIC -c -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
-/tmp/cccw2DqZ.s: Assembler messages:
-/tmp/cccw2DqZ.s:21: Error: opcode not supported on this processor: mips1 (mips1) `dmult g $1,$2,$3'
+END /tmp/ffconf.SKhk17jP.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -fPIC -c -o /tmp/ffconf.BJYw4EUC.o /tmp/ffconf.SKhk17jP.c
+/tmp/cclZVSNn.s: Assembler messages:
+/tmp/cclZVSNn.s:21: Error: opcode not supported on this processor: mips1 (mips1) `dmult g $1,$2,$3'
 check_asm mmi "lq $2, 0($2)"
 check_as
-BEGIN /tmp/ffconf.ERx5dseQ.c
+BEGIN /tmp/ffconf.SKhk17jP.c
     1	void foo(void){ __asm__ volatile("lq $2, 0($2)"); }
-END /tmp/ffconf.ERx5dseQ.c
-mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -fPIC -c -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
-/tmp/ccxFWN21.s: Assembler messages:
-/tmp/ccxFWN21.s:21: Error: unrecognized opcode `lq $2,0($2)'
+END /tmp/ffconf.SKhk17jP.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -fPIC -c -o /tmp/ffconf.BJYw4EUC.o /tmp/ffconf.SKhk17jP.c
+/tmp/cceMFmuq.s: Assembler messages:
+/tmp/cceMFmuq.s:21: Error: unrecognized opcode `lq $2,0($2)'
 check_func dlopen
 check_ld
 check_cc
-BEGIN /tmp/ffconf.ERx5dseQ.c
+BEGIN /tmp/ffconf.SKhk17jP.c
     1	extern int dlopen();
     2	int main(void){ dlopen(); }
-END /tmp/ffconf.ERx5dseQ.c
-mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -c -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
-mipsel-linux-gcc -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -o /tmp/ffconf.sAoH9i2C /tmp/ffconf.hyh2rGhV.o
-/tmp/ffconf.hyh2rGhV.o: In function `main':ffconf.ERx5dseQ.c:(.text+0x18): undefined reference to `dlopen'
+END /tmp/ffconf.SKhk17jP.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -c -o /tmp/ffconf.BJYw4EUC.o /tmp/ffconf.SKhk17jP.c
+mipsel-linux-gcc -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -o /tmp/ffconf.yJAKbHfR /tmp/ffconf.BJYw4EUC.o
+/tmp/ffconf.BJYw4EUC.o: In function `main':ffconf.SKhk17jP.c:(.text+0x18): undefined reference to `dlopen'
 collect2: ld returned 1 exit status
 check_func dlopen -ldl
 check_ld -ldl
 check_cc
-BEGIN /tmp/ffconf.ERx5dseQ.c
+BEGIN /tmp/ffconf.SKhk17jP.c
     1	extern int dlopen();
     2	int main(void){ dlopen(); }
-END /tmp/ffconf.ERx5dseQ.c
-mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -c -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
-mipsel-linux-gcc -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -o /tmp/ffconf.sAoH9i2C /tmp/ffconf.hyh2rGhV.o -ldl
+END /tmp/ffconf.SKhk17jP.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -c -o /tmp/ffconf.BJYw4EUC.o /tmp/ffconf.SKhk17jP.c
+mipsel-linux-gcc -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -o /tmp/ffconf.yJAKbHfR /tmp/ffconf.BJYw4EUC.o -ldl
 check_func nanosleep
 check_ld
 check_cc
-BEGIN /tmp/ffconf.ERx5dseQ.c
+BEGIN /tmp/ffconf.SKhk17jP.c
     1	extern int nanosleep();
     2	int main(void){ nanosleep(); }
-END /tmp/ffconf.ERx5dseQ.c
-mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -c -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
-mipsel-linux-gcc -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -o /tmp/ffconf.sAoH9i2C /tmp/ffconf.hyh2rGhV.o
+END /tmp/ffconf.SKhk17jP.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -c -o /tmp/ffconf.BJYw4EUC.o /tmp/ffconf.SKhk17jP.c
+mipsel-linux-gcc -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -o /tmp/ffconf.yJAKbHfR /tmp/ffconf.BJYw4EUC.o
 check_func fork
 check_ld
 check_cc
-BEGIN /tmp/ffconf.ERx5dseQ.c
+BEGIN /tmp/ffconf.SKhk17jP.c
     1	extern int fork();
     2	int main(void){ fork(); }
-END /tmp/ffconf.ERx5dseQ.c
-mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -c -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
-mipsel-linux-gcc -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -o /tmp/ffconf.sAoH9i2C /tmp/ffconf.hyh2rGhV.o
+END /tmp/ffconf.SKhk17jP.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -c -o /tmp/ffconf.BJYw4EUC.o /tmp/ffconf.SKhk17jP.c
+mipsel-linux-gcc -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -o /tmp/ffconf.yJAKbHfR /tmp/ffconf.BJYw4EUC.o
 check_func getaddrinfo
 check_ld
 check_cc
-BEGIN /tmp/ffconf.ERx5dseQ.c
+BEGIN /tmp/ffconf.SKhk17jP.c
     1	extern int getaddrinfo();
     2	int main(void){ getaddrinfo(); }
-END /tmp/ffconf.ERx5dseQ.c
-mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -c -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
-mipsel-linux-gcc -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -o /tmp/ffconf.sAoH9i2C /tmp/ffconf.hyh2rGhV.o
+END /tmp/ffconf.SKhk17jP.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -c -o /tmp/ffconf.BJYw4EUC.o /tmp/ffconf.SKhk17jP.c
+mipsel-linux-gcc -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -o /tmp/ffconf.yJAKbHfR /tmp/ffconf.BJYw4EUC.o
 check_func gethrtime
 check_ld
 check_cc
-BEGIN /tmp/ffconf.ERx5dseQ.c
+BEGIN /tmp/ffconf.SKhk17jP.c
     1	extern int gethrtime();
     2	int main(void){ gethrtime(); }
-END /tmp/ffconf.ERx5dseQ.c
-mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -c -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
-mipsel-linux-gcc -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -o /tmp/ffconf.sAoH9i2C /tmp/ffconf.hyh2rGhV.o
-/tmp/ffconf.hyh2rGhV.o: In function `main':ffconf.ERx5dseQ.c:(.text+0x18): undefined reference to `gethrtime'
+END /tmp/ffconf.SKhk17jP.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -c -o /tmp/ffconf.BJYw4EUC.o /tmp/ffconf.SKhk17jP.c
+mipsel-linux-gcc -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -o /tmp/ffconf.yJAKbHfR /tmp/ffconf.BJYw4EUC.o
+/tmp/ffconf.BJYw4EUC.o: In function `main':ffconf.SKhk17jP.c:(.text+0x18): undefined reference to `gethrtime'
 collect2: ld returned 1 exit status
 check_func getrusage
 check_ld
 check_cc
-BEGIN /tmp/ffconf.ERx5dseQ.c
+BEGIN /tmp/ffconf.SKhk17jP.c
     1	extern int getrusage();
     2	int main(void){ getrusage(); }
-END /tmp/ffconf.ERx5dseQ.c
-mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -c -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
-mipsel-linux-gcc -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -o /tmp/ffconf.sAoH9i2C /tmp/ffconf.hyh2rGhV.o
+END /tmp/ffconf.SKhk17jP.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -c -o /tmp/ffconf.BJYw4EUC.o /tmp/ffconf.SKhk17jP.c
+mipsel-linux-gcc -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -o /tmp/ffconf.yJAKbHfR /tmp/ffconf.BJYw4EUC.o
 check_type sys/time.h sys/resource.h struct rusage ru_maxrss
 check_cc
-BEGIN /tmp/ffconf.ERx5dseQ.c
+BEGIN /tmp/ffconf.SKhk17jP.c
     1	
     2	#include <sys/time.h>
     3	#include <sys/resource.h>
     4	const void *p = &((struct rusage *)0)->ru_maxrss;
-END /tmp/ffconf.ERx5dseQ.c
-mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -c -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
+END /tmp/ffconf.SKhk17jP.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -c -o /tmp/ffconf.BJYw4EUC.o /tmp/ffconf.SKhk17jP.c
 check_func inet_aton
 check_ld
 check_cc
-BEGIN /tmp/ffconf.ERx5dseQ.c
+BEGIN /tmp/ffconf.SKhk17jP.c
     1	extern int inet_aton();
     2	int main(void){ inet_aton(); }
-END /tmp/ffconf.ERx5dseQ.c
-mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -c -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
-mipsel-linux-gcc -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -o /tmp/ffconf.sAoH9i2C /tmp/ffconf.hyh2rGhV.o
+END /tmp/ffconf.SKhk17jP.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -c -o /tmp/ffconf.BJYw4EUC.o /tmp/ffconf.SKhk17jP.c
+mipsel-linux-gcc -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -o /tmp/ffconf.yJAKbHfR /tmp/ffconf.BJYw4EUC.o
 check_func isatty
 check_ld
 check_cc
-BEGIN /tmp/ffconf.ERx5dseQ.c
+BEGIN /tmp/ffconf.SKhk17jP.c
     1	extern int isatty();
     2	int main(void){ isatty(); }
-END /tmp/ffconf.ERx5dseQ.c
-mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -c -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
-mipsel-linux-gcc -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -o /tmp/ffconf.sAoH9i2C /tmp/ffconf.hyh2rGhV.o
+END /tmp/ffconf.SKhk17jP.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -c -o /tmp/ffconf.BJYw4EUC.o /tmp/ffconf.SKhk17jP.c
+mipsel-linux-gcc -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -o /tmp/ffconf.yJAKbHfR /tmp/ffconf.BJYw4EUC.o
 check_func memalign
 check_ld
 check_cc
-BEGIN /tmp/ffconf.ERx5dseQ.c
+BEGIN /tmp/ffconf.SKhk17jP.c
     1	extern int memalign();
     2	int main(void){ memalign(); }
-END /tmp/ffconf.ERx5dseQ.c
-mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -c -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
-mipsel-linux-gcc -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -o /tmp/ffconf.sAoH9i2C /tmp/ffconf.hyh2rGhV.o
+END /tmp/ffconf.SKhk17jP.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -c -o /tmp/ffconf.BJYw4EUC.o /tmp/ffconf.SKhk17jP.c
+mipsel-linux-gcc -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -o /tmp/ffconf.yJAKbHfR /tmp/ffconf.BJYw4EUC.o
 check_func mkstemp
 check_ld
 check_cc
-BEGIN /tmp/ffconf.ERx5dseQ.c
+BEGIN /tmp/ffconf.SKhk17jP.c
     1	extern int mkstemp();
     2	int main(void){ mkstemp(); }
-END /tmp/ffconf.ERx5dseQ.c
-mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -c -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
-mipsel-linux-gcc -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -o /tmp/ffconf.sAoH9i2C /tmp/ffconf.hyh2rGhV.o
+END /tmp/ffconf.SKhk17jP.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -c -o /tmp/ffconf.BJYw4EUC.o /tmp/ffconf.SKhk17jP.c
+mipsel-linux-gcc -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -o /tmp/ffconf.yJAKbHfR /tmp/ffconf.BJYw4EUC.o
 check_func posix_memalign
 check_ld
 check_cc
-BEGIN /tmp/ffconf.ERx5dseQ.c
+BEGIN /tmp/ffconf.SKhk17jP.c
     1	extern int posix_memalign();
     2	int main(void){ posix_memalign(); }
-END /tmp/ffconf.ERx5dseQ.c
-mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -c -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
-mipsel-linux-gcc -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -o /tmp/ffconf.sAoH9i2C /tmp/ffconf.hyh2rGhV.o
-/tmp/ffconf.hyh2rGhV.o: In function `main':ffconf.ERx5dseQ.c:(.text+0x18): undefined reference to `posix_memalign'
+END /tmp/ffconf.SKhk17jP.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -c -o /tmp/ffconf.BJYw4EUC.o /tmp/ffconf.SKhk17jP.c
+mipsel-linux-gcc -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -o /tmp/ffconf.yJAKbHfR /tmp/ffconf.BJYw4EUC.o
+/tmp/ffconf.BJYw4EUC.o: In function `main':ffconf.SKhk17jP.c:(.text+0x18): undefined reference to `posix_memalign'
 collect2: ld returned 1 exit status
 check_func setrlimit
 check_ld
 check_cc
-BEGIN /tmp/ffconf.ERx5dseQ.c
+BEGIN /tmp/ffconf.SKhk17jP.c
     1	extern int setrlimit();
     2	int main(void){ setrlimit(); }
-END /tmp/ffconf.ERx5dseQ.c
-mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -c -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
-mipsel-linux-gcc -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -o /tmp/ffconf.sAoH9i2C /tmp/ffconf.hyh2rGhV.o
+END /tmp/ffconf.SKhk17jP.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -c -o /tmp/ffconf.BJYw4EUC.o /tmp/ffconf.SKhk17jP.c
+mipsel-linux-gcc -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -o /tmp/ffconf.yJAKbHfR /tmp/ffconf.BJYw4EUC.o
 check_func strerror_r
 check_ld
 check_cc
-BEGIN /tmp/ffconf.ERx5dseQ.c
+BEGIN /tmp/ffconf.SKhk17jP.c
     1	extern int strerror_r();
     2	int main(void){ strerror_r(); }
-END /tmp/ffconf.ERx5dseQ.c
-mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -c -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
-mipsel-linux-gcc -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -o /tmp/ffconf.sAoH9i2C /tmp/ffconf.hyh2rGhV.o
-/tmp/ffconf.hyh2rGhV.o: In function `main':ffconf.ERx5dseQ.c:(.text+0x18): undefined reference to `strerror_r'
+END /tmp/ffconf.SKhk17jP.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -c -o /tmp/ffconf.BJYw4EUC.o /tmp/ffconf.SKhk17jP.c
+mipsel-linux-gcc -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -o /tmp/ffconf.yJAKbHfR /tmp/ffconf.BJYw4EUC.o
+/tmp/ffconf.BJYw4EUC.o: In function `main':ffconf.SKhk17jP.c:(.text+0x18): undefined reference to `strerror_r'
 collect2: ld returned 1 exit status
 check_func_headers io.h setmode
 check_ld
 check_cc
-BEGIN /tmp/ffconf.ERx5dseQ.c
+BEGIN /tmp/ffconf.SKhk17jP.c
     1	
     2	#include <io.h>
     3	int main(int argc, char **argv){
     4	    return (long) setmode;
     5	}
-END /tmp/ffconf.ERx5dseQ.c
-mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -c -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
-/tmp/ffconf.ERx5dseQ.c:2:16: io.h: No such file or directory
-/tmp/ffconf.ERx5dseQ.c: In function `main':
-/tmp/ffconf.ERx5dseQ.c:4: error: `setmode' undeclared (first use in this function)
-/tmp/ffconf.ERx5dseQ.c:4: error: (Each undeclared identifier is reported only once
-/tmp/ffconf.ERx5dseQ.c:4: error: for each function it appears in.)
+END /tmp/ffconf.SKhk17jP.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -c -o /tmp/ffconf.BJYw4EUC.o /tmp/ffconf.SKhk17jP.c
+/tmp/ffconf.SKhk17jP.c:2:16: io.h: No such file or directory
+/tmp/ffconf.SKhk17jP.c: In function `main':
+/tmp/ffconf.SKhk17jP.c:4: error: `setmode' undeclared (first use in this function)
+/tmp/ffconf.SKhk17jP.c:4: error: (Each undeclared identifier is reported only once
+/tmp/ffconf.SKhk17jP.c:4: error: for each function it appears in.)
 check_func_headers lzo/lzo1x.h lzo1x_999_compress
 check_ld
 check_cc
-BEGIN /tmp/ffconf.ERx5dseQ.c
+BEGIN /tmp/ffconf.SKhk17jP.c
     1	
     2	#include <lzo/lzo1x.h>
     3	int main(int argc, char **argv){
     4	    return (long) lzo1x_999_compress;
     5	}
-END /tmp/ffconf.ERx5dseQ.c
-mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -c -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
-/tmp/ffconf.ERx5dseQ.c:2:23: lzo/lzo1x.h: No such file or directory
-/tmp/ffconf.ERx5dseQ.c: In function `main':
-/tmp/ffconf.ERx5dseQ.c:4: error: `lzo1x_999_compress' undeclared (first use in this function)
-/tmp/ffconf.ERx5dseQ.c:4: error: (Each undeclared identifier is reported only once
-/tmp/ffconf.ERx5dseQ.c:4: error: for each function it appears in.)
+END /tmp/ffconf.SKhk17jP.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -c -o /tmp/ffconf.BJYw4EUC.o /tmp/ffconf.SKhk17jP.c
+/tmp/ffconf.SKhk17jP.c:2:23: lzo/lzo1x.h: No such file or directory
+/tmp/ffconf.SKhk17jP.c: In function `main':
+/tmp/ffconf.SKhk17jP.c:4: error: `lzo1x_999_compress' undeclared (first use in this function)
+/tmp/ffconf.SKhk17jP.c:4: error: (Each undeclared identifier is reported only once
+/tmp/ffconf.SKhk17jP.c:4: error: for each function it appears in.)
 check_lib2 windows.h psapi.h GetProcessMemoryInfo -lpsapi
 check_func_headers windows.h psapi.h GetProcessMemoryInfo -lpsapi
 check_ld -lpsapi
 check_cc
-BEGIN /tmp/ffconf.ERx5dseQ.c
+BEGIN /tmp/ffconf.SKhk17jP.c
     1	
     2	#include <windows.h>
     3	#include <psapi.h>
     4	int main(int argc, char **argv){
     5	    return (long) GetProcessMemoryInfo;
     6	}
-END /tmp/ffconf.ERx5dseQ.c
-mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -c -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
-/tmp/ffconf.ERx5dseQ.c:2:21: windows.h: No such file or directory
-/tmp/ffconf.ERx5dseQ.c:3:19: psapi.h: No such file or directory
-/tmp/ffconf.ERx5dseQ.c: In function `main':
-/tmp/ffconf.ERx5dseQ.c:5: error: `GetProcessMemoryInfo' undeclared (first use in this function)
-/tmp/ffconf.ERx5dseQ.c:5: error: (Each undeclared identifier is reported only once
-/tmp/ffconf.ERx5dseQ.c:5: error: for each function it appears in.)
+END /tmp/ffconf.SKhk17jP.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -c -o /tmp/ffconf.BJYw4EUC.o /tmp/ffconf.SKhk17jP.c
+/tmp/ffconf.SKhk17jP.c:2:21: windows.h: No such file or directory
+/tmp/ffconf.SKhk17jP.c:3:19: psapi.h: No such file or directory
+/tmp/ffconf.SKhk17jP.c: In function `main':
+/tmp/ffconf.SKhk17jP.c:5: error: `GetProcessMemoryInfo' undeclared (first use in this function)
+/tmp/ffconf.SKhk17jP.c:5: error: (Each undeclared identifier is reported only once
+/tmp/ffconf.SKhk17jP.c:5: error: for each function it appears in.)
 check_func_headers windows.h GetProcessTimes
 check_ld
 check_cc
-BEGIN /tmp/ffconf.ERx5dseQ.c
+BEGIN /tmp/ffconf.SKhk17jP.c
     1	
     2	#include <windows.h>
     3	int main(int argc, char **argv){
     4	    return (long) GetProcessTimes;
     5	}
-END /tmp/ffconf.ERx5dseQ.c
-mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -c -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
-/tmp/ffconf.ERx5dseQ.c:2:21: windows.h: No such file or directory
-/tmp/ffconf.ERx5dseQ.c: In function `main':
-/tmp/ffconf.ERx5dseQ.c:4: error: `GetProcessTimes' undeclared (first use in this function)
-/tmp/ffconf.ERx5dseQ.c:4: error: (Each undeclared identifier is reported only once
-/tmp/ffconf.ERx5dseQ.c:4: error: for each function it appears in.)
+END /tmp/ffconf.SKhk17jP.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -c -o /tmp/ffconf.BJYw4EUC.o /tmp/ffconf.SKhk17jP.c
+/tmp/ffconf.SKhk17jP.c:2:21: windows.h: No such file or directory
+/tmp/ffconf.SKhk17jP.c: In function `main':
+/tmp/ffconf.SKhk17jP.c:4: error: `GetProcessTimes' undeclared (first use in this function)
+/tmp/ffconf.SKhk17jP.c:4: error: (Each undeclared identifier is reported only once
+/tmp/ffconf.SKhk17jP.c:4: error: for each function it appears in.)
 check_func_headers windows.h VirtualAlloc
 check_ld
 check_cc
-BEGIN /tmp/ffconf.ERx5dseQ.c
+BEGIN /tmp/ffconf.SKhk17jP.c
     1	
     2	#include <windows.h>
     3	int main(int argc, char **argv){
     4	    return (long) VirtualAlloc;
     5	}
-END /tmp/ffconf.ERx5dseQ.c
-mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -c -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
-/tmp/ffconf.ERx5dseQ.c:2:21: windows.h: No such file or directory
-/tmp/ffconf.ERx5dseQ.c: In function `main':
-/tmp/ffconf.ERx5dseQ.c:4: error: `VirtualAlloc' undeclared (first use in this function)
-/tmp/ffconf.ERx5dseQ.c:4: error: (Each undeclared identifier is reported only once
-/tmp/ffconf.ERx5dseQ.c:4: error: for each function it appears in.)
+END /tmp/ffconf.SKhk17jP.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -c -o /tmp/ffconf.BJYw4EUC.o /tmp/ffconf.SKhk17jP.c
+/tmp/ffconf.SKhk17jP.c:2:21: windows.h: No such file or directory
+/tmp/ffconf.SKhk17jP.c: In function `main':
+/tmp/ffconf.SKhk17jP.c:4: error: `VirtualAlloc' undeclared (first use in this function)
+/tmp/ffconf.SKhk17jP.c:4: error: (Each undeclared identifier is reported only once
+/tmp/ffconf.SKhk17jP.c:4: error: for each function it appears in.)
 check_header conio.h
 check_cpp
-BEGIN /tmp/ffconf.ERx5dseQ.c
+BEGIN /tmp/ffconf.SKhk17jP.c
     1	#include <conio.h>
     2	int x;
-END /tmp/ffconf.ERx5dseQ.c
-mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -E -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
-/tmp/ffconf.ERx5dseQ.c:1:19: conio.h: No such file or directory
+END /tmp/ffconf.SKhk17jP.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -E -o /tmp/ffconf.BJYw4EUC.o /tmp/ffconf.SKhk17jP.c
+/tmp/ffconf.SKhk17jP.c:1:19: conio.h: No such file or directory
 check_header dlfcn.h
 check_cpp
-BEGIN /tmp/ffconf.ERx5dseQ.c
+BEGIN /tmp/ffconf.SKhk17jP.c
     1	#include <dlfcn.h>
     2	int x;
-END /tmp/ffconf.ERx5dseQ.c
-mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -E -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
+END /tmp/ffconf.SKhk17jP.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -E -o /tmp/ffconf.BJYw4EUC.o /tmp/ffconf.SKhk17jP.c
 check_header dxva2api.h
 check_cpp
-BEGIN /tmp/ffconf.ERx5dseQ.c
+BEGIN /tmp/ffconf.SKhk17jP.c
     1	#include <dxva2api.h>
     2	int x;
-END /tmp/ffconf.ERx5dseQ.c
-mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -E -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
-/tmp/ffconf.ERx5dseQ.c:1:22: dxva2api.h: No such file or directory
+END /tmp/ffconf.SKhk17jP.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -E -o /tmp/ffconf.BJYw4EUC.o /tmp/ffconf.SKhk17jP.c
+/tmp/ffconf.SKhk17jP.c:1:22: dxva2api.h: No such file or directory
 check_header malloc.h
 check_cpp
-BEGIN /tmp/ffconf.ERx5dseQ.c
+BEGIN /tmp/ffconf.SKhk17jP.c
     1	#include <malloc.h>
     2	int x;
-END /tmp/ffconf.ERx5dseQ.c
-mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -E -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
+END /tmp/ffconf.SKhk17jP.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -E -o /tmp/ffconf.BJYw4EUC.o /tmp/ffconf.SKhk17jP.c
 check_header poll.h
 check_cpp
-BEGIN /tmp/ffconf.ERx5dseQ.c
+BEGIN /tmp/ffconf.SKhk17jP.c
     1	#include <poll.h>
     2	int x;
-END /tmp/ffconf.ERx5dseQ.c
-mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -E -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
+END /tmp/ffconf.SKhk17jP.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -E -o /tmp/ffconf.BJYw4EUC.o /tmp/ffconf.SKhk17jP.c
 check_header sys/mman.h
 check_cpp
-BEGIN /tmp/ffconf.ERx5dseQ.c
+BEGIN /tmp/ffconf.SKhk17jP.c
     1	#include <sys/mman.h>
     2	int x;
-END /tmp/ffconf.ERx5dseQ.c
-mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -E -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
+END /tmp/ffconf.SKhk17jP.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -E -o /tmp/ffconf.BJYw4EUC.o /tmp/ffconf.SKhk17jP.c
 check_header sys/resource.h
 check_cpp
-BEGIN /tmp/ffconf.ERx5dseQ.c
+BEGIN /tmp/ffconf.SKhk17jP.c
     1	#include <sys/resource.h>
     2	int x;
-END /tmp/ffconf.ERx5dseQ.c
-mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -E -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
+END /tmp/ffconf.SKhk17jP.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -E -o /tmp/ffconf.BJYw4EUC.o /tmp/ffconf.SKhk17jP.c
 check_header sys/select.h
 check_cpp
-BEGIN /tmp/ffconf.ERx5dseQ.c
+BEGIN /tmp/ffconf.SKhk17jP.c
     1	#include <sys/select.h>
     2	int x;
-END /tmp/ffconf.ERx5dseQ.c
-mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -E -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
+END /tmp/ffconf.SKhk17jP.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -E -o /tmp/ffconf.BJYw4EUC.o /tmp/ffconf.SKhk17jP.c
 check_header termios.h
 check_cpp
-BEGIN /tmp/ffconf.ERx5dseQ.c
+BEGIN /tmp/ffconf.SKhk17jP.c
     1	#include <termios.h>
     2	int x;
-END /tmp/ffconf.ERx5dseQ.c
-mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -E -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
+END /tmp/ffconf.SKhk17jP.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -E -o /tmp/ffconf.BJYw4EUC.o /tmp/ffconf.SKhk17jP.c
 check_header vdpau/vdpau.h
 check_cpp
-BEGIN /tmp/ffconf.ERx5dseQ.c
+BEGIN /tmp/ffconf.SKhk17jP.c
     1	#include <vdpau/vdpau.h>
     2	int x;
-END /tmp/ffconf.ERx5dseQ.c
-mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -E -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
-/tmp/ffconf.ERx5dseQ.c:1:25: vdpau/vdpau.h: No such file or directory
+END /tmp/ffconf.SKhk17jP.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -E -o /tmp/ffconf.BJYw4EUC.o /tmp/ffconf.SKhk17jP.c
+/tmp/ffconf.SKhk17jP.c:1:25: vdpau/vdpau.h: No such file or directory
 check_header vdpau/vdpau_x11.h
 check_cpp
-BEGIN /tmp/ffconf.ERx5dseQ.c
+BEGIN /tmp/ffconf.SKhk17jP.c
     1	#include <vdpau/vdpau_x11.h>
     2	int x;
-END /tmp/ffconf.ERx5dseQ.c
-mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -E -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
-/tmp/ffconf.ERx5dseQ.c:1:29: vdpau/vdpau_x11.h: No such file or directory
+END /tmp/ffconf.SKhk17jP.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -E -o /tmp/ffconf.BJYw4EUC.o /tmp/ffconf.SKhk17jP.c
+/tmp/ffconf.SKhk17jP.c:1:29: vdpau/vdpau_x11.h: No such file or directory
 check_header X11/extensions/XvMClib.h
 check_cpp
-BEGIN /tmp/ffconf.ERx5dseQ.c
+BEGIN /tmp/ffconf.SKhk17jP.c
     1	#include <X11/extensions/XvMClib.h>
     2	int x;
-END /tmp/ffconf.ERx5dseQ.c
-mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -E -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
-/tmp/ffconf.ERx5dseQ.c:1:36: X11/extensions/XvMClib.h: No such file or directory
+END /tmp/ffconf.SKhk17jP.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -E -o /tmp/ffconf.BJYw4EUC.o /tmp/ffconf.SKhk17jP.c
+/tmp/ffconf.SKhk17jP.c:1:36: X11/extensions/XvMClib.h: No such file or directory
 check_type dxva2api.h DXVA_PictureParameters wDecodedPictureIndex
 check_cc
-BEGIN /tmp/ffconf.ERx5dseQ.c
+BEGIN /tmp/ffconf.SKhk17jP.c
     1	
     2	#include <dxva2api.h>
     3	const void *p = &((DXVA_PictureParameters *)0)->wDecodedPictureIndex;
-END /tmp/ffconf.ERx5dseQ.c
-mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -c -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
-/tmp/ffconf.ERx5dseQ.c:2:22: dxva2api.h: No such file or directory
-/tmp/ffconf.ERx5dseQ.c:3: error: `DXVA_PictureParameters' undeclared here (not in a function)
-/tmp/ffconf.ERx5dseQ.c:3: error: parse error before ')' token
+END /tmp/ffconf.SKhk17jP.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -c -o /tmp/ffconf.BJYw4EUC.o /tmp/ffconf.SKhk17jP.c
+/tmp/ffconf.SKhk17jP.c:2:22: dxva2api.h: No such file or directory
+/tmp/ffconf.SKhk17jP.c:3: error: `DXVA_PictureParameters' undeclared here (not in a function)
+/tmp/ffconf.SKhk17jP.c:3: error: parse error before ')' token
 check_lib zlib.h zlibVersion -lz
 check_header zlib.h
 check_cpp
-BEGIN /tmp/ffconf.ERx5dseQ.c
+BEGIN /tmp/ffconf.SKhk17jP.c
     1	#include <zlib.h>
     2	int x;
-END /tmp/ffconf.ERx5dseQ.c
-mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -E -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
+END /tmp/ffconf.SKhk17jP.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -E -o /tmp/ffconf.BJYw4EUC.o /tmp/ffconf.SKhk17jP.c
 check_func zlibVersion
 check_ld
 check_cc
-BEGIN /tmp/ffconf.ERx5dseQ.c
+BEGIN /tmp/ffconf.SKhk17jP.c
     1	extern int zlibVersion();
     2	int main(void){ zlibVersion(); }
-END /tmp/ffconf.ERx5dseQ.c
-mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -c -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
-mipsel-linux-gcc -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -o /tmp/ffconf.sAoH9i2C /tmp/ffconf.hyh2rGhV.o -lz
+END /tmp/ffconf.SKhk17jP.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -c -o /tmp/ffconf.BJYw4EUC.o /tmp/ffconf.SKhk17jP.c
+mipsel-linux-gcc -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -o /tmp/ffconf.yJAKbHfR /tmp/ffconf.BJYw4EUC.o -lz
 check_lib2 bzlib.h BZ2_bzlibVersion -lbz2
 check_func_headers bzlib.h BZ2_bzlibVersion -lbz2
 check_ld -lbz2
 check_cc
-BEGIN /tmp/ffconf.ERx5dseQ.c
+BEGIN /tmp/ffconf.SKhk17jP.c
     1	
     2	#include <bzlib.h>
     3	int main(int argc, char **argv){
     4	    return (long) BZ2_bzlibVersion;
     5	}
-END /tmp/ffconf.ERx5dseQ.c
-mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -c -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
-/tmp/ffconf.ERx5dseQ.c:2:19: bzlib.h: No such file or directory
-/tmp/ffconf.ERx5dseQ.c: In function `main':
-/tmp/ffconf.ERx5dseQ.c:4: error: `BZ2_bzlibVersion' undeclared (first use in this function)
-/tmp/ffconf.ERx5dseQ.c:4: error: (Each undeclared identifier is reported only once
-/tmp/ffconf.ERx5dseQ.c:4: error: for each function it appears in.)
+END /tmp/ffconf.SKhk17jP.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -c -o /tmp/ffconf.BJYw4EUC.o /tmp/ffconf.SKhk17jP.c
+/tmp/ffconf.SKhk17jP.c:2:19: bzlib.h: No such file or directory
+/tmp/ffconf.SKhk17jP.c: In function `main':
+/tmp/ffconf.SKhk17jP.c:4: error: `BZ2_bzlibVersion' undeclared (first use in this function)
+/tmp/ffconf.SKhk17jP.c:4: error: (Each undeclared identifier is reported only once
+/tmp/ffconf.SKhk17jP.c:4: error: for each function it appears in.)
 check_func pthread_create
 check_ld
 check_cc
-BEGIN /tmp/ffconf.ERx5dseQ.c
+BEGIN /tmp/ffconf.SKhk17jP.c
     1	extern int pthread_create();
     2	int main(void){ pthread_create(); }
-END /tmp/ffconf.ERx5dseQ.c
-mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -c -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
-mipsel-linux-gcc -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -o /tmp/ffconf.sAoH9i2C /tmp/ffconf.hyh2rGhV.o -lz
-/tmp/ffconf.hyh2rGhV.o: In function `main':ffconf.ERx5dseQ.c:(.text+0x18): undefined reference to `pthread_create'
+END /tmp/ffconf.SKhk17jP.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -c -o /tmp/ffconf.BJYw4EUC.o /tmp/ffconf.SKhk17jP.c
+mipsel-linux-gcc -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -o /tmp/ffconf.yJAKbHfR /tmp/ffconf.BJYw4EUC.o -lz
+/tmp/ffconf.BJYw4EUC.o: In function `main':ffconf.SKhk17jP.c:(.text+0x18): undefined reference to `pthread_create'
 collect2: ld returned 1 exit status
 check_func pthread_create -pthread
 check_ld -pthread
 check_cc -pthread
-BEGIN /tmp/ffconf.ERx5dseQ.c
+BEGIN /tmp/ffconf.SKhk17jP.c
     1	extern int pthread_create();
     2	int main(void){ pthread_create(); }
-END /tmp/ffconf.ERx5dseQ.c
-mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -pthread -c -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
-mipsel-linux-gcc -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -pthread -o /tmp/ffconf.sAoH9i2C /tmp/ffconf.hyh2rGhV.o -lz
+END /tmp/ffconf.SKhk17jP.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -pthread -c -o /tmp/ffconf.BJYw4EUC.o /tmp/ffconf.SKhk17jP.c
+mipsel-linux-gcc -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -pthread -o /tmp/ffconf.yJAKbHfR /tmp/ffconf.BJYw4EUC.o -lz
 check_lib math.h sin -lm
 check_header math.h
 check_cpp
-BEGIN /tmp/ffconf.ERx5dseQ.c
+BEGIN /tmp/ffconf.SKhk17jP.c
     1	#include <math.h>
     2	int x;
-END /tmp/ffconf.ERx5dseQ.c
-mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -pthread -E -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
+END /tmp/ffconf.SKhk17jP.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -pthread -E -o /tmp/ffconf.BJYw4EUC.o /tmp/ffconf.SKhk17jP.c
 check_func sin
 check_ld
 check_cc
-BEGIN /tmp/ffconf.ERx5dseQ.c
+BEGIN /tmp/ffconf.SKhk17jP.c
     1	extern int sin();
     2	int main(void){ sin(); }
-END /tmp/ffconf.ERx5dseQ.c
-mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -pthread -c -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
-/tmp/ffconf.ERx5dseQ.c:1: warning: conflicting types for built-in function 'sin'
-mipsel-linux-gcc -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -o /tmp/ffconf.sAoH9i2C /tmp/ffconf.hyh2rGhV.o -lz -pthread -lm
+END /tmp/ffconf.SKhk17jP.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -pthread -c -o /tmp/ffconf.BJYw4EUC.o /tmp/ffconf.SKhk17jP.c
+/tmp/ffconf.SKhk17jP.c:1: warning: conflicting types for built-in function 'sin'
+mipsel-linux-gcc -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -o /tmp/ffconf.yJAKbHfR /tmp/ffconf.BJYw4EUC.o -lz -pthread -lm
 check_lib va/va.h vaInitialize -lva
 check_header va/va.h
 check_cpp
-BEGIN /tmp/ffconf.ERx5dseQ.c
+BEGIN /tmp/ffconf.SKhk17jP.c
     1	#include <va/va.h>
     2	int x;
-END /tmp/ffconf.ERx5dseQ.c
-mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -pthread -E -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
-/tmp/ffconf.ERx5dseQ.c:1:19: va/va.h: No such file or directory
+END /tmp/ffconf.SKhk17jP.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -pthread -E -o /tmp/ffconf.BJYw4EUC.o /tmp/ffconf.SKhk17jP.c
+/tmp/ffconf.SKhk17jP.c:1:19: va/va.h: No such file or directory
 check_mathfunc exp2
 check_ld
 check_cc
-BEGIN /tmp/ffconf.ERx5dseQ.c
+BEGIN /tmp/ffconf.SKhk17jP.c
     1	#include <math.h>
     2	float foo(float f) { return exp2(f); }
     3	int main(void){ return 0; }
-END /tmp/ffconf.ERx5dseQ.c
-mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -pthread -c -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
-mipsel-linux-gcc -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -o /tmp/ffconf.sAoH9i2C /tmp/ffconf.hyh2rGhV.o -lz -pthread -lm
-/tmp/ffconf.hyh2rGhV.o: In function `foo':ffconf.ERx5dseQ.c:(.text+0x18): undefined reference to `exp2'
+END /tmp/ffconf.SKhk17jP.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -pthread -c -o /tmp/ffconf.BJYw4EUC.o /tmp/ffconf.SKhk17jP.c
+mipsel-linux-gcc -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -o /tmp/ffconf.yJAKbHfR /tmp/ffconf.BJYw4EUC.o -lz -pthread -lm
+/tmp/ffconf.BJYw4EUC.o: In function `foo':ffconf.SKhk17jP.c:(.text+0x18): undefined reference to `exp2'
 collect2: ld returned 1 exit status
 check_mathfunc exp2f
 check_ld
 check_cc
-BEGIN /tmp/ffconf.ERx5dseQ.c
+BEGIN /tmp/ffconf.SKhk17jP.c
     1	#include <math.h>
     2	float foo(float f) { return exp2f(f); }
     3	int main(void){ return 0; }
-END /tmp/ffconf.ERx5dseQ.c
-mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -pthread -c -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
-mipsel-linux-gcc -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -o /tmp/ffconf.sAoH9i2C /tmp/ffconf.hyh2rGhV.o -lz -pthread -lm
-/tmp/ffconf.hyh2rGhV.o: In function `foo':ffconf.ERx5dseQ.c:(.text+0xc): undefined reference to `exp2f'
+END /tmp/ffconf.SKhk17jP.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -pthread -c -o /tmp/ffconf.BJYw4EUC.o /tmp/ffconf.SKhk17jP.c
+mipsel-linux-gcc -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -o /tmp/ffconf.yJAKbHfR /tmp/ffconf.BJYw4EUC.o -lz -pthread -lm
+/tmp/ffconf.BJYw4EUC.o: In function `foo':ffconf.SKhk17jP.c:(.text+0xc): undefined reference to `exp2f'
 collect2: ld returned 1 exit status
 check_mathfunc llrint
 check_ld
 check_cc
-BEGIN /tmp/ffconf.ERx5dseQ.c
+BEGIN /tmp/ffconf.SKhk17jP.c
     1	#include <math.h>
     2	float foo(float f) { return llrint(f); }
     3	int main(void){ return 0; }
-END /tmp/ffconf.ERx5dseQ.c
-mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -pthread -c -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
-mipsel-linux-gcc -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -o /tmp/ffconf.sAoH9i2C /tmp/ffconf.hyh2rGhV.o -lz -pthread -lm
-/tmp/ffconf.hyh2rGhV.o: In function `foo':ffconf.ERx5dseQ.c:(.text+0x18): undefined reference to `llrint'
+END /tmp/ffconf.SKhk17jP.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -pthread -c -o /tmp/ffconf.BJYw4EUC.o /tmp/ffconf.SKhk17jP.c
+mipsel-linux-gcc -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -o /tmp/ffconf.yJAKbHfR /tmp/ffconf.BJYw4EUC.o -lz -pthread -lm
+/tmp/ffconf.BJYw4EUC.o: In function `foo':ffconf.SKhk17jP.c:(.text+0x18): undefined reference to `llrint'
 collect2: ld returned 1 exit status
 check_mathfunc llrintf
 check_ld
 check_cc
-BEGIN /tmp/ffconf.ERx5dseQ.c
+BEGIN /tmp/ffconf.SKhk17jP.c
     1	#include <math.h>
     2	float foo(float f) { return llrintf(f); }
     3	int main(void){ return 0; }
-END /tmp/ffconf.ERx5dseQ.c
-mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -pthread -c -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
-mipsel-linux-gcc -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -o /tmp/ffconf.sAoH9i2C /tmp/ffconf.hyh2rGhV.o -lz -pthread -lm
-/tmp/ffconf.hyh2rGhV.o: In function `foo':ffconf.ERx5dseQ.c:(.text+0x18): undefined reference to `llrintf'
+END /tmp/ffconf.SKhk17jP.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -pthread -c -o /tmp/ffconf.BJYw4EUC.o /tmp/ffconf.SKhk17jP.c
+mipsel-linux-gcc -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -o /tmp/ffconf.yJAKbHfR /tmp/ffconf.BJYw4EUC.o -lz -pthread -lm
+/tmp/ffconf.BJYw4EUC.o: In function `foo':ffconf.SKhk17jP.c:(.text+0x18): undefined reference to `llrintf'
 collect2: ld returned 1 exit status
 check_mathfunc log2
 check_ld
 check_cc
-BEGIN /tmp/ffconf.ERx5dseQ.c
+BEGIN /tmp/ffconf.SKhk17jP.c
     1	#include <math.h>
     2	float foo(float f) { return log2(f); }
     3	int main(void){ return 0; }
-END /tmp/ffconf.ERx5dseQ.c
-mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -pthread -c -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
-mipsel-linux-gcc -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -o /tmp/ffconf.sAoH9i2C /tmp/ffconf.hyh2rGhV.o -lz -pthread -lm
-/tmp/ffconf.hyh2rGhV.o: In function `foo':ffconf.ERx5dseQ.c:(.text+0x18): undefined reference to `log2'
+END /tmp/ffconf.SKhk17jP.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -pthread -c -o /tmp/ffconf.BJYw4EUC.o /tmp/ffconf.SKhk17jP.c
+mipsel-linux-gcc -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -o /tmp/ffconf.yJAKbHfR /tmp/ffconf.BJYw4EUC.o -lz -pthread -lm
+/tmp/ffconf.BJYw4EUC.o: In function `foo':ffconf.SKhk17jP.c:(.text+0x18): undefined reference to `log2'
 collect2: ld returned 1 exit status
 check_mathfunc log2f
 check_ld
 check_cc
-BEGIN /tmp/ffconf.ERx5dseQ.c
+BEGIN /tmp/ffconf.SKhk17jP.c
     1	#include <math.h>
     2	float foo(float f) { return log2f(f); }
     3	int main(void){ return 0; }
-END /tmp/ffconf.ERx5dseQ.c
-mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -pthread -c -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
-mipsel-linux-gcc -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -o /tmp/ffconf.sAoH9i2C /tmp/ffconf.hyh2rGhV.o -lz -pthread -lm
-/tmp/ffconf.hyh2rGhV.o: In function `foo':ffconf.ERx5dseQ.c:(.text+0xc): undefined reference to `log2f'
+END /tmp/ffconf.SKhk17jP.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -pthread -c -o /tmp/ffconf.BJYw4EUC.o /tmp/ffconf.SKhk17jP.c
+mipsel-linux-gcc -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -o /tmp/ffconf.yJAKbHfR /tmp/ffconf.BJYw4EUC.o -lz -pthread -lm
+/tmp/ffconf.BJYw4EUC.o: In function `foo':ffconf.SKhk17jP.c:(.text+0xc): undefined reference to `log2f'
 collect2: ld returned 1 exit status
 check_mathfunc lrint
 check_ld
 check_cc
-BEGIN /tmp/ffconf.ERx5dseQ.c
+BEGIN /tmp/ffconf.SKhk17jP.c
     1	#include <math.h>
     2	float foo(float f) { return lrint(f); }
     3	int main(void){ return 0; }
-END /tmp/ffconf.ERx5dseQ.c
-mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -pthread -c -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
-mipsel-linux-gcc -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -o /tmp/ffconf.sAoH9i2C /tmp/ffconf.hyh2rGhV.o -lz -pthread -lm
-/tmp/ffconf.hyh2rGhV.o: In function `foo':ffconf.ERx5dseQ.c:(.text+0x18): undefined reference to `lrint'
+END /tmp/ffconf.SKhk17jP.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -pthread -c -o /tmp/ffconf.BJYw4EUC.o /tmp/ffconf.SKhk17jP.c
+mipsel-linux-gcc -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -o /tmp/ffconf.yJAKbHfR /tmp/ffconf.BJYw4EUC.o -lz -pthread -lm
+/tmp/ffconf.BJYw4EUC.o: In function `foo':ffconf.SKhk17jP.c:(.text+0x18): undefined reference to `lrint'
 collect2: ld returned 1 exit status
 check_mathfunc lrintf
 check_ld
 check_cc
-BEGIN /tmp/ffconf.ERx5dseQ.c
+BEGIN /tmp/ffconf.SKhk17jP.c
     1	#include <math.h>
     2	float foo(float f) { return lrintf(f); }
     3	int main(void){ return 0; }
-END /tmp/ffconf.ERx5dseQ.c
-mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -pthread -c -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
-mipsel-linux-gcc -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -o /tmp/ffconf.sAoH9i2C /tmp/ffconf.hyh2rGhV.o -lz -pthread -lm
-/tmp/ffconf.hyh2rGhV.o: In function `foo':ffconf.ERx5dseQ.c:(.text+0x18): undefined reference to `lrintf'
+END /tmp/ffconf.SKhk17jP.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -pthread -c -o /tmp/ffconf.BJYw4EUC.o /tmp/ffconf.SKhk17jP.c
+mipsel-linux-gcc -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -o /tmp/ffconf.yJAKbHfR /tmp/ffconf.BJYw4EUC.o -lz -pthread -lm
+/tmp/ffconf.BJYw4EUC.o: In function `foo':ffconf.SKhk17jP.c:(.text+0x18): undefined reference to `lrintf'
 collect2: ld returned 1 exit status
 check_mathfunc round
 check_ld
 check_cc
-BEGIN /tmp/ffconf.ERx5dseQ.c
+BEGIN /tmp/ffconf.SKhk17jP.c
     1	#include <math.h>
     2	float foo(float f) { return round(f); }
     3	int main(void){ return 0; }
-END /tmp/ffconf.ERx5dseQ.c
-mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -pthread -c -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
-mipsel-linux-gcc -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -o /tmp/ffconf.sAoH9i2C /tmp/ffconf.hyh2rGhV.o -lz -pthread -lm
-/tmp/ffconf.hyh2rGhV.o: In function `foo':ffconf.ERx5dseQ.c:(.text+0xc): undefined reference to `roundf'
+END /tmp/ffconf.SKhk17jP.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -pthread -c -o /tmp/ffconf.BJYw4EUC.o /tmp/ffconf.SKhk17jP.c
+mipsel-linux-gcc -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -o /tmp/ffconf.yJAKbHfR /tmp/ffconf.BJYw4EUC.o -lz -pthread -lm
+/tmp/ffconf.BJYw4EUC.o: In function `foo':ffconf.SKhk17jP.c:(.text+0xc): undefined reference to `roundf'
 collect2: ld returned 1 exit status
 check_mathfunc roundf
 check_ld
 check_cc
-BEGIN /tmp/ffconf.ERx5dseQ.c
+BEGIN /tmp/ffconf.SKhk17jP.c
     1	#include <math.h>
     2	float foo(float f) { return roundf(f); }
     3	int main(void){ return 0; }
-END /tmp/ffconf.ERx5dseQ.c
-mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -pthread -c -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
-mipsel-linux-gcc -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -o /tmp/ffconf.sAoH9i2C /tmp/ffconf.hyh2rGhV.o -lz -pthread -lm
-/tmp/ffconf.hyh2rGhV.o: In function `foo':ffconf.ERx5dseQ.c:(.text+0xc): undefined reference to `roundf'
+END /tmp/ffconf.SKhk17jP.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -pthread -c -o /tmp/ffconf.BJYw4EUC.o /tmp/ffconf.SKhk17jP.c
+mipsel-linux-gcc -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -o /tmp/ffconf.yJAKbHfR /tmp/ffconf.BJYw4EUC.o -lz -pthread -lm
+/tmp/ffconf.BJYw4EUC.o: In function `foo':ffconf.SKhk17jP.c:(.text+0xc): undefined reference to `roundf'
 collect2: ld returned 1 exit status
 check_mathfunc truncf
 check_ld
 check_cc
-BEGIN /tmp/ffconf.ERx5dseQ.c
+BEGIN /tmp/ffconf.SKhk17jP.c
     1	#include <math.h>
     2	float foo(float f) { return truncf(f); }
     3	int main(void){ return 0; }
-END /tmp/ffconf.ERx5dseQ.c
-mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -pthread -c -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
-mipsel-linux-gcc -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -o /tmp/ffconf.sAoH9i2C /tmp/ffconf.hyh2rGhV.o -lz -pthread -lm
-/tmp/ffconf.hyh2rGhV.o: In function `foo':ffconf.ERx5dseQ.c:(.text+0xc): undefined reference to `truncf'
+END /tmp/ffconf.SKhk17jP.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -pthread -c -o /tmp/ffconf.BJYw4EUC.o /tmp/ffconf.SKhk17jP.c
+mipsel-linux-gcc -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -o /tmp/ffconf.yJAKbHfR /tmp/ffconf.BJYw4EUC.o -lz -pthread -lm
+/tmp/ffconf.BJYw4EUC.o: In function `foo':ffconf.SKhk17jP.c:(.text+0xc): undefined reference to `truncf'
 collect2: ld returned 1 exit status
 check_type sys/types.h sys/socket.h socklen_t
 check_cc
-BEGIN /tmp/ffconf.ERx5dseQ.c
+BEGIN /tmp/ffconf.SKhk17jP.c
     1	
     2	#include <sys/types.h>
     3	#include <sys/socket.h>
     4	socklen_t v;
-END /tmp/ffconf.ERx5dseQ.c
-mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -pthread -c -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
+END /tmp/ffconf.SKhk17jP.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -pthread -c -o /tmp/ffconf.BJYw4EUC.o /tmp/ffconf.SKhk17jP.c
 check_type netdb.h struct addrinfo
 check_cc
-BEGIN /tmp/ffconf.ERx5dseQ.c
+BEGIN /tmp/ffconf.SKhk17jP.c
     1	
     2	#include <netdb.h>
     3	struct addrinfo v;
-END /tmp/ffconf.ERx5dseQ.c
-mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -pthread -c -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
+END /tmp/ffconf.SKhk17jP.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -pthread -c -o /tmp/ffconf.BJYw4EUC.o /tmp/ffconf.SKhk17jP.c
 check_type netinet/in.h struct ipv6_mreq
 check_cc
-BEGIN /tmp/ffconf.ERx5dseQ.c
+BEGIN /tmp/ffconf.SKhk17jP.c
     1	
     2	#include <netinet/in.h>
     3	struct ipv6_mreq v;
-END /tmp/ffconf.ERx5dseQ.c
-mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -pthread -c -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
+END /tmp/ffconf.SKhk17jP.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -pthread -c -o /tmp/ffconf.BJYw4EUC.o /tmp/ffconf.SKhk17jP.c
 check_type netinet/in.h struct sockaddr_in6
 check_cc
-BEGIN /tmp/ffconf.ERx5dseQ.c
+BEGIN /tmp/ffconf.SKhk17jP.c
     1	
     2	#include <netinet/in.h>
     3	struct sockaddr_in6 v;
-END /tmp/ffconf.ERx5dseQ.c
-mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -pthread -c -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
+END /tmp/ffconf.SKhk17jP.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -pthread -c -o /tmp/ffconf.BJYw4EUC.o /tmp/ffconf.SKhk17jP.c
 check_type sys/types.h sys/socket.h struct sockaddr_storage
 check_cc
-BEGIN /tmp/ffconf.ERx5dseQ.c
+BEGIN /tmp/ffconf.SKhk17jP.c
     1	
     2	#include <sys/types.h>
     3	#include <sys/socket.h>
     4	struct sockaddr_storage v;
-END /tmp/ffconf.ERx5dseQ.c
-mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -pthread -c -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
+END /tmp/ffconf.SKhk17jP.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -pthread -c -o /tmp/ffconf.BJYw4EUC.o /tmp/ffconf.SKhk17jP.c
 check_type sys/types.h sys/socket.h struct sockaddr sa_len
 check_cc
-BEGIN /tmp/ffconf.ERx5dseQ.c
+BEGIN /tmp/ffconf.SKhk17jP.c
     1	
     2	#include <sys/types.h>
     3	#include <sys/socket.h>
     4	const void *p = &((struct sockaddr *)0)->sa_len;
-END /tmp/ffconf.ERx5dseQ.c
-mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -pthread -c -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
-/tmp/ffconf.ERx5dseQ.c:4: error: structure has no member named `sa_len'
+END /tmp/ffconf.SKhk17jP.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -pthread -c -o /tmp/ffconf.BJYw4EUC.o /tmp/ffconf.SKhk17jP.c
+/tmp/ffconf.SKhk17jP.c:4: error: structure has no member named `sa_len'
 check_header arpa/inet.h
 check_cpp
-BEGIN /tmp/ffconf.ERx5dseQ.c
+BEGIN /tmp/ffconf.SKhk17jP.c
     1	#include <arpa/inet.h>
     2	int x;
-END /tmp/ffconf.ERx5dseQ.c
-mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -pthread -E -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
+END /tmp/ffconf.SKhk17jP.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -pthread -E -o /tmp/ffconf.BJYw4EUC.o /tmp/ffconf.SKhk17jP.c
 check_func closesocket
 check_ld
 check_cc
-BEGIN /tmp/ffconf.ERx5dseQ.c
+BEGIN /tmp/ffconf.SKhk17jP.c
     1	extern int closesocket();
     2	int main(void){ closesocket(); }
-END /tmp/ffconf.ERx5dseQ.c
-mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -pthread -c -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
-mipsel-linux-gcc -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -o /tmp/ffconf.sAoH9i2C /tmp/ffconf.hyh2rGhV.o -lz -pthread -lm
-/tmp/ffconf.hyh2rGhV.o: In function `main':ffconf.ERx5dseQ.c:(.text+0x18): undefined reference to `closesocket'
+END /tmp/ffconf.SKhk17jP.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -pthread -c -o /tmp/ffconf.BJYw4EUC.o /tmp/ffconf.SKhk17jP.c
+mipsel-linux-gcc -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -o /tmp/ffconf.yJAKbHfR /tmp/ffconf.BJYw4EUC.o -lz -pthread -lm
+/tmp/ffconf.BJYw4EUC.o: In function `main':ffconf.SKhk17jP.c:(.text+0x18): undefined reference to `closesocket'
 collect2: ld returned 1 exit status
 check_header linux/videodev.h
 check_cpp
-BEGIN /tmp/ffconf.ERx5dseQ.c
+BEGIN /tmp/ffconf.SKhk17jP.c
     1	#include <linux/videodev.h>
     2	int x;
-END /tmp/ffconf.ERx5dseQ.c
-mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -pthread -E -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
+END /tmp/ffconf.SKhk17jP.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -pthread -E -o /tmp/ffconf.BJYw4EUC.o /tmp/ffconf.SKhk17jP.c
 check_header linux/videodev2.h
 check_cpp
-BEGIN /tmp/ffconf.ERx5dseQ.c
+BEGIN /tmp/ffconf.SKhk17jP.c
     1	#include <linux/videodev2.h>
     2	int x;
-END /tmp/ffconf.ERx5dseQ.c
-mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -pthread -E -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
+END /tmp/ffconf.SKhk17jP.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -pthread -E -o /tmp/ffconf.BJYw4EUC.o /tmp/ffconf.SKhk17jP.c
 check_header sys/videoio.h
 check_cpp
-BEGIN /tmp/ffconf.ERx5dseQ.c
+BEGIN /tmp/ffconf.SKhk17jP.c
     1	#include <sys/videoio.h>
     2	int x;
-END /tmp/ffconf.ERx5dseQ.c
-mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -pthread -E -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
-/tmp/ffconf.ERx5dseQ.c:1:25: sys/videoio.h: No such file or directory
+END /tmp/ffconf.SKhk17jP.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -pthread -E -o /tmp/ffconf.BJYw4EUC.o /tmp/ffconf.SKhk17jP.c
+/tmp/ffconf.SKhk17jP.c:1:25: sys/videoio.h: No such file or directory
 check_func_headers windows.h vfw.h capCreateCaptureWindow -lavicap32
 check_ld -lavicap32
 check_cc
-BEGIN /tmp/ffconf.ERx5dseQ.c
+BEGIN /tmp/ffconf.SKhk17jP.c
     1	
     2	#include <windows.h>
     3	#include <vfw.h>
     4	int main(int argc, char **argv){
     5	    return (long) capCreateCaptureWindow;
     6	}
-END /tmp/ffconf.ERx5dseQ.c
-mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -pthread -c -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
-/tmp/ffconf.ERx5dseQ.c:2:21: windows.h: No such file or directory
-/tmp/ffconf.ERx5dseQ.c:3:17: vfw.h: No such file or directory
-/tmp/ffconf.ERx5dseQ.c: In function `main':
-/tmp/ffconf.ERx5dseQ.c:5: error: `capCreateCaptureWindow' undeclared (first use in this function)
-/tmp/ffconf.ERx5dseQ.c:5: error: (Each undeclared identifier is reported only once
-/tmp/ffconf.ERx5dseQ.c:5: error: for each function it appears in.)
+END /tmp/ffconf.SKhk17jP.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -pthread -c -o /tmp/ffconf.BJYw4EUC.o /tmp/ffconf.SKhk17jP.c
+/tmp/ffconf.SKhk17jP.c:2:21: windows.h: No such file or directory
+/tmp/ffconf.SKhk17jP.c:3:17: vfw.h: No such file or directory
+/tmp/ffconf.SKhk17jP.c: In function `main':
+/tmp/ffconf.SKhk17jP.c:5: error: `capCreateCaptureWindow' undeclared (first use in this function)
+/tmp/ffconf.SKhk17jP.c:5: error: (Each undeclared identifier is reported only once
+/tmp/ffconf.SKhk17jP.c:5: error: for each function it appears in.)
 check_header dev/bktr/ioctl_meteor.h
 check_cpp
-BEGIN /tmp/ffconf.ERx5dseQ.c
+BEGIN /tmp/ffconf.SKhk17jP.c
     1	#include <dev/bktr/ioctl_meteor.h>
     2	int x;
-END /tmp/ffconf.ERx5dseQ.c
-mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -pthread -E -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
-/tmp/ffconf.ERx5dseQ.c:1:35: dev/bktr/ioctl_meteor.h: No such file or directory
+END /tmp/ffconf.SKhk17jP.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -pthread -E -o /tmp/ffconf.BJYw4EUC.o /tmp/ffconf.SKhk17jP.c
+/tmp/ffconf.SKhk17jP.c:1:35: dev/bktr/ioctl_meteor.h: No such file or directory
 check_header machine/ioctl_meteor.h
 check_cpp
-BEGIN /tmp/ffconf.ERx5dseQ.c
+BEGIN /tmp/ffconf.SKhk17jP.c
     1	#include <machine/ioctl_meteor.h>
     2	int x;
-END /tmp/ffconf.ERx5dseQ.c
-mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -pthread -E -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
-/tmp/ffconf.ERx5dseQ.c:1:34: machine/ioctl_meteor.h: No such file or directory
+END /tmp/ffconf.SKhk17jP.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -pthread -E -o /tmp/ffconf.BJYw4EUC.o /tmp/ffconf.SKhk17jP.c
+/tmp/ffconf.SKhk17jP.c:1:34: machine/ioctl_meteor.h: No such file or directory
 check_header dev/video/meteor/ioctl_meteor.h
 check_cpp
-BEGIN /tmp/ffconf.ERx5dseQ.c
+BEGIN /tmp/ffconf.SKhk17jP.c
     1	#include <dev/video/meteor/ioctl_meteor.h>
     2	int x;
-END /tmp/ffconf.ERx5dseQ.c
-mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -pthread -E -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
-/tmp/ffconf.ERx5dseQ.c:1:43: dev/video/meteor/ioctl_meteor.h: No such file or directory
+END /tmp/ffconf.SKhk17jP.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -pthread -E -o /tmp/ffconf.BJYw4EUC.o /tmp/ffconf.SKhk17jP.c
+/tmp/ffconf.SKhk17jP.c:1:43: dev/video/meteor/ioctl_meteor.h: No such file or directory
 check_header dev/ic/bt8xx.h
 check_cpp
-BEGIN /tmp/ffconf.ERx5dseQ.c
+BEGIN /tmp/ffconf.SKhk17jP.c
     1	#include <dev/ic/bt8xx.h>
     2	int x;
-END /tmp/ffconf.ERx5dseQ.c
-mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -pthread -E -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
-/tmp/ffconf.ERx5dseQ.c:1:26: dev/ic/bt8xx.h: No such file or directory
+END /tmp/ffconf.SKhk17jP.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -pthread -E -o /tmp/ffconf.BJYw4EUC.o /tmp/ffconf.SKhk17jP.c
+/tmp/ffconf.SKhk17jP.c:1:26: dev/ic/bt8xx.h: No such file or directory
 check_header sys/soundcard.h
 check_cpp
-BEGIN /tmp/ffconf.ERx5dseQ.c
+BEGIN /tmp/ffconf.SKhk17jP.c
     1	#include <sys/soundcard.h>
     2	int x;
-END /tmp/ffconf.ERx5dseQ.c
-mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -pthread -E -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
+END /tmp/ffconf.SKhk17jP.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -pthread -E -o /tmp/ffconf.BJYw4EUC.o /tmp/ffconf.SKhk17jP.c
 check_header soundcard.h
 check_cpp
-BEGIN /tmp/ffconf.ERx5dseQ.c
+BEGIN /tmp/ffconf.SKhk17jP.c
     1	#include <soundcard.h>
     2	int x;
-END /tmp/ffconf.ERx5dseQ.c
-mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -pthread -E -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
-/tmp/ffconf.ERx5dseQ.c:1:23: soundcard.h: No such file or directory
+END /tmp/ffconf.SKhk17jP.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -pthread -E -o /tmp/ffconf.BJYw4EUC.o /tmp/ffconf.SKhk17jP.c
+/tmp/ffconf.SKhk17jP.c:1:23: soundcard.h: No such file or directory
 check_cflags -Wdeclaration-after-statement
 check_cc -Wdeclaration-after-statement
-BEGIN /tmp/ffconf.ERx5dseQ.c
+BEGIN /tmp/ffconf.SKhk17jP.c
     1	int x;
-END /tmp/ffconf.ERx5dseQ.c
-mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -pthread -g -Wdeclaration-after-statement -c -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
+END /tmp/ffconf.SKhk17jP.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -pthread -Wdeclaration-after-statement -c -o /tmp/ffconf.BJYw4EUC.o /tmp/ffconf.SKhk17jP.c
 check_cflags -Wall
 check_cc -Wall
-BEGIN /tmp/ffconf.ERx5dseQ.c
+BEGIN /tmp/ffconf.SKhk17jP.c
     1	int x;
-END /tmp/ffconf.ERx5dseQ.c
-mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -pthread -g -Wdeclaration-after-statement -Wall -c -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
+END /tmp/ffconf.SKhk17jP.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -pthread -Wdeclaration-after-statement -Wall -c -o /tmp/ffconf.BJYw4EUC.o /tmp/ffconf.SKhk17jP.c
 check_cflags -Wno-switch
 check_cc -Wno-switch
-BEGIN /tmp/ffconf.ERx5dseQ.c
+BEGIN /tmp/ffconf.SKhk17jP.c
     1	int x;
-END /tmp/ffconf.ERx5dseQ.c
-mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -pthread -g -Wdeclaration-after-statement -Wall -Wno-switch -c -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
+END /tmp/ffconf.SKhk17jP.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -pthread -Wdeclaration-after-statement -Wall -Wno-switch -c -o /tmp/ffconf.BJYw4EUC.o /tmp/ffconf.SKhk17jP.c
 check_cflags -Wdisabled-optimization
 check_cc -Wdisabled-optimization
-BEGIN /tmp/ffconf.ERx5dseQ.c
+BEGIN /tmp/ffconf.SKhk17jP.c
     1	int x;
-END /tmp/ffconf.ERx5dseQ.c
-mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -pthread -g -Wdeclaration-after-statement -Wall -Wno-switch -Wdisabled-optimization -c -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
+END /tmp/ffconf.SKhk17jP.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -pthread -Wdeclaration-after-statement -Wall -Wno-switch -Wdisabled-optimization -c -o /tmp/ffconf.BJYw4EUC.o /tmp/ffconf.SKhk17jP.c
 check_cflags -Wpointer-arith
 check_cc -Wpointer-arith
-BEGIN /tmp/ffconf.ERx5dseQ.c
+BEGIN /tmp/ffconf.SKhk17jP.c
     1	int x;
-END /tmp/ffconf.ERx5dseQ.c
-mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -pthread -g -Wdeclaration-after-statement -Wall -Wno-switch -Wdisabled-optimization -Wpointer-arith -c -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
+END /tmp/ffconf.SKhk17jP.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -pthread -Wdeclaration-after-statement -Wall -Wno-switch -Wdisabled-optimization -Wpointer-arith -c -o /tmp/ffconf.BJYw4EUC.o /tmp/ffconf.SKhk17jP.c
 check_cflags -Wredundant-decls
 check_cc -Wredundant-decls
-BEGIN /tmp/ffconf.ERx5dseQ.c
+BEGIN /tmp/ffconf.SKhk17jP.c
     1	int x;
-END /tmp/ffconf.ERx5dseQ.c
-mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -pthread -g -Wdeclaration-after-statement -Wall -Wno-switch -Wdisabled-optimization -Wpointer-arith -Wredundant-decls -c -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
+END /tmp/ffconf.SKhk17jP.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -pthread -Wdeclaration-after-statement -Wall -Wno-switch -Wdisabled-optimization -Wpointer-arith -Wredundant-decls -c -o /tmp/ffconf.BJYw4EUC.o /tmp/ffconf.SKhk17jP.c
 check_cflags -Wno-pointer-sign
 check_cc -Wno-pointer-sign
-BEGIN /tmp/ffconf.ERx5dseQ.c
+BEGIN /tmp/ffconf.SKhk17jP.c
     1	int x;
-END /tmp/ffconf.ERx5dseQ.c
-mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -pthread -g -Wdeclaration-after-statement -Wall -Wno-switch -Wdisabled-optimization -Wpointer-arith -Wredundant-decls -Wno-pointer-sign -c -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
+END /tmp/ffconf.SKhk17jP.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -pthread -Wdeclaration-after-statement -Wall -Wno-switch -Wdisabled-optimization -Wpointer-arith -Wredundant-decls -Wno-pointer-sign -c -o /tmp/ffconf.BJYw4EUC.o /tmp/ffconf.SKhk17jP.c
 cc1: error: unrecognized command line option "-Wno-pointer-sign"
 check_cflags -Wcast-qual
 check_cc -Wcast-qual
-BEGIN /tmp/ffconf.ERx5dseQ.c
+BEGIN /tmp/ffconf.SKhk17jP.c
     1	int x;
-END /tmp/ffconf.ERx5dseQ.c
-mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -pthread -g -Wdeclaration-after-statement -Wall -Wno-switch -Wdisabled-optimization -Wpointer-arith -Wredundant-decls -Wcast-qual -c -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
+END /tmp/ffconf.SKhk17jP.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -pthread -Wdeclaration-after-statement -Wall -Wno-switch -Wdisabled-optimization -Wpointer-arith -Wredundant-decls -Wcast-qual -c -o /tmp/ffconf.BJYw4EUC.o /tmp/ffconf.SKhk17jP.c
 check_cflags -Wwrite-strings
 check_cc -Wwrite-strings
-BEGIN /tmp/ffconf.ERx5dseQ.c
+BEGIN /tmp/ffconf.SKhk17jP.c
     1	int x;
-END /tmp/ffconf.ERx5dseQ.c
-mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -pthread -g -Wdeclaration-after-statement -Wall -Wno-switch -Wdisabled-optimization -Wpointer-arith -Wredundant-decls -Wcast-qual -Wwrite-strings -c -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
+END /tmp/ffconf.SKhk17jP.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -pthread -Wdeclaration-after-statement -Wall -Wno-switch -Wdisabled-optimization -Wpointer-arith -Wredundant-decls -Wcast-qual -Wwrite-strings -c -o /tmp/ffconf.BJYw4EUC.o /tmp/ffconf.SKhk17jP.c
 check_cflags -Wtype-limits
 check_cc -Wtype-limits
-BEGIN /tmp/ffconf.ERx5dseQ.c
+BEGIN /tmp/ffconf.SKhk17jP.c
     1	int x;
-END /tmp/ffconf.ERx5dseQ.c
-mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -pthread -g -Wdeclaration-after-statement -Wall -Wno-switch -Wdisabled-optimization -Wpointer-arith -Wredundant-decls -Wcast-qual -Wwrite-strings -Wtype-limits -c -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
+END /tmp/ffconf.SKhk17jP.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -pthread -Wdeclaration-after-statement -Wall -Wno-switch -Wdisabled-optimization -Wpointer-arith -Wredundant-decls -Wcast-qual -Wwrite-strings -Wtype-limits -c -o /tmp/ffconf.BJYw4EUC.o /tmp/ffconf.SKhk17jP.c
 cc1: error: unrecognized command line option "-Wtype-limits"
 check_cflags -Wundef
 check_cc -Wundef
-BEGIN /tmp/ffconf.ERx5dseQ.c
+BEGIN /tmp/ffconf.SKhk17jP.c
     1	int x;
-END /tmp/ffconf.ERx5dseQ.c
-mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -pthread -g -Wdeclaration-after-statement -Wall -Wno-switch -Wdisabled-optimization -Wpointer-arith -Wredundant-decls -Wcast-qual -Wwrite-strings -Wundef -c -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
+END /tmp/ffconf.SKhk17jP.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -pthread -Wdeclaration-after-statement -Wall -Wno-switch -Wdisabled-optimization -Wpointer-arith -Wredundant-decls -Wcast-qual -Wwrite-strings -Wundef -c -o /tmp/ffconf.BJYw4EUC.o /tmp/ffconf.SKhk17jP.c
 check_cflags -Wmissing-prototypes
 check_cc -Wmissing-prototypes
-BEGIN /tmp/ffconf.ERx5dseQ.c
+BEGIN /tmp/ffconf.SKhk17jP.c
     1	int x;
-END /tmp/ffconf.ERx5dseQ.c
-mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -pthread -g -Wdeclaration-after-statement -Wall -Wno-switch -Wdisabled-optimization -Wpointer-arith -Wredundant-decls -Wcast-qual -Wwrite-strings -Wundef -Wmissing-prototypes -c -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
+END /tmp/ffconf.SKhk17jP.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -pthread -Wdeclaration-after-statement -Wall -Wno-switch -Wdisabled-optimization -Wpointer-arith -Wredundant-decls -Wcast-qual -Wwrite-strings -Wundef -Wmissing-prototypes -c -o /tmp/ffconf.BJYw4EUC.o /tmp/ffconf.SKhk17jP.c
 check_ldflags -Wl,--warn-common
 test_ldflags -Wl,--warn-common
 check_ld -Wl,--warn-common
 check_cc -Wl,--warn-common
-BEGIN /tmp/ffconf.ERx5dseQ.c
+BEGIN /tmp/ffconf.SKhk17jP.c
     1	int main(void){ return 0; }
-END /tmp/ffconf.ERx5dseQ.c
-mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -pthread -g -Wdeclaration-after-statement -Wall -Wno-switch -Wdisabled-optimization -Wpointer-arith -Wredundant-decls -Wcast-qual -Wwrite-strings -Wundef -Wmissing-prototypes -Wl,--warn-common -c -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
+END /tmp/ffconf.SKhk17jP.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -pthread -Wdeclaration-after-statement -Wall -Wno-switch -Wdisabled-optimization -Wpointer-arith -Wredundant-decls -Wcast-qual -Wwrite-strings -Wundef -Wmissing-prototypes -Wl,--warn-common -c -o /tmp/ffconf.BJYw4EUC.o /tmp/ffconf.SKhk17jP.c
 mipsel-linux-gcc: --warn-common: linker input file unused because linking not done
-mipsel-linux-gcc -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -Wl,--warn-common -o /tmp/ffconf.sAoH9i2C /tmp/ffconf.hyh2rGhV.o -lz -pthread -lm
+mipsel-linux-gcc -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -Wl,--warn-common -o /tmp/ffconf.yJAKbHfR /tmp/ffconf.BJYw4EUC.o -lz -pthread -lm
 check_ldflags -Wl,--as-needed
 test_ldflags -Wl,--as-needed
 check_ld -Wl,--as-needed
 check_cc -Wl,--as-needed
-BEGIN /tmp/ffconf.ERx5dseQ.c
+BEGIN /tmp/ffconf.SKhk17jP.c
     1	int main(void){ return 0; }
-END /tmp/ffconf.ERx5dseQ.c
-mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -pthread -g -Wdeclaration-after-statement -Wall -Wno-switch -Wdisabled-optimization -Wpointer-arith -Wredundant-decls -Wcast-qual -Wwrite-strings -Wundef -Wmissing-prototypes -Wl,--as-needed -c -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
+END /tmp/ffconf.SKhk17jP.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -pthread -Wdeclaration-after-statement -Wall -Wno-switch -Wdisabled-optimization -Wpointer-arith -Wredundant-decls -Wcast-qual -Wwrite-strings -Wundef -Wmissing-prototypes -Wl,--as-needed -c -o /tmp/ffconf.BJYw4EUC.o /tmp/ffconf.SKhk17jP.c
 mipsel-linux-gcc: --as-needed: linker input file unused because linking not done
-mipsel-linux-gcc -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -Wl,--warn-common -Wl,--as-needed -o /tmp/ffconf.sAoH9i2C /tmp/ffconf.hyh2rGhV.o -lz -pthread -lm
+mipsel-linux-gcc -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -Wl,--warn-common -Wl,--as-needed -o /tmp/ffconf.yJAKbHfR /tmp/ffconf.BJYw4EUC.o -lz -pthread -lm
 check_ldflags -Wl,-rpath-link,\$(BUILD_ROOT)/libpostproc -Wl,-rpath-link,\$(BUILD_ROOT)/libswscale -Wl,-rpath-link,\$(BUILD_ROOT)/libavfilter -Wl,-rpath-link,\$(BUILD_ROOT)/libavdevice -Wl,-rpath-link,\$(BUILD_ROOT)/libavformat -Wl,-rpath-link,\$(BUILD_ROOT)/libavcodec -Wl,-rpath-link,\$(BUILD_ROOT)/libavutil
 test_ldflags -Wl,-rpath-link,\$(BUILD_ROOT)/libpostproc -Wl,-rpath-link,\$(BUILD_ROOT)/libswscale -Wl,-rpath-link,\$(BUILD_ROOT)/libavfilter -Wl,-rpath-link,\$(BUILD_ROOT)/libavdevice -Wl,-rpath-link,\$(BUILD_ROOT)/libavformat -Wl,-rpath-link,\$(BUILD_ROOT)/libavcodec -Wl,-rpath-link,\$(BUILD_ROOT)/libavutil
 check_ld -Wl,-rpath-link,\$(BUILD_ROOT)/libpostproc -Wl,-rpath-link,\$(BUILD_ROOT)/libswscale -Wl,-rpath-link,\$(BUILD_ROOT)/libavfilter -Wl,-rpath-link,\$(BUILD_ROOT)/libavdevice -Wl,-rpath-link,\$(BUILD_ROOT)/libavformat -Wl,-rpath-link,\$(BUILD_ROOT)/libavcodec -Wl,-rpath-link,\$(BUILD_ROOT)/libavutil
 check_cc -Wl,-rpath-link,\$(BUILD_ROOT)/libpostproc -Wl,-rpath-link,\$(BUILD_ROOT)/libswscale -Wl,-rpath-link,\$(BUILD_ROOT)/libavfilter -Wl,-rpath-link,\$(BUILD_ROOT)/libavdevice -Wl,-rpath-link,\$(BUILD_ROOT)/libavformat -Wl,-rpath-link,\$(BUILD_ROOT)/libavcodec -Wl,-rpath-link,\$(BUILD_ROOT)/libavutil
-BEGIN /tmp/ffconf.ERx5dseQ.c
+BEGIN /tmp/ffconf.SKhk17jP.c
     1	int main(void){ return 0; }
-END /tmp/ffconf.ERx5dseQ.c
-mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -pthread -g -Wdeclaration-after-statement -Wall -Wno-switch -Wdisabled-optimization -Wpointer-arith -Wredundant-decls -Wcast-qual -Wwrite-strings -Wundef -Wmissing-prototypes -Wl,-rpath-link,\$(BUILD_ROOT)/libpostproc -Wl,-rpath-link,\$(BUILD_ROOT)/libswscale -Wl,-rpath-link,\$(BUILD_ROOT)/libavfilter -Wl,-rpath-link,\$(BUILD_ROOT)/libavdevice -Wl,-rpath-link,\$(BUILD_ROOT)/libavformat -Wl,-rpath-link,\$(BUILD_ROOT)/libavcodec -Wl,-rpath-link,\$(BUILD_ROOT)/libavutil -c -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
+END /tmp/ffconf.SKhk17jP.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -pthread -Wdeclaration-after-statement -Wall -Wno-switch -Wdisabled-optimization -Wpointer-arith -Wredundant-decls -Wcast-qual -Wwrite-strings -Wundef -Wmissing-prototypes -Wl,-rpath-link,\$(BUILD_ROOT)/libpostproc -Wl,-rpath-link,\$(BUILD_ROOT)/libswscale -Wl,-rpath-link,\$(BUILD_ROOT)/libavfilter -Wl,-rpath-link,\$(BUILD_ROOT)/libavdevice -Wl,-rpath-link,\$(BUILD_ROOT)/libavformat -Wl,-rpath-link,\$(BUILD_ROOT)/libavcodec -Wl,-rpath-link,\$(BUILD_ROOT)/libavutil -c -o /tmp/ffconf.BJYw4EUC.o /tmp/ffconf.SKhk17jP.c
 mipsel-linux-gcc: -rpath-link: linker input file unused because linking not done
 mipsel-linux-gcc: \$(BUILD_ROOT)/libpostproc: linker input file unused because linking not done
 mipsel-linux-gcc: -rpath-link: linker input file unused because linking not done
@@ -4010,85 +3992,85 @@ mipsel-linux-gcc: -rpath-link: linker input file unused because linking not done
 mipsel-linux-gcc: \$(BUILD_ROOT)/libavcodec: linker input file unused because linking not done
 mipsel-linux-gcc: -rpath-link: linker input file unused because linking not done
 mipsel-linux-gcc: \$(BUILD_ROOT)/libavutil: linker input file unused because linking not done
-mipsel-linux-gcc -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -Wl,--warn-common -Wl,--as-needed -Wl,-rpath-link,\$(BUILD_ROOT)/libpostproc -Wl,-rpath-link,\$(BUILD_ROOT)/libswscale -Wl,-rpath-link,\$(BUILD_ROOT)/libavfilter -Wl,-rpath-link,\$(BUILD_ROOT)/libavdevice -Wl,-rpath-link,\$(BUILD_ROOT)/libavformat -Wl,-rpath-link,\$(BUILD_ROOT)/libavcodec -Wl,-rpath-link,\$(BUILD_ROOT)/libavutil -o /tmp/ffconf.sAoH9i2C /tmp/ffconf.hyh2rGhV.o -lz -pthread -lm
+mipsel-linux-gcc -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -Wl,--warn-common -Wl,--as-needed -Wl,-rpath-link,\$(BUILD_ROOT)/libpostproc -Wl,-rpath-link,\$(BUILD_ROOT)/libswscale -Wl,-rpath-link,\$(BUILD_ROOT)/libavfilter -Wl,-rpath-link,\$(BUILD_ROOT)/libavdevice -Wl,-rpath-link,\$(BUILD_ROOT)/libavformat -Wl,-rpath-link,\$(BUILD_ROOT)/libavcodec -Wl,-rpath-link,\$(BUILD_ROOT)/libavutil -o /tmp/ffconf.yJAKbHfR /tmp/ffconf.BJYw4EUC.o -lz -pthread -lm
 check_ldflags -Wl,-Bsymbolic
 test_ldflags -Wl,-Bsymbolic
 check_ld -Wl,-Bsymbolic
 check_cc -Wl,-Bsymbolic
-BEGIN /tmp/ffconf.ERx5dseQ.c
+BEGIN /tmp/ffconf.SKhk17jP.c
     1	int main(void){ return 0; }
-END /tmp/ffconf.ERx5dseQ.c
-mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -pthread -g -Wdeclaration-after-statement -Wall -Wno-switch -Wdisabled-optimization -Wpointer-arith -Wredundant-decls -Wcast-qual -Wwrite-strings -Wundef -Wmissing-prototypes -Wl,-Bsymbolic -c -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
+END /tmp/ffconf.SKhk17jP.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -pthread -Wdeclaration-after-statement -Wall -Wno-switch -Wdisabled-optimization -Wpointer-arith -Wredundant-decls -Wcast-qual -Wwrite-strings -Wundef -Wmissing-prototypes -Wl,-Bsymbolic -c -o /tmp/ffconf.BJYw4EUC.o /tmp/ffconf.SKhk17jP.c
 mipsel-linux-gcc: -Bsymbolic: linker input file unused because linking not done
-mipsel-linux-gcc -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -Wl,--warn-common -Wl,--as-needed -Wl,-rpath-link,$(BUILD_ROOT)/libpostproc -Wl,-rpath-link,$(BUILD_ROOT)/libswscale -Wl,-rpath-link,$(BUILD_ROOT)/libavfilter -Wl,-rpath-link,$(BUILD_ROOT)/libavdevice -Wl,-rpath-link,$(BUILD_ROOT)/libavformat -Wl,-rpath-link,$(BUILD_ROOT)/libavcodec -Wl,-rpath-link,$(BUILD_ROOT)/libavutil -Wl,-Bsymbolic -o /tmp/ffconf.sAoH9i2C /tmp/ffconf.hyh2rGhV.o -lz -pthread -lm
-test_ldflags -Wl,--version-script,/tmp/ffconf.J0t6KttF.ver
-check_ld -Wl,--version-script,/tmp/ffconf.J0t6KttF.ver
-check_cc -Wl,--version-script,/tmp/ffconf.J0t6KttF.ver
-BEGIN /tmp/ffconf.ERx5dseQ.c
+mipsel-linux-gcc -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -Wl,--warn-common -Wl,--as-needed -Wl,-rpath-link,$(BUILD_ROOT)/libpostproc -Wl,-rpath-link,$(BUILD_ROOT)/libswscale -Wl,-rpath-link,$(BUILD_ROOT)/libavfilter -Wl,-rpath-link,$(BUILD_ROOT)/libavdevice -Wl,-rpath-link,$(BUILD_ROOT)/libavformat -Wl,-rpath-link,$(BUILD_ROOT)/libavcodec -Wl,-rpath-link,$(BUILD_ROOT)/libavutil -Wl,-Bsymbolic -o /tmp/ffconf.yJAKbHfR /tmp/ffconf.BJYw4EUC.o -lz -pthread -lm
+test_ldflags -Wl,--version-script,/tmp/ffconf.QakxjoeQ.ver
+check_ld -Wl,--version-script,/tmp/ffconf.QakxjoeQ.ver
+check_cc -Wl,--version-script,/tmp/ffconf.QakxjoeQ.ver
+BEGIN /tmp/ffconf.SKhk17jP.c
     1	int main(void){ return 0; }
-END /tmp/ffconf.ERx5dseQ.c
-mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -pthread -g -Wdeclaration-after-statement -Wall -Wno-switch -Wdisabled-optimization -Wpointer-arith -Wredundant-decls -Wcast-qual -Wwrite-strings -Wundef -Wmissing-prototypes -Wl,--version-script,/tmp/ffconf.J0t6KttF.ver -c -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
+END /tmp/ffconf.SKhk17jP.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -pthread -Wdeclaration-after-statement -Wall -Wno-switch -Wdisabled-optimization -Wpointer-arith -Wredundant-decls -Wcast-qual -Wwrite-strings -Wundef -Wmissing-prototypes -Wl,--version-script,/tmp/ffconf.QakxjoeQ.ver -c -o /tmp/ffconf.BJYw4EUC.o /tmp/ffconf.SKhk17jP.c
 mipsel-linux-gcc: --version-script: linker input file unused because linking not done
-mipsel-linux-gcc: /tmp/ffconf.J0t6KttF.ver: linker input file unused because linking not done
-mipsel-linux-gcc -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -Wl,--warn-common -Wl,--as-needed -Wl,-rpath-link,$(BUILD_ROOT)/libpostproc -Wl,-rpath-link,$(BUILD_ROOT)/libswscale -Wl,-rpath-link,$(BUILD_ROOT)/libavfilter -Wl,-rpath-link,$(BUILD_ROOT)/libavdevice -Wl,-rpath-link,$(BUILD_ROOT)/libavformat -Wl,-rpath-link,$(BUILD_ROOT)/libavcodec -Wl,-rpath-link,$(BUILD_ROOT)/libavutil -Wl,-Bsymbolic -Wl,--version-script,/tmp/ffconf.J0t6KttF.ver -o /tmp/ffconf.sAoH9i2C /tmp/ffconf.hyh2rGhV.o -lz -pthread -lm
+mipsel-linux-gcc: /tmp/ffconf.QakxjoeQ.ver: linker input file unused because linking not done
+mipsel-linux-gcc -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -Wl,--warn-common -Wl,--as-needed -Wl,-rpath-link,$(BUILD_ROOT)/libpostproc -Wl,-rpath-link,$(BUILD_ROOT)/libswscale -Wl,-rpath-link,$(BUILD_ROOT)/libavfilter -Wl,-rpath-link,$(BUILD_ROOT)/libavdevice -Wl,-rpath-link,$(BUILD_ROOT)/libavformat -Wl,-rpath-link,$(BUILD_ROOT)/libavcodec -Wl,-rpath-link,$(BUILD_ROOT)/libavutil -Wl,-Bsymbolic -Wl,--version-script,/tmp/ffconf.QakxjoeQ.ver -o /tmp/ffconf.yJAKbHfR /tmp/ffconf.BJYw4EUC.o -lz -pthread -lm
 check_cc
-BEGIN /tmp/ffconf.ERx5dseQ.c
+BEGIN /tmp/ffconf.SKhk17jP.c
     1	void ff_foo(void) __asm__ ("av_foo@VERSION");
     2	void ff_foo(void) { __asm__(""); }
-END /tmp/ffconf.ERx5dseQ.c
-mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -pthread -g -Wdeclaration-after-statement -Wall -Wno-switch -Wdisabled-optimization -Wpointer-arith -Wredundant-decls -Wcast-qual -Wwrite-strings -Wundef -Wmissing-prototypes -c -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
+END /tmp/ffconf.SKhk17jP.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -pthread -Wdeclaration-after-statement -Wall -Wno-switch -Wdisabled-optimization -Wpointer-arith -Wredundant-decls -Wcast-qual -Wwrite-strings -Wundef -Wmissing-prototypes -c -o /tmp/ffconf.BJYw4EUC.o /tmp/ffconf.SKhk17jP.c
 {standard input}: Assembler messages:
-{standard input}:13: Error: : no such section
-{standard input}:13: Error: junk at end of line, first unrecognized character is `@'
-{standard input}:14: Error: junk at end of line, first unrecognized character is `@'
-{standard input}:15: Error: unrecognized symbol type "VERSION"
-{standard input}:15: Error: junk at end of line, first unrecognized character is `,'
-{standard input}:16: Error: unrecognized opcode `av_foo@VERSION:'
-{standard input}:26: Error: junk at end of line, first unrecognized character is `@'
+{standard input}:7: Error: : no such section
+{standard input}:7: Error: junk at end of line, first unrecognized character is `@'
+{standard input}:8: Error: junk at end of line, first unrecognized character is `@'
+{standard input}:9: Error: unrecognized symbol type "VERSION"
+{standard input}:9: Error: junk at end of line, first unrecognized character is `,'
+{standard input}:10: Error: unrecognized opcode `av_foo@VERSION:'
+{standard input}:15: Error: junk at end of line, first unrecognized character is `@'
 check_cc
-BEGIN /tmp/ffconf.ERx5dseQ.c
+BEGIN /tmp/ffconf.SKhk17jP.c
     1	__asm__(".symver ff_foo,av_foo@VERSION");
     2	void ff_foo(void) {}
-END /tmp/ffconf.ERx5dseQ.c
-mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -pthread -g -Wdeclaration-after-statement -Wall -Wno-switch -Wdisabled-optimization -Wpointer-arith -Wredundant-decls -Wcast-qual -Wwrite-strings -Wundef -Wmissing-prototypes -c -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
-/tmp/ffconf.ERx5dseQ.c:2: warning: no previous prototype for 'ff_foo'
+END /tmp/ffconf.SKhk17jP.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -pthread -Wdeclaration-after-statement -Wall -Wno-switch -Wdisabled-optimization -Wpointer-arith -Wredundant-decls -Wcast-qual -Wwrite-strings -Wundef -Wmissing-prototypes -c -o /tmp/ffconf.BJYw4EUC.o /tmp/ffconf.SKhk17jP.c
+/tmp/ffconf.SKhk17jP.c:2: warning: no previous prototype for 'ff_foo'
 check_cflags -fno-math-errno
 check_cc -fno-math-errno
-BEGIN /tmp/ffconf.ERx5dseQ.c
+BEGIN /tmp/ffconf.SKhk17jP.c
     1	int x;
-END /tmp/ffconf.ERx5dseQ.c
-mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -pthread -g -Wdeclaration-after-statement -Wall -Wno-switch -Wdisabled-optimization -Wpointer-arith -Wredundant-decls -Wcast-qual -Wwrite-strings -Wundef -Wmissing-prototypes -O3 -fno-math-errno -c -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
+END /tmp/ffconf.SKhk17jP.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -pthread -Wdeclaration-after-statement -Wall -Wno-switch -Wdisabled-optimization -Wpointer-arith -Wredundant-decls -Wcast-qual -Wwrite-strings -Wundef -Wmissing-prototypes -O3 -fno-math-errno -c -o /tmp/ffconf.BJYw4EUC.o /tmp/ffconf.SKhk17jP.c
 check_cflags -fno-signed-zeros
 check_cc -fno-signed-zeros
-BEGIN /tmp/ffconf.ERx5dseQ.c
+BEGIN /tmp/ffconf.SKhk17jP.c
     1	int x;
-END /tmp/ffconf.ERx5dseQ.c
-mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -pthread -g -Wdeclaration-after-statement -Wall -Wno-switch -Wdisabled-optimization -Wpointer-arith -Wredundant-decls -Wcast-qual -Wwrite-strings -Wundef -Wmissing-prototypes -O3 -fno-math-errno -fno-signed-zeros -c -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
+END /tmp/ffconf.SKhk17jP.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -pthread -Wdeclaration-after-statement -Wall -Wno-switch -Wdisabled-optimization -Wpointer-arith -Wredundant-decls -Wcast-qual -Wwrite-strings -Wundef -Wmissing-prototypes -O3 -fno-math-errno -fno-signed-zeros -c -o /tmp/ffconf.BJYw4EUC.o /tmp/ffconf.SKhk17jP.c
 cc1: error: unrecognized command line option "-fno-signed-zeros"
 check_cflags -fno-tree-vectorize
 check_cc -fno-tree-vectorize
-BEGIN /tmp/ffconf.ERx5dseQ.c
+BEGIN /tmp/ffconf.SKhk17jP.c
     1	int x;
-END /tmp/ffconf.ERx5dseQ.c
-mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -pthread -g -Wdeclaration-after-statement -Wall -Wno-switch -Wdisabled-optimization -Wpointer-arith -Wredundant-decls -Wcast-qual -Wwrite-strings -Wundef -Wmissing-prototypes -O3 -fno-math-errno -fno-tree-vectorize -c -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
+END /tmp/ffconf.SKhk17jP.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -pthread -Wdeclaration-after-statement -Wall -Wno-switch -Wdisabled-optimization -Wpointer-arith -Wredundant-decls -Wcast-qual -Wwrite-strings -Wundef -Wmissing-prototypes -O3 -fno-math-errno -fno-tree-vectorize -c -o /tmp/ffconf.BJYw4EUC.o /tmp/ffconf.SKhk17jP.c
 cc1: error: unrecognized command line option "-fno-tree-vectorize"
 check_cflags -Werror=implicit
 check_cc -Werror=implicit
-BEGIN /tmp/ffconf.ERx5dseQ.c
+BEGIN /tmp/ffconf.SKhk17jP.c
     1	int x;
-END /tmp/ffconf.ERx5dseQ.c
-mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -pthread -g -Wdeclaration-after-statement -Wall -Wno-switch -Wdisabled-optimization -Wpointer-arith -Wredundant-decls -Wcast-qual -Wwrite-strings -Wundef -Wmissing-prototypes -O3 -fno-math-errno -Werror=implicit -c -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
+END /tmp/ffconf.SKhk17jP.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -pthread -Wdeclaration-after-statement -Wall -Wno-switch -Wdisabled-optimization -Wpointer-arith -Wredundant-decls -Wcast-qual -Wwrite-strings -Wundef -Wmissing-prototypes -O3 -fno-math-errno -Werror=implicit -c -o /tmp/ffconf.BJYw4EUC.o /tmp/ffconf.SKhk17jP.c
 cc1: error: unrecognized command line option "-Werror=implicit"
 check_cflags -Werror=missing-prototypes
 check_cc -Werror=missing-prototypes
-BEGIN /tmp/ffconf.ERx5dseQ.c
+BEGIN /tmp/ffconf.SKhk17jP.c
     1	int x;
-END /tmp/ffconf.ERx5dseQ.c
-mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -pthread -g -Wdeclaration-after-statement -Wall -Wno-switch -Wdisabled-optimization -Wpointer-arith -Wredundant-decls -Wcast-qual -Wwrite-strings -Wundef -Wmissing-prototypes -O3 -fno-math-errno -Werror=missing-prototypes -c -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
+END /tmp/ffconf.SKhk17jP.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -O2 -fomit-frame-pointer -pipe -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source -std=c99 -fomit-frame-pointer -fPIC -pthread -Wdeclaration-after-statement -Wall -Wno-switch -Wdisabled-optimization -Wpointer-arith -Wredundant-decls -Wcast-qual -Wwrite-strings -Wundef -Wmissing-prototypes -O3 -fno-math-errno -Werror=missing-prototypes -c -o /tmp/ffconf.BJYw4EUC.o /tmp/ffconf.SKhk17jP.c
 cc1: error: unrecognized command line option "-Werror=missing-prototypes"
 check_asm asmalign_pot ".align 3"
 check_as
-BEGIN /tmp/ffconf.ERx5dseQ.c
+BEGIN /tmp/ffconf.SKhk17jP.c
     1	void foo(void){ __asm__ volatile(".align 3"); }
-END /tmp/ffconf.ERx5dseQ.c
-mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -fPIC -g -c -o /tmp/ffconf.hyh2rGhV.o /tmp/ffconf.ERx5dseQ.c
+END /tmp/ffconf.SKhk17jP.c
+mipsel-linux-gcc -D_ISOC99_SOURCE -D_POSIX_C_SOURCE=200112 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DPIC -fPIC -c -o /tmp/ffconf.BJYw4EUC.o /tmp/ffconf.SKhk17jP.c

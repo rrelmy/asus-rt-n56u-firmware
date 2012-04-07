@@ -1,19 +1,19 @@
-/*  MiniDLNA media server
- *  Copyright (C) 2008-2010  Justin Maggard
+/* MiniDLNA media server
+ * Copyright (C) 2008-2010  Justin Maggard
  *
- *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
+ * This file is part of MiniDLNA.
  *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * MiniDLNA is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2 as
+ * published by the Free Software Foundation.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * MiniDLNA is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with MiniDLNA. If not, see <http://www.gnu.org/licenses/>.
  */
 #include "config.h"
 #include <stdio.h>
@@ -29,13 +29,12 @@
 #include <sys/time.h>
 #include <sys/resource.h>
 #include <poll.h>
-//#ifdef HAVE_INOTIFY_H
-//#include <sys/inotify.h>
-//#else
-#include <linux/inotify.h>
-//#include "linux/inotify.h"
+#ifdef HAVE_INOTIFY_H
+#include <sys/inotify.h>
+#else
+#include "linux/inotify.h"
 #include "linux/inotify-syscalls.h"
-//#endif
+#endif
 
 #include "upnpglobalvars.h"
 #include "inotify.h"
@@ -190,11 +189,10 @@ inotify_create_watches(int fd)
 		                        "Hopefully it is enough to cover %u current directories plus any new ones added.\n", num_watches);
 	}
 
-	media_path = media_dirs;
-	while( media_path )
+	for( media_path = media_dirs; media_path != NULL; media_path = media_path->next )
 	{
+		DPRINTF(E_DEBUG, L_INOTIFY, "Add watch to %s\n", media_path->path);
 		add_watch(fd, media_path->path);
-		media_path = media_path->next;
 	}
 	sql_get_table(db, "SELECT PATH from DETAILS where SIZE is NULL and PATH is not NULL", &result, &rows, NULL);
 	for( i=1; i <= rows; i++ )
@@ -646,9 +644,8 @@ start_inotify()
 	pollfds[0].fd = inotify_init();
 	pollfds[0].events = POLLIN;
 
-	if ( pollfds[0].fd < 0 ) {
+	if ( pollfds[0].fd < 0 )
 		DPRINTF(E_ERROR, L_INOTIFY, "inotify_init() failed!\n");
-	}
 
 	while( scanning )
 	{
@@ -697,32 +694,44 @@ start_inotify()
 				}
 				esc_name = modifyString(strdup(event->name), "&", "&amp;amp;", 0);
 				sprintf(path_buf, "%s/%s", get_path_from_wd(event->wd), event->name);
-				if ( (event->mask & IN_CREATE && event->mask & IN_ISDIR) ||
-				     (event->mask & IN_MOVED_TO && event->mask & IN_ISDIR) )
+				if ( event->mask & IN_ISDIR && (event->mask & (IN_CREATE|IN_MOVED_TO)) )
 				{
-					DPRINTF(E_DEBUG, L_INOTIFY,  "The directory %s was %s.\n", path_buf, (event->mask & IN_MOVED_TO ? "moved here" : "created"));
+					DPRINTF(E_DEBUG, L_INOTIFY,  "The directory %s was %s.\n",
+						path_buf, (event->mask & IN_MOVED_TO ? "moved here" : "created"));
 					inotify_insert_directory(pollfds[0].fd, esc_name, path_buf);
 				}
-				else if ( event->mask & IN_CLOSE_WRITE || event->mask & IN_MOVED_TO )
+				else if ( (event->mask & (IN_CLOSE_WRITE|IN_MOVED_TO|IN_CREATE)) &&
+				          (lstat(path_buf, &st) == 0) )
 				{
-					if( stat(path_buf, &st) == 0 && st.st_size > 0 )
+					if( S_ISLNK(st.st_mode) )
 					{
-						DPRINTF(E_DEBUG, L_INOTIFY, "The file %s was %s.\n", path_buf, (event->mask & IN_MOVED_TO ? "moved here" : "changed"));
-						inotify_insert_file(esc_name, path_buf);
+						DPRINTF(E_DEBUG, L_INOTIFY, "The symbolic link %s was %s.\n",
+							path_buf, (event->mask & IN_MOVED_TO ? "moved here" : "created"));
+						if( stat(path_buf, &st) == 0 && S_ISDIR(st.st_mode) )
+							inotify_insert_directory(pollfds[0].fd, esc_name, path_buf);
+						else
+							inotify_insert_file(esc_name, path_buf);
+					}
+					else if( event->mask & (IN_CLOSE_WRITE|IN_MOVED_TO) && st.st_size > 0 )
+					{
+						if( (event->mask & IN_MOVED_TO) ||
+						    (sql_get_int_field(db, "SELECT TIMESTAMP from DETAILS where PATH = '%q'", path_buf) != st.st_mtime) )
+						{
+							DPRINTF(E_DEBUG, L_INOTIFY, "The file %s was %s.\n",
+								path_buf, (event->mask & IN_MOVED_TO ? "moved here" : "changed"));
+							inotify_insert_file(esc_name, path_buf);
+						}
 					}
 				}
-				else if ( event->mask & IN_DELETE || event->mask & IN_MOVED_FROM )
+				else if ( event->mask & (IN_DELETE|IN_MOVED_FROM) )
 				{
+					DPRINTF(E_DEBUG, L_INOTIFY, "The %s %s was %s.\n",
+						(event->mask & IN_ISDIR ? "directory" : "file"),
+						path_buf, (event->mask & IN_MOVED_FROM ? "moved away" : "deleted"));
 					if ( event->mask & IN_ISDIR )
-					{
-						DPRINTF(E_DEBUG, L_INOTIFY, "The directory %s was %s.\n", path_buf, (event->mask & IN_MOVED_FROM ? "moved away" : "deleted"));
 						inotify_remove_directory(pollfds[0].fd, path_buf);
-					}
 					else
-					{
-						DPRINTF(E_DEBUG, L_INOTIFY, "The file %s was %s.\n", path_buf, (event->mask & IN_MOVED_FROM ? "moved away" : "deleted"));
 						inotify_remove_file(path_buf);
-					}
 				}
 				free(esc_name);
 			}

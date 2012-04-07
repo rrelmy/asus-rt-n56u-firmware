@@ -1,6 +1,6 @@
 # @(#) list changes to udpxy from build to build
 #
-# Copyright 2008 Pavel V. Cherenkov
+# Copyright 2008-2011 Pavel V. Cherenkov (pcherenkov@gmail.com)
 #
 #  This file is part of udpxy.
 #
@@ -151,6 +151,15 @@ Build 15 (XX-Mar-2010)
 Build 16 (21-Mar-2010)
     (*) FIXED: hanging when specifying network interface by name
 
+Build 17 (27-Jun-2010)
+    (*) FIXED: server terminates on ECONNABORTED from accept()
+    (*) Dynamic memory allocation for HTTP status pages implemented - will not truncate pages
+
+Build 18 (9-Jan-2011)
+    (*) IP/port separator in HTTP request to udpxy can be any of those: ":%~+-^"
+
+Build 19 (9-Jan-2011)
+    (*) MAX limit of clients (-c option) upped to 5,000 (five thousand)
 
 
 # __EOF__

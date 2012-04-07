@@ -1,19 +1,19 @@
-/*  MiniDLNA media server
- *  Copyright (C) 2008-2009  Justin Maggard
+/* MiniDLNA media server
+ * Copyright (C) 2008-2009  Justin Maggard
  *
- *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
+ * This file is part of MiniDLNA.
  *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * MiniDLNA is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2 as
+ * published by the Free Software Foundation.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * MiniDLNA is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with MiniDLNA. If not, see <http://www.gnu.org/licenses/>.
  */
 #include <stdio.h>
 #include <ctype.h>
@@ -27,7 +27,10 @@
 #include <fcntl.h>
 #include <errno.h>
 
+//#include <nvram/bcmnvram.h>	// ASUS EXT
+
 #include "minidlnatypes.h"
+#include "upnpglobalvars.h"
 #include "log.h"
 
 int
@@ -214,7 +217,7 @@ is_video(const char * file)
 		ends_with(file, ".mts") || ends_with(file, ".m2ts")  ||
 		ends_with(file, ".m2t") || ends_with(file, ".mkv")   ||
 		ends_with(file, ".vob") || ends_with(file, ".ts")    ||
-		ends_with(file, ".tp")  ||	// ASUS
+		ends_with(file, ".tp")  ||	// ASUS EXT
 		ends_with(file, ".flv") || ends_with(file, ".xvid")  ||
 #ifdef TIVO_SUPPORT
 		ends_with(file, ".TiVo") ||
@@ -244,6 +247,29 @@ int
 is_playlist(const char * file)
 {
 	return (ends_with(file, ".m3u") || ends_with(file, ".pls"));
+}
+
+int
+is_album_art(const char * name)
+{
+	struct album_art_name_s * album_art_name;
+
+	/* Check if this file name matches one of the default album art names */
+	for( album_art_name = album_art_names; album_art_name; album_art_name = album_art_name->next )
+	{
+		if( album_art_name->wildcard )
+		{
+			if( strncmp(album_art_name->name, name, strlen(album_art_name->name)) == 0 )
+				break;
+		}
+		else
+		{
+			if( strcmp(album_art_name->name, name) == 0 )
+				break;
+		}
+	}
+
+	return (album_art_name ? 1 : 0);
 }
 
 int

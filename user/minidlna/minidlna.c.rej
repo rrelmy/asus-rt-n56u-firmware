@@ -1,0 +1,18 @@
+--- minidlna.c	2010-07-21 00:26:36.000000000 +0100
++++ minidlna.c	2011-02-14 16:26:40.000000000 +0000
+@@ -35,6 +35,7 @@
+ 
+ #include "upnpglobalvars.h"
+ #include "sql.h"
++#include "naturalsort.h"
+ #include "upnphttp.h"
+ #include "upnpdescgen.h"
+ #include "minidlnapath.h"
+@@ -221,6 +222,7 @@
+ 	sql_exec(db, "pragma journal_mode = OFF");
+ 	sql_exec(db, "pragma synchronous = OFF;");
+ 	sql_exec(db, "pragma default_cache_size = 8192;");
++	sqlite3_create_collation(db, "naturalsort", SQLITE_UTF8, NULL, naturalsort);
+ 	return new_db;
+ }
+ 

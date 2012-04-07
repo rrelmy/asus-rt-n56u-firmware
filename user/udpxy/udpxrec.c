@@ -1,6 +1,6 @@
 /* @(#) udpxrec utility: main module
  *
- * Copyright 2008 Pavel V. Cherenkov (pcherenkov@gmail.com)
+ * Copyright 2008-2011 Pavel V. Cherenkov (pcherenkov@gmail.com)
  *
  *  This file is part of udpxy.
  *
@@ -17,7 +17,6 @@
  *  You should have received a copy of the GNU General Public License
  *  along with udpxy.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 #include <stdio.h>
 #include <unistd.h>
 #include <string.h>
@@ -98,6 +97,7 @@ usage( const char* app, FILE* fp )
     extern const char  VERSION[];
     extern const int   BUILDNUM;
     extern const char  UDPXY_COPYRIGHT_NOTICE[];
+    extern const char  UDPXY_CONTACT[];
     extern const char  COMPILE_MODE[];
 
     (void) fprintf(fp, "%s %s (build %d) %s\n", app, VERSION, BUILDNUM,
@@ -135,7 +135,8 @@ usage( const char* app, FILE* fp )
             "\tset socket buffer to 64Kb; increment nice value by 2;\n"
             "\twrite captured video to /opt/video/tv5.mpg\n",
             g_udpxrec_app );
-    (void) fprintf( fp, "\n  %s\n\n", UDPXY_COPYRIGHT_NOTICE );
+    (void) fprintf( fp, "\n  %s\n", UDPXY_COPYRIGHT_NOTICE );
+    (void) fprintf( fp, "  %s\n\n", UDPXY_CONTACT );
     return;
 }
 
@@ -817,7 +818,6 @@ int udpxrec_main( int argc, char* const argv[] )
 
     return rc;
 }
-
 
 /* __EOF__ */
 

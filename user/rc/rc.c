@@ -111,7 +111,7 @@ restore_defaults(void)
 	restore_defaults = !nvram_match("restore_defaults", "0");
 
 	if (restore_defaults) {
-		fprintf(stderr, "\n## Restoring defaults... ##\n");
+		dbg("\n## Restoring defaults... ##\n");
 		logmessage(LOGNAME, "Restoring defaults...");
 	}
 
@@ -128,7 +128,7 @@ restore_defaults(void)
 	if (restore_defaults) {
 		/* default value of vlan */
 		nvram_commit();		
-		fprintf(stderr, "done\n");
+		dbg("done\n");
 	}
 
 	klogctl(8, NULL, atoi(nvram_safe_get("console_loglevel")));
@@ -209,6 +209,10 @@ sysinit(void)
 
 	mkdir("/tmp/rc_notification", 0777);		// 2008.10 magic
 	mkdir("/tmp/rc_action_incomplete", 0777);	// 2008.10 magic
+
+	/* Make /etc symlinks for compatibility */
+	symlink("/tmp/resolv.conf", "/etc/resolv.conf");
+	symlink("/etc_ro/protocols", "/etc/protocols");
 
 	/* extra settings */
 	symlink("/tmp", "/shares");
@@ -320,7 +324,25 @@ insmod(void)
 #endif
 #endif
 #endif
+/*
+	if (nvram_match("wan_route_x", "IP_Routed"))
+	{
+		if (atoi(nvram_safe_get("port_ftp")) != 21)
+		{
+			char ports[32];
 
+			sprintf(ports, "ports=21,%d", atoi(nvram_get("port_ftp")));
+			eval("insmod", "nf_conntrack_ftp", ports);    
+			eval("insmod", "nf_nat_ftp");
+		}
+		else
+		{
+			eval("insmod", "nf_conntrack_ftp");
+			eval("insmod", "nf_nat_ftp");
+
+		}
+	}
+*/
 //	if (!nvram_match("wan0_proto", "3g"))
 	{
 		system("insmod -q /usr/lib/ufsd.ko");
@@ -378,12 +400,19 @@ set_timezone(void)
 	struct tm gm, local;
 	struct timezone tz;
 	struct timeval *tvp = NULL;
+	FILE *f;
 
 	/* Export TZ variable for the time libraries to 
 	 * use.
 	 */
 	time_zone_x_mapping();
-	setenv("TZ", nvram_get("time_zone_x"), 1);
+	setenv("TZ", nvram_safe_get("time_zone_x"), 1);
+
+	/* uClibc TZ */
+	if ((f = fopen("/etc/TZ", "w"))) {
+		fprintf(f, "%s\n", nvram_safe_get("time_zone_x"));
+		fclose(f);
+	}
 
 	/* Update kernel timezone */
 	time(&now);
@@ -646,7 +675,7 @@ void restart_qos()
 			(nvram_match("qos_ubw","0") || nvram_match("qos_ubw",""))
 		)
 		{
-			fprintf(stderr, "no wan rate! skip qos setting!\n");
+			dbg("no wan rate! skip qos setting!\n");
 			goto Speedtest_Init_failed;
 		}
 
@@ -660,13 +689,13 @@ void restart_qos()
 		nvram_set("qos_enable", "1");
 		track_set("1");
 
-		fprintf(stderr, "rebuild QoS rules...\n");
+		dbg("rebuild QoS rules...\n");
 		Speedtest_Init();
 	}
 	else
 	{
 Speedtest_Init_failed:
-		fprintf(stderr, "clear QoS rules...\n");
+		dbg("clear QoS rules...\n");
 
 		track_set("0");
 
@@ -735,10 +764,9 @@ static void handle_notifications(void) {
 		full_name = (char *)(malloc(strlen(entry->d_name) + 100));
 		if (full_name == NULL)
 		{
-			fprintf(stderr,
-					"Error: Failed trying to allocate %lu bytes of memory for "
-					"the full name of an rc notification marker file.\n",
-					(unsigned long)(strlen(entry->d_name) + 100));
+			dbg("Error: Failed trying to allocate %lu bytes of memory for "
+			    "the full name of an rc notification marker file.\n",
+			    (unsigned long)(strlen(entry->d_name) + 100));
 			break;
 		}
 		sprintf(full_name, "/tmp/rc_notification/%s", entry->d_name);
@@ -749,7 +777,7 @@ static void handle_notifications(void) {
 		/* Take the appropriate action. */
 		if (strcmp(entry->d_name, "restart_reboot") == 0)
 		{
-			fprintf(stderr, "rc rebooting the system.\n");
+			dbg("rc rebooting the system.\n");
 
 			nvram_set("reboot", "1");
 /*
@@ -773,7 +801,7 @@ static void handle_notifications(void) {
 		}
 		else if (strcmp(entry->d_name, "restart_networking") == 0)
 		{
-			fprintf(stderr, "rc restarting networking.\n");
+			dbg("rc restarting networking.\n");
 			
 #ifdef WEB_REDIRECT
 			printf("--- SERVICE: Wait to kill wanduck ---\n");
@@ -792,7 +820,7 @@ static void handle_notifications(void) {
 		}
 		else if (strcmp(entry->d_name, "restart_ddns") == 0 && nvram_match("wan_route_x", "IP_Routed"))
 		{
-			fprintf(stderr, "rc restarting DDNS.\n");
+			dbg("rc restarting DDNS.\n");
 			stop_ddns();
 			
 			if (nvram_match("ddns_enable_x", "1")) {
@@ -816,7 +844,7 @@ static void handle_notifications(void) {
 					}
 					
 //					if (nvram_match("dms_running", "1")) {
-					if (pids("ushare")) {
+					if (pids("minidlna") || pids("ushare")) {
 						stop_dms();
 #ifdef CONFIG_USER_MTDAAPD
 						stop_mt_daapd();
@@ -829,7 +857,7 @@ static void handle_notifications(void) {
 		}
 		else if (strcmp(entry->d_name, "restart_httpd") == 0)
 		{
-			fprintf(stderr, "rc restarting HTTPD.\n");
+			dbg("rc restarting HTTPD.\n");
 			stop_httpd();
 			nvram_unset("login_ip");
 			nvram_unset("login_ip_str");
@@ -838,21 +866,21 @@ static void handle_notifications(void) {
 		}
 		else if (strcmp(entry->d_name, "restart_dns") == 0)
 		{
-			fprintf(stderr, "rc restarting DNS.\n");
+			dbg("rc restarting DNS.\n");
 //			stop_dns();
 //			start_dns();
 			restart_dns();
 		}
 		else if (strcmp(entry->d_name, "restart_dhcpd") == 0)
 		{
-			fprintf(stderr, "rc restarting DHCPD.\n");
+			dbg("rc restarting DHCPD.\n");
 			restart_dhcpd();
 		}
 		else if (strcmp(entry->d_name, "restart_upnp") == 0)
 		{
 			stop_upnp();
 			if (nvram_match("upnp_enable", "1")) {
-				fprintf(stderr, "rc restarting UPNP.\n");
+				dbg("rc restarting UPNP.\n");
 				nvram_set("upnp_enable_ex", "1");
 				start_upnp();
 			}
@@ -864,7 +892,7 @@ static void handle_notifications(void) {
 			stop_mt_daapd();
 #endif
                         if (nvram_match("apps_dms", "1")) {
-                                fprintf(stderr, "rc restarting DMS.\n");
+                                dbg("rc restarting DMS.\n");
                                 nvram_set("apps_dmsx", "1");
                                 start_dms();
 #ifdef CONFIG_USER_MTDAAPD
@@ -882,7 +910,7 @@ static void handle_notifications(void) {
 #endif
 		else if (strcmp(entry->d_name, "restart_syslog") == 0)
 		{
-			fprintf(stderr, "rc restarting syslogd.\n");
+			dbg("rc restarting syslogd.\n");
 #ifdef ASUS_EXT  
 	stop_logger();
 	start_logger();
@@ -894,7 +922,7 @@ static void handle_notifications(void) {
 			char wan_ifname[16];
 			char *wan_proto = nvram_safe_get("wan_proto");
 			
-			fprintf(stderr, "rc restarting firewall.\n");
+			dbg("rc restarting firewall.\n");
 			/*if (!nvram_match("wan_status_t", "Connected"))
 				continue;*/
 			
@@ -914,7 +942,7 @@ static void handle_notifications(void) {
 #ifdef NOIPTABLES
 			start_firewall2(wan_ifname);
 #else
-			fprintf(stderr, "rc restarting IPTABLES firewall.\n");
+			dbg("rc restarting IPTABLES firewall.\n");
 			start_firewall_ex(wan_ifname, nvram_safe_get("wan0_ipaddr"), "br0", nvram_safe_get("lan_ipaddr"));
 #endif
 			
@@ -925,7 +953,7 @@ static void handle_notifications(void) {
 		}
 		else if (strcmp(entry->d_name, "restart_ntpc") == 0)
 		{
-			fprintf(stderr, "rc restarting ntpc.\n");
+			dbg("rc restarting ntpc.\n");
 //			stop_ntpc();
 //			start_ntpc();
 			refresh_ntpc();
@@ -933,18 +961,18 @@ static void handle_notifications(void) {
 		else if (strcmp(entry->d_name, "rebuild_cifs_config_and_password") ==
 				 0)
 		{
-			fprintf(stderr, "rc rebuilding CIFS config and password databases.\n");
+			dbg("rc rebuilding CIFS config and password databases.\n");
 //			regen_passwd_files(); /* Must be called before regen_cifs_config_file(). */
 //			regen_cifs_config_file();
 		}
 		else if (strcmp(entry->d_name, "ddns_update") == 0)
 		{
-			fprintf(stderr, "rc updating ez-ipupdate for ddns changes.\n");
+			dbg("rc updating ez-ipupdate for ddns changes.\n");
 //			update_ddns_changes();
 		}
 		else if (strcmp(entry->d_name, "restart_time") == 0)
 		{
-			fprintf(stderr, "rc restarting time.\n");
+			dbg("rc restarting time.\n");
 
 			do_timer();
 			
@@ -960,7 +988,7 @@ static void handle_notifications(void) {
 #ifdef WSC
 		else if (!strcmp(entry->d_name, "restart_wps"))
 		{
-			fprintf(stderr, "rc restart_wps\n");
+			dbg("rc restart_wps\n");
 			;	// do nothing
 		}
 #endif
@@ -971,18 +999,28 @@ static void handle_notifications(void) {
 			{
 				nvram_set("apcli_workaround", "2");
 
-				fprintf(stderr, "rc restarting apcli_monitor.\n");
+				dbg("rc restarting apcli_monitor.\n");
 
 				system("brctl addif br0 apcli0");
 				kill_pidfile_s("/var/run/apcli_monitor.pid", SIGTSTP);
 			}
 		}
 #endif
+		else if (!strcmp(entry->d_name, "restart_wifi"))
+		{
+			dbg("rc restart_wifi\n");
+
+			restart_wifi();
+		}
+		else if (!strcmp(entry->d_name, "restart_wifi_rt"))
+		{
+			dbg("rc restart_wifi_rt\n");
+
+			restart_wifi_rt();
+		}
 		else
 		{
-			fprintf(stderr,
-					"WARNING: rc notified of unrecognized event `%s'.\n",
-					entry->d_name);
+			dbg("WARNING: rc notified of unrecognized event `%s'.\n", entry->d_name);
 		}
 
 		/*
@@ -1189,6 +1227,7 @@ get_usb_path2_info()
 }
 
 int pending_hotplug_usb = 0;
+extern int stop_service_type_99;
 
 /* Main loop */
 static void
@@ -1321,11 +1360,13 @@ main_loop(void)
 				handle_notifications();
 			}
 			
-			nvram_set("success_start_service", "1");	// 2008.05 James. For judging if the system is ready.
+//			nvram_set("success_start_service", "1");	// 2008.05 James. For judging if the system is ready.
 			break;
 		case HOTPLUG:
 //			if (!nvram_match("asus_mfg", "0"))
 //				break;
+			if (stop_service_type_99)
+				break;
 /*
 			if (nvram_match("ignore_plug", "1"))
 			{
@@ -1654,7 +1695,7 @@ main(int argc, char **argv)
 		if (argv[1])
 			return mtd_erase(argv[1]);
 		else {
-			fprintf(stderr, "usage: erase [device]\n");
+			dbg("usage: erase [device]\n");
 			return EINVAL;
 		}
 	}
@@ -1688,7 +1729,7 @@ main(int argc, char **argv)
 		if (argc >= 3)
 			return mtd_write(argv[1], argv[2]);
 		else {
-			fprintf(stderr, "usage: write [path] [device]\n");
+			dbg("usage: write [path] [device]\n");
 			return EINVAL;
 		}
 	}
@@ -1704,9 +1745,13 @@ main(int argc, char **argv)
 	}
 	else if (!strcmp(base, "hotplug"))
 	{
-		fprintf(stderr, "call hotplug_usb_test()...\n");
+		dbg("call hotplug_usb_test()...\n");
 		return hotplug_usb_test();
 	}
+	else if (!strcmp(base, "halt"))
+		return kill(1, SIGQUIT);
+	else if (!strcmp(base, "reboot"))
+		return kill(1, SIGTERM);
 #ifdef DLM
 	else if (!strcmp(base, "create_swap_file"))
 		return create_swap_file(argv[1]);
@@ -1870,7 +1915,7 @@ main(int argc, char **argv)
 				return kill(1, SIGHUP);
 			}
 		} else {
-			fprintf(stderr, "usage: rc [start|stop|restart]\n");
+			dbg("usage: rc [start|stop|restart]\n");
 			return EINVAL;
 		}
 	}

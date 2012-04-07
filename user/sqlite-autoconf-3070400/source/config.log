@@ -570,7 +570,7 @@ configure:20683: $? = 0
 configure:20705: result: yes
 configure:20620: checking for fullfsync
 configure:20676: /opt/buildroot-gcc342/bin/mipsel-linux-uclibc-gcc  -o conftest -O2 -fomit-frame-pointer -pipe  -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source   -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src conftest.c  >&5
-/tmp/ccMSXH6B.o: In function `main':conftest.c:(.text+0x18): undefined reference to `fullfsync'
+/tmp/ccfntUIV.o: In function `main':conftest.c:(.text+0x18): undefined reference to `fullfsync'
 collect2: ld returned 1 exit status
 configure:20683: $? = 1
 configure: failed program was:
@@ -646,7 +646,7 @@ configure:20683: $? = 0
 configure:20705: result: yes
 configure:20734: checking for library containing tgetent
 configure:20775: /opt/buildroot-gcc342/bin/mipsel-linux-uclibc-gcc  -o conftest -O2 -fomit-frame-pointer -pipe  -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source   -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src conftest.c  >&5
-/tmp/ccmn5zD4.o: In function `main':conftest.c:(.text+0x18): undefined reference to `tgetent'
+/tmp/ccS4H8Vk.o: In function `main':conftest.c:(.text+0x18): undefined reference to `tgetent'
 collect2: ld returned 1 exit status
 configure:20782: $? = 1
 configure: failed program was:
@@ -695,7 +695,7 @@ configure:20782: $? = 0
 configure:20813: result: -lcurses
 configure:20821: checking for library containing readline
 configure:20862: /opt/buildroot-gcc342/bin/mipsel-linux-uclibc-gcc  -o conftest -O2 -fomit-frame-pointer -pipe  -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source   -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src conftest.c -lcurses  >&5
-/tmp/ccsgXFYc.o: In function `main':conftest.c:(.text+0x18): undefined reference to `readline'
+/tmp/ccrQ1aOB.o: In function `main':conftest.c:(.text+0x18): undefined reference to `readline'
 collect2: ld returned 1 exit status
 configure:20869: $? = 1
 configure: failed program was:
@@ -787,7 +787,7 @@ configure: failed program was:
 configure:20900: result: no
 configure:20914: checking for readline
 configure:20970: /opt/buildroot-gcc342/bin/mipsel-linux-uclibc-gcc  -o conftest -O2 -fomit-frame-pointer -pipe  -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source   -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src conftest.c -lcurses  >&5
-/tmp/cckdZdZs.o: In function `main':conftest.c:(.text+0x18): undefined reference to `readline'
+/tmp/cc3GV7wR.o: In function `main':conftest.c:(.text+0x18): undefined reference to `readline'
 collect2: ld returned 1 exit status
 configure:20977: $? = 1
 configure: failed program was:
@@ -857,7 +857,7 @@ configure: failed program was:
 configure:20999: result: no
 configure:21029: checking for library containing pthread_create
 configure:21070: /opt/buildroot-gcc342/bin/mipsel-linux-uclibc-gcc  -o conftest -O2 -fomit-frame-pointer -pipe  -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source   -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src conftest.c  >&5
-/tmp/ccYZwNzE.o: In function `main':conftest.c:(.text+0x18): undefined reference to `pthread_create'
+/tmp/ccXNz3Y0.o: In function `main':conftest.c:(.text+0x18): undefined reference to `pthread_create'
 collect2: ld returned 1 exit status
 configure:21077: $? = 1
 configure: failed program was:
@@ -906,7 +906,7 @@ configure:21077: $? = 0
 configure:21108: result: -lpthread
 configure:21131: checking for library containing dlopen
 configure:21172: /opt/buildroot-gcc342/bin/mipsel-linux-uclibc-gcc  -o conftest -O2 -fomit-frame-pointer -pipe  -Dlinux -D__linux__ -Dunix -DEMBED -I/root/RT-N56U/source/lib/include -I/root/RT-N56U/source/uClibc++/include -I/root/RT-N56U/source   -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src -Wl,--fatal-warnings -L/root/RT-N56U/source/lib/lib -L/root/RT-N56U/source/uClibc++/src conftest.c -lpthread  >&5
-/tmp/ccV7hfTT.o: In function `main':conftest.c:(.text+0x18): undefined reference to `dlopen'
+/tmp/cc84maVf.o: In function `main':conftest.c:(.text+0x18): undefined reference to `dlopen'
 collect2: ld returned 1 exit status
 configure:21179: $? = 1
 configure: failed program was:

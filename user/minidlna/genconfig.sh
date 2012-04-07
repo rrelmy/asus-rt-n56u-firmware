@@ -1,10 +1,24 @@
 #! /bin/sh
-# $Id: genconfig.sh,v 1.17 2010/07/17 00:47:48 jmaggard Exp $
+# $Id: genconfig.sh,v 1.20 2011/02/17 23:17:24 jmaggard Exp $
 # MiniDLNA project
 # http://sourceforge.net/projects/minidlna/
-# (c) 2008-2009 Justin Maggard
-# This software is subject to the conditions detailed in the
-# LICENCE file provided within the distribution
+#
+# MiniDLNA media server
+# Copyright (C) 2008-2009  Justin Maggard
+#
+# This file is part of MiniDLNA.
+#
+# MiniDLNA is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License version 2 as
+# published by the Free Software Foundation.
+#
+# MiniDLNA is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with MiniDLNA. If not, see <http://www.gnu.org/licenses/>.
 
 RM="rm -f"
 CONFIGFILE="config.h"
@@ -12,6 +26,8 @@ CONFIGMACRO="__CONFIG_H__"
 
 # Database path
 DB_PATH="/tmp/minidlna"
+# Log path
+LOG_PATH="${DB_PATH}"
 
 # detecting the OS name and version
 OS_NAME=`uname -s`
@@ -19,6 +35,7 @@ OS_VERSION=`uname -r`
 TIVO="/*#define TIVO_SUPPORT*/"
 NETGEAR="/*#define NETGEAR*/"
 READYNAS="/*#define READYNAS*/"
+PNPX="#define PNPX 0"
 
 ${RM} ${CONFIGFILE}
 
@@ -107,15 +124,18 @@ case $OS_NAME in
 			OS_NAME=$(awk -F'!!|=' '{ print $1 }' /etc/raidiator_version)
 			OS_VERSION=$(awk -F'!!|[=,.]' '{ print $3"."$4 }' /etc/raidiator_version)
 			OS_URL="http://www.readynas.com/"
+			LOG_PATH="/var/log"
 			DB_PATH="/var/cache/minidlna"
 			TIVO="#define TIVO_SUPPORT"
 			NETGEAR="#define NETGEAR"
 			READYNAS="#define READYNAS"
+			PNPX="#define PNPX 5"
 		# Debian GNU/Linux special case
 		elif [ -f /etc/debian_version ]; then
 			OS_NAME=Debian
 			OS_VERSION=`cat /etc/debian_version`
 			OS_URL=http://www.debian.org/
+			LOG_PATH="/var/log"
 			# use lsb_release (Linux Standard Base) when available
 			LSB_RELEASE=`which lsb_release 2>/dev/null`
 			if [ 0 -eq $? ]; then
@@ -137,13 +157,17 @@ case $OS_NAME in
 		;;
 esac
 
-echo "#define OS_NAME		\"$OS_NAME\"" >> ${CONFIGFILE}
-echo "#define OS_VERSION	\"$OS_NAME/$OS_VERSION\"" >> ${CONFIGFILE}
-echo "#define OS_URL		\"${OS_URL}\"" >> ${CONFIGFILE}
+echo "#define OS_NAME			\"$OS_NAME\"" >> ${CONFIGFILE}
+echo "#define OS_VERSION		\"$OS_NAME/$OS_VERSION\"" >> ${CONFIGFILE}
+echo "#define OS_URL			\"${OS_URL}\"" >> ${CONFIGFILE}
 echo "" >> ${CONFIGFILE}
 
 echo "/* full path of the file database */" >> ${CONFIGFILE}
-echo "#define DEFAULT_DB_PATH	\"${DB_PATH}\"" >> ${CONFIGFILE}
+echo "#define DEFAULT_DB_PATH		\"${DB_PATH}\"" >> ${CONFIGFILE}
+echo "" >> ${CONFIGFILE}
+
+echo "/* full path of the log directory */" >> ${CONFIGFILE}
+echo "#define DEFAULT_LOG_PATH	\"${LOG_PATH}\"" >> ${CONFIGFILE}
 echo "" >> ${CONFIGFILE}
 
 echo "/* Comment the following line to use home made daemonize() func instead" >> ${CONFIGFILE}
@@ -182,6 +206,8 @@ echo "/* Enable ReadyNAS-specific tweaks. */" >> ${CONFIGFILE}
 echo "${READYNAS}" >> ${CONFIGFILE}
 echo "/* Compile in TiVo support. */" >> ${CONFIGFILE}
 echo "${TIVO}" >> ${CONFIGFILE}
+echo "/* Enable PnPX support. */" >> ${CONFIGFILE}
+echo "${PNPX}" >> ${CONFIGFILE}
 echo "" >> ${CONFIGFILE}
 
 echo "#endif" >> ${CONFIGFILE}

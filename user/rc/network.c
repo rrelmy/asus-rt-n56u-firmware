@@ -476,11 +476,17 @@ vconfig()
 	ifconfig(WIF, IFUP, NULL, NULL);
 	if (nvram_match("wl_radio_x", "0"))
 		radio_main(0);
+        else
+        {
+                int txpower = atoi(nvram_safe_get("TxPower"));
+                if ((txpower >= 0) && (txpower <= 100))
+                        doSystem("iwpriv ra0 set TxPower=%d",txpower);
+        }
 #if (!defined(W7_LOGO) && !defined(WIFI_LOGO))
 #ifdef MR
-	else if (nvram_match("HT_BW", "1"))
+	if (nvram_match("HT_BW", "1"))
 #else
-	else if (nvram_match("HT_BW", "2"))
+	if (nvram_match("HT_BW", "2"))
 #endif
 	{
 		int channel = get_channel();
@@ -491,17 +497,20 @@ vconfig()
 		}
 	}
 #endif
-//	if (nvram_match("wl_txbf", "1"))
-//		doSystem("iwpriv %s set ETxBfEnCond=1", WIF);	// TxBF
-
 	ifconfig(WIF2G, IFUP, NULL, NULL);
 	if (nvram_match("rt_radio_x", "0"))
 		radio_main_rt(0);
+        else
+        {
+                int txpower = atoi(nvram_safe_get("rt_TxPower"));
+                if ((txpower >= 0) && (txpower <= 100))
+                        doSystem("iwpriv rai0 set TxPower=%d",txpower);
+        }
 #if (!defined(W7_LOGO) && !defined(WIFI_LOGO))
 #ifdef MR
-	else if (nvram_match("rt_HT_BW", "1"))
+	if (nvram_match("rt_HT_BW", "1"))
 #else
-	else if (nvram_match("rt_HT_BW", "2"))
+	if (nvram_match("rt_HT_BW", "2"))
 #endif
 	{
 		int channel_2g = get_channel_2G();
@@ -569,6 +578,8 @@ vconfig()
 		system("brctl addif br0 eth3");
 	}
 
+	if (!is_ap_mode())
+	{
 	/* unknown unicast storm control */
 	if (!nvram_get("controlrate_unknown_unicast"))
 		controlrate_unknown_unicast = 16;
@@ -608,6 +619,7 @@ vconfig()
 		controlrate_broadcast = 0;
 	if (controlrate_broadcast)
 		doSystem("8367m 25 %d", controlrate_broadcast);
+	}
 
 	rtl8367m_AllPort_linkUp();
 	kill_pidfile_s("/var/run/linkstatus_monitor.pid", SIGALRM);
@@ -658,6 +670,126 @@ vconfig()
 
 	/* clean up... */
 	nvram_unset("wan0_hwaddr_x");
+}
+
+void
+restart_wifi()
+{
+	ifconfig("ra0", 0, NULL, NULL);
+	ifconfig("wds0", 0, NULL, NULL);
+	ifconfig("wds1", 0, NULL, NULL);
+	ifconfig("wds2", 0, NULL, NULL);
+	ifconfig("wds3", 0, NULL, NULL);
+	system("brctl delif br0 wds0 1>/dev/null 2>&1");
+	system("brctl delif br0 wds1 1>/dev/null 2>&1");
+	system("brctl delif br0 wds2 1>/dev/null 2>&1");
+	system("brctl delif br0 wds3 1>/dev/null 2>&1");
+	system("gen_ralink_config");
+	ifconfig("ra0", IFUP, NULL, NULL);
+	if (!nvram_match("wl_mode_x", "0") && !nvram_match("sw_mode_ex", "2"))
+	{
+		ifconfig("wds0", IFUP, NULL, NULL);
+		ifconfig("wds1", IFUP, NULL, NULL);
+		ifconfig("wds2", IFUP, NULL, NULL);
+		ifconfig("wds3", IFUP, NULL, NULL);
+
+		system("brctl addif br0 wds0");
+		system("brctl addif br0 wds1");
+		system("brctl addif br0 wds2");
+		system("brctl addif br0 wds3");
+	}
+
+	if (nvram_match("wl_radio_x", "0"))
+		radio_main(0);
+        else
+        {
+                int txpower = atoi(nvram_safe_get("TxPower"));
+                if ((txpower >= 0) && (txpower <= 100))
+                        doSystem("iwpriv ra0 set TxPower=%d",txpower);
+        }
+#if (!defined(W7_LOGO) && !defined(WIFI_LOGO))
+#ifdef MR
+	if (nvram_match("HT_BW", "1"))
+#else
+	if (nvram_match("HT_BW", "2"))
+#endif
+	{
+		int channel = get_channel();
+		if (channel)
+		{
+//			doSystem("iwpriv %s set Channel=%d", "ra0", channel);
+			doSystem("iwpriv %s set HtBw=%d", "ra0", 1);
+		}
+	}
+
+//	if (nvram_match("rt_IgmpSnEnable", "1"))
+	if (atoi(nvram_safe_get("wl_mrate")))
+		doSystem("iwpriv %s set IgmpSnEnable=1", "ra0");
+#endif
+	nvram_set("reload_svc_wl", "1");
+
+	start_8021x();
+	stop_lltd();
+	start_lltd();
+}
+
+void
+restart_wifi_rt()
+{
+	ifconfig("rai0", 0, NULL, NULL);
+	ifconfig("wdsi0", 0, NULL, NULL);
+	ifconfig("wdsi1", 0, NULL, NULL);
+	ifconfig("wdsi2", 0, NULL, NULL);
+	ifconfig("wdsi3", 0, NULL, NULL);
+	system("brctl delif br0 wdsi0 1>/dev/null 2>&1");
+	system("brctl delif br0 wdsi1 1>/dev/null 2>&1");
+	system("brctl delif br0 wdsi2 1>/dev/null 2>&1");
+	system("brctl delif br0 wdsi3 1>/dev/null 2>&1");
+	system("gen_ralink_config_rt");
+	ifconfig("rai0", IFUP, NULL, NULL);
+	if (!nvram_match("rt_mode_x", "0") && !nvram_match("sw_mode_ex", "2"))
+	{
+		ifconfig("wdsi0", IFUP, NULL, NULL);
+		ifconfig("wdsi1", IFUP, NULL, NULL);
+		ifconfig("wdsi2", IFUP, NULL, NULL);
+		ifconfig("wdsi3", IFUP, NULL, NULL);
+
+		system("brctl addif br0 wdsi0");
+		system("brctl addif br0 wdsi1");
+		system("brctl addif br0 wdsi2");
+		system("brctl addif br0 wdsi3");
+	}
+
+	if (nvram_match("rt_radio_x", "0"))
+		radio_main_rt(0);
+	else
+	{
+		int txpower = atoi(nvram_safe_get("rt_TxPower"));
+		if ((txpower >= 0) && (txpower <= 100))
+			doSystem("iwpriv rai0 set TxPower=%d",txpower);
+	}
+#if (!defined(W7_LOGO) && !defined(WIFI_LOGO))
+#ifdef MR
+	if (nvram_match("rt_HT_BW", "1"))
+#else
+	if (nvram_match("rt_HT_BW", "2"))
+#endif
+	{
+		int channel_2g = get_channel_2G();
+		if (channel_2g)
+		{
+//			doSystem("iwpriv %s set Channel=%d", "rai0", channel_2g);
+			doSystem("iwpriv %s set HtBw=%d", "rai0", 1);
+		}
+	}
+
+//	if (nvram_match("rt_IgmpSnEnable", "1"))
+	if (atoi(nvram_safe_get("rt_mrate")))
+		doSystem("iwpriv %s set IgmpSnEnable=1", "rai0");
+#endif
+	nvram_set("reload_svc_rt", "1");
+
+	start_8021x_rt();
 }
 
 void
@@ -784,7 +916,7 @@ start_lan(void)
 			argv[argc++] = nvram_safe_get("log_ipaddr");
 		}
 
-		fprintf(stderr, "start syslogd\n");
+		dbg("start syslogd\n");
 		_eval(argv, NULL, 0, &pid);
 	}
 #endif // ASUS_EXT
@@ -950,12 +1082,12 @@ int enable_qos()
 		(rulenum && qos_userspec_app_en)
 	)
 	{
-		fprintf(stderr, "found QoS rulues\n");
+		dbg("found QoS rulues\n");
 		return 1;
 	}
 	else
 	{
-		fprintf(stderr, "no QoS rulues\n");
+		dbg("no QoS rulues\n");
 		return 0;
 	}
 }
@@ -971,6 +1103,19 @@ int is_hwnat_loaded()
                 return 1;
         }
                 return 0;
+}
+
+int is_RT3090_loaded()
+{
+	DIR *dir_to_open = NULL;
+        
+	dir_to_open = opendir("/sys/module/RT3090_ap");
+	if (dir_to_open)
+	{
+		closedir(dir_to_open);
+		return 1;
+	}
+		return 0;
 }
 
 void
@@ -1037,7 +1182,7 @@ start_wan(void)
 		if (!wan_proto || !strcmp(wan_proto, "disabled"))
 			continue;
 
-		fprintf(stderr, "%s(): wan_ifname=%s, wan_proto=%s\n", __FUNCTION__, wan_ifname, wan_proto);
+		dbg("%s(): wan_ifname=%s, wan_proto=%s\n", __FUNCTION__, wan_ifname, wan_proto);
 
 		/* Set i/f hardware address before bringing it up */
 		if ((s = socket(AF_INET, SOCK_RAW, IPPROTO_RAW)) < 0)
@@ -1056,20 +1201,20 @@ start_wan(void)
 		if (nvram_match("wan_proto", "dhcp") && nvram_match("mac_clone_en", "1"))
 			nvram_set(strcat_r(prefix, "hwaddr", tmp), nvram_safe_get("cl0macaddr"));
 /*
-		fprintf(stderr, "$$ xxx_hwaddr (%s): %s\n", strcat_r(prefix, "hwaddr", tmp),
+		dbg("$$ xxx_hwaddr (%s): %s\n", strcat_r(prefix, "hwaddr", tmp),
 			nvram_safe_get(strcat_r(prefix, "hwaddr", tmp)));
 */
 		ether_atoe(nvram_safe_get(strcat_r(prefix, "hwaddr", tmp)), eabuf);
 /*
 		int i;
-		fprintf(stderr, "$$ eabuf: ");
+		dbg("$$ eabuf: ");
 		for (i=0; i<ETHER_ADDR_LEN; ++i)
-			fprintf(stderr, "%02X%s", eabuf[i] & 0xff, i < 5 ? ":" : "");
-		fprintf(stderr, "\n");
-		fprintf(stderr, "$$ ifr_hwaddr_sa_data: ");
+			dbg("%02X%s", eabuf[i] & 0xff, i < 5 ? ":" : "");
+		dbg("\n");
+		dbg("$$ ifr_hwaddr_sa_data: ");
 		for (i=0; i<ETHER_ADDR_LEN; ++i)
-			fprintf(stderr, "%02X%s", ifr.ifr_hwaddr.sa_data[i] & 0xff, i < 5 ? ":" : "");
-		fprintf(stderr, "\n");
+			dbg("%02X%s", ifr.ifr_hwaddr.sa_data[i] & 0xff, i < 5 ? ":" : "");
+		dbg("\n");
 */
 		if (/*!nvram_match("wan_hwaddr", "") && */(bcmp(eabuf, ifr.ifr_hwaddr.sa_data, ETHER_ADDR_LEN)))
 		{
@@ -1084,7 +1229,7 @@ start_wan(void)
 		}
 
 		if (!(ifr.ifr_flags & IFF_UP)) {
-//			fprintf(stderr, "** wan_ifname: %s is NOT UP\n", wan_ifname);
+//			dbg("** wan_ifname: %s is NOT UP\n", wan_ifname);
 
 			/* Sync connection nvram address and i/f hardware address */
 			memset(ifr.ifr_hwaddr.sa_data, 0, ETHER_ADDR_LEN);
@@ -1099,15 +1244,15 @@ start_wan(void)
 			    !ether_atoe(nvram_safe_get(strcat_r(prefix, "hwaddr", tmp)), ifr.ifr_hwaddr.sa_data) ||
 			    !memcmp(ifr.ifr_hwaddr.sa_data, "\0\0\0\0\0\0", ETHER_ADDR_LEN)) {
 /*
-				fprintf(stderr, "** chk hwaddr:[%s]<%s>\n", strcat_r(prefix, "hwaddr", tmp),
+				dbg("** chk hwaddr:[%s]<%s>\n", strcat_r(prefix, "hwaddr", tmp),
 					nvram_safe_get(strcat_r(prefix, "hwaddr", tmp)));
-				fprintf(stderr, "** atoe result:%d\n", ether_atoe(nvram_safe_get(strcat_r(prefix, "hwaddr", tmp)),
+				dbg("** atoe result:%d\n", ether_atoe(nvram_safe_get(strcat_r(prefix, "hwaddr", tmp)),
 					ifr.ifr_hwaddr.sa_data));
-				fprintf(stderr, "** ifr_sa_data not empty:[%d]\n", 
+				dbg("** ifr_sa_data not empty:[%d]\n", 
 					memcmp(ifr.ifr_hwaddr.sa_data, "\0\0\0\0\0\0", ETHER_ADDR_LEN));
 */
 				if (ioctl(s, SIOCGIFHWADDR, &ifr)) {
-					fprintf(stderr, "ioctl fail. continue\n");
+					dbg("ioctl fail. continue\n");
 					close(s);
 					continue;
 				}
@@ -1284,8 +1429,8 @@ start_wan(void)
 #if 0
 			int dhcpc_argc;
 			for (dhcpc_argc = 0; dhcp_argv[dhcpc_argc] != NULL; dhcpc_argc++)
-				fprintf(stderr, "%s ", dhcp_argv[dhcpc_argc]);
-			fprintf(stderr, "\n");
+				dbg("%s ", dhcp_argv[dhcpc_argc]);
+			dbg("\n");
 #endif
 			/* J++ debug */
 
@@ -1496,40 +1641,19 @@ stop_wan2(void)
 #endif
 }
 
-int chk_flag = 0;
-
-int	// oleg patch add
+int
 update_resolvconf(void)
 {
 	FILE *fp;
 	char word[256], *next;
-	int i, dns_count = 0;
-	char *chk_dns;
-	char *use_resolv = NULL;
 
-	printf("\n### update resolvconf:%d\n", chk_flag);	// tmp test
 	while (strcmp(nvram_safe_get("update_resolv"), "used") == 0)
 		continue;
 
-	//stop_dns();
-	if (!nvram_match("wan_dnsenable_x", "1") || nvram_match("wan0_proto", "static"))	// ham 0415
-	{
-		/* Write resolv.conf with upstream nameservers */
-		//start_dns();
-		restart_dns();
-
-		//printf("chk return :[%s][%s]\n", nvram_safe_get("wan_dnsenable_x"), nvram_safe_get("wan0_proto"));	// tmp test
-		return 0;
-	}
-
 	/* check if auto dns enabled */
 	if (!nvram_match("wan_dnsenable_x", "1"))
-	{
-		printf("chk return 2:[%s]\n", nvram_safe_get("wan_dnsenable_x"));	// tmp test
 		return 0;
-	}
 
-	//printf("open resolvconf\n");	// tmp test
 	nvram_set("update_resolv", "used");
 
 	if (!(fp = fopen("/tmp/resolv.conf", "w+"))) {
@@ -1538,65 +1662,18 @@ update_resolvconf(void)
 		return errno;
 	}
 
-	// dns patch check 0524
-	if(nvram_match("wan_dnsenable_x", "1"))
-	{
-		fprintf(fp, "nameserver 8.8.8.8\n");			// add for incompatible cable modem user
-		++dns_count;
-	}
-
-	foreach(word, ((strlen(nvram_safe_get("wan_dns_t")) > 0) ? nvram_safe_get("wan_dns_t"):
-		nvram_safe_get("wanx_dns")), next)
-	{
-		fprintf(fp, "nameserver %s\n", word);
-		++dns_count;
-		nvram_set("auto_dhcp_dns", word);
-		printf("[rc] auto set dhcp dns option:%s\n", word);	// tmp test
-	}
-	if(dns_count < 3)
-	{
-		if(dns_count < 2)
-			fprintf(fp, "nameserver 156.154.70.1\n");	// add for incompatible cable modem user
-		fprintf(fp, "nameserver 8.8.4.4\n");			// add for incompatible cable modem user
-	}
-
-	fclose(fp);
-
-	dns_count = 0;
-	/* write also /etc/resolv.conf */
-	if (!(fp = fopen("/etc/resolv.conf", "w+"))) {
-		nvram_set("update_resolv", "free");
-		perror("/etc/resolv.conf");
-		return errno;
-	}
-
-	if(nvram_match("wan_dnsenable_x", "1"))
-	{
-		fprintf(fp, "nameserver 8.8.8.8\n");			// add for incompatible cable modem user
-		++dns_count;
-	}
-
-	foreach(word, ((strlen(nvram_safe_get("wan_dns_t")) > 0) ? nvram_safe_get("wan_dns_t"):
-		nvram_safe_get("wanx_dns")), next)
-	{
-		fprintf(fp, "nameserver %s\n", word);
-		++dns_count;
-	}
-	if(dns_count < 3)
-	{
-		if(dns_count < 2)
-			fprintf(fp, "nameserver 156.154.70.1\n");	// add for incompatible cable modem user
-		fprintf(fp, "nameserver 8.8.4.4\n");			// add for incompatible cable modem user
-	}
-
-	fclose(fp);
+	/* Write resolv.conf with upstream nameservers */
+	//foreach(word, ((strlen(nvram_safe_get("wan_dns_t")) > 0) ? nvram_safe_get("wan_dns_t"):
+	foreach(word, (*nvram_safe_get("wan0_dns") ? nvram_safe_get("wan0_dns") :
+                nvram_safe_get("wanx_dns")), next)
+        {
+                fprintf(fp, "nameserver %s\n", word);
+        }
+        fclose(fp);
 
 	nvram_set("update_resolv", "free");
 
-	//start_dns();
 	restart_dns();
-
-	// dns patch check 0524 end
 
 	return 0;
 }
@@ -1604,19 +1681,10 @@ update_resolvconf(void)
 void
 wan_up(char *wan_ifname)	// oleg patch, replace
 {
-	fprintf(stderr, "%s(%s)\n", __FUNCTION__, wan_ifname);
+	dbg("%s(%s)\n", __FUNCTION__, wan_ifname);
 
 	char tmp[100], prefix[] = "wanXXXXXXXXXX_";
 	char *wan_proto, *gateway;
-
-// 2010.09 James. {
-	{
-		printf("rc: Send SIGUSR1 to wanduck.\n");
-		kill_pidfile_s("/var/run/wanduck.pid", SIGUSR1);
-		printf("rc: Send SIGUSR2 to wanduck.\n");
-		kill_pidfile_s("/var/run/wanduck.pid", SIGUSR2);
-	}
-// 2010.09 James. }
 
 	/* Figure out nvram variable name prefix for this i/f */
 	if (wan_prefix(wan_ifname, prefix) < 0)
@@ -1719,6 +1787,15 @@ wan_up(char *wan_ifname)	// oleg patch, replace
 	start_firewall_ex(wan_ifname, nvram_safe_get(strcat_r(prefix, "ipaddr", tmp)),
 		"br0", nvram_safe_get("lan_ipaddr"));
 
+// 2011.02 James. {
+	{
+		printf("rc: Send SIGUSR1 to wanduck.\n");
+		kill_pidfile_s("/var/run/wanduck.pid", SIGUSR1);
+		printf("rc: Send SIGUSR2 to wanduck.\n");
+		kill_pidfile_s("/var/run/wanduck.pid", SIGUSR2);
+	}
+// 2011.02 James. }
+
 	if (strcmp(wan_proto, "bigpond")==0)
 	{
 		stop_bpalogin();
@@ -1780,7 +1857,7 @@ wan_up(char *wan_ifname)	// oleg patch, replace
 			(nvram_match("qos_ubw","0") || nvram_match("qos_ubw",""))
 		)
 		{
-			fprintf(stderr, "wan_up: no wan rate! skip qos setting!\n");
+			dbg("wan_up: no wan rate! skip qos setting!\n");
 			goto Speedtest_Init_failed_wan_up;
 		}
 
@@ -1794,13 +1871,13 @@ wan_up(char *wan_ifname)	// oleg patch, replace
 		)
 			system("rmmod hw_nat");
 
-		fprintf(stderr, "wan_up rebuild QoS rules...\n");
+		dbg("wan_up rebuild QoS rules...\n");
 		Speedtest_Init();
 	}
 	else
 	{
 Speedtest_Init_failed_wan_up:
-		fprintf(stderr, "wan_up clear QoS rules...\n");
+		dbg("wan_up clear QoS rules...\n");
 
 		track_set("0");
 
@@ -1891,7 +1968,6 @@ wan_down(char *wan_ifname)
 	/* Remove interface dependent static routes */
 	del_wan_routes(wan_ifname);
 
-	/* Update resolv.conf */
 	/* Update resolv.conf -- leave as is if no dns servers left for demand to work */
 	if (*nvram_safe_get("wanx_dns"))	// oleg patch
 		nvram_unset(strcat_r(prefix, "dns", tmp));
@@ -1947,21 +2023,6 @@ lan_up(char *lan_ifname)
 	}
 	fclose(fp);
 
-	// also for /etc/resolv.conf
-	if (!(fp = fopen("/etc/resolv.conf", "w+"))) {
-		perror("/etc/resolv.conf");
-		return;
-	}
-
-	if (!nvram_match("lan_gateway", ""))
-		fprintf(fp, "nameserver %s\n", nvram_safe_get("lan_gateway"));
-
-	foreach(word, nvram_safe_get("lan_dns"), next)
-	{
-		fprintf(fp, "nameserver %s\n", word);
-	}
-	fclose(fp);
-
 	/* Sync time */
 	stop_ntpc();
 	start_ntpc();
@@ -1977,7 +2038,6 @@ lan_down(char *lan_ifname)
 
 	/* remove resolv.conf */
 	unlink("/tmp/resolv.conf");
-	unlink("/etc/resolv.conf");
 }
 
 
@@ -1996,21 +2056,6 @@ lan_up_ex(char *lan_ifname)
 	/* Open resolv.conf to read */
 	if (!(fp = fopen("/tmp/resolv.conf", "w"))) {
 		perror("/tmp/resolv.conf");
-		return;
-	}
-
-	if (!nvram_match("lan_gateway_t", ""))
-		fprintf(fp, "nameserver %s\n", nvram_safe_get("lan_gateway_t"));
-
-	foreach(word, nvram_safe_get("lan_dns_t"), next)
-	{
-		fprintf(fp, "nameserver %s\n", word);
-	}
-	fclose(fp);
-
-	/* also for /etc/resolv.conf */
-	if (!(fp = fopen("/etc/resolv.conf", "w+"))) {
-		perror("/etc/resolv.conf");
 		return;
 	}
 
@@ -2047,7 +2092,6 @@ lan_down_ex(char *lan_ifname)
 
 	/* remove resolv.conf */
 	unlink("/tmp/resolv.conf");
-	unlink("/etc/resolv.conf");
 
 	update_lan_status(0);
 }
@@ -2127,7 +2171,7 @@ void dumparptable()
 
 	FILE *fp = fopen("/proc/net/arp", "r");
 	if (!fp) {
-		fprintf(stderr, "no proc fs mounted!\n");
+		dbg("no proc fs mounted!\n");
 		return;
 	}
 
@@ -2140,7 +2184,7 @@ void dumparptable()
 		if (!strcmp(device, "br0"))
 		{
 			strcpy(mac_clone[mac_num++], hw_address);
-//			fprintf(stderr, "%d %s\n", mac_num, mac_clone[mac_num - 1]);
+//			dbg("%d %s\n", mac_num, mac_clone[mac_num - 1]);
 		}
 	}
 	fclose(fp);
@@ -2153,10 +2197,10 @@ void dumparptable()
 
 	if (mac_num)
 	{
-		fprintf(stderr, "num of mac: %d\n", mac_num);
+		dbg("num of mac: %d\n", mac_num);
 		int i;
 		for (i = 0; i < mac_num; i++)
-			fprintf(stderr, "mac to clone: %s\n", mac_clone[i]);
+			dbg("mac to clone: %s\n", mac_clone[i]);
 	}
 }
 
@@ -2181,7 +2225,7 @@ get_lan_ipaddr()
 	close(s);	
 
 	ip_addr = ((struct sockaddr_in*)&ifr.ifr_addr)->sin_addr;
-//	fprintf(stderr, "current LAN IP address: %s\n", inet_ntoa(ip_addr));
+//	dbg("current LAN IP address: %s\n", inet_ntoa(ip_addr));
 	return inet_ntoa(ip_addr);
 }
 
@@ -2212,7 +2256,7 @@ get_wan_ipaddr()
 	close(s);	
 
 	ip_addr = ((struct sockaddr_in*)&ifr.ifr_addr)->sin_addr;
-//	fprintf(stderr, "current WAN IP address: %s\n", inet_ntoa(ip_addr));
+//	dbg("current WAN IP address: %s\n", inet_ntoa(ip_addr));
 	return inet_ntoa(ip_addr);
 }
 
@@ -2245,7 +2289,7 @@ print_wan_ip()
 	close(s);	
 
 	ip_addr = ((struct sockaddr_in*)&ifr.ifr_addr)->sin_addr;
-	fprintf(stderr, "current WAN IP address: %s\n", inet_ntoa(ip_addr));
+	dbg("current WAN IP address: %s\n", inet_ntoa(ip_addr));
 //	if (strcmp("0.0.0.0", inet_ntoa(ip_addr)))
 //		return 1;
 //	else
@@ -2279,7 +2323,7 @@ has_wan_ip()
 	close(s);	
 
 	ip_addr = ((struct sockaddr_in*)&ifr.ifr_addr)->sin_addr;
-//	fprintf(stderr, "current WAN IP address: %s\n", inet_ntoa(ip_addr));
+//	dbg("current WAN IP address: %s\n", inet_ntoa(ip_addr));
 	if (strcmp("0.0.0.0", inet_ntoa(ip_addr)))
 		return 1;
 	else
@@ -2312,7 +2356,7 @@ got_wan_ip()
 	ioctl(s, SIOCGIFADDR, &ifr);
 	close(s);
 
-//	fprintf(stderr, "current WAN IP address: %s\n", inet_ntoa(sin_addr(&ifr.ifr_addr)));
+//	dbg("current WAN IP address: %s\n", inet_ntoa(sin_addr(&ifr.ifr_addr)));
 
 	if ((strcmp("0.0.0.0", inet_ntoa(sin_addr(&ifr.ifr_addr)))))//*/
 	char *wan_ip = nvram_safe_get("wan_ipaddr_t");
@@ -2361,7 +2405,7 @@ start_mac_clone()
 					memset(buf, 0, 13);
 					mac_conv2("cl0macaddr", -1, buf);
 					nvram_set("wan_hwaddr_x", buf);
-					fprintf(stderr, "stop mac cloning!\n");
+					dbg("stop mac cloning!\n");
 					break;
 				}
 
@@ -2423,15 +2467,16 @@ ppp0_as_default_route()
 	return 0;
 }
 
-long print_num_of_connections()
+void print_num_of_connections()
 {
+	FILE *fp;
 	char buf[256];
 	char entries[16], others[256];
-	long num_of_entries;
+	unsigned long num_of_entries;
 
-	FILE *fp = fopen("/proc/net/stat/nf_conntrack", "r");
+	fp = fopen("/proc/net/stat/nf_conntrack", "r");
 	if (!fp) {
-		fprintf(stderr, "no connection!\n");
+		dbg("\nconnection count: ?!\n");
 		return;
 	}
 
@@ -2443,8 +2488,62 @@ long print_num_of_connections()
 	sscanf(buf, "%s %s", entries, others);
 	num_of_entries = strtoul(entries, NULL, 16);
 
-	fprintf(stderr, "connection count: %ld\n", num_of_entries);
-	return num_of_entries;
+	dbg("\nconnection count: %ld\n", num_of_entries);
+
+        fp = fopen("/proc/sys/net/nf_conntrack_max", "r");
+        if (!fp) {
+                dbg("connection max: ?!\n");
+                return;
+        }
+
+        fgets(buf, 256, fp);
+        fclose(fp);
+
+        memset(entries, 0x0, 16);
+        sscanf(buf, "%s", entries);
+        num_of_entries = strtoul(entries, NULL, 10);
+
+        dbg("connection max: %ld\n", num_of_entries);
+}
+
+void
+reltime(unsigned long seconds, char *cs)
+{
+        int days=0, hours=0, minutes=0;
+
+        if (seconds > 60*60*24) {
+                days = seconds / (60*60*24);
+                seconds %= 60*60*24;
+        }
+        if (seconds > 60*60) {
+                hours = seconds / (60*60);
+                seconds %= 60*60;
+        }
+        if (seconds > 60) {
+                minutes = seconds / 60;
+                seconds %= 60;
+        }
+        sprintf(cs, "%d days, %d hours, %d minutes, %d seconds", days, hours, minutes, seconds);
+}
+
+void
+print_uptime(void)
+{
+        char buf[64];
+        double secs;
+
+        FILE *fp = fopen("/proc/uptime", "r");
+        if (!fp) {
+                dbg("fopen error!\n");
+                return;
+        }
+
+        fgets(buf, 64, fp);
+        fclose(fp);
+
+        secs = atof(buf);
+        reltime((unsigned long) secs, buf);
+        dbg("uptime: %s\n\n", buf);
 }
 
 int
@@ -2473,13 +2572,13 @@ found_default_route()
 
 			if (i != 3)
 			{
-//				fprintf(stderr, "junk in buffer");
+//				dbg("junk in buffer");
 				break;
 			}
 
 			if (device[0] != '\0' && dest == 0 && mask == 0)
 			{
-//				fprintf(stderr, "default route dev: %s\n", device);
+//				dbg("default route dev: %s\n", device);
 				found = 1;
 				break;
 			}
@@ -2487,24 +2586,29 @@ found_default_route()
 
 		fclose(f);
 
-		if (nvram_match("wan0_proto", "dhcp") || nvram_match("wan0_proto", "static"))
-			strcpy(wanif, "eth3");
-		else
-			strcpy(wanif, "ppp0");
-
-		if (found && !strcmp(wanif, device))
+		if (found)
 		{
-//			fprintf(stderr, "got default route!\n");
-			return 1;
+			if (nvram_match("wan0_proto", "dhcp") || nvram_match("wan0_proto", "static"))
+			{
+				if (!strcmp("eth3", device))
+					return 1;
+				else
+					goto no_default_route;
+			}
+			else
+			{
+				if (!strcmp("ppp0", device) || !strcmp("eth3", device))
+					return 1;
+				else
+					goto no_default_route;
+			}
 		}
 		else
-		{
-			fprintf(stderr, "no default route!\n");
-			return 0;
-		}
+			goto no_default_route;
 	}
 
-	fprintf(stderr, "no default route!!!\n");
+no_default_route:
+	dbg("no default route!!!\n");
 	return 0;
 }
 

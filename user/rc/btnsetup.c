@@ -141,7 +141,7 @@ typedef union {
 #define MAX_DHKEY_LEN 192
 #define WEP64_LEN 10
 #define WEP128_LEN 26
-#define WPAPSK_LEN 63
+#define WPAPSK_LEN 64
 
 PKT_SET_INFO_GW_QUICK pkt;
 unsigned char pubkey[MAX_DHKEY_LEN];
@@ -1163,12 +1163,12 @@ int isWAN_detect()
 	char *detect_host[] = {"8.8.8.8", "208.67.220.220", "208.67.222.222"};
 	int i;
 
-	if (iw_debug) fprintf(stderr, "## isWAN_detect: internet status ##\n");
+	if (iw_debug) dbg("## isWAN_detect: internet status ##\n");
 
 	remove(isWAN_DETECT_FILE);
 	i = rand_seed_by_time() % 3;
 	snprintf(cmd, sizeof(cmd), "/usr/sbin/tcpcheck 5 %s:53 %s:53 >%s", detect_host[i], detect_host[(i+1)%3], isWAN_DETECT_FILE);
-	if (iw_debug) fprintf(stderr, "cmd: %s\n", cmd);
+	if (iw_debug) dbg("cmd: %s\n", cmd);
 	system(cmd);
 	if (iw_debug)
 	{
@@ -1185,7 +1185,7 @@ int isWAN_detect()
 			{
 				if (strstr(line, "alive"))
 				{
-					if (iw_debug) fprintf(stderr, "isWAN_detect: got response!\n");
+					if (iw_debug) dbg("isWAN_detect: got response!\n");
 					fclose(fp);
 					return 1;
 				}
@@ -1195,11 +1195,11 @@ int isWAN_detect()
 		}
 
 		fclose(fp);
-		if (iw_debug) fprintf(stderr, "isWAN_detect: no response!\n");
+		if (iw_debug) dbg("isWAN_detect: no response!\n");
 		return 0;
 	}
 
-	if (iw_debug) fprintf(stderr, "isWAN_detect: fopen %s error!\n", isWAN_DETECT_FILE);
+	if (iw_debug) dbg("isWAN_detect: fopen %s error!\n", isWAN_DETECT_FILE);
 	return 0;
 }
 
@@ -1532,7 +1532,7 @@ ots_main(int argc, char *argv[])
 
 	/* Initialize listen socket */
     	if ((listen_fd = OTS_socket_init(&usa)) < 0) {
-		fprintf(stderr, "can't bind to any address\n" );
+		dbg("can't bind to any address\n" );
 		return 0;
     	} 	
 

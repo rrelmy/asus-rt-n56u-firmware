@@ -62,7 +62,7 @@ getMAC()
 	memset(macaddr, 0, sizeof(macaddr));
 
 	if (FRead((unsigned int *)buffer, OFFSET_MAC_ADDR, 6)<0)
-		fprintf(stderr, "READ MAC address: Out of scope\n");
+		dbg("READ MAC address: Out of scope\n");
 	else
 	{
 		ether_etoa(buffer, macaddr);
@@ -80,7 +80,7 @@ getMAC_2G()
 	memset(macaddr, 0, sizeof(macaddr));
 
 	if (FRead((unsigned int *)buffer, OFFSET_MAC_ADDR_2G, 6)<0)
-		fprintf(stderr, "READ MAC address 2G: Out of scope\n");
+		dbg("READ MAC address 2G: Out of scope\n");
 	else
 	{
 		ether_etoa(buffer, macaddr);
@@ -288,7 +288,7 @@ FREAD(unsigned int addr_sa, int len)
 	memset(buffer_h, 0, sizeof(buffer_h));
 
 	if (FRead((unsigned int *)buffer, addr_sa, len)<0)
-		fprintf(stderr, "FREAD: Out of scope\n");
+		dbg("FREAD: Out of scope\n");
 	else
 	{
 		if (len > MAX_FRW)
@@ -3608,27 +3608,27 @@ ralink_get_range_info(iwrange *	range, char* buffer, int length)
       /* We don't like very old version (unfortunately kernel 2.2.X) */
       if (range->we_version_compiled <= 10)
 	{
-	  fprintf(stderr, "Warning: Driver for device %s has been compiled with an ancient version\n", WIF);
-	  fprintf(stderr, "of Wireless Extension, while this program support version 11 and later.\n");
-	  fprintf(stderr, "Some things may be broken...\n\n");
+	  dbg("Warning: Driver for device %s has been compiled with an ancient version\n", WIF);
+	  dbg("of Wireless Extension, while this program support version 11 and later.\n");
+	  dbg("Some things may be broken...\n\n");
 	}
 
       /* We don't like future versions of WE, because we can't cope with
        * the unknown */
       if (range->we_version_compiled > WE_MAX_VERSION)
 	{
-	  fprintf(stderr, "Warning: Driver for device %s has been compiled with version %d\n", WIF, range->we_version_compiled);
-	  fprintf(stderr, "of Wireless Extension, while this program supports up to version %d.\n", WE_VERSION);
-	  fprintf(stderr, "Some things may be broken...\n\n");
+	  dbg("Warning: Driver for device %s has been compiled with version %d\n", WIF, range->we_version_compiled);
+	  dbg("of Wireless Extension, while this program supports up to version %d.\n", WE_VERSION);
+	  dbg("Some things may be broken...\n\n");
 	}
 
       /* Driver version verification */
       if ((range->we_version_compiled > 10) &&
 	 (range->we_version_compiled < range->we_version_source))
 	{
-	  fprintf(stderr, "Warning: Driver for device %s recommend version %d of Wireless Extension,\n", WIF, range->we_version_source);
-	  fprintf(stderr, "but has been compiled with version %d, therefore some driver features\n", range->we_version_compiled);
-	  fprintf(stderr, "may not be available...\n\n");
+	  dbg("Warning: Driver for device %s recommend version %d of Wireless Extension,\n", WIF, range->we_version_source);
+	  dbg("but has been compiled with version %d, therefore some driver features\n", range->we_version_compiled);
+	  dbg("may not be available...\n\n");
 	}
       /* Note : we are only trying to catch compile difference, not source.
        * If the driver source has not been updated to the latest, it doesn't
@@ -3656,7 +3656,7 @@ getSSID()
 
 	if (wl_ioctl(WIF, SIOCGIWESSID, &wrq) < 0)
 	{
-		fprintf(stderr, "!!!\n");
+		dbg("!!!\n");
 		return 0;
 	}
 
@@ -3776,20 +3776,20 @@ getSiteSurvey()
 	{
 		spinlock_unlock(0);
 
-		fprintf(stderr, "Site Survey fails\n");
+		dbg("Site Survey fails\n");
 		return 0;
 	}
 	spinlock_unlock(SPINLOCK_SiteSurvey);
 
-	fprintf(stderr, "Please wait");
+	dbg("Please wait");
 	sleep(1);
-	fprintf(stderr, ".");
+	dbg(".");
 	sleep(1);
-	fprintf(stderr, ".");
+	dbg(".");
 	sleep(1);
-	fprintf(stderr, ".");
+	dbg(".");
 	sleep(1);
-	fprintf(stderr, ".\n\n");
+	dbg(".\n\n");
 
 	memset(data, 0, 8192);
 	strcpy(data, "");
@@ -3799,14 +3799,14 @@ getSiteSurvey()
 
 	if (wl_ioctl(WIF, RTPRIV_IOCTL_GSITESURVEY, &wrq) < 0)
 	{
-		fprintf(stderr, "errors in getting site survey result\n");
+		dbg("errors in getting site survey result\n");
 		return 0;
 	}
 
 	memset(header, 0, sizeof(header));
 	//sprintf(header, "%-3s%-33s%-18s%-8s%-15s%-9s%-8s%-2s\n", "Ch", "SSID", "BSSID", "Enc", "Auth", "Siganl(%)", "W-Mode", "NT");
 	sprintf(header, "%-3s%-33s%-18s%-9s%-16s%-9s%-8s%-2s%-3s\n", "Ch", "SSID", "BSSID", "Enc", "Auth", "Siganl(%)", "W-Mode", "NT", " CC");
-	fprintf(stderr, "\n%s", header);
+	dbg("\n%s", header);
 
 	if (wrq.u.data.length > 0)
 	{
@@ -3833,7 +3833,7 @@ getSiteSurvey()
 
 		for (i=0;i<apCount;i++)
 		{
-			fprintf(stderr, "%-3s%-33s%-18s%-9s%-16s%-9s%-8s%-2s %-2s\n",
+			dbg("%-3s%-33s%-18s%-9s%-16s%-9s%-8s%-2s %-2s\n",
 				ssap->SiteSurvey[i].channel,
 				(char*)ssap->SiteSurvey[i].ssid,
 				ssap->SiteSurvey[i].bssid,
@@ -3845,7 +3845,7 @@ getSiteSurvey()
 				ssap->SiteSurvey[i].centralchannel
 			);
 		}
-		fprintf(stderr, "\n");
+		dbg("\n");
 	}
 
 	return 0;
@@ -3864,7 +3864,7 @@ int getBSSID()	// get AP's BSSID
 
 	if (wl_ioctl(WIF, RT_PRIV_IOCTL, &wrq) < 0)
 	{
-		fprintf(stderr, "errors in getting bssid!\n");
+		dbg("errors in getting bssid!\n");
 		return -1;
 	}
 	else
@@ -4008,7 +4008,7 @@ wps_pin(int pincode)
 		unlink(WSCD_PIDFILE_5G);
 	}
 
-	fprintf(stderr, "start wsc\n");
+	dbg("start wsc\n");
 
 	doSystem("iwpriv %s set WscConfMode=%d", WIF, 0);		// WPS disabled
 	doSystem("iwpriv %s set WscConfMode=%d", WIF, 7);		// Enrollee + Proxy + Registrar
@@ -4021,7 +4021,7 @@ wps_pin(int pincode)
 		strcpy(str_lan_ipaddr, nvram_safe_get("lan_ipaddr_t"));
 	doSystem("wscd -m 1 -a %s -i %s &", str_lan_ipaddr, WIF);
 
-	fprintf(stderr, "WPS: PIN\n");					// PIN method
+	dbg("WPS: PIN\n");					// PIN method
 	doSystem("iwpriv %s set WscMode=1", WIF);
 
 	if (pincode == 0)
@@ -4054,7 +4054,7 @@ wps_pin_2g(int pincode)
 		doSystem("rm -f /var/run/wscd.pid.%s", WIF2G);
 	}
 
-	fprintf(stderr, "start wsc\n");
+	dbg("start wsc\n");
 
 	doSystem("iwpriv %s set WscConfMode=%d", WIF2G, 0);		// WPS disabled
 	doSystem("iwpriv %s set WscConfMode=%d", WIF2G, 7);		// Enrollee + Proxy + Registrar
@@ -4067,7 +4067,7 @@ wps_pin_2g(int pincode)
 		strcpy(str_lan_ipaddr, nvram_safe_get("lan_ipaddr_t"));
 	doSystem("wscd -m 1 -a %s -i %s &", str_lan_ipaddr, WIF2G);
 
-	fprintf(stderr, "WPS: PIN\n");					// PIN method
+	dbg("WPS: PIN\n");					// PIN method
 	doSystem("iwpriv %s set WscMode=1", WIF2G);
 
 	if (pincode == 0)
@@ -4100,7 +4100,7 @@ wps_pbc()
 		unlink(WSCD_PIDFILE_5G);
 	}
 
-	fprintf(stderr, "start wsc\n");
+	dbg("start wsc\n");
 
 	doSystem("iwpriv %s set WscConfMode=%d", WIF, 0);		// WPS disabled
 	doSystem("iwpriv %s set WscConfMode=%d", WIF, 7);		// Enrollee + Proxy + Registrar
@@ -4113,7 +4113,7 @@ wps_pbc()
 		strcpy(str_lan_ipaddr, nvram_safe_get("lan_ipaddr_t"));
 	doSystem("wscd -m 1 -a %s -i %s &", str_lan_ipaddr, WIF);
 
-//	fprintf(stderr, "WPS: PBC\n");
+//	dbg("WPS: PBC\n");
 	g_isEnrollee = 1;
 	doSystem("iwpriv %s set WscMode=%d", WIF, 2);			// PBC method
 	doSystem("iwpriv %s set WscGetConf=%d", WIF, 1);		// Trigger WPS AP to do simple config with WPS Client
@@ -4136,7 +4136,7 @@ wps_pbc_2g()
 		doSystem("rm -f /var/run/wscd.pid.%s", WIF2G);
 	}
 
-	fprintf(stderr, "start wsc\n");
+	dbg("start wsc\n");
 
 	doSystem("iwpriv %s set WscConfMode=%d", WIF2G, 0);		// WPS disabled
 	doSystem("iwpriv %s set WscConfMode=%d", WIF2G, 7);		// Enrollee + Proxy + Registrar
@@ -4149,7 +4149,7 @@ wps_pbc_2g()
 		strcpy(str_lan_ipaddr, nvram_safe_get("lan_ipaddr_t"));
 	doSystem("wscd -m 1 -a %s -i %s &", str_lan_ipaddr, WIF2G);
 
-//	fprintf(stderr, "WPS: PBC\n");
+//	dbg("WPS: PBC\n");
 	g_isEnrollee = 1;
 	doSystem("iwpriv %s set WscMode=", WIF2G);			// PBC method
 	doSystem("iwpriv %s set WscGetConf=%d", WIF2G, 1);		// Trigger WPS AP to do simple config with WPS Client
@@ -4179,7 +4179,7 @@ wps_pbc_both()
 		doSystem("rm -f /var/run/wscd.pid.%s", WIF2G);
 	}
 
-	fprintf(stderr, "start wsc\n");
+	dbg("start wsc\n");
 
 	doSystem("iwpriv %s set WscConfMode=%d", WIF, 0);		// WPS disabled
 	doSystem("iwpriv %s set WscConfMode=%d", WIF, 7);		// Enrollee + Proxy + Registrar
@@ -4196,7 +4196,7 @@ wps_pbc_both()
 	doSystem("wscd -m 1 -a %s -i %s &", str_lan_ipaddr, WIF);
 	doSystem("wscd -m 1 -a %s -i %s &", str_lan_ipaddr, WIF2G);
 
-//	fprintf(stderr, "WPS: PBC\n");
+//	dbg("WPS: PBC\n");
 	g_isEnrollee = 1;
 	doSystem("iwpriv %s set WscMode=%d", WIF, 2);			// PBC method
 	doSystem("iwpriv %s set WscGetConf=%d", WIF, 1);		// Trigger WPS AP to do simple config with WPS Client
@@ -4212,7 +4212,7 @@ wps_pin(int pincode)
 {
 	if (!need_to_start_wps_5g()) return 0;
 
-//	fprintf(stderr, "WPS: PIN\n");
+//	dbg("WPS: PIN\n");
 	doSystem("iwpriv %s set WscMode=1", WIF);
 
 	if (pincode == 0)
@@ -4228,7 +4228,7 @@ wps_pin_2g(int pincode)
 {
 	if (!need_to_start_wps_2g()) return 0;
 
-//	fprintf(stderr, "WPS: PIN\n");
+//	dbg("WPS: PIN\n");
 	doSystem("iwpriv %s set WscMode=1", WIF2G);			// PIN method
 
 	if (pincode == 0)
@@ -4244,7 +4244,7 @@ wps_pbc()
 {
 	if (!need_to_start_wps_5g()) return 0;
 
-//	fprintf(stderr, "WPS: PBC\n");
+//	dbg("WPS: PBC\n");
 	g_isEnrollee = 1;
 	doSystem("iwpriv %s set WscMode=%d", WIF, 2);			// PBC method
 	doSystem("iwpriv %s set WscGetConf=%d", WIF, 1);		// Trigger WPS AP to do simple config with WPS Client
@@ -4257,7 +4257,7 @@ wps_pbc_2g()
 {
 	if (!need_to_start_wps_2g()) return 0;
 
-//	fprintf(stderr, "WPS: PBC\n");
+//	dbg("WPS: PBC\n");
 	g_isEnrollee = 1;
 	doSystem("iwpriv %s set WscMode=2", WIF2G);			// PBC method
 	doSystem("iwpriv %s set WscGetConf=%d", WIF2G, 1);		// Trigger WPS AP to do simple config with WPS Client
@@ -4270,7 +4270,7 @@ wps_pbc_both()
 {
 	if (!need_to_start_wps_5g() || !need_to_start_wps_2g()) return 0;
 
-//	fprintf(stderr, "WPS: PBC\n");
+//	dbg("WPS: PBC\n");
 	g_isEnrollee = 1;
 
 	doSystem("iwpriv %s set WscMode=%d", WIF, 2);			// PBC method
@@ -4333,10 +4333,19 @@ wps_oob()
 	nvram_commit_safe();
 
 #if defined (W7_LOGO) || defined (WIFI_LOGO)
-	doSystem("iwpriv %s set SSID=ASUS_5G", WIF);
-	doSystem("iwpriv %s set AuthMode=OPEN", WIF);
-	doSystem("iwpriv %s set EncrypType=NONE", WIF);
-	doSystem("iwpriv %s set DefaultKeyID=1", WIF);
+	doSystem("iwpriv %s set AuthMode=%s", WIF, "OPEN");
+	doSystem("iwpriv %s set EncrypType=%s", WIF, "NONE");
+	doSystem("iwpriv %s set IEEE8021X=%d", WIF, 0);
+	if (strlen(nvram_safe_get("wl_key1")))
+	doSystem("iwpriv %s set Key1=%s", WIF, nvram_safe_get("wl_key1"));
+	if (strlen(nvram_safe_get("wl_key2")))
+	doSystem("iwpriv %s set Key2=%s", WIF, nvram_safe_get("wl_key2"));
+	if (strlen(nvram_safe_get("wl_key3")))
+	doSystem("iwpriv %s set Key3=%s", WIF, nvram_safe_get("wl_key3"));
+	if (strlen(nvram_safe_get("wl_key4")))
+	doSystem("iwpriv %s set Key4=%s", WIF, nvram_safe_get("wl_key4"));
+	doSystem("iwpriv %s set DefaultKeyID=%s", WIF, nvram_safe_get("wl_key"));
+	doSystem("iwpriv %s set SSID=%s", WIF, nvram_safe_get("wl_ssid"));
 
 	system("route delete 239.255.255.250 1>/dev/null 2>&1");
 	if (check_if_file_exist(WSCD_PIDFILE_5G))
@@ -4368,10 +4377,19 @@ wps_oob()
 	doSystem("iwpriv %s set WPAPSK=12345678", WIF);
 	doSystem("iwpriv %s set DefaultKeyID=2", WIF);
 */
-	doSystem("iwpriv %s set SSID=ASUS_5G", WIF);
-	doSystem("iwpriv %s set AuthMode=OPEN", WIF);
-	doSystem("iwpriv %s set EncrypType=NONE", WIF);
-	doSystem("iwpriv %s set DefaultKeyID=1", WIF);
+	doSystem("iwpriv %s set AuthMode=%s", WIF, "OPEN");
+	doSystem("iwpriv %s set EncrypType=%s", WIF, "NONE");
+	doSystem("iwpriv %s set IEEE8021X=%d", WIF, 0);
+	if (strlen(nvram_safe_get("wl_key1")))
+	doSystem("iwpriv %s set Key1=%s", WIF, nvram_safe_get("wl_key1"));
+	if (strlen(nvram_safe_get("wl_key2")))
+	doSystem("iwpriv %s set Key2=%s", WIF, nvram_safe_get("wl_key2"));
+	if (strlen(nvram_safe_get("wl_key3")))
+	doSystem("iwpriv %s set Key3=%s", WIF, nvram_safe_get("wl_key3"));
+	if (strlen(nvram_safe_get("wl_key4")))
+	doSystem("iwpriv %s set Key4=%s", WIF, nvram_safe_get("wl_key4"));
+	doSystem("iwpriv %s set DefaultKeyID=%s", WIF, nvram_safe_get("wl_key"));
+	doSystem("iwpriv %s set SSID=%s", WIF, nvram_safe_get("wl_ssid"));
 	doSystem("iwpriv %s set WscConfStatus=%d", WIF, 1);		// AP is unconfigured
 #endif
 	g_isEnrollee = 0;
@@ -4427,10 +4445,19 @@ wps_oob_2g()
 	nvram_commit_safe();
 
 #if defined (W7_LOGO) || defined (WIFI_LOGO)
-	doSystem("iwpriv %s set SSID=ASUS", WIF2G);
-	doSystem("iwpriv %s set AuthMode=OPEN", WIF2G);
-	doSystem("iwpriv %s set EncrypType=NONE", WIF2G);
-	doSystem("iwpriv %s set DefaultKeyID=1", WIF2G);
+	doSystem("iwpriv %s set AuthMode=%s", WIF2G, "OPEN");
+	doSystem("iwpriv %s set EncrypType=%s", WIF2G, "NONE");
+	doSystem("iwpriv %s set IEEE8021X=%d", WIF2G, 0);
+	if (strlen(nvram_safe_get("rt_key1")))
+	doSystem("iwpriv %s set Key1=%s", WIF2G, nvram_safe_get("rt_key1"));
+	if (strlen(nvram_safe_get("rt_key2")))
+	doSystem("iwpriv %s set Key2=%s", WIF2G, nvram_safe_get("rt_key2"));
+	if (strlen(nvram_safe_get("rt_key3")))
+	doSystem("iwpriv %s set Key3=%s", WIF2G, nvram_safe_get("rt_key3"));
+	if (strlen(nvram_safe_get("rt_key4")))
+	doSystem("iwpriv %s set Key4=%s", WIF2G, nvram_safe_get("rt_key4"));
+	doSystem("iwpriv %s set DefaultKeyID=%s", WIF2G, nvram_safe_get("rt_key"));
+	doSystem("iwpriv %s set SSID=%s", WIF2G, nvram_safe_get("rt_ssid"));
 
 	system("route delete 239.255.255.250 1>/dev/null 2>&1");
 	if (check_if_file_exist(WSCD_PIDFILE_2G))
@@ -4462,10 +4489,19 @@ wps_oob_2g()
 	doSystem("iwpriv %s set WPAPSK=12345678", WIF2G);
 	doSystem("iwpriv %s set DefaultKeyID=2", WIF2G);
 */
-	doSystem("iwpriv %s set SSID=ASUS", WIF2G);
-	doSystem("iwpriv %s set AuthMode=OPEN", WIF2G);
-	doSystem("iwpriv %s set EncrypType=NONE", WIF2G);
-	doSystem("iwpriv %s set DefaultKeyID=1", WIF2G);
+	doSystem("iwpriv %s set AuthMode=%s", WIF2G, "OPEN");
+	doSystem("iwpriv %s set EncrypType=%s", WIF2G, "NONE");
+	doSystem("iwpriv %s set IEEE8021X=%d", WIF2G, 0);
+	if (strlen(nvram_safe_get("rt_key1")))
+	doSystem("iwpriv %s set Key1=%s", WIF2G, nvram_safe_get("rt_key1"));
+	if (strlen(nvram_safe_get("rt_key2")))
+	doSystem("iwpriv %s set Key2=%s", WIF2G, nvram_safe_get("rt_key2"));
+	if (strlen(nvram_safe_get("rt_key3")))
+	doSystem("iwpriv %s set Key3=%s", WIF2G, nvram_safe_get("rt_key3"));
+	if (strlen(nvram_safe_get("rt_key4")))
+	doSystem("iwpriv %s set Key4=%s", WIF2G, nvram_safe_get("rt_key4"));
+	doSystem("iwpriv %s set DefaultKeyID=%s", WIF2G, nvram_safe_get("rt_key"));
+	doSystem("iwpriv %s set SSID=%s", WIF2G, nvram_safe_get("rt_ssid"));
 	doSystem("iwpriv %s set WscConfStatus=%d", WIF2G, 1);		// AP is unconfigured
 #endif
 	g_isEnrollee = 0;
@@ -4548,15 +4584,33 @@ wps_oob_both()
 	nvram_commit_safe();
 
 #if defined (W7_LOGO) || defined (WIFI_LOGO)
-	doSystem("iwpriv %s set SSID=ASUS_5G", WIF);
-	doSystem("iwpriv %s set AuthMode=OPEN", WIF);
-	doSystem("iwpriv %s set EncrypType=NONE", WIF);
-	doSystem("iwpriv %s set DefaultKeyID=1", WIF);
+	doSystem("iwpriv %s set AuthMode=%s", WIF, "OPEN");
+	doSystem("iwpriv %s set EncrypType=%s", WIF, "NONE");
+	doSystem("iwpriv %s set IEEE8021X=%d", WIF, 0);
+	if (strlen(nvram_safe_get("wl_key1")))
+	doSystem("iwpriv %s set Key1=%s", WIF, nvram_safe_get("wl_key1"));
+	if (strlen(nvram_safe_get("wl_key2")))
+	doSystem("iwpriv %s set Key2=%s", WIF, nvram_safe_get("wl_key2"));
+	if (strlen(nvram_safe_get("wl_key3")))
+	doSystem("iwpriv %s set Key3=%s", WIF, nvram_safe_get("wl_key3"));
+	if (strlen(nvram_safe_get("wl_key4")))
+	doSystem("iwpriv %s set Key4=%s", WIF, nvram_safe_get("wl_key4"));
+	doSystem("iwpriv %s set DefaultKeyID=%s", WIF, nvram_safe_get("wl_key"));
+	doSystem("iwpriv %s set SSID=%s", WIF, nvram_safe_get("wl_ssid"));
 
-	doSystem("iwpriv %s set SSID=ASUS", WIF2G);
-	doSystem("iwpriv %s set AuthMode=OPEN", WIF2G);
-	doSystem("iwpriv %s set EncrypType=NONE", WIF2G);
-	doSystem("iwpriv %s set DefaultKeyID=1", WIF2G);
+	doSystem("iwpriv %s set AuthMode=%s", WIF2G, "OPEN");
+	doSystem("iwpriv %s set EncrypType=%s", WIF2G, "NONE");
+	doSystem("iwpriv %s set IEEE8021X=%d", WIF2G, 0);
+	if (strlen(nvram_safe_get("rt_key1")))
+	doSystem("iwpriv %s set Key1=%s", WIF2G, nvram_safe_get("rt_key1"));
+	if (strlen(nvram_safe_get("rt_key2")))
+	doSystem("iwpriv %s set Key2=%s", WIF2G, nvram_safe_get("rt_key2"));
+	if (strlen(nvram_safe_get("rt_key3")))
+	doSystem("iwpriv %s set Key3=%s", WIF2G, nvram_safe_get("rt_key3"));
+	if (strlen(nvram_safe_get("rt_key4")))
+	doSystem("iwpriv %s set Key4=%s", WIF2G, nvram_safe_get("rt_key4"));
+	doSystem("iwpriv %s set DefaultKeyID=%s", WIF2G, nvram_safe_get("rt_key"));
+	doSystem("iwpriv %s set SSID=%s", WIF2G, nvram_safe_get("rt_ssid"));
 
 	system("route delete 239.255.255.250 1>/dev/null 2>&1");
 
@@ -4606,16 +4660,34 @@ wps_oob_both()
 	doSystem("iwpriv %s set WPAPSK=12345678", WIF);
 	doSystem("iwpriv %s set DefaultKeyID=2", WIF);
 */
-	doSystem("iwpriv %s set SSID=ASUS_5G", WIF);
-	doSystem("iwpriv %s set AuthMode=OPEN", WIF);
-	doSystem("iwpriv %s set EncrypType=NONE", WIF);
-	doSystem("iwpriv %s set DefaultKeyID=1", WIF);
+	doSystem("iwpriv %s set AuthMode=%s", WIF, "OPEN");
+	doSystem("iwpriv %s set EncrypType=%s", WIF, "NONE");
+	doSystem("iwpriv %s set IEEE8021X=%d", WIF, 0);
+	if (strlen(nvram_safe_get("wl_key1")))
+	doSystem("iwpriv %s set Key1=%s", WIF, nvram_safe_get("wl_key1"));
+	if (strlen(nvram_safe_get("wl_key2")))
+	doSystem("iwpriv %s set Key2=%s", WIF, nvram_safe_get("wl_key2"));
+	if (strlen(nvram_safe_get("wl_key3")))
+	doSystem("iwpriv %s set Key3=%s", WIF, nvram_safe_get("wl_key3"));
+	if (strlen(nvram_safe_get("wl_key4")))
+	doSystem("iwpriv %s set Key4=%s", WIF, nvram_safe_get("wl_key4"));
+	doSystem("iwpriv %s set DefaultKeyID=%s", WIF, nvram_safe_get("wl_key"));
+	doSystem("iwpriv %s set SSID=%s", WIF, nvram_safe_get("wl_ssid"));
 	doSystem("iwpriv %s set WscConfStatus=%d", WIF, 1);		// AP is unconfigured
 
-	doSystem("iwpriv %s set SSID=ASUS", WIF2G);
-	doSystem("iwpriv %s set AuthMode=OPEN", WIF2G);
-	doSystem("iwpriv %s set EncrypType=NONE", WIF2G);
-	doSystem("iwpriv %s set DefaultKeyID=1", WIF2G);
+	doSystem("iwpriv %s set AuthMode=%s", WIF2G, "OPEN");
+	doSystem("iwpriv %s set EncrypType=%s", WIF2G, "NONE");
+	doSystem("iwpriv %s set IEEE8021X=%d", WIF2G, 0);
+	if (strlen(nvram_safe_get("rt_key1")))
+	doSystem("iwpriv %s set Key1=%s", WIF2G, nvram_safe_get("rt_key1"));
+	if (strlen(nvram_safe_get("rt_key2")))
+	doSystem("iwpriv %s set Key2=%s", WIF2G, nvram_safe_get("rt_key2"));
+	if (strlen(nvram_safe_get("rt_key3")))
+	doSystem("iwpriv %s set Key3=%s", WIF2G, nvram_safe_get("rt_key3"));
+	if (strlen(nvram_safe_get("rt_key4")))
+	doSystem("iwpriv %s set Key4=%s", WIF2G, nvram_safe_get("rt_key4"));
+	doSystem("iwpriv %s set DefaultKeyID=%s", WIF2G, nvram_safe_get("rt_key"));
+	doSystem("iwpriv %s set SSID=%s", WIF2G, nvram_safe_get("rt_ssid"));
 	doSystem("iwpriv %s set WscConfStatus=%d", WIF2G, 1);		// AP is unconfigured
 #endif
 	g_isEnrollee = 0;
@@ -4636,7 +4708,7 @@ start_wsc()
 		unlink(WSCD_PIDFILE_5G);
 	}
 
-	fprintf(stderr, "start wsc\n");
+	dbg("start wsc\n");
 
 	doSystem("iwpriv %s set WscConfMode=%d", WIF, 0);		// WPS disabled
 	doSystem("iwpriv %s set WscConfMode=%d", WIF, 7);		// Enrollee + Proxy + Registrar
@@ -4658,12 +4730,12 @@ start_wsc()
 */
 	if (nvram_match("wps_mode", "1"))
 	{
-		fprintf(stderr, "WPS: PIN\n");				// PIN method
+		dbg("WPS: PIN\n");				// PIN method
 		doSystem("iwpriv %s set WscMode=1", WIF);
 	}
 	else
 	{
-		fprintf(stderr, "WPS: PBC\n");				// PBC method
+		dbg("WPS: PBC\n");				// PBC method
 		doSystem("iwpriv %s set WscMode=2", WIF);
 	}
 
@@ -4687,7 +4759,7 @@ start_wsc_2g()
 		doSystem("rm -f /var/run/wscd.pid.%s", WIF2G);
 	}
 
-	fprintf(stderr, "start wsc\n");
+	dbg("start wsc\n");
 
 	doSystem("iwpriv %s set WscConfMode=%d", WIF2G, 0);		// WPS disabled
 	doSystem("iwpriv %s set WscConfMode=%d", WIF2G, 7);		// Enrollee + Proxy + Registrar
@@ -4709,12 +4781,12 @@ start_wsc_2g()
 */
 	if (nvram_match("wps_mode", "1"))
 	{
-		fprintf(stderr, "WPS: PIN\n");				// PIN method
+		dbg("WPS: PIN\n");				// PIN method
 		doSystem("iwpriv %s set WscMode=1", WIF2G);
 	}
 	else
 	{
-		fprintf(stderr, "WPS: PBC\n");				// PBC method
+		dbg("WPS: PBC\n");				// PBC method
 		doSystem("iwpriv %s set WscMode=2", WIF2G);
 	}
 
@@ -4731,7 +4803,7 @@ start_wsc_pbc()
 
 	if (!need_to_start_wps_5g()) return;
 
-	fprintf(stderr, "start wsc\n");
+	dbg("start wsc\n");
 	if (nvram_match("wps_enable", "0"))
 	{
 		system("route add -host 239.255.255.250 dev br0 1>/dev/null 2>&1");
@@ -4750,7 +4822,7 @@ start_wsc_pbc()
 		doSystem("iwpriv %s set WscConfMode=%d", WIF, 7);	// Enrollee + Proxy + Registrar
 	}
 
-	fprintf(stderr, "WPS: PBC\n");
+	dbg("WPS: PBC\n");
 	doSystem("iwpriv %s set WscMode=%d", WIF, 2);			// PBC method
 	doSystem("iwpriv %s set WscGetConf=%d", WIF, 1);		// Trigger WPS AP to do simple config with WPS Client
 
@@ -4766,7 +4838,7 @@ start_wsc_pbc_2g()
 
 	if (!need_to_start_wps_2g()) return;
 
-	fprintf(stderr, "start wsc\n");
+	dbg("start wsc\n");
 	if (nvram_match("wps_enable", "0"))
 	{
 		system("route add -host 239.255.255.250 dev br0 1>/dev/null 2>&1");
@@ -4785,7 +4857,7 @@ start_wsc_pbc_2g()
 		doSystem("iwpriv %s set WscConfMode=%d", WIF2G, 7);	// Enrollee + Proxy + Registrar
 	}
 
-	fprintf(stderr, "WPS: PBC\n");
+	dbg("WPS: PBC\n");
 	doSystem("iwpriv %s set WscMode=2", WIF2G);			// PBC method
 	doSystem("iwpriv %s set WscGetConf=%d", WIF2G, 1);		// Trigger WPS AP to do simple config with WPS Client
 
@@ -4801,7 +4873,7 @@ start_wsc_pbc_both()
 
 	if (!need_to_start_wps_5g() || !need_to_start_wps_2g()) return;
 
-	fprintf(stderr, "start wsc\n");
+	dbg("start wsc\n");
 //	if (nvram_match("wps_enable", "0"))
 	{
 		system("route delete 239.255.255.250 1>/dev/null 2>&1");
@@ -4832,7 +4904,7 @@ start_wsc_pbc_both()
 		doSystem("iwpriv %s set WscConfMode=%d", WIF2G, 7);	// Enrollee + Proxy + Registrar
 	}
 
-	fprintf(stderr, "WPS: PBC\n");
+	dbg("WPS: PBC\n");
 
 	doSystem("iwpriv %s set WscMode=%d", WIF, 2);			// PBC method
 	doSystem("iwpriv %s set WscGetConf=%d", WIF, 1);		// Trigger WPS AP to do simple config with WPS Client
@@ -4863,7 +4935,7 @@ start_wsc_pin_enrollee()
 		unlink(WSCD_PIDFILE_5G);
 	}
 
-	fprintf(stderr, "start wsc\n");
+	dbg("start wsc\n");
 
 	char str_lan_ipaddr[16];
 	if (nvram_match("lan_ipaddr_t", ""))
@@ -4873,7 +4945,7 @@ start_wsc_pin_enrollee()
 	doSystem("wscd -m 1 -a %s -i %s &", str_lan_ipaddr, WIF);
 	doSystem("iwpriv %s set WscConfMode=%d", WIF, 7);		// Enrollee + Proxy + Registrar	
 
-	fprintf(stderr, "WPS: PIN\n");
+	dbg("WPS: PIN\n");
 	doSystem("iwpriv %s set WscMode=1", WIF);
 
 	nvram_set("wps_start_flag", "1");
@@ -4898,7 +4970,7 @@ start_wsc_pin_enrollee_2g()
 		doSystem("rm -f /var/run/wscd.pid.%s", WIF2G);
 	}
 
-	fprintf(stderr, "start wsc\n");
+	dbg("start wsc\n");
 
 	char str_lan_ipaddr[16];
 	if (nvram_match("lan_ipaddr_t", ""))
@@ -4908,7 +4980,7 @@ start_wsc_pin_enrollee_2g()
 	doSystem("wscd -m 1 -a %s -i %s &", str_lan_ipaddr, WIF2G);
 	doSystem("iwpriv %s set WscConfMode=%d", WIF2G, 7);		// Enrollee + Proxy + Registrar
 
-	fprintf(stderr, "WPS: PIN\n");
+	dbg("WPS: PIN\n");
 	doSystem("iwpriv %s set WscMode=1", WIF2G);			// PIN method
 
 	nvram_set("wps_start_flag", "1");
@@ -4956,7 +5028,7 @@ int getWscStatus()
 	wrq.u.data.flags = RT_OID_WSC_QUERY_STATUS;
 
 	if (wl_ioctl(WIF, RT_PRIV_IOCTL, &wrq) < 0)
-		fprintf(stderr, "errors in getting WSC status\n");
+		dbg("errors in getting WSC status\n");
 
 	return data;
 }
@@ -4971,7 +5043,7 @@ int getWscStatus_2g()
 	wrq.u.data.flags = RT_OID_WSC_QUERY_STATUS;
 
 	if (wl_ioctl(WIF2G, RT_PRIV_IOCTL, &wrq) < 0)
-		fprintf(stderr, "errors in getting WSC status\n");
+		dbg("errors in getting WSC status\n");
 
 	return data;
 }
@@ -5005,7 +5077,7 @@ stainfo()
 
 	if(wl_ioctl(WIF, RTPRIV_IOCTL_GSTAINFO, &wrq) < 0)
 	{
-		fprintf(stderr, "errors in getting STAINFO result\n");
+		dbg("errors in getting STAINFO result\n");
 		return 0;
 	}
 
@@ -5030,7 +5102,7 @@ stainfo_2g()
 
 	if(wl_ioctl(WIF2G, RTPRIV_IOCTL_GSTAINFO, &wrq) < 0)
 	{
-		fprintf(stderr, "errors in getting STAINFO result\n");
+		dbg("errors in getting STAINFO result\n");
 		return 0;
 	}
 
@@ -5055,7 +5127,7 @@ getstat()
 
 	if(wl_ioctl(WIF, RTPRIV_IOCTL_GSTAT, &wrq) < 0)
 	{
-		fprintf(stderr, "errors in getting STAT result\n");
+		dbg("errors in getting STAT result\n");
 		return 0;
 	}
 
@@ -5080,7 +5152,7 @@ getstat_2g()
 
 	if(wl_ioctl(WIF2G, RTPRIV_IOCTL_GSTAT, &wrq) < 0)
 	{
-		fprintf(stderr, "errors in getting STAT result\n");
+		dbg("errors in getting STAT result\n");
 		return 0;
 	}
 
@@ -5105,7 +5177,7 @@ getrssi()
 
 	if(wl_ioctl(WIF, RTPRIV_IOCTL_GRSSI, &wrq) < 0)
 	{
-		fprintf(stderr, "errors in getting RSSI result\n");
+		dbg("errors in getting RSSI result\n");
 		return 0;
 	}
 
@@ -5130,7 +5202,7 @@ getrssi_2g()
 
 	if(wl_ioctl(WIF2G, RTPRIV_IOCTL_GRSSI, &wrq) < 0)
 	{
-		fprintf(stderr, "errors in getting RSSI result\n");
+		dbg("errors in getting RSSI result\n");
 		return 0;
 	}
 
@@ -5155,7 +5227,7 @@ gettxbfcal()
 
 	if(wl_ioctl(WIF, RTPRIV_IOCTL_GTXBFCALP, &wrq) < 0)
 	{
-		fprintf(stderr, "errors in getting TxBfCal result\n");
+		dbg("errors in getting TxBfCal result\n");
 		return 0;
 	}
 
@@ -5235,9 +5307,13 @@ wsc_user_commit()
 		if (flag_wep)
 		{
 			//KeyStr
+			if (strlen(nvram_safe_get("rt_key1")))
 			doSystem("iwpriv %s set Key1=%s", WIF2G, nvram_safe_get("rt_key1"));
+			if (strlen(nvram_safe_get("rt_key2")))
 			doSystem("iwpriv %s set Key2=%s", WIF2G, nvram_safe_get("rt_key2"));
+			if (strlen(nvram_safe_get("rt_key3")))
 			doSystem("iwpriv %s set Key3=%s", WIF2G, nvram_safe_get("rt_key3"));
+			if (strlen(nvram_safe_get("rt_key4")))
 			doSystem("iwpriv %s set Key4=%s", WIF2G, nvram_safe_get("rt_key4"));
 
 			//DefaultKeyID
@@ -5313,9 +5389,13 @@ wsc_user_commit()
 		if (flag_wep)
 		{
 			//KeyStr
+			if (strlen(nvram_safe_get("wl_key1")))
 			doSystem("iwpriv %s set Key1=%s", WIF, nvram_safe_get("wl_key1"));
+			if (strlen(nvram_safe_get("wl_key2")))
 			doSystem("iwpriv %s set Key2=%s", WIF, nvram_safe_get("wl_key2"));
+			if (strlen(nvram_safe_get("wl_key3")))
 			doSystem("iwpriv %s set Key3=%s", WIF, nvram_safe_get("wl_key3"));
+			if (strlen(nvram_safe_get("wl_key4")))
 			doSystem("iwpriv %s set Key4=%s", WIF, nvram_safe_get("wl_key4"));
 
 			//DefaultKeyID

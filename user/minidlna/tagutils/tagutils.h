@@ -17,8 +17,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
 /*
@@ -35,11 +34,11 @@
 #define ROLE_NOUSE 0
 #define ROLE_START 1
 #define ROLE_ARTIST 1
-#define ROLE_COMPOSER 2
-#define ROLE_CONDUCTOR 3
+#define ROLE_TRACKARTIST 2
+#define ROLE_ALBUMARTIST 3
 #define ROLE_BAND 4
-#define ROLE_ALBUMARTIST 5
-#define ROLE_TRACKARTIST 6
+#define ROLE_CONDUCTOR 5
+#define ROLE_COMPOSER 6
 #define ROLE_LAST 6
 #define N_ROLE 7
 

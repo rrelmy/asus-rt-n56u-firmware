@@ -16,13 +16,14 @@
  */
 
 #ifndef BRCM_UDHCPD
+#include <sys/types.h>
 #include <sys/sysinfo.h>
 
 long uptime(void)
 {
 	struct sysinfo info;
 	sysinfo(&info);
-        
+
 	return info.uptime;
 }
 #endif

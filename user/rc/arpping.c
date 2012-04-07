@@ -13,6 +13,8 @@
 #include <netinet/udp.h>
 #include <stdio.h>
 #include <errno.h>
+#include <sys/types.h>
+#include <shutils.h>
 #include <nvram/bcmnvram.h>
 
 #define ETHER_ADDR_STR_LEN	18
@@ -81,9 +83,9 @@ int arpping(/*uint32_t yiaddr, uint32_t ip, uint8_t *mac, char *interface*/)
 		strcpy(wanmac, nvram_safe_get("lan_hwaddr"));	// br0 MAC address
 	}
 
-	fprintf(stderr, "IP: %s\n", inet_ntoa(ip));
-	fprintf(stderr, "Gateway: %s\n", inet_ntoa(yiaddr));
-	fprintf(stderr, "MAC: %s\n", wanmac);
+	dbg("IP: %s\n", inet_ntoa(ip));
+	dbg("Gateway: %s\n", inet_ntoa(yiaddr));
+	dbg("MAC: %s\n", wanmac);
 
         wanmac[17]=0;
         for(i=0;i<6;i++)
@@ -105,14 +107,14 @@ int arpping(/*uint32_t yiaddr, uint32_t ip, uint8_t *mac, char *interface*/)
 
 	s = socket(PF_PACKET, SOCK_PACKET, htons(ETH_P_ARP));
 	if (s == -1) {
-		fprintf(stderr, "cannot create raw socket\n");
+		dbg("cannot create raw socket\n");
 //		return -1;
 //		puts("");
 		return 0;
 	}
 
 	if (setsockopt_broadcast(s) == -1) {
-		fprintf(stderr, "cannot setsocketopt on raw socket\n");
+		dbg("cannot setsocketopt on raw socket\n");
 		close(s);
 //		return -1;
 //		puts("");
@@ -143,7 +145,7 @@ int arpping(/*uint32_t yiaddr, uint32_t ip, uint8_t *mac, char *interface*/)
 
 	if (setsockopt(s, SOL_SOCKET, SO_BINDTODEVICE, DEV, IFNAMSIZ) != 0)	// J++
         {
-                fprintf(stderr, "setsockopt error: %s\n", DEV);
+                dbg("setsockopt error: %s\n", DEV);
                 perror("setsockopt set:");
         }
 
@@ -151,7 +153,7 @@ int arpping(/*uint32_t yiaddr, uint32_t ip, uint8_t *mac, char *interface*/)
 
         if (setsockopt(s, SOL_SOCKET, SO_BINDTODEVICE, "", IFNAMSIZ) != 0)	// J++
         {
-                fprintf(stderr, "setsockopt error: %s\n", "");
+                dbg("setsockopt error: %s\n", "");
                 perror("setsockopt reset:");
         }
 
@@ -169,14 +171,14 @@ int arpping(/*uint32_t yiaddr, uint32_t ip, uint8_t *mac, char *interface*/)
 		FD_SET(s, &fdset);
 		tm.tv_sec = timeout;
 		if (select(s + 1, &fdset, (fd_set *) NULL, (fd_set *) NULL, &tm) < 0) {
-			fprintf(stderr, "error on ARPING request\n");
+			dbg("error on ARPING request\n");
 			if (errno != EINTR) rv = 0;
 		} else if (FD_ISSET(s, &fdset)) {
 			if (recv(s, &arp, sizeof(arp), 0) < 0 ) rv = 0;
 			if (arp.operation == htons(ARPOP_REPLY) &&
 			    memcmp(arp.tHaddr, mac, 6) == 0 &&
 			    *((uint32_t *) arp.sInaddr) == yiaddr) {
-				fprintf(stderr, "Valid arp reply from [%02X:%02X:%02X:%02X:%02X:%02X]\n",
+				dbg("Valid arp reply from [%02X:%02X:%02X:%02X:%02X:%02X]\n",
 					(unsigned char)arp.sHaddr[0],
 					(unsigned char)arp.sHaddr[1],
 					(unsigned char)arp.sHaddr[2],
@@ -196,7 +198,7 @@ int arpping(/*uint32_t yiaddr, uint32_t ip, uint8_t *mac, char *interface*/)
 //	puts("");
 	close(s);
 
-	fprintf(stderr, "%salid arp reply\n", rv ? "V" : "No v");
+	dbg("%salid arp reply\n", rv ? "V" : "No v");
 	return rv;
 //	return 0;
 }

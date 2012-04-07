@@ -15,7 +15,13 @@ LANG_TR=Türkçe
 LANG_TH=ไทย
 LANG_MS=Malaysia
 [untranslate]
-LANHostConfig_x_TimeZone_itemhint_2=The router detected that the NTP time zone is different from your router’s current time seting. Do you want to use the NTP time zone as your router’s time zone?
+IPConnection_VSList_ftpport=FTP Server Port:
+Adm_System_telnetd=Enable Telnet Server?
+wps_start_btn=Start
+USB_Application_account_alert=User's account cannot be‘root’, ‘Root’, ‘ROOT’, ‘admin’, ‘Admin’, ‘ADMIN’, ‘family’, ‘Family’, ‘FAMILY’ ! Please enter a valid account.
+BasicConfig_USBStorageWhiteist_itemdesc=The range for this field is hex 1 to FFFF. Enter 0 (zero) to disable this feature.
+BasicConfig_USBStorageWhiteist_itemname=USB Storage Device VID whitelist
+LANHostConfig_x_TimeZone_itemhint_2=The selected time zone setting is different from what the device has detected. Do you want change to the detected time zone?
 RouterConfig_GWMulticast_Multicast_all_itemdesc=Enable this feature to control the network traffic and avoid a broadcast storm, which would result to a network slowdown or to an unusable network. The range for this field is 1 to 1024.  Enter 0 (zero) to disable this feature.
 RouterConfig_GWMulticast_unknownUni_itemname=Unknown unicast storm control(Mbps):
 RouterConfig_GWMulticast_unknownMul_itemname=Unknown multicast storm control(Mbps):

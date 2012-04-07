@@ -463,7 +463,6 @@ ej_lan_leases(int eid, webs_t wp, int argc, char_t **argv)
 			ret += websWrite(wp, "%s\n", lease_buf);
 		}
 	}
-	printf("lease test 3\n");	// tmp test
 	fclose(fp);
 
 	return ret;
@@ -481,7 +480,6 @@ sys_renew(void)
 	if ((unit = atoi(nvram_safe_get("wan_unit"))) < 0)
 		unit = 0;
 
-	printf("sys renew\n");	// tmp test
 #ifdef REMOVE	
 	snprintf(tmp, sizeof(tmp), "/var/run/udhcpc%d.pid", unit);
 	if ((str = file2str(tmp))) {
@@ -509,7 +507,6 @@ sys_release(void)
 	if ((unit = atoi(nvram_safe_get("wan_unit"))) < 0)
 		unit = 0;
 	
-	//printf("sys release\n");	// tmp test
 #ifdef REMOVE
 	snprintf(tmp, sizeof(tmp), "/var/run/udhcpc%d.pid", unit);
 	if ((str = file2str(tmp))) {
@@ -519,7 +516,6 @@ sys_release(void)
 	}	
 	return -1;
 #else	
-	//printf("enter kill\n");	// tmp test
 	snprintf(tmp, sizeof(tmp), "wan_disconnect,%d", unit);
 	nvram_set("rc_service", tmp);
 	kill(1, SIGUSR1);
@@ -699,8 +695,9 @@ ej_route_table(int eid, webs_t wp, int argc, char_t **argv)
 					inet_ntoa(dest)));
 			strcpy(sgw,    (gw.s_addr==0   ? "*"       :
 					inet_ntoa(gw)));
-			if (nvram_match("wan_proto","pppoe") && (strstr(buff, "eth0")))
-				continue;
+			/* dhcp + pppoe case */
+			//if (nvram_match("wan_proto","pppoe") && (strstr(buff, "eth0")))
+			//	continue;
 			if (strstr(buff, "br0") || strstr(buff, "wl0"))
 			{
 				ret += websWrite(wp, "%-16s%-16s%-16s%-6s%-6d %-2d %7d LAN\n",

@@ -1,5 +1,9 @@
-
-/* This program is free software; you can redistribute it and/or modify
+/* MiniDLNA media server
+ * Copyright (C) 2008-2010 NETGEAR, Inc. All Rights Reserved.
+ *
+ * This file is part of MiniDLNA.
+ *
+ * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
@@ -131,7 +135,11 @@ log_err(int level, enum _log_facility facility, char *fname, int lineno, char *f
 	// user log
 	va_start(ap, fmt);
 	//vsnprintf(errbuf, sizeof(errbuf), fmt, ap);
-	vasprintf(&errbuf, fmt, ap);
+	if (vasprintf(&errbuf, fmt, ap) == -1)
+	{
+		va_end(ap);
+		return;
+	}
 	va_end(ap);
 
 	// timestamp

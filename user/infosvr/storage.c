@@ -154,6 +154,7 @@ getStorageStatus(STORAGE_INFO_T *st)
 //	char tmparray[MAXARRAY][MAXARRSIZE];
 	char *username, *password;
 	char *apps_ver, *apps_model;
+	int port;
 
 	st->Capability=0;
 
@@ -196,13 +197,21 @@ getStorageStatus(STORAGE_INFO_T *st)
 	{
 		apps_status|=APPS_STATUS_CHECKED;
 	}
-	if (nvram_match("usb_disc0_port", "1"))
+	if (nvram_match("usb_mnt_first_path_port", "1"))
 	{
 		apps_status|=APPS_STATUS_USBPORT1;
 	}
 	if (strcmp(nvram_safe_get("mnt_type"), "ntfs") == 0)
 	{
 		apps_status|=APPS_STATUS_FS_NTFS;
+	}
+	if(strcmp(nvram_safe_get("mnt_type"), "fat32") == 0)
+	{
+		apps_status|=APPS_STATUS_FS_FAT;
+	}
+	if(strcmp(nvram_safe_get("dmrd"), "1") == 0)     
+	{
+		apps_status|=APPS_STATUS_READONLY;
 	}
 	if(strcmp(nvram_safe_get("dm_block"), "1") == 0)
 	{

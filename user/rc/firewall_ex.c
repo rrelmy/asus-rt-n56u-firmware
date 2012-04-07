@@ -980,6 +980,8 @@ void nat_setting(char *wan_if, char *wan_ip, char *lan_if, char *lan_ip, char *l
 		// masquerade lan to lan
 		ip2class(lan_ip, nvram_safe_get("lan_netmask"), lan_class);
 		fprintf(fp, "-A POSTROUTING -o %s -s %s -d %s -j MASQUERADE\n", lan_if, lan_class, lan_class);
+
+		porttrigger_setting_without_netconf(fp);
 	}
 
 	fprintf(fp, "COMMIT\n");
@@ -1010,11 +1012,11 @@ void redirect_setting()
 	char *lan_netmask_t = nvram_safe_get("lan_netmask");
 
 	if (redirect_fp == NULL) {
-		fprintf(stderr, "*** Can't make the file of the redirect rules! ***\n");
+		dbg("*** Can't make the file of the redirect rules! ***\n");
 		return;
 	}
 	if (fake_nat_fp == NULL) {
-		fprintf(stderr, "*** create fake nat fules fail! ***\n");
+		dbg("*** create fake nat fules fail! ***\n");
 		return;
 	}
 
@@ -2036,6 +2038,7 @@ filter_setting(char *wan_if, char *wan_ip, char *lan_if, char *lan_ip, char *log
 	system("iptables-restore /tmp/filter_rules");
 }
 
+#if 0
 int porttrigger_setting()
 {
 	netconf_app_t apptarget, *app;
@@ -2119,6 +2122,97 @@ int porttrigger_setting()
 		}
 	}
 }
+#endif
+
+int porttrigger_setting_without_netconf(FILE *fp)
+{
+	netconf_app_t apptarget, *app;
+	int i;
+	char *out_proto, *in_proto, *out_port, *in_port, *desc;
+	int  out_start, out_end, in_start, in_end;
+
+	if (!nvram_match("autofw_enable_x", "1")) 
+		return -1;
+	
+	g_buf_init();
+
+	foreach_x("autofw_num_x")
+	{
+		out_proto = proto_conv("autofw_outproto_x", i);
+//		out_port = portrange_ex2_conv("autofw_outport_x", i, &out_start, &out_end);
+		out_port = portrange_ex2_conv_new("autofw_outport_x", i, &out_start, &out_end);
+		in_proto = proto_conv("autofw_inproto_x", i);
+		in_port = portrange_ex2_conv("autofw_inport_x", i, &in_start, &in_end);
+		desc = general_conv("autofw_desc_x", i);
+		app = &apptarget;
+		memset(app, 0, sizeof(netconf_app_t));
+
+		/* Parse outbound protocol */
+		if (!strncasecmp(out_proto, "tcp", 3))
+			app->match.ipproto = IPPROTO_TCP;
+		else if (!strncasecmp(out_proto, "udp", 3))
+			app->match.ipproto = IPPROTO_UDP;
+		else continue;
+
+		/* Parse outbound port range */
+		app->match.dst.ports[0] = htons(out_start);
+		app->match.dst.ports[1] = htons(out_end);
+
+		/* Parse related protocol */
+		if (!strncasecmp(in_proto, "tcp", 3))
+			app->proto = IPPROTO_TCP;
+		else if (!strncasecmp(in_proto, "udp", 3))
+			app->proto = IPPROTO_UDP;
+		else continue;
+
+		/* Parse related destination port range */
+		app->dport[0] = htons(in_start);
+		app->dport[1] = htons(in_end);
+
+		/* Parse mapped destination port range */
+		app->to[0] = htons(in_start);
+		app->to[1] = htons(in_end);
+
+		/* Parse description */
+		if (desc)
+			strncpy(app->desc, desc, sizeof(app->desc));
+
+		/* Set interface name (match packets entering LAN interface) */
+		strncpy(app->match.in.name, nvram_safe_get("lan_ifname"), IFNAMSIZ);
+
+		/* Set LAN source port range (match packets from any source port) */
+		app->match.src.ports[1] = htons(0xffff);
+
+		/* Set target (application specific port forward) */
+		app->target = NETCONF_APP;
+
+		if (valid_autofw_port(app))
+		{
+			/* cmd format:
+			 * iptables -t nat -A PREROUTING -i br0 -p INCOMING_PROTOCOL --dport TRIGGER_PORT_FROM(-TRIGGER_PORT_TO) -j autofw --related-proto TRIGGER_PROTOCOL --related-dport INCOMING_PORT_FROM(-INCOMING_PORT_TO) --related-to INCOMING_PORT_FROM(-INCOMING_PORT_TO)
+			 *
+			 * For example, to set up a trigger for BitTorrent, you'd use this:
+			 * iptables -t nat -A PREROUTING -i br0 -p tcp --dport 6881 -j autofw --related-proto tcp --related-dport 6881-6999 --related-to 6881-6999
+			 */
+/*
+			doSystem("iptables -t nat -A PREROUTING -i %s -p %s --dport %s -j autofw --related-proto %s --related-dport %s --related-to %s",
+				nvram_safe_get("lan_ifname"),
+				out_proto,
+				out_port,
+				in_proto,
+				in_port,
+				in_port);
+*/
+			fprintf(fp, "-A PREROUTING -i %s -p %s --dport %s -j autofw --related-proto %s --related-dport %s --related-to %s\n",
+				nvram_safe_get("lan_ifname"),
+				out_proto,
+				out_port,
+				in_proto,
+				in_port,
+				in_port);
+		}
+	}
+}
 
 int
 start_firewall_ex(char *wan_if, char *wan_ip, char *lan_if, char *lan_ip)
@@ -2176,7 +2270,7 @@ start_firewall_ex(char *wan_if, char *wan_ip, char *lan_if, char *lan_ip)
 	filter_setting(wan_if, wan_ip, lan_if, lan_ip, logaccept, logdrop);
 
 	/* Trigger port setting */
-	porttrigger_setting();
+//	porttrigger_setting();	// move to nat_setting()
 
 #if (!defined(W7_LOGO) && !defined(WIFI_LOGO))
 	if ((fp=fopen("/proc/sys/net/nf_conntrack_max", "w+")))
@@ -2186,7 +2280,7 @@ start_firewall_ex(char *wan_if, char *wan_ip, char *lan_if, char *lan_ip)
 		else
 		{
 			if (nvram_get("misc_conntrack_x") == NULL)
-				fputs("4096", fp);
+				fputs("8192", fp);
 			else
 				fputs(nvram_safe_get("misc_conntrack_x"), fp);
 		}
@@ -2348,6 +2442,21 @@ start_firewall_ex(char *wan_if, char *wan_ip, char *lan_if, char *lan_ip)
 	{
 		fputs("1", fp);
 		fclose(fp);
+	}
+
+	system("rmmod nf_nat_ftp 2>/dev/null");
+	system("rmmod nf_conntrack_ftp 2>/dev/null");
+
+	int port_ftp = atoi(nvram_safe_get("port_ftp"));                
+	if ((port_ftp > 0) && (port_ftp < 65536) && (port_ftp != 21))
+	{
+		doSystem("insmod nf_conntrack_ftp ports=21,%d", port_ftp);
+		system("insmod nf_nat_ftp");
+	}
+	else
+	{
+		system("insmod nf_conntrack_ftp");
+		system("insmod nf_nat_ftp");
 	}
 
 	return 0;

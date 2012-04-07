@@ -16,10 +16,7 @@ function redirect(){
 function redirect1(){
 	if(parent.lan_ipaddr == "192.168.1.1")
 		if(navigator.appName.indexOf("Microsoft") >= 0){
-			//parent.location.reload();			
 			parent.parent.location.href = "http://192.168.1.1/QIS_wizard.htm";
-			//parent.location.href = "http://192.168.1.1/index.asp?t="+new Date().getTime();
-			//setTimeout("parent.parent.detectLANstatus('/', '');", restart_time*1000);
 		}
 		else{
 			parent.parent.location.href = "http://192.168.1.1/QIS_wizard.htm";

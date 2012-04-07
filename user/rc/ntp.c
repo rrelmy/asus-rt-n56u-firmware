@@ -77,7 +77,7 @@ int ntp_main(void)
 	fprintf(fp, "%d", getpid());
 	fclose(fp);
 
-	fprintf(stderr, "starting ntp...\n");
+	dbg("starting ntp...\n");
 
 	signal(SIGTSTP, catch_sig);
 

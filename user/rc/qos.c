@@ -179,7 +179,7 @@ void start_qos(char *wan_ipaddr)	//modified by angela 2008.05
 
 	strcpy(lan_net_name, nvram_safe_get("lan_ifname"));
 
-	fprintf(stderr, "QoS wan_net_name: %s, lan_net_name: %s\n", wan_net_name, lan_net_name);
+	dbg("QoS wan_net_name: %s, lan_net_name: %s\n", wan_net_name, lan_net_name);
 
 	/* Add new qdisc for wan classify */
 	eval("tc","qdisc","add", "dev", wan_net_name, "root", "handle", "10:",\
@@ -196,7 +196,7 @@ void start_qos(char *wan_ipaddr)	//modified by angela 2008.05
 
 	/*Decide all the max/min=qos_ubw/qos_ubw bandwidth for each classes */		
 	ubw = atoi(nvram_safe_get("qos_ubw_real"));
-	fprintf(stderr, "upload speed to apply: %s\n", nvram_safe_get("qos_ubw_real"));
+	dbg("upload speed to apply: %s\n", nvram_safe_get("qos_ubw_real"));
 	m_ubw = ubw/5;
 	if (m_ubw == 0)  m_ubw = 1;
 	if (rulenum > 0)

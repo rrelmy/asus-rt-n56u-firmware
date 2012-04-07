@@ -1,0 +1,28 @@
+--- Makefile	2010-07-16 22:25:54.000000000 +0100
++++ Makefile	2011-02-14 16:26:06.000000000 +0000
+@@ -29,7 +29,7 @@
+            upnpreplyparse.o minixml.o \
+            getifaddr.o daemonize.o upnpglobalvars.o \
+            options.o minissdp.o uuid.o upnpevents.o \
+-           sql.o utils.o metadata.o scanner.o inotify.o \
++           sql.o naturalsort.o utils.o metadata.o scanner.o inotify.o \
+            tivo_utils.o tivo_beacon.o tivo_commands.o \
+            tagutils/textutils.o tagutils/misc.o tagutils/tagutils.o \
+            playlist.o image_utils.o albumart.o log.o
+@@ -78,7 +78,7 @@
+ 
+ minidlna.o: config.h upnpglobalvars.h minidlnatypes.h
+ minidlna.o: upnphttp.h upnpdescgen.h minidlnapath.h getifaddr.h upnpsoap.h
+-minidlna.o: options.h minissdp.h daemonize.h upnpevents.h log.h
++minidlna.o: options.h minissdp.h daemonize.h upnpevents.h log.h naturalsort.h
+ upnphttp.o: config.h upnphttp.h upnpdescgen.h minidlnapath.h upnpsoap.h
+ upnphttp.o: upnpevents.h image_utils.h sql.h log.h icons.c
+ upnpdescgen.o: config.h upnpdescgen.h minidlnapath.h upnpglobalvars.h
+@@ -117,6 +117,7 @@
+ tivo_commands.o: config.h tivo_commands.h tivo_utils.h
+ utils.o: utils.h
+ sql.o: sql.h
++naturalsort.o: naturalsort.h
+ log.o: log.h
+ 
+ .SUFFIXES: .c .o

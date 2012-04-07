@@ -1,10 +1,10 @@
-# $Id: Makefile,v 1.26 2010/03/18 21:37:39 jmaggard Exp $
+# $Id: Makefile,v 1.30 2011/02/17 23:17:24 jmaggard Exp $
 # MiniDLNA project
 # http://sourceforge.net/projects/minidlna/
 # (c) 2008-2009 Justin Maggard
 # for use with GNU Make
 # To install use :
-# $ PREFIX=/dummyinstalldir make install
+# $ DESTDIR=/dummyinstalldir make install
 # or :
 # $ INSTALLPREFIX=/usr/local make install
 # or :
@@ -12,6 +12,10 @@
 #
 #CFLAGS = -Wall -O -D_GNU_SOURCE -g -DDEBUG
 #CFLAGS = -Wall -g -Os -D_GNU_SOURCE
+#CFLAGS = -Wall -g -O3 -D_GNU_SOURCE -D_FILE_OFFSET_BITS=64 \
+#	 -I/usr/include/ffmpeg \
+#	 -I/usr/include/libavutil -I/usr/include/libavcodec -I/usr/include/libavformat \
+#	 -I/usr/include/ffmpeg/libavutil -I/usr/include/ffmpeg/libavcodec -I/usr/include/ffmpeg/libavformat
 CFLAGS = -Wall -g -O3 -D_GNU_SOURCE -D_FILE_OFFSET_BITS=64 \
 	 -I../../lib/include \
 	 -I../sqlite-autoconf-3070400/source \
@@ -26,29 +30,28 @@ CFLAGS = -Wall -g -O3 -D_GNU_SOURCE -D_FILE_OFFSET_BITS=64 \
 	 -I../libvorbis-1.3.2/source/include \
 	 -I../flac-1.2.1/source/include \
 	 -I../libexif-0.6.20/source/libexif
-
-#STATIC_LINKING:
-LDFLAGS = -static
+#STATIC_LINKING: CFLAGS += -DSTATIC
+#STATIC_LINKING: LDFLAGS = -static
 CC = mipsel-linux-gcc
 RM = rm -f
 INSTALL = install
 
-DIR_HOME = $(shell pwd)
-INSTALLPREFIX = $(DIR_HOME)/install
+INSTALLPREFIX ?= $(DESTDIR)/usr
 SBININSTALLDIR = $(INSTALLPREFIX)/sbin
-ETCINSTALLDIR = $(PREFIX)/etc
+ETCINSTALLDIR = $(DESTDIR)/etc
 
 BASEOBJS = minidlna.o upnphttp.o upnpdescgen.o upnpsoap.o \
            upnpreplyparse.o minixml.o \
            getifaddr.o daemonize.o upnpglobalvars.o \
            options.o minissdp.o uuid.o upnpevents.o \
-           sql.o utils.o metadata.o scanner.o inotify.o \
+           sql.o naturalsort.o utils.o metadata.o scanner.o inotify.o \
            tivo_utils.o tivo_beacon.o tivo_commands.o \
            tagutils/textutils.o tagutils/misc.o tagutils/tagutils.o \
            playlist.o image_utils.o albumart.o log.o
 
 ALLOBJS = $(BASEOBJS) $(LNXOBJS)
 
+#LIBS += -L../extra_bin
 LIBS += -L../sqlite-autoconf-3070400/install/lib
 LIBS += -L../libexif-0.6.20/install/lib
 LIBS += -L../jpeg-8b/install/lib
@@ -59,14 +62,20 @@ LIBS += -L../flac-1.2.1/install/lib
 LIBS += -L../libexif-0.6.20/install/lib
 LIBS += -L../../lib/lib 
 #LIBS += -lintl # NLS support
-LIBS += -lpthread -lexif -ljpeg -lsqlite3 -lid3tag -lFLAC -lvorbis -logg -lavformat -lavcodec -lavutil -ldl -lz -lm
+LIBS += -lpthread -lexif -ljpeg -lsqlite3 -lid3tag -lFLAC -lvorbis -logg -lavformat -lavcodec -lavutil -ldl -lz -lm# -liconv
+#LIBS = -lpthread -lexif -ljpeg -lsqlite3 -lavformat -lavutil -lavcodec -lid3tag -lFLAC -logg -lvorbis
 #STATIC_LINKING: LIBS = -lvorbis -logg -lm -lsqlite3 -lpthread -lexif -ljpeg -lFLAC -lm -lid3tag -lz -lavformat -lavutil -lavcodec -lm
+
+#SHDIR = $(ROOTDIR)/user/shared
+#USERDIR = $(ROOTDIR)/user
+#CFLAGS += -DASUS_NVRAM -I$(ROOTDIR)/linux-2.6.21.x/include
+#LIBS += -L$(SHDIR) -lshared
 
 TESTUPNPDESCGENOBJS = testupnpdescgen.o upnpdescgen.o
 
 EXECUTABLES = minidlna testupnpdescgen
 
-.PHONY:	all clean install depend
+.PHONY:	all clean distclean install depend
 
 all:	$(EXECUTABLES)
 
@@ -75,18 +84,21 @@ clean:
 	$(RM) $(EXECUTABLES)
 	$(RM) testupnpdescgen.o
 
-#install: minidlna
-#	$(INSTALL) -d $(SBININSTALLDIR)
-#	$(INSTALL) minidlna $(SBININSTALLDIR)
-#	$(INSTALL) -d $(ETCINSTALLDIR)
-#	$(INSTALL) --mode=0644 minidlna.conf $(ETCINSTALLDIR)
+distclean: clean
+	$(RM) config.h
+
+install:	minidlna
+	$(INSTALL) -d $(SBININSTALLDIR)
+	$(INSTALL) minidlna $(SBININSTALLDIR)
+	$(INSTALL) -d $(ETCINSTALLDIR)
+	$(INSTALL) --mode=0644 minidlna.conf $(ETCINSTALLDIR)
 
 romfs: minidlna
 	$(ROMFSINST) /usr/bin/minidlna
 	$(STRIP) $(INSTALLDIR)/usr/bin/minidlna
 	$(ROMFSINST) /etc_ro/minidlna.conf
 
-minidlna:	$(BASEOBJS) $(LNXOBJS)# $(LIBS)
+minidlna:	$(BASEOBJS) $(LNXOBJS) #$(LIBS)
 	@echo Linking $@
 	@$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $(BASEOBJS) $(LNXOBJS) $(LIBS)
 
@@ -96,7 +108,7 @@ testupnpdescgen:	$(TESTUPNPDESCGENOBJS)
 	@$(CC) $(CFLAGS) -o $@ $(TESTUPNPDESCGENOBJS)
 
 config.h:	genconfig.sh
-	./genconfig.sh
+#	./genconfig.sh
 
 depend:	config.h
 	makedepend -f$(MAKEFILE_LIST) -Y \
@@ -106,7 +118,7 @@ depend:	config.h
 
 minidlna.o: config.h upnpglobalvars.h minidlnatypes.h
 minidlna.o: upnphttp.h upnpdescgen.h minidlnapath.h getifaddr.h upnpsoap.h
-minidlna.o: options.h minissdp.h daemonize.h upnpevents.h log.h
+minidlna.o: options.h minissdp.h daemonize.h upnpevents.h log.h naturalsort.h
 upnphttp.o: config.h upnphttp.h upnpdescgen.h minidlnapath.h upnpsoap.h
 upnphttp.o: upnpevents.h image_utils.h sql.h log.h icons.c
 upnpdescgen.o: config.h upnpdescgen.h minidlnapath.h upnpglobalvars.h
@@ -145,6 +157,7 @@ tivo_beacon.o: config.h tivo_beacon.h tivo_utils.h
 tivo_commands.o: config.h tivo_commands.h tivo_utils.h
 utils.o: utils.h
 sql.o: sql.h
+naturalsort.o: naturalsort.h
 log.o: log.h
 
 .SUFFIXES: .c .o

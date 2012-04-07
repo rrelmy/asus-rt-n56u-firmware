@@ -1,12 +1,50 @@
 /* MiniDLNA project
  *
  * http://sourceforge.net/projects/minidlna/
- * (c) 2008-2009 Justin Maggard
- * This software is subject to the conditions detailed
- * in the LICENCE file provided within the distribution
  *
- * Portions of the code (c) Thomas Bernard, subject to
- * the conditions detailed in the LICENSE.miniupnpd file.
+ * MiniDLNA media server
+ * Copyright (C) 2008-2009  Justin Maggard
+ *
+ * This file is part of MiniDLNA.
+ *
+ * MiniDLNA is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2 as
+ * published by the Free Software Foundation.
+ *
+ * MiniDLNA is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with MiniDLNA. If not, see <http://www.gnu.org/licenses/>.
+ *
+ * Portions of the code from the MiniUPnP project:
+ *
+ * Copyright (c) 2006-2007, Thomas Bernard
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *     * Redistributions of source code must retain the above copyright
+ *       notice, this list of conditions and the following disclaimer.
+ *     * Redistributions in binary form must reproduce the above copyright
+ *       notice, this list of conditions and the following disclaimer in the
+ *       documentation and/or other materials provided with the distribution.
+ *     * The name of the author may not be used to endorse or promote products
+ *       derived from this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
  */
 #include <stdlib.h>
 #include <unistd.h>
@@ -35,6 +73,7 @@
 
 #include "upnpglobalvars.h"
 #include "sql.h"
+#include "naturalsort.h"
 #include "upnphttp.h"
 #include "upnpdescgen.h"
 #include "minidlnapath.h"
@@ -168,11 +207,13 @@ getfriendlyname(char * buf, int len)
 {
 	char * dot = NULL;
 	char * hn = calloc(1, 256);
+	int off;
+
 	if( gethostname(hn, 256) == 0 )
 	{
 		strncpy(buf, hn, len-1);
 		buf[len] = '\0';
-		dot = index(buf, '.');
+		dot = strchr(buf, '.');
 		if( dot )
 			*dot = '\0';
 	}
@@ -181,14 +222,69 @@ getfriendlyname(char * buf, int len)
 		strcpy(buf, "Unknown");
 	}
 	free(hn);
-//	strcat(buf, ": ");
-	#ifdef READYNAS
-	strncat(buf, "ReadyNAS", len-strlen(buf)-1);
-	#else
-/*
+
+	off = strlen(buf);
+	off += snprintf(buf+off, len-off, ": ");
+#ifdef READYNAS
+	FILE * info;
+	char ibuf[64], *key, *val;
+	snprintf(buf+off, len-off, "ReadyNAS");
+	info = fopen("/proc/sys/dev/boot/info", "r");
+	if( !info )
+		return;
+	while( (val = fgets(ibuf, 64, info)) != NULL )
+	{
+		key = strsep(&val, ": \t");
+		val = trim(val);
+		if( strcmp(key, "model") == 0 )
+		{
+			snprintf(buf+off, len-off, "%s", val);
+			key = strchr(val, ' ');
+			if( key )
+			{
+				strncpy(modelnumber, key+1, MODELNUMBER_MAX_LEN);
+				modelnumber[MODELNUMBER_MAX_LEN-1] = '\0';
+				*key = '\0';
+			}
+			snprintf(modelname, MODELNAME_MAX_LEN,
+				"Windows Media Connect compatible (%s)", val);
+		}
+		else if( strcmp(key, "serial") == 0 )
+		{
+			strncpy(serialnumber, val, SERIALNUMBER_MAX_LEN);
+			serialnumber[SERIALNUMBER_MAX_LEN-1] = '\0';
+			if( serialnumber[0] == '\0' )
+			{
+				char mac_str[13];
+				if( getsyshwaddr(mac_str, sizeof(mac_str)) == 0 )
+					strcpy(serialnumber, mac_str);
+				else
+					strcpy(serialnumber, "0");
+			}
+			break;
+		}
+	}
+	fclose(info);
+	if( strcmp(modelnumber, "NVX") == 0 )
+		memcpy(pnpx_hwid+4, "01F2&amp;DEV_0101", 17);
+	else if( strcmp(modelnumber, "Pro") == 0 ||
+	         strcmp(modelnumber, "Pro 6") == 0 ||
+	         strncmp(modelnumber, "Ultra 6", 7) == 0 )
+		memcpy(pnpx_hwid+4, "01F2&amp;DEV_0102", 17);
+	else if( strcmp(modelnumber, "Pro 2") == 0 ||
+	         strncmp(modelnumber, "Ultra 2", 7) == 0 )
+		memcpy(pnpx_hwid+4, "01F2&amp;DEV_0103", 17);
+	else if( strcmp(modelnumber, "Pro 4") == 0 ||
+	         strncmp(modelnumber, "Ultra 4", 7) == 0 )
+		memcpy(pnpx_hwid+4, "01F2&amp;DEV_0104", 17);
+	else if( strcmp(modelnumber+1, "100") == 0 )
+		memcpy(pnpx_hwid+4, "01F2&amp;DEV_0105", 17);
+	else if( strcmp(modelnumber+1, "200") == 0 )
+		memcpy(pnpx_hwid+4, "01F2&amp;DEV_0106", 17);
+#else
 	char * logname;
 	logname = getenv("LOGNAME");
-#if 1 // Disable for static linking
+#ifndef STATIC // Disable for static linking
 	if( !logname )
 	{
 		struct passwd * pwent;
@@ -197,9 +293,8 @@ getfriendlyname(char * buf, int len)
 			logname = pwent->pw_name;
 	}
 #endif
-	strncat(buf, logname?logname:"Unknown", len-strlen(buf)-1);
-*/
-	#endif
+	snprintf(buf+off, len-off, "%s", logname?logname:"Unknown");
+#endif
 }
 
 int
@@ -223,6 +318,7 @@ open_db(void)
 	sql_exec(db, "pragma journal_mode = OFF");
 	sql_exec(db, "pragma synchronous = OFF;");
 	sql_exec(db, "pragma default_cache_size = 8192;");
+	sqlite3_create_collation(db, "naturalsort", SQLITE_UTF8, NULL, naturalsort);
 	return new_db;
 }
 
@@ -269,7 +365,7 @@ init(int argc, char * * argv)
 		DPRINTF(E_OFF, L_GENERAL, "No MAC address found.  Falling back to generic UUID.\n");
 		strcpy(mac_str, "554e4b4e4f57");
 	}
-	strcpy(uuidvalue+5, "4d696e69-444c-164e-9d41-");
+	strcpy(uuidvalue+5, "41535553-0000-0000-0000-");
 	strncat(uuidvalue, mac_str, 12);
 
 	getfriendlyname(friendly_name, FRIENDLYNAME_MAX_LEN);
@@ -326,6 +422,10 @@ init(int argc, char * * argv)
 				strncpy(serialnumber, ary_options[i].value, SERIALNUMBER_MAX_LEN);
 				serialnumber[SERIALNUMBER_MAX_LEN-1] = '\0';
 				break;				
+			case UPNPMODEL_NAME:
+				strncpy(modelname, ary_options[i].value, MODELNAME_MAX_LEN);
+				modelname[MODELNAME_MAX_LEN-1] = '\0';
+				break;
 			case UPNPMODEL_NUMBER:
 				strncpy(modelnumber, ary_options[i].value, MODELNUMBER_MAX_LEN);
 				modelnumber[MODELNUMBER_MAX_LEN-1] = '\0';
@@ -386,6 +486,12 @@ init(int argc, char * * argv)
 			case UPNPALBUMART_NAMES:
 				for( string = ary_options[i].value; (word = strtok(string, "/")); string = NULL ) {
 					struct album_art_name_s * this_name = calloc(1, sizeof(struct album_art_name_s));
+					int len = strlen(word);
+					if( word[len-1] == '*' )
+					{
+						word[len-1] = '\0';
+						this_name->wildcard = 1;
+					}
 					this_name->name = strdup(word);
 					if( !album_art_names )
 					{
@@ -411,6 +517,18 @@ init(int argc, char * * argv)
 					break;
 				}
 				strncpy(db_path, path, PATH_MAX);
+				break;
+			case UPNPLOGDIR:
+				path = realpath(ary_options[i].value, real_path);
+				if( !path )
+					path = (ary_options[i].value);
+				make_dir(path, S_ISVTX|S_IRWXU|S_IRWXG|S_IRWXO);
+				if( access(path, F_OK) != 0 )
+				{
+					DPRINTF(E_FATAL, L_GENERAL, "Log path not accessible! [%s]\n", path);
+					break;
+				}
+				strncpy(log_path, path, PATH_MAX);
 				break;
 			case UPNPINOTIFY:
 				if( (strcmp(ary_options[i].value, "yes") != 0) && !atoi(ary_options[i].value) )
@@ -575,8 +693,8 @@ init(int argc, char * * argv)
 	if( n_lan_addr < 1 )
 	{
 		if( (getsysaddr(ext_ip_addr, INET_ADDRSTRLEN) < 0) &&
-		    (getifaddr("eth0", ext_ip_addr, INET_ADDRSTRLEN) < 0) &&
-		    (getifaddr("eth1", ext_ip_addr, INET_ADDRSTRLEN) < 0) )
+		    (getifaddr("br0", ext_ip_addr, INET_ADDRSTRLEN) < 0) &&	// ASUS EXT
+		    (getifaddr("eth0", ext_ip_addr, INET_ADDRSTRLEN) < 0) )	// ASUS EXT
 		{
 			DPRINTF(E_OFF, L_GENERAL, "No IP address automatically detected!\n");
 		}
@@ -626,7 +744,7 @@ init(int argc, char * * argv)
 		#else
 		if( access(db_path, F_OK) != 0 )
 			make_dir(db_path, S_ISVTX|S_IRWXU|S_IRWXG|S_IRWXO);
-		sprintf(real_path, "%s/minidlna.log", db_path);
+		sprintf(real_path, "%s/minidlna.log", log_path);
 		log_init(real_path, "general,artwork,database,inotify,scanner,metadata,http,ssdp,tivo=warn");
 		#endif
 	}
@@ -640,7 +758,6 @@ init(int argc, char * * argv)
 	set_startup_time();
 
 	/* presentation url */
-#if 0
 	if(presurl)
 	{
 		strncpy(presentationurl, presurl, PRESENTATIONURL_MAX_LEN);
@@ -656,7 +773,6 @@ init(int argc, char * * argv)
 		         "http://%s:%d/", lan_addr[0].str, runtime_vars.port);
 #endif
 	}
-#endif
 
 	/* set signal handler */
 	signal(SIGCLD, SIG_IGN);
@@ -711,25 +827,18 @@ main(int argc, char * * argv)
 #ifdef ENABLE_NLS
 	setlocale(LC_MESSAGES, "");
 	setlocale(LC_CTYPE, "en_US.utf8");
+	DPRINTF(E_DEBUG, L_GENERAL, "Using locale dir %s\n", bindtextdomain("minidlna", getenv("TEXTDOMAINDIR")));
 	textdomain("minidlna");
 #endif
 
 	if(init(argc, argv) != 0)
 		return 1;
 
-        /* write pid */
-	FILE *fp;
-	if ((fp = fopen("/var/run/minidlna.pid", "w")) != NULL)
-	{
-		fprintf(fp, "%d", getpid());
-		fclose(fp);
-	}
-
 #ifdef READYNAS
-	DPRINTF(E_WARN, L_GENERAL, "Starting ReadyDLNA version " MINIDLNA_VERSION ".\n");
+	DPRINTF(E_WARN, L_GENERAL, "Starting " SERVER_NAME " version " MINIDLNA_VERSION ".\n");
 	unlink("/ramfs/.upnp-av_scan");
 #else
-	DPRINTF(E_WARN, L_GENERAL, "Starting MiniDLNA version " MINIDLNA_VERSION " [SQLite %s].\n", sqlite3_libversion());
+	DPRINTF(E_WARN, L_GENERAL, "Starting " SERVER_NAME " version " MINIDLNA_VERSION " [SQLite %s].\n", sqlite3_libversion());
 	if( !sqlite3_threadsafe() )
 	{
 		DPRINTF(E_ERROR, L_GENERAL, "SQLite library is not threadsafe!  "
@@ -939,7 +1048,13 @@ main(int argc, char * * argv)
 			FD_SET(shttpl, &readset);
 			max_fd = MAX( max_fd, shttpl);
 		}
-
+#ifdef TIVO_SUPPORT
+		if (sbeacon >= 0) 
+		{
+			FD_SET(sbeacon, &readset);
+			max_fd = MAX(max_fd, sbeacon);
+		}
+#endif
 		i = 0;	/* active HTTP connections count */
 		for(e = upnphttphead.lh_first; e != NULL; e = e->entries.le_next)
 		{
@@ -950,14 +1065,13 @@ main(int argc, char * * argv)
 				i++;
 			}
 		}
-		/* for debug */
 #ifdef DEBUG
+		/* for debug */
 		if(i > 1)
 		{
 			DPRINTF(E_DEBUG, L_GENERAL, "%d active incoming HTTP connections\n", i);
 		}
 #endif
-
 		FD_ZERO(&writeset);
 		upnpevents_selectfds(&readset, &writeset, &max_fd);
 
@@ -974,6 +1088,13 @@ main(int argc, char * * argv)
 			/*DPRINTF(E_DEBUG, L_GENERAL, "Received UDP Packet\n");*/
 			ProcessSSDPRequest(sudp, (unsigned short)runtime_vars.port);
 		}
+#ifdef TIVO_SUPPORT
+		if(sbeacon >= 0 && FD_ISSET(sbeacon, &readset))
+		{
+			/*DPRINTF(E_DEBUG, L_GENERAL, "Received UDP Packet\n");*/
+			ProcessTiVoBeacon(sbeacon);
+		}
+#endif
 		/* increment SystemUpdateID if the content database has changed,
 		 * and if there is an active HTTP connection, at most once every 2 seconds */
 		if( i && (time(NULL) >= (lastupdatetime.tv_sec + 2)) )

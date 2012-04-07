@@ -18,6 +18,11 @@
 #ifndef _UPTIME_H
 #define _UPTIME_H
 
+#ifndef BRCM_UDHCPD
 long uptime(void);
+#else
+#define uptime() time(0)
+#endif
 
 #endif
+

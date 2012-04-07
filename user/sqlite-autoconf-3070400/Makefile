@@ -23,7 +23,13 @@ configure:
 clean:
 	$(MAKE) -C source clean
 	rm -rf install
+	rm -f libsqlite3.so.0.8.6
 	rm -f config_done
 
 romfs:
-	echo "do nothing"
+#	echo "do nothing"
+	cp install/lib/libsqlite3.so.0.8.6 .
+	$(ROMFSINST) /lib/libsqlite3.so.0.8.6
+	cd $(INSTALLDIR)/lib && ln -sf libsqlite3.so.0.8.6 libsqlite3.so.0
+	cd $(INSTALLDIR)/lib && ln -sf libsqlite3.so.0.8.6 libsqlite3.so
+

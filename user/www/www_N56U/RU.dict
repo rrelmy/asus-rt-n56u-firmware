@@ -15,7 +15,13 @@ LANG_TR=Türkçe
 LANG_TH=ไทย
 LANG_MS=Malaysia
 [untranslate]
-LANHostConfig_x_TimeZone_itemhint_2=Роутер обнаружил, что часовой пояс NTP отличается от часового пояса Вашего роутера. Вы хотите использовать часовой пояс NTP для Вашего роутера?
+IPConnection_VSList_ftpport=FTP Server Port:
+Adm_System_telnetd=Enable Telnet Server?
+wps_start_btn=Пачаць
+USB_Application_account_alert=Учетная запись пользователя не может быть root,  Root, ROOT, admin, Admin, ADMIN, family, Family, FAMILY! Пожалуйста, введите верную учетную запись.
+BasicConfig_USBStorageWhiteist_itemdesc=В это поле вводятся шестнадцатеричные цифры от 1 до FFFF. Введите 0 (ноль) для отключения этой функции.
+BasicConfig_USBStorageWhiteist_itemname=Список изготовителей USB устройств
+LANHostConfig_x_TimeZone_itemhint_2=Выбранный часовой пояс отличается от обнаруженного устройством. Вы хотите изменить часовой пояс?
 RouterConfig_GWMulticast_Multicast_all_itemdesc=Включите эту функцию для избежангия широковещательного шторма, что может привести бы к уменьшению производительности сети или невозможности ее использования. Введите значение в диапазоне от 1 до 1024. Введите 0 (ноль) для отключения этой функции.
 RouterConfig_GWMulticast_unknownUni_itemname=Unknown unicast storm control(Mbps):
 RouterConfig_GWMulticast_unknownMul_itemname=Unknown multicast strom control(Mbps):

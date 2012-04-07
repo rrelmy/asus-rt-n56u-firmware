@@ -27,8 +27,8 @@ all: libnetconf.so netconf
 romfs:
 	$(STRIP) libnetconf.so
 	$(ROMFSINST) /lib/libnetconf.so
-	$(STRIP) netconf
-	$(ROMFSINST) /bin/netconf
+#	$(STRIP) netconf
+#	$(ROMFSINST) /bin/netconf
 
 clean:
 	rm -f *.o *.a *.so netconf

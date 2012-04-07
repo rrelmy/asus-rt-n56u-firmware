@@ -52,10 +52,10 @@ libevent/libevent.a:
 %.o: %.c
 	@CC@ -c -o $@ $(CFLAGS) $<
 
-depend: .depend
+#depend: .depend
 
-.depend: $(SRCS)
-	@CC@ -M $(CFLAGS) $^ > .depend
+#.depend: $(SRCS)
+#	@CC@ -M $(CFLAGS) $^ > .depend
 
 handlers:
 	$(MAKE) -C handlers
@@ -77,7 +77,7 @@ distclean: clean
 	rm -f Makefile config.cache
 	$(MAKE) -C handlers distclean
 
--include .depend
+#-include .depend
 
 install: all
 	-mkdir -p $(RPM_INSTALL_ROOT)$(DESTDIR)$(sbindir)

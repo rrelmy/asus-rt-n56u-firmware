@@ -1,19 +1,19 @@
-/*  MiniDLNA media server
- *  Copyright (C) 2008  Justin Maggard
+/* MiniDLNA media server
+ * Copyright (C) 2008  Justin Maggard
  *
- *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
+ * This file is part of MiniDLNA.
  *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * MiniDLNA is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2 as
+ * published by the Free Software Foundation.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * MiniDLNA is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with MiniDLNA. If not, see <http://www.gnu.org/licenses/>.
  */
 #include <stdio.h>
 #include <stdlib.h>
@@ -107,7 +107,7 @@ update_if_album_art(const char * path)
 	char * match = NULL;
 	char * file = NULL;
 	int ncmp = 0;
-	struct album_art_name_s * album_art_name;
+	int album_art;
 	DIR * dh;
 	struct dirent *dp;
 	enum file_types type = TYPE_UNKNOWN;
@@ -121,14 +121,10 @@ update_if_album_art(const char * path)
 	}
 	else
 	{
-		ncmp = strrchr(match, '.')-match;
+		ncmp = strrchr(match, '.') - match;
 	}
 	/* Check if this file name matches one of the default album art names */
-	for( album_art_name = album_art_names; album_art_name; album_art_name = album_art_name->next )
-	{
-		if( strcmp(album_art_name->name, match) == 0 )
-			break;
-	}
+	album_art = is_album_art(match);
 
 	dir = dirname(strdup(path));
 	dh = opendir(dir);
@@ -155,7 +151,7 @@ update_if_album_art(const char * path)
 			continue;
 		if( (*(dp->d_name) != '.') &&
 		    (is_video(dp->d_name) || is_audio(dp->d_name)) &&
-		    (album_art_name || strncmp(dp->d_name, match, ncmp) == 0) )
+		    (album_art || strncmp(dp->d_name, match, ncmp) == 0) )
 		{
 			DPRINTF(E_DEBUG, L_METADATA, "New file %s looks like cover art for %s\n", path, dp->d_name);
 			asprintf(&file, "%s/%s", dir, dp->d_name);
@@ -249,6 +245,7 @@ check_embedded_art(const char * path, const char * image_data, int image_size)
 		fclose(dstfile);
 		if( nwritten != image_size )
 		{
+			DPRINTF(E_WARN, L_METADATA, "Embedded art error: wrote %d/%d bytes\n", nwritten, image_size);
 			remove(art_path);
 			free(art_path);
 			art_path = NULL;

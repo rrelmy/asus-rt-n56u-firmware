@@ -93,11 +93,7 @@ int arpping(u_int32_t yiaddr, u_int32_t ip, unsigned char *mac, char *interface)
 	
 	/* wait arp reply, and check it */
 	tm.tv_usec = 0;
-#ifdef BRCM_UDHCPD
-	time(&prevTime);
-#else
 	prevTime = uptime();
-#endif
 	while (timeout > 0) {
 		FD_ZERO(&fdset);
 		FD_SET(s, &fdset);
@@ -115,13 +111,8 @@ int arpping(u_int32_t yiaddr, u_int32_t ip, unsigned char *mac, char *interface)
 				break;
 			}
 		}
-#ifdef BRCM_UDHCPD
-		timeout -= time(NULL) - prevTime;
-		time(&prevTime);
-#else
 		timeout -= uptime() - prevTime;
 		prevTime = uptime();
-#endif
 	}
 	close(s);
 	DEBUG(LOG_INFO, "%salid arp replies for this address", rv ? "No v" : "V");	 

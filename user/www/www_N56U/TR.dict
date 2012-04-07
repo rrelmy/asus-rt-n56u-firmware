@@ -15,7 +15,13 @@ LANG_TR=Türkçe
 LANG_TH=ไทย
 LANG_MS=Malaysia
 [untranslate]
-LANHostConfig_x_TimeZone_itemhint_2=Yönlendirici NTP zaman diliminin yönlendiricinin güncel saat ayarından farklı olduğunu algıladı. Yönlendiricinizin zaman dilimi olarak NTP zaman dilimini kullanmak istiyor musunuz?
+IPConnection_VSList_ftpport=FTP Server Port:
+Adm_System_telnetd=Enable Telnet Server?
+wps_start_btn=Başlatmak
+USB_Application_account_alert=Kullanıcı hesapları be‘root’, ‘Root’, ‘ROOT’, ‘admin’, ‘Admin’, ‘ADMIN’, ‘family’, ‘Family’, ‘FAMILY’ olamaz! Lütfen geçerli bir hesap girin.
+BasicConfig_USBStorageWhiteist_itemdesc=Bu alan için aralık hex 1 ile FFFF arasındadır. Bu özelliği engellemek için 0 (sıfır) girin.
+BasicConfig_USBStorageWhiteist_itemname=USB Depolama Aygıtı VID ak listesi
+LANHostConfig_x_TimeZone_itemhint_2=Seçilen zaman dilimi ayarı aygıtın algıladığından farklı. Algılanan zaman dilimini değiştirmek istiyor musunuz?
 RouterConfig_GWMulticast_Multicast_all_itemdesc=Bu özelliği etkinleştirerek ağ trafiğini kontrol edin ve ağın yavaşlamasına ya da dengesiz ağ oluşumuna sebep olabilecek yayın fırtınasından kaçının. Bu alanın menzili 1 ila 1024 arasındadır.  Bu özelliği engellemek için 0 (sıfır) girin.
 RouterConfig_GWMulticast_unknownUni_itemname=Bilinmeyen tek yönlü fırtına kontrolü (Mbps):
 RouterConfig_GWMulticast_unknownMul_itemname=Bilinmeyen çok yönlü fırtına kontrolü (Mbps):

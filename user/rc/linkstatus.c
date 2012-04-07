@@ -2,20 +2,23 @@
 #include <stdio.h>
 #include <signal.h>
 #include <unistd.h>
+#include <sys/types.h>
+#include <shutils.h>
 #include <nvram/bcmnvram.h>
 #include <rtxxxx.h>
 #include <time.h>
 
+#if 0
 void conntrack_and_dns_cache_cleanup()
 {
 	int i, num = 1;
 
-	fprintf(stderr, "conntrack & dns cache cleanup\n");
+	dbg("conntrack & dns cache cleanup\n");
 
 	track_set("101");
 	for (i = 0; i < num; i++)
 	{
-		fprintf(stderr, "**** clean ip_conntrack %d time(s). ****\n", i + 1);
+		dbg("**** clean ip_conntrack %d time(s). ****\n", i + 1);
 		system("cat /proc/net/nf_conntrack 1>/dev/null 2>&1");		
 	}
 	track_set("100");
@@ -23,6 +26,7 @@ void conntrack_and_dns_cache_cleanup()
 	system("rm -f /tmp/dproxy.cache");
 	restart_dns();
 }
+#endif
 
 static int count = 0;
 
@@ -118,19 +122,19 @@ void catch_sig_linkstatus(int sig)
 		else
 			linkstatus_lan = rtl8367m_wanPort_phyStatus() || rtl8367m_lanPorts_phyStatus();
 		linkstatus_usb = usb_status();
-//		fprintf(stderr, "linkstatus_wan: %d\n", linkstatus_wan);
-//		fprintf(stderr, "linkstatus_lan: %d\n", linkstatus_lan);
+//		dbg("linkstatus_wan: %d\n", linkstatus_wan);
+//		dbg("linkstatus_lan: %d\n", linkstatus_lan);
 
 		if (!timer_wget && (p_wget_timestamp = nvram_get("wget_timestamp")))
 		{
 			now = uptime();
 
-//			fprintf(stderr, "wget_timestamp: %s\n", p_wget_timestamp);
-//			fprintf(stderr, "wget timeout: %d\n", (unsigned long)(now - strtoul(p_wget_timestamp, NULL, 10)));
+//			dbg("wget_timestamp: %s\n", p_wget_timestamp);
+//			dbg("wget timeout: %d\n", (unsigned long)(now - strtoul(p_wget_timestamp, NULL, 10)));
 /*
 			if (nvram_get("login_timestamp") && !nvram_match("login_timestamp", ""))
 			{
-				fprintf(stderr, "user login! no detect!\n");
+				dbg("user login! no detect!\n");
 
 				remove(DETECT_HTTPD_FILE);
 				if (pids("wget"))
@@ -138,7 +142,7 @@ void catch_sig_linkstatus(int sig)
 			}
 			else */if ((unsigned long)(now - strtoul(p_wget_timestamp, NULL, 10)) > 4)
 			{
-				fprintf(stderr, "wget no response for more than 4 seconds!\n");
+				dbg("wget no response for more than 4 seconds!\n");
 
 				remove(DETECT_HTTPD_FILE);
 				if (pids("wget"))
@@ -146,7 +150,8 @@ void catch_sig_linkstatus(int sig)
 			}
 		}
 
-		if (nvram_match("wan_route_x", "IP_Routed") && (linkstatus_wan != linkstatus_wan_old))
+		if (	nvram_match("wan_route_x", "IP_Routed") &&
+			(linkstatus_wan != linkstatus_wan_old)	)
 		{
 			if (linkstatus_wan)
 			{
@@ -163,7 +168,9 @@ void catch_sig_linkstatus(int sig)
 				nvram_set("link_internet", "0");
 				LED_CONTROL(LED_WAN, LED_OFF);
 
-				if (pids("udhcpc") && nvram_match("dhcp_renew", "0"))
+				if (	nvram_match("wan0_proto", "dhcp") &&
+					pids("udhcpc") &&
+					nvram_match("dhcp_renew", "0")	)
 				{
 					nvram_set("dhcp_renew", "1");	// for detectWAN
 /*
@@ -179,15 +186,15 @@ void catch_sig_linkstatus(int sig)
 
 //					conntrack_and_dns_cache_cleanup();
 					sleep(1);
-//					fprintf(stderr, "[linkstatus] wan_ipaddr_t: %s, wan_gateway_t: %s\n", nvram_safe_get("wan_ipaddr_t"), nvram_safe_get("wan_gateway_t"));
+//					dbg("[linkstatus] wan_ipaddr_t: %s, wan_gateway_t: %s\n", nvram_safe_get("wan_ipaddr_t"), nvram_safe_get("wan_gateway_t"));
 					kill_pidfile_s("/var/run/wanduck.pid", SIGUSR1);
 					kill_pidfile_s("/var/run/wanduck.pid", SIGUSR2);
 
 					logmessage("linkstatus", "perform DHCP renew");
 					system("killall -SIGUSR1 udhcpc");
 				}
-				else
-					conntrack_and_dns_cache_cleanup();	
+//				else
+//					conntrack_and_dns_cache_cleanup();	
 			}
 		}
 
@@ -214,7 +221,7 @@ void catch_sig_linkstatus(int sig)
 			else
 				lanport3_link_up = 0;
 
-			fprintf(stderr, "LAN Link Status: %d, %d, %d, %d\n", lanport0_link_up, lanport1_link_up, lanport2_link_up, lanport3_link_up);
+			dbg("LAN Link Status: %d, %d, %d, %d\n", lanport0_link_up, lanport1_link_up, lanport2_link_up, lanport3_link_up);
 */
 			if (linkstatus_lan)
 			{

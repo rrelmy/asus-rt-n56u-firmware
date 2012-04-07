@@ -74,6 +74,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/types.h>
+#include <shutils.h>
 #include <bcmcrypto/dh.h>
 
 #define _OPENSSL_malloc malloc
@@ -219,7 +221,7 @@ int main(int argc, char *argv)
 
 	if ((aout < 4) || (bout != aout) || (memcmp(abuf,bbuf,aout) != 0))
 		{
-		fprintf(stderr,"Error in DH routines\n");
+		dbg("Error in DH routines\n");
 		ret=1;
 		}
 	else

@@ -15,7 +15,13 @@ LANG_TR=Türkçe
 LANG_TH=ไทย
 LANG_MS=Malaysia
 [untranslate]
-LANHostConfig_x_TimeZone_itemhint_2=Směrovač zjistil, že se časové pásmo NTP liší od nastavení aktuálního směrovače. Chcete použít časové pásmo NTP jako časové pásmo směrovače?
+IPConnection_VSList_ftpport=FTP Server Port:
+Adm_System_telnetd=Enable Telnet Server?
+wps_start_btn=Zahájení
+USB_Application_account_alert=Uživatelský účet nemůže být ‘kořen’, ‘Kořen’, ‘KOŘEN’, ‘správce’, ‘Správce’, ‘SPRÁVCE’, ‘rodina’, ‘Rodina’, ‘RODINA’ ! Zadejte platný účet.
+BasicConfig_USBStorageWhiteist_itemdesc=Rozsah pro toto pole je šestnáctkově 1 až FFFF. Zadáním 0 (nula) deaktivujete tuto funkci.
+BasicConfig_USBStorageWhiteist_itemname=Seznam povolených VID paměťového zařízení USB
+LANHostConfig_x_TimeZone_itemhint_2=Vybrané nastavení časového pásma se liší od toho, co zařízení rozpoznalo. Chcete změnit na rozpoznané časové pásmo?
 RouterConfig_GWMulticast_Multicast_all_itemdesc=Aktivací této funkce můžete řídit síťový provoz a zabránit bouři vysílání, která by mohla vést k zpomalení sítě nebo k její nepoužitelnosti. Rozsah pro toto pole je 1 až 1024. Zadáním 0 (nula) tuto funkci deaktivujete.
 RouterConfig_GWMulticast_unknownUni_itemname=Řízení neznámé bouře jednosměrového vysílání (Mb/s):
 RouterConfig_GWMulticast_unknownMul_itemname=Řízení neznámé bouře vícesměrového vysílání (Mb/s):

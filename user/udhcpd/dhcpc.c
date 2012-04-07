@@ -130,13 +130,11 @@ static void change_mode(int new_mode)
 		fd = -1;
 	}
 
-#ifndef BRCM_UDHCPD
 	if (new_mode == LISTEN_KERNEL)
 		fd = listen_socket(INADDR_ANY, CLIENT_PORT, client_config.interface);
 	else if (new_mode != LISTEN_NONE)
 		fd = raw_socket(client_config.ifindex);
 	/* else LISTEN_NONE: fd stays closed */
-#endif
 }
 
 
@@ -368,11 +366,8 @@ int main(int argc, char *argv[])
 	change_mode(LISTEN_RAW);
 
 	for (;;) {
-#ifndef BRCM_UDHCPD
+
 		tv.tv_sec = timeout - uptime();
-#else
-		tv.tv_sec = timeout - time(0);
-#endif
 		tv.tv_usec = 0;
 		FD_ZERO(&rfds);
 
@@ -395,11 +390,7 @@ int main(int argc, char *argv[])
 			retval = select(max_fd + 1, &rfds, NULL, NULL, &tv);
 		} else retval = 0; /* If we already timed out, fall through */
 
-#ifndef BRCM_UDHCPD
 		now = uptime();
-#else
-		now = time(0);
-#endif
 		if (retval == 0) {
 			/* timeout dropped to zero */
 			switch (state) {
@@ -423,11 +414,7 @@ int main(int argc, char *argv[])
 				  	}
 					/* wait to try again */
 					packet_num = 0;
-#ifndef BRCM_UDHCPD
-					timeout = now + 5;
-#else
-					timeout = now + 60;
-#endif
+					timeout = now + 20;
 				}
 				break;
 			case RENEW_REQUESTED:

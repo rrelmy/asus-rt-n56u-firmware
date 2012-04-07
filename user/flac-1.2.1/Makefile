@@ -23,7 +23,13 @@ configure:
 clean:
 	$(MAKE) -C source clean
 	rm -rf install
+	rm -f libFLAC.so.8.2.0
 	rm -f config_done
 
 romfs:
-	echo "do nothing"
+#	echo "do nothing"
+	cp install/lib/libFLAC.so.8.2.0 .
+	$(ROMFSINST) /lib/libFLAC.so.8.2.0
+	cd $(INSTALLDIR)/lib && ln -sf libFLAC.so.8.2.0 libFLAC.so.8
+	cd $(INSTALLDIR)/lib && ln -sf libFLAC.so.8.2.0 libFLAC.so
+

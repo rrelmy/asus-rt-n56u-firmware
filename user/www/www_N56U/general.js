@@ -524,7 +524,7 @@ function validate_range(o, min, max) {
 	}
 	if(o.value<min || o.value>max) {
 		alert('<#JS_validrange#> ' + min + ' <#JS_validrange_to#> ' + max);
-		//o.value = max;
+		o.value = "";
 		o.focus();
 		o.select();
 		return false;
@@ -1131,6 +1131,7 @@ function validate_ipaddr_final(o, v){
 
 function change_ipaddrport(o)
 {}
+
 function is_ipaddrport(o)
 {if (!nav) keyPressed = IEKey();
 else keyPressed=NSKey();
@@ -1142,6 +1143,7 @@ if ((keyPressed>47 && keyPressed<58) || keyPressed == 46 || keyPressed == 58)
 }
 return false;
 }
+
 function validate_ipaddrport(o, v)
 {num = -1;
 pos = 0;
@@ -1846,7 +1848,8 @@ inputRCtrl2(document.form.misc_ping_x, 1);
 }
 else
 {
-inputCtrl(document.form.fw_log_x, 1);
+inputCtrl(document.form.fw_log_x, 1);
+
 inputRCtrl1(document.form.misc_http_x, 1);
 inputCtrl(document.form.misc_httpport_x, 1);
 if (isModel()!="WL520gc" && isModel()!="SnapAP")
@@ -2893,9 +2896,9 @@ function updateDateTime(s)
 function openLink(s)
 {if (s=='x_DDNSServer')
 {if (document.form.ddns_server_x.value.indexOf("WWW.DYNDNS.ORG")!=-1)
-tourl = "https://www.dyndns.org/account/create.html"
+tourl = "https://www.dyndns.com/account/services/hosts/add.html"
 else if (document.form.ddns_server_x.value == 'WWW.ZONEEDIT.COM')
-tourl = "https://www.zoneedit.com/signup.html"
+tourl = "http://www.zoneedit.com/signUp.html"
 else if (document.form.ddns_server_x.value == 'WWW.ASUS.COM')
 tourl = "";
 else
@@ -3277,7 +3280,7 @@ function insertExtChannelOption(){
 		}
 	}
         else{
-                if (document.form.HT_BW.value == "0"){
+                if (document.form.HT_BW.value == "0"){ 
                 	if (country == "AL" || 
                 	 country == "DZ" || 
 			 country == "AU" || 
@@ -3320,7 +3323,7 @@ function insertExtChannelOption(){
                 	 country == "VN" ||
                 	 country == "YE" || 
                 	 country == "ZW")
-                		channels = new Array(0, 36, 40, 44, 48, 149, 153, 157, 161, 165);
+                		channels = new Array(0, 36, 40, 44, 48, 149, 153, 157, 161); //Region 0
                 		
                 	else if(country == "AT" ||
                 		country == "BE" ||
@@ -3351,7 +3354,7 @@ function insertExtChannelOption(){
             		    	country == "CH" ||
             		    	country == "GB" || 
             		    	country == "UZ")
-                		channels = new Array(0, 36, 40, 44 ,48);
+                		channels = new Array(0, 36, 40, 44 ,48); //Region 1
                 	
                 	else if(country == "AM" ||
             		    	country == "AZ" || 
@@ -3364,10 +3367,10 @@ function insertExtChannelOption(){
             		    	country == "TT" || 
             		    	country == "TN" ||
             		    	country == "TR")
-                		channels = new Array(0, 36, 40, 44 ,48);
+                		channels = new Array(0, 36, 40, 44 ,48); //Region 2
                 	
                 	else if(country == "AR" || country == "TW")
-                		channels = new Array(0, 149, 153, 157, 161, 165);
+                		channels = new Array(0, 149, 153, 157, 161); //Region 3
                 	
                 	else if(country == "BZ" ||
                 		country == "BO" || 
@@ -3377,19 +3380,19 @@ function insertExtChannelOption(){
             		    	country == "IR" || 
             		    	country == "PE" ||
             		    	country == "PH")
-                		channels = new Array(0, 149, 153, 157, 161, 165);
+                		channels = new Array(0, 149, 153, 157, 161); //Region 4
                 	
                 	else if(country == "KP" ||
                 		country == "KR" || 
             		    	country == "UY" ||
             		    	country == "VE")
-                		channels = new Array(0, 149, 153, 157, 161);
+                		channels = new Array(0, 149, 153, 157, 161); //Region 5
                    	
 									else if(country == "JP")
-                		channels = new Array(0, 36, 40, 44, 48);
+                		channels = new Array(0, 36, 40, 44, 48); //Region 9
 									
 									else
-                		channels = new Array(0, 36, 40, 44, 48, 52, 56, 60, 64, 100, 104, 108, 112, 116, 120, 124, 128, 132, 136, 140, 149, 153, 157, 161, 165);
+                		channels = new Array(0, 36, 40, 44, 48, 52, 56, 60, 64, 100, 104, 108, 112, 116, 120, 124, 128, 132, 136, 140, 149, 153, 157, 161); //Region 7
                 }
 								else if(document.form.HT_BW.value == "1"){
                 	if (country == "AL" || 
@@ -3434,7 +3437,7 @@ function insertExtChannelOption(){
                 	 country == "VN" ||
                 	 country == "YE" || 
                 	 country == "ZW")
-                		channels = new Array(0, 36, 40, 44, 48, 149, 153, 157, 161, 165);
+                		channels = new Array(0, 36, 40, 44, 48, 149, 153, 157, 161); //Region 0
                 		
                 	else if(country == "AT" ||
                 		country == "BE" ||
@@ -3465,7 +3468,7 @@ function insertExtChannelOption(){
             		    	country == "CH" ||
             		    	country == "GB" || 
             		    	country == "UZ")
-                		channels = new Array(0, 36, 40, 44, 48);
+                		channels = new Array(0, 36, 40, 44, 48); //Region 1
                 	
                 	else if(country == "AM" ||
             		    	country == "AZ" || 
@@ -3478,10 +3481,10 @@ function insertExtChannelOption(){
             		    	country == "TT" || 
             		    	country == "TN" ||
             		    	country == "TR")
-                		channels = new Array(0, 36, 40, 44, 48);
+                		channels = new Array(0, 36, 40, 44, 48); //Region 2
                 	
                 	else if(country == "AR" || country == "TW")
-                		channels = new Array(0, 149, 153, 157, 161, 165);
+                		channels = new Array(0, 149, 153, 157, 161); //Region 3
                 	
                 	else if(country == "BZ" ||
                 		country == "BO" || 
@@ -3491,19 +3494,19 @@ function insertExtChannelOption(){
             		    	country == "IR" || 
             		    	country == "PE" ||
             		    	country == "PH")
-                		channels = new Array(0, 149, 153, 157, 161, 165);
+                		channels = new Array(0, 149, 153, 157, 161); //Region 4
                 	
                 	else if(country == "KP" ||
                 		country == "KR" || 
             		    	country == "UY" ||
             		    	country == "VE")
-                		channels = new Array(0, 149, 153, 157, 161);
+                		channels = new Array(0, 149, 153, 157, 161); //Region 5
                 	
 									else if(country == "JP")
-                		channels = new Array(0, 36, 40, 44, 48);
+                		channels = new Array(0, 36, 40, 44, 48); //Region 9
 
 									else
-                		channels = new Array(36, 40, 44, 48, 52, 56, 60, 64, 100, 104, 108, 112, 116, 120, 124, 128, 132, 136, 140, 149, 153, 157, 161, 165);
+                		channels = new Array(36, 40, 44, 48, 52, 56, 60, 64, 100, 104, 108, 112, 116, 120, 124, 128, 132, 136, 140, 149, 153, 157, 161); //Region 7
                 }		
                 else{
                 	if (country == "AL" || 
@@ -3548,7 +3551,7 @@ function insertExtChannelOption(){
                 	 country == "VN" ||
                 	 country == "YE" || 
                 	 country == "ZW")
-                		channels = new Array(0, 36, 40, 44, 48, 149, 153, 157, 161);
+                		channels = new Array(0, 36, 40, 44, 48, 149, 153, 157, 161, 165); //Region 0
                 		
                 	else if(country == "AT" ||
                 		country == "BE" ||
@@ -3579,7 +3582,7 @@ function insertExtChannelOption(){
             		    	country == "CH" ||
             		    	country == "GB" || 
             		    	country == "UZ")
-                		channels = new Array(0, 36, 40, 44, 48);
+                		channels = new Array(0, 36, 40, 44, 48); //Region 1
                 	
                 	else if(country == "AM" ||
             		    	country == "AZ" || 
@@ -3592,10 +3595,10 @@ function insertExtChannelOption(){
             		    	country == "TT" || 
             		    	country == "TN" ||
             		    	country == "TR")
-                		channels = new Array(0, 36, 40, 44, 48);
+                		channels = new Array(0, 36, 40, 44, 48); //Region 2
                 	
                 	else if(country == "AR" || country == "TW")
-                		channels = new Array(0, 149, 153, 157, 161);
+                		channels = new Array(0, 149, 153, 157, 161); //Region 3
                 	
                 	else if(country == "BZ" ||
                 		country == "BO" || 
@@ -3605,19 +3608,19 @@ function insertExtChannelOption(){
             		    	country == "IR" || 
             		    	country == "PE" ||
             		    	country == "PH")
-                		channels = new Array(0, 149, 153, 157, 161);
+                		channels = new Array(0, 149, 153, 157, 161, 165); //Region 4
                 	
                 	else if(country == "KP" ||
                 		country == "KR" || 
             		    	country == "UY" ||
             		    	country == "VE")
-                		channels = new Array(0, 149, 153, 157, 161);
+                		channels = new Array(0, 149, 153, 157, 161, 165); //Region 5
                 	
 									else if(country == "JP")
-                		channels = new Array(0, 36, 40, 44, 48);
+                		channels = new Array(0, 36, 40, 44, 48); //Region 9
 
 									else
-                		channels = new Array(36, 40, 44, 48, 52, 56, 60, 64, 100, 104, 108, 112, 116, 120, 124, 128, 132, 136, 140, 149, 153, 157, 161, 165);
+                		channels = new Array(36, 40, 44, 48, 52, 56, 60, 64, 100, 104, 108, 112, 116, 120, 124, 128, 132, 136, 140, 149, 153, 157, 161, 165); //Region 7
                 }                
         }
         

@@ -23,7 +23,13 @@ configure:
 clean:
 	$(MAKE) -C source clean
 	rm -rf install
+	rm -f libvorbis.so.0.4.5
 	rm -f config_done
 
 romfs:
-	echo "do nothing"
+#	echo "do nothing"
+	cp install/lib/libvorbis.so.0.4.5 .
+	$(ROMFSINST) /lib/libvorbis.so.0.4.5
+	cd $(INSTALLDIR)/lib && ln -sf libvorbis.so.0.4.5 libvorbis.so.0
+	cd $(INSTALLDIR)/lib && ln -sf libvorbis.so.0.4.5 libvorbis.so
+

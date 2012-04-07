@@ -17,7 +17,7 @@
 /* #undef FLAC__HAS_AS */
 
 /* define if you have docbook-to-man or docbook2man */
-#define FLAC__HAS_DOCBOOK_TO_MAN 1
+/* #undef FLAC__HAS_DOCBOOK_TO_MAN */
 
 /* define if you are compiling for PowerPC and have the 'gas' assembler */
 #define FLAC__HAS_GAS 1

@@ -15,7 +15,13 @@ LANG_TR=Türkçe
 LANG_TH=ไทย
 LANG_MS=Malaysia
 [untranslate]
-LANHostConfig_x_TimeZone_itemhint_2=Le fuseau horaire détecté par le serveur NTP est différent de celui actuellement utilisé par le routeur. Souhaitez-vous remplacer le fuseau horaire du routeur par celui détecté par le serveur NTP ?
+IPConnection_VSList_ftpport=FTP Server Port:
+Adm_System_telnetd=Enable Telnet Server?
+wps_start_btn=Commencer
+USB_Application_account_alert=Le nom d'utilisateur ne peut pas être "root", "Root", "ROOT", "admin", "Admin", "ADMIN", "family", Family" ou "FAMILY". Veuillez modifier votre nom d'utilisateur.
+BasicConfig_USBStorageWhiteist_itemdesc=Ce champ autorise la saisie d'un caractère hexadécimal compris entre 1 et FFFF. Entrez 0 (zéro) pour désactiver cette fonctionnalité.
+BasicConfig_USBStorageWhiteist_itemname=Liste blanche des fabricants de périphériques de stockage USB
+LANHostConfig_x_TimeZone_itemhint_2=Le fuseau horaire sélectionné est différent du fuseau horaire actuel. Souhaitez-vous le modifier ? 
 RouterConfig_GWMulticast_Multicast_all_itemdesc=Activez cette fonction pour contrôler le trafic réseau et éviter les tempêtes de diffusion pouvant ralentir ou empêcher le réseau de fonctionner correctement.  Vous pouvez entrer une valeur comprise entre 1 et 1024. Entrez 0 (zéro) pour désactiver cette fonction. 
 RouterConfig_GWMulticast_unknownUni_itemname=Contrôle de tempête monodiffusion inconnu (Mbps) :
 RouterConfig_GWMulticast_unknownMul_itemname=Contrôle de tempête multidiffusion inconnu (Mbps) :

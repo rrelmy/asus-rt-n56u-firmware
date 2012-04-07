@@ -675,9 +675,9 @@ s,@FLaC__HAS_OGG_TRUE@,,;t t
 s,@FLaC__HAS_OGG_FALSE@,#,;t t
 s,@LIBICONV@,,;t t
 s,@LTLIBICONV@,,;t t
-s,@DOCBOOK_TO_MAN@,docbook2man,;t t
-s,@FLaC__HAS_DOCBOOK_TO_MAN_TRUE@,,;t t
-s,@FLaC__HAS_DOCBOOK_TO_MAN_FALSE@,#,;t t
+s,@DOCBOOK_TO_MAN@,,;t t
+s,@FLaC__HAS_DOCBOOK_TO_MAN_TRUE@,#,;t t
+s,@FLaC__HAS_DOCBOOK_TO_MAN_FALSE@,,;t t
 s,@NASM@,,;t t
 s,@FLaC__HAS_NASM_TRUE@,#,;t t
 s,@FLaC__HAS_NASM_FALSE@,,;t t
@@ -1031,7 +1031,6 @@ ${ac_dA}FLAC__HAS_OGG${ac_dB}FLAC__HAS_OGG${ac_dC}1${ac_dD}
 ${ac_dA}HAVE_ICONV${ac_dB}HAVE_ICONV${ac_dC}1${ac_dD}
 ${ac_dA}ICONV_CONST${ac_dB}ICONV_CONST${ac_dC}${ac_dD}
 ${ac_dA}HAVE_LANGINFO_CODESET${ac_dB}HAVE_LANGINFO_CODESET${ac_dC}1${ac_dD}
-${ac_dA}FLAC__HAS_DOCBOOK_TO_MAN${ac_dB}FLAC__HAS_DOCBOOK_TO_MAN${ac_dC}1${ac_dD}
 ${ac_dA}FLAC__HAS_GAS${ac_dB}FLAC__HAS_GAS${ac_dC}1${ac_dD}
 CEOF
   sed -f $tmp/defines.sed $tmp/in >$tmp/out
@@ -1075,7 +1074,6 @@ ${ac_uA}FLAC__HAS_OGG${ac_uB}FLAC__HAS_OGG${ac_uC}1${ac_uD}
 ${ac_uA}HAVE_ICONV${ac_uB}HAVE_ICONV${ac_uC}1${ac_uD}
 ${ac_uA}ICONV_CONST${ac_uB}ICONV_CONST${ac_uC}${ac_uD}
 ${ac_uA}HAVE_LANGINFO_CODESET${ac_uB}HAVE_LANGINFO_CODESET${ac_uC}1${ac_uD}
-${ac_uA}FLAC__HAS_DOCBOOK_TO_MAN${ac_uB}FLAC__HAS_DOCBOOK_TO_MAN${ac_uC}1${ac_uD}
 ${ac_uA}FLAC__HAS_GAS${ac_uB}FLAC__HAS_GAS${ac_uC}1${ac_uD}
 s,^[	 ]*#[	 ]*undef[	 ][	 ]*[a-zA-Z_][a-zA-Z_0-9]*,/* & */,
 CEOF

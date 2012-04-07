@@ -18,7 +18,9 @@ config_test:
 #	make configure
 #	$(MAKE) -C source
 
-configure:
+configure: source/Makefile
+
+source/Makefile:
 	( cd source ; \
 	export SMB_BUILD_CC_NEGATIVE_ENUM_VALUES=yes ; \
 	export libreplace_cv_READDIR_GETDIRENTRIES=no ; \
@@ -55,7 +57,8 @@ configure:
 	)
 
 clean:
-	( cd source; make -f Makefile.orig distclean )
+#	( cd source; make -f Makefile.orig distclean )
+	( cd source; make -f Makefile distclean )
 	rm -f config_done
 	rm -f smbd
 	rm -f nmbd

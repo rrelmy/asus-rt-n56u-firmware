@@ -154,13 +154,13 @@ mtd_write(const char *path, const char *mtd)
 	else
 		count = http_get(path, (char *) &trx, sizeof(struct trx_header), 0);
 	if (count < sizeof(struct trx_header)) {
-		fprintf(stderr, "%s: File is too small (%ld bytes)\n", path, count);
+		dbg("%s: File is too small (%ld bytes)\n", path, count);
 		goto fail;
 	}
 	if (trx.magic != TRX_MAGIC ||
 	    trx.len > TRX_MAX_LEN ||
 	    trx.len < sizeof(struct trx_header)) {
-		fprintf(stderr, "%s: Bad trx header\n", path);
+		dbg("%s: Bad trx header\n", path);
 		goto fail;
 	}
 
@@ -214,7 +214,7 @@ mtd_write(const char *path, const char *mtd)
 		else
 			count += http_get(path, &buf[off], len - off, erase_info.start + off);
 		if (count < len) {
-			fprintf(stderr, "%s: Truncated file (actual %ld expect %ld)\n", path,
+			dbg("%s: Truncated file (actual %ld expect %ld)\n", path,
 				count - off, len - off);
 			goto fail;
 		}
@@ -223,7 +223,7 @@ mtd_write(const char *path, const char *mtd)
 		/* Check CRC before writing if possible */
 		if (count == trx.len) {
 			if (crc != trx.crc32) {
-				fprintf(stderr, "%s: Bad CRC\n", path);
+				dbg("%s: Bad CRC\n", path);
 				goto fail;
 			}
 		}

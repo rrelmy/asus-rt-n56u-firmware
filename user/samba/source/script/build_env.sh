@@ -7,7 +7,7 @@ then
 fi
 
 uname=`uname -a`
-date=`date`
+date=`LC_ALL=C date`
 srcdir=$1
 builddir=$2
 compiler=$3
@@ -34,8 +34,8 @@ cat <<EOF
 #define BUILD_ENV_DATE "${date}"
 #define BUILD_ENV_SRCDIR "${srcdir}"
 #define BUILD_ENV_BUILDDIR "${builddir}"
-#define BUILD_ENV_USER "${whoami}"
-#define BUILD_ENV_HOST "${host}"
+#define BUILD_ENV_USER "asus"
+#define BUILD_ENV_HOST "localhost"
 #define BUILD_ENV_COMPILER "${compiler}"
 #endif /* _BUILD_ENV_H */
 EOF

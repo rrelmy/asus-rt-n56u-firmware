@@ -215,27 +215,6 @@ function show_device(){
 		case "storage":
 			for(var i = 0; i < all_disks.length; ++i)
 				if(foreign_disk_interface_names()[i] == "1"){
-					disk_html(1, i);
-					break;
-				}
-			break;
-		case "printer":
-			printer_html(1, 0);
-			break;
-		case "audio":
-		case "webcam":
-		case "HSDPA":
-			HSDPA_html(0, 0);
-			break;
-		default:
-			no_device_html(1);
-	}
-	
-	// show the upper usb device
-	switch(usb_path2){
-		case "storage":
-			for(var i = 0; i < all_disks.length; ++i)
-				if(foreign_disk_interface_names()[i] == "2"){
 					disk_html(0, i);
 					break;
 				}
@@ -250,6 +229,27 @@ function show_device(){
 			break;
 		default:
 			no_device_html(0);
+	}
+	
+	// show the upper usb device
+	switch(usb_path2){
+		case "storage":
+			for(var i = 0; i < all_disks.length; ++i)
+				if(foreign_disk_interface_names()[i] == "2"){
+					disk_html(1, i);
+					break;
+				}
+			break;
+		case "printer":
+			printer_html(1, 0);
+			break;
+		case "audio":
+		case "webcam":
+		case "HSDPA":
+			HSDPA_html(1, 0);
+			break;
+		default:
+			no_device_html(1);
 	}
 		
 }

@@ -230,9 +230,11 @@ function done_validating(action){
                                 </tr>
                                 
                                 <tr>
-                                        <th><a class="hintstyle" href="javascript:openHint(17, 9);"><#ShareNode_FTPLANG_itemname#></th>
+                                        <th>
+																								<a class="hintstyle" href="javascript:openHint(17, 10);"><#ShareNode_FTPLANG_itemname#></a>
+																				</th>
                                         <td>
-                                                <select name="ftp_lang" class="input" onChange="return change_common(this, 'Storage', 'ftp_lang');">
+                                                <select name="ftp_lang" class="input" onClick="openHint(17, 10);" onChange="return change_common(this, 'Storage', 'ftp_lang');">
                                                         <option value="CN" <% nvram_match_x("Storage", "ftp_lang", "CN", "selected"); %>><#ShareNode_FTPLANG_optionname3#></option>
                                                         <option value="TW" <% nvram_match_x("Storage", "ftp_lang", "TW", "selected"); %>><#ShareNode_FTPLANG_optionname2#></option>
                                                         <option value="EN" <% nvram_match_x("Storage", "ftp_lang", "EN", "selected"); %>><#ShareNode_FTPLANG_optionname1#></option>
@@ -247,6 +249,15 @@ function done_validating(action){
                                         <td>
                                                 <input type="radio" name="apps_dl" value="1" <% nvram_match_x("Storage", "apps_dl", "1", "checked"); %>>Yes
                                                 <input type="radio" name="apps_dl" value="0" <% nvram_match_x("Storage", "apps_dl", "0", "checked"); %>>No
+                                        </td>
+                                </tr>
+
+                                <tr>
+                                        <th>
+                                                <a class="hintstyle" href="javascript:openHint(17, 9);"><#BasicConfig_USBStorageWhiteist_itemname#></a>
+                                        </th>
+                                        <td>
+                                                <input type="text" name="usb_vid_allow" class="input" onClick="openHint(17, 9);" maxlength="4" size="4" value="<% nvram_get_x("Storage", "usb_vid_allow"); %>">
                                         </td>
                                 </tr>
                                 

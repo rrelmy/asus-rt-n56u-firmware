@@ -255,11 +255,8 @@ struct pppol2tp_tunnel
 	char			name[12];	/* "tunl xxxxx" */
 	struct pppol2tp_ioc_stats stats;
 
-/* l2tp-encap */
-#if 1
 #ifndef UDP_ENCAP_L2TPINUDP
 	void (*old_data_ready)(struct sock *, int);
-#endif
 #endif
 	void (*old_sk_destruct)(struct sock *);
 
@@ -494,9 +491,7 @@ static void pppol2tp_recv_dequeue(struct pppol2tp_session *session)
 			       skb_queue_len(&session->reorder_q));
 			skb_unlink(skb, &session->reorder_q);
 			kfree_skb(skb);
-#if 1	/* l2tp-encap */
 			sock_put(session->sock);
-#endif
 			goto again;
 		}
 
@@ -534,12 +529,8 @@ static int pppol2tp_recv_core(struct sock *sock, struct sk_buff *skb)
 	unsigned char *ptr;
 	u16 hdrflags;
 	u16 tunnel_id, session_id;
-#if 0
-	int length;
-#else	/* l2tp-encap */
 	int length, i;
 	struct udphdr *uh;
-#endif
 
 	ENTER_FUNCTION;
 
@@ -552,43 +543,25 @@ static int pppol2tp_recv_core(struct sock *sock, struct sk_buff *skb)
 		goto end;
 	}
 
-	/* l2tp-encap */
 	/* Get length of L2TP packet */
-#if 1
 #if LINUX_VERSION_CODE < KERNEL_VERSION(2,6,22)
 	uh = (struct udphdr *) skb->h.raw;
 #else
 	uh = (struct udphdr *) skb_transport_header(skb);
 #endif
 	length = ntohs(uh->len) - sizeof(struct udphdr);
-#endif
 
 	/* Point to L2TP header */
 	ptr = skb->data + sizeof(struct udphdr);
-
-#if 0	/* l2tp-encap */
-	/* Get L2TP header flags */
-	hdrflags = ntohs(*(u16*)ptr);
-#endif
 
 	/* Trace packet contents, if enabled */
 	if (tunnel->debug & PPPOL2TP_MSG_DATA) {
 		printk(KERN_DEBUG "%s: recv: ", tunnel->name);
 
-#if 0
-		for (length = 0; length < 16; length++)
-			printk(" %02X", ptr[length]);
-#else	/* l2tp-encap */
 		for (i = 0; i < length && i < 16; i++)
 			printk(" %02X", ptr[i]);
-#endif
 		printk("\n");
 	}
-
-#if 0	/* l2tp-encap */
-	/* Get length of L2TP packet */
-	length = ntohs(skb->h.uh->len) - sizeof(struct udphdr);
-#endif
 
 	/* Too short? */
 	if (length < 12) {
@@ -597,10 +570,8 @@ static int pppol2tp_recv_core(struct sock *sock, struct sk_buff *skb)
 		goto end;
 	}
 
-#if 1	/* l2tp-encap */
 	/* Get L2TP header flags */
 	hdrflags = ntohs(*(u16*)ptr);
-#endif
 
 	/* If type is control packet, it is handled by userspace. */
 	if (hdrflags & L2TP_HDRFLAG_T) {
@@ -871,16 +842,6 @@ static int pppol2tp_recvmsg(struct kiocb *iocb, struct socket *sock,
 
 	skb=skb_recv_datagram(sk, flags & ~MSG_DONTWAIT,
 			      flags & MSG_DONTWAIT, &err);
-#if 0
-	if (skb) {
-		err = memcpy_toiovec(msg->msg_iov, (unsigned char *) skb->data,
-				     skb->len);
-		if (err < 0)
-			goto do_skb_free;
-		err = skb->len;
-	}
-do_skb_free:
-#else	/* l2tp-encap */
 	if (!skb)
 		goto error;
 
@@ -893,7 +854,6 @@ do_skb_free:
 	if (likely(err == 0))
 		err = len;
 
-#endif	
 	if (skb)
 		kfree_skb(skb);
 error:
@@ -1296,10 +1256,8 @@ static void pppol2tp_tunnel_closeall(struct pppol2tp_tunnel *tunnel)
 
 	for (hash = 0; hash < PPPOL2TP_HASH_SIZE; hash++) {
 		hlist_for_each_safe(walk, tmp, &tunnel->session_hlist[hash]) {
-#if 1	/* l2tp-encap */
 			struct sk_buff *skb;
 
-#endif
 			session = hlist_entry(walk, struct pppol2tp_session, hlist);
 
 			sk = session->sock;
@@ -1324,12 +1282,10 @@ static void pppol2tp_tunnel_closeall(struct pppol2tp_tunnel *tunnel)
 			/* Purge any queued data */
 			skb_queue_purge(&sk->sk_receive_queue);
 			skb_queue_purge(&sk->sk_write_queue);
-#if 1	/* l2tp-encap */
 			while ((skb = skb_dequeue(&session->reorder_q))) {
 				kfree_skb(skb);
 				sock_put(sk);
 			}
-#endif
 
 			release_sock(sk);
 
@@ -1355,9 +1311,6 @@ static void pppol2tp_tunnel_free(struct pppol2tp_tunnel *tunnel)
 	list_del_init(&tunnel->list);
 
 	sk->sk_prot = tunnel->old_proto;
-#if 0
-       	sk->sk_data_ready = tunnel->old_data_ready;
-#else	/* l2tp-encap */
 #ifndef UDP_ENCAP_L2TPINUDP
 	sk->sk_data_ready = tunnel->old_data_ready;
 #else
@@ -1365,7 +1318,6 @@ static void pppol2tp_tunnel_free(struct pppol2tp_tunnel *tunnel)
 	(udp_sk(sk))->encap_type = 0;
 	(udp_sk(sk))->encap_rcv = NULL;
 #endif       	
-#endif
 	sk->sk_destruct = tunnel->old_sk_destruct;
 	sk->sk_user_data = NULL;
 
@@ -1503,7 +1455,6 @@ static int pppol2tp_release(struct socket *sock)
 	/* Purge any queued data */
 	skb_queue_purge(&sk->sk_receive_queue);
 	skb_queue_purge(&sk->sk_write_queue);
-#if 1	/* l2tp-encap */
 	if (session != NULL) {
 		struct sk_buff *skb;
 		while ((skb = skb_dequeue(&session->reorder_q))) {
@@ -1512,7 +1463,6 @@ static int pppol2tp_release(struct socket *sock)
 		}
 		sock_put(sk);
 	}
-#endif
 
 	release_sock(sk);
 

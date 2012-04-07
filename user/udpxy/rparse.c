@@ -1,6 +1,6 @@
 /* @(#) parsing functions for udpxy
  *
- * Copyright 2008 Pavel V. Cherenkov
+ * Copyright 2008-2011 Pavel V. Cherenkov (pcherenkov@gmail.com)
  *
  *  This file is part of udpxy.
  *
@@ -145,7 +145,7 @@ parse_udprelay( const char*  opt, size_t optlen,
     size_t n;
     int pval;
 
-    const char* SEP = ":";
+    const char* SEP = ":%~+-^";
     const int MAX_PORT = 65535;
 
     #define MAX_OPTLEN 512
@@ -157,7 +157,7 @@ parse_udprelay( const char*  opt, size_t optlen,
     s[ MAX_OPTLEN - 1 ] = '\0';
     do {
         n = strcspn( s, SEP );
-        if( SEP[0] != s[n] || n >= optlen ) break;
+        if( !n || n >= optlen ) break;
         s[n] = '\0';
 
         strncpy( addr, s, addrlen );

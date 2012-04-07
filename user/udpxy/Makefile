@@ -22,13 +22,14 @@
 
 EXEC := udpxy
 UPXC := upxc
-UDPXREC := udpxrec
+# UDPXREC := udpxrec
 
 MKDEPOPT := -M
 DEBUG_ON := -g
 
 #CFLAGS += -W -Wall -Werror --pedantic
 CFLAGS += -W -Wall --pedantic	# ASUS EXT
+CFLAGS += -O2
 
 SYSTEM=$(shell uname 2>/dev/null)
 ifeq ($(SYSTEM), FreeBSD)
@@ -105,7 +106,11 @@ MKDEP_SRC := $(UTILDIR)/mkdep.c
 MKDEP_TOOL := $(UTILDIR)/mkdep
 
 SRC := udpxy.c rparse.c util.c prbuf.c ifaddr.c ctx.c mkpg.c \
-	  rtp.c uopt.c dpkt.c netop.c extrn.c udpxrec.c main.c
+	  rtp.c uopt.c dpkt.c netop.c extrn.c
+ifdef UDPXREC
+SRC += udpxrec.c main.c
+CFLAGS += -DHAVE_UDPXREC
+endif
 OBJ := ${SRC:.c=.o}
 
 DEPFILE := $(EXEC).dep
@@ -159,7 +164,9 @@ $(EXEC) : $(DEPFILE) $(OBJ)
 	$(CC) $(CFLAGS) $(COPT) -o $(EXEC) $(OBJ)
 	@ls -l $(EXEC)
 	@rm -f $(UDPXREC)
+ifdef UDPXREC
 	ln -s $(EXEC) $(UDPXREC)
+endif
 
 clean:
 	rm -f $(CORES) $(DEPFILE) $(OBJ) $(EXEC) $(UDPXREC)
@@ -184,18 +191,21 @@ distro:
 	@ls -l $(ARCFILE)
 	@rm -fr $(DISTRO_DIR)
 
-#install:all
-romfs:	all
-	@test -d $(INSTALLROOT)/sbin || mkdir -p -m 755 $(INSTALLROOT)/sbin
+romfs:	release
 	$(STRIP) $(EXEC)
-	@cp $(EXEC) $(INSTALLROOT)/sbin
-	@rm -f $(INSTALLROOT)/sbin/$(UDPXREC)
-	@ln -s ./$(EXEC) $(INSTALLROOT)/sbin/$(UDPXREC)
-	@ls -l ./$(EXEC) $(INSTALLROOT)/sbin/$(UDPXREC)
+	$(ROMFSINST) /usr/sbin/udpxy
+
+install:
+	@test -d $(INSTALLROOT)/bin || mkdir -p -m 755 $(INSTALLROOT)/bin
+	@cp $(EXEC) $(INSTALLROOT)/bin
+ifdef UDPXREC
+	@ln -s $(INSTALLROOT)/bin/$(EXEC) $(INSTALLROOT)/bin/$(UDPXREC)
+	@ls -l $(INSTALLROOT)/bin/$(EXEC) $(INSTALLROOT)/bin/$(UDPXREC)
+endif
 	@echo "Installation of udpxy is complete"
 
 uninstall:
-	@rm -f $(INSTALLROOT)/sbin/$(EXEC) $(INSTALLROOT)/sbin/$(UDPXREC)
+	@rm -f $(INSTALLROOT)/bin/$(EXEC) $(INSTALLROOT)/bin/$(UDPXREC)
 	@echo "udpxy successfully uninstalled"
 
 ifneq ($(MAKECMDGOALS), clean)

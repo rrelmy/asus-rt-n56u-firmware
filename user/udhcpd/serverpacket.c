@@ -62,22 +62,29 @@ static int send_packet_to_client(struct dhcpMessage *payload, int force_broadcas
 {
 	unsigned char *chaddr;
 	u_int32_t ciaddr;
-	
-	if (force_broadcast) {
-		DEBUG(LOG_INFO, "broadcasting packet to client (NAK)");
-		ciaddr = INADDR_BROADCAST;
-		chaddr = MAC_BCAST_ADDR;
-	} else if (payload->ciaddr) {
-		DEBUG(LOG_INFO, "unicasting packet to client ciaddr");
-		ciaddr = payload->ciaddr;
-		chaddr = payload->chaddr;
-	} else if (ntohs(payload->flags) & BROADCAST_FLAG) {
-		DEBUG(LOG_INFO, "broadcasting packet to client (requested)");
+
+	// Was:
+	//if (force_broadcast) { /* broadcast */ }
+	//else if (dhcp_pkt->ciaddr) { /* unicast to dhcp_pkt->ciaddr */ }
+	//else if (dhcp_pkt->flags & htons(BROADCAST_FLAG)) { /* broadcast */ }
+	//else { /* unicast to dhcp_pkt->yiaddr */ }
+	// But this is wrong: yiaddr is _our_ idea what client's IP is
+	// (for example, from lease file). Client may not know that,
+	// and may not have UDP socket listening on that IP!
+	// We should never unicast to dhcp_pkt->yiaddr!
+	// dhcp_pkt->ciaddr, OTOH, comes from client's request packet,
+	// and can be used.
+
+	if (force_broadcast
+	 || (payload->flags & htons(BROADCAST_FLAG))
+	 || payload->ciaddr == 0
+	) {
+		DEBUG(LOG_INFO, "broadcasting packet to client");
 		ciaddr = INADDR_BROADCAST;
 		chaddr = MAC_BCAST_ADDR;
 	} else {
-		DEBUG(LOG_INFO, "unicasting packet to client yiaddr");
-		ciaddr = payload->yiaddr;
+		DEBUG(LOG_INFO, "unicasting packet to client ciaddr");
+		ciaddr = payload->ciaddr;
 		chaddr = payload->chaddr;
 	}
 	return raw_packet(payload, server_config.server, SERVER_PORT, 
@@ -136,11 +143,7 @@ int sendOffer(struct dhcpMessage *oldpacket)
 	/* the client is in our lease/offered table */
 	if ((lease = find_lease_by_chaddr(oldpacket->chaddr))) {
 		if (!lease_expired(lease))
-#ifdef BRCM_UDHCPD 
-			lease_time_align = lease->expires - time(0);
-#else
 			lease_time_align = lease->expires - uptime();
-#endif
 		packet.yiaddr = lease->yiaddr;
 		
 	/* Or the client has a requested ip */
@@ -162,10 +165,10 @@ int sendOffer(struct dhcpMessage *oldpacket)
 
 	/* otherwise, find a free IP */ /*ADDME: is it a static lease? */
 	} else {
-		packet.yiaddr = find_address(0);
+		packet.yiaddr = find_address(oldpacket->chaddr, 0);
 		
 		/* try for an expired lease */
-		if (!packet.yiaddr) packet.yiaddr = find_address(1);
+		if (!packet.yiaddr) packet.yiaddr = find_address(oldpacket->chaddr, 1);
 	}
 	
 	if(!packet.yiaddr) {

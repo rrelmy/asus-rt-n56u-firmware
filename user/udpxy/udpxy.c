@@ -1,6 +1,6 @@
 /* @(#) udpxy server: main module
  *
- * Copyright 2008 Pavel V. Cherenkov (pcherenkov@gmail.com)
+ * Copyright 2008-2011 Pavel V. Cherenkov (pcherenkov@gmail.com)
  *
  *  This file is part of udpxy.
  *
@@ -73,6 +73,7 @@ extern const size_t CMD_RTP_LEN;
 extern const char   IPv4_ALL[];
 
 extern const char  UDPXY_COPYRIGHT_NOTICE[];
+extern const char  UDPXY_CONTACT[];
 extern const char  COMPILE_MODE[];
 extern const char  VERSION[];
 extern const int   BUILDNUM;
@@ -120,7 +121,7 @@ static void
 handle_sigchld(int signo)
 {
     (void) &signo;
-    g_childexit = 1;
+    g_childexit = (sig_atomic_t)1;
 
     TRACE( (void)tmfprintf( g_flog, "*** Caught SIGCHLD in process=[%d] ***\n",
                 getpid()) );
@@ -188,14 +189,14 @@ read_command( int sockfd, char* cmd, size_t clen,
     TRACE( (void)tmfprintf( g_flog,  "Reading command from socket [%d]\n",
                             sockfd ) );
     hlen = recv( sockfd, httpbuf, sizeof(httpbuf), 0 );
-    if( -1 == hlen ) {
+    if( 0>hlen ) {
         mperror(g_flog, errno, "%s - recv", __func__);
         return errno;
     }
 
-    /* deep DEBUG - re-enable if needed
-    TRACE( (void) save_buffer( httpbuf, hlen, "/tmp/httpbuf.dat" ) );
-    */
+    /* deep DEBUG - re-enable if needed */
+    TRACE( (void)tmfprintf( g_flog, "HTTP buffer [%ld bytes] received\n", (long)hlen ) );
+    /* TRACE( (void) save_buffer( httpbuf, hlen, "/tmp/httpbuf.dat" ) ); */
 
     rlen = sizeof(request);
     rc = get_request( httpbuf, (size_t)hlen, request, &rlen );
@@ -268,7 +269,7 @@ send_http_response( int sockfd, int code, const char* reason )
 
     assert( (sockfd > 0) && code && reason );
 
-    msglen = snprintf( msg, sizeof(msg) - 1, "HTTP/1.1 %d %s \n\n",
+    msglen = snprintf( msg, sizeof(msg) - 1, "HTTP/1.1 %d %s.\nContent-Type:application/octet-stream.\n\n",
               code, reason );
     if( msglen <= 0 ) return ERR_INTERNAL;
 
@@ -753,16 +754,29 @@ udp_relay( int sockfd, const char* param, size_t plen,
 static int
 report_status( int sockfd, const struct server_ctx* ctx, int options )
 {
-    static char buf[ 8192 ];
+    char *buf = NULL;
     int rc = 0;
     ssize_t n, nsent;
-    size_t nlen = 0;
+    size_t nlen = 0, bufsz, i;
+
+    static size_t BYTES_HDR = 2048;
+    static size_t BYTES_PER_CLI = 512;
 
     assert( (sockfd > 0) && ctx );
 
-    (void) memset( buf, 0, sizeof(buf) );
+    for (bufsz=BYTES_HDR, i=0; i < ctx->clmax; ++i) {
+        bufsz+=BYTES_PER_CLI;
+    }
+    buf = malloc(bufsz);
+    if( !buf ) {
+        mperror(g_flog, ENOMEM, "malloc for %ld bytes for HTTP buffer "
+            "failed in %s", (long)bufsz, __func__ );
+        return ERR_INTERNAL;
+    }
 
-    nlen = sizeof(buf);
+    (void) memset( buf, 0, sizeof(bufsz) );
+
+    nlen = bufsz;
     rc = mk_status_page( ctx, buf, &nlen, options | MSO_HTTP_HEADER );
 
     for( n = nsent = 0; (0 == rc) && (nsent < (ssize_t)nlen);  ) {
@@ -788,6 +802,7 @@ report_status( int sockfd, const struct server_ctx* ctx, int options )
         */
     }
 
+    free(buf);
     return rc;
 }
 
@@ -883,11 +898,9 @@ server_loop( const char* ipaddr, int port,
         FD_SET( srv.lsockfd, &rset );
         FD_SET( srv.cpipe[0], &rset );
 
-        /*
         TRACE( (void)tmfprintf( g_flog, "Server is waiting for input: "
                     "socket=[%d], pipe=[%d]\n",
                     srv.lsockfd, srv.cpipe[0]) );
-        */
 
         maxfd = (srv.lsockfd > srv.cpipe[0] ) ? srv.lsockfd : srv.cpipe[0];
         rc = select( maxfd + 1, &rset, NULL, NULL, NULL );
@@ -914,11 +927,21 @@ server_loop( const char* ipaddr, int port,
         }
 
         addrlen = sizeof(cliaddr);
-        new_sockfd = accept( srv.lsockfd, (struct sockaddr*)&cliaddr, &addrlen );
-        if( -1 == new_sockfd ) {
+        do {
+            new_sockfd = accept( srv.lsockfd, (struct sockaddr*)&cliaddr, &addrlen );
+            if (-1 != new_sockfd) break;
             mperror( g_flog, errno,  "%s: accept", __func__ );
-            break;
-        }
+
+            /* loop for these two, terminate for others */
+            if ((ECONNABORTED != errno) || (EINTR != errno)) break;
+            if( get_childexit() ) {
+                wait_terminated( &srv );
+            }
+        } while (!must_quit() && -1==new_sockfd);
+
+        /* kill signal or fatal error */
+        if ((-1==new_sockfd) || must_quit()) break;
+
         TRACE( (void)tmfprintf( g_flog, "Accepted socket=[%d]\n",
                     new_sockfd) );
 
@@ -1002,15 +1025,21 @@ usage( const char* app, FILE* fp )
             "\tlisten for HTTP requests on interface lan0, port 4022;\n"
             "\tsubscribe to multicast groups on interface lan1\n",
             app, app);
-    (void) fprintf( fp, "\n  %s\n\n", UDPXY_COPYRIGHT_NOTICE );
+    (void) fprintf( fp, "\n  %s\n", UDPXY_COPYRIGHT_NOTICE );
+    (void) fprintf( fp, "  %s\n\n", UDPXY_CONTACT );
     return;
 }
 
 
+#ifdef HAVE_UDPXREC
 extern int udpxy_main( int argc, char* const argv[] );
 
 int
 udpxy_main( int argc, char* const argv[] )
+#else
+int
+main( int argc, char* const argv[] )
+#endif
 {
     int rc, ch, port, custom_log, no_daemon;
     char ipaddr[IPADDR_STR_SIZE],

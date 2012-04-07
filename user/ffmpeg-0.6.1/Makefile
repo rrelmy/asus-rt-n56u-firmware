@@ -21,6 +21,7 @@ configure:
 		--target-os=linux \
 		--prefix=$(FFMPEG_HOME)/../install \
 		--enable-pthreads \
+		--disable-debug \
 		--disable-avdevice \
 		--disable-swscale \
 		--disable-ffmpeg \

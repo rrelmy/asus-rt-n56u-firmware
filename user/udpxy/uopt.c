@@ -1,6 +1,6 @@
 /* @(#) option-associated functions for udpxy
  *
- * Copyright 2008 Pavel V. Cherenkov
+ * Copyright 2008-2011 Pavel V. Cherenkov (pcherenkov@gmail.com)
  *
  *  This file is part of udpxy.
  *
@@ -71,6 +71,7 @@ free_uopt( struct udpxy_opt* uo )
 }
 
 
+#ifdef HAVE_UDPXREC
 /* populate udpxrec options with default/initial values
  */
 void
@@ -173,6 +174,7 @@ fprint_recopt( FILE* stream, struct udpxrec_opt* ro )
     (void) fputs( "\n", stream );
     return;
 }
+#endif
 
 
 /* set verbose output on

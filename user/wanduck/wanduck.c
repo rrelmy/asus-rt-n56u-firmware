@@ -124,12 +124,10 @@ csprintf("\n# Rebuild rules by SIGUSR2\n");
 }
 // 2010.09 James. }
 
-int passivesock(char *service, char *protocol, int qlen){
+int passivesock(char *service, int protocol_num, int qlen){
 	//struct servent *pse;
-	struct protoent *ppe;
 	struct sockaddr_in sin;
 	int s, type;
-	int protocol_num;
 	
 	memset(&sin, 0, sizeof(sin));
 	sin.sin_family = AF_INET;
@@ -142,16 +140,7 @@ int passivesock(char *service, char *protocol, int qlen){
 		return -1;
 	}
 	
-	// map protocol name to protocol number
-	if((ppe = getprotobyname(protocol)) == (struct protoent*)0){
-		protocol_num = 0;
-		//perror("cannot get proto entry");	// remove for noisy
-		//return -1;
-	}
-	else
-		protocol_num = ppe->p_proto;
-	
-	if(!strcmp(protocol, "udp"))
+	if(protocol_num == IPPROTO_UDP)
 		type = SOCK_DGRAM;
 	else
 		type = SOCK_STREAM;
@@ -1324,12 +1313,12 @@ int readline(int fd,char *ptr,int maxlen){  // read a line(\n, \r\n) each time
 }
 
 int build_socket(char *http_port, char *dns_port, int *hd, int *dd){
-	if((*hd = passivesock(http_port, "tcp", 10)) < 0){
+	if((*hd = passivesock(http_port, IPPROTO_TCP, 10)) < 0){
 		csprintf("Fail to socket for httpd port: %s.\n", http_port);
 		return -1;
 	}
 	
-	if((*dd = passivesock(dns_port, "udp", 10)) < 0){
+	if((*dd = passivesock(dns_port, IPPROTO_UDP, 10)) < 0){
 		csprintf("Fail to socket for DNS port: %s.\n", dns_port);
 		return -1;
 	}

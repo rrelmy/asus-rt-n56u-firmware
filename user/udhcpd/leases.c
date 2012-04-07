@@ -37,6 +37,7 @@
 unsigned char blank_chaddr[] = {[0 ... 15] = 0};
 struct dhcpOfferedAddr *static_lease;
 
+
 /* clear every lease out that chaddr OR yiaddr matches and is nonzero */
 void clear_lease(u_int8_t *chaddr, u_int32_t yiaddr)
 {
@@ -82,11 +83,7 @@ struct dhcpOfferedAddr *add_lease(u_int8_t *chaddr, u_int32_t yiaddr, unsigned l
 		if (lease==0xffffffff)
 			oldest->expires = 0xffffffff;
 		else
-#ifdef BRCM_UDHCPD
-			oldest->expires = time(0) + lease;
-#else
 			oldest->expires = uptime() + lease;
-#endif
 	}
 	
 	return oldest;
@@ -96,11 +93,7 @@ struct dhcpOfferedAddr *add_lease(u_int8_t *chaddr, u_int32_t yiaddr, unsigned l
 /* true if a lease has expired */
 int lease_expired(struct dhcpOfferedAddr *lease)
 {
-#ifdef BRCM_UDHCPD
-	return (lease->expires < (unsigned long) time(0));
-#else
 	return (lease->expires < (unsigned long) uptime());
-#endif
 }	
 
 
@@ -108,11 +101,7 @@ int lease_expired(struct dhcpOfferedAddr *lease)
 struct dhcpOfferedAddr *oldest_expired_lease(void)
 {
 	struct dhcpOfferedAddr *oldest = NULL;
-#ifdef BRCM_UDHCPD
-	unsigned long oldest_lease = time(0);
-#else
 	unsigned long oldest_lease = uptime();
-#endif
 	unsigned int i;
 
 	
@@ -154,19 +143,32 @@ struct dhcpOfferedAddr *find_lease_by_yiaddr(u_int32_t yiaddr)
 
 /* find an assignable address, it check_expired is true, we check all the expired leases as well.
  * Maybe this should try expired leases by age... */
-u_int32_t find_address(int check_expired) 
+u_int32_t find_address(u_int8_t *chaddr, int check_expired)
 {
-	u_int32_t addr, ret;
+	u_int32_t start, addr, ret;
 	struct dhcpOfferedAddr *lease = NULL;		
+	int i;
+	unsigned int j;
 
-	addr = ntohl(server_config.start); /* addr is in host order here */
-	for (;addr <= ntohl(server_config.end); addr++) {
+	/* hash hwaddr: use the SDBM hashing algorithm.  Seems to give good
+	   dispersal even with similarly-valued "strings". */ 
+//TODO: dhcp_packet.hlen should be used instead of hardcoded mac length
+#define hlen 6
+	for (j = 0, i = 0; i < hlen; i++)
+		j += chaddr[i] + (j << 6) + (j << 16) - j;
 
+	/* pick a seed based on hwaddr then iterate until we find a free address. */
+	start = addr =  ntohl(server_config.start) + 
+		(j % (1 + ntohl(server_config.end) - ntohl(server_config.start)));
+	do {
 		/* ie, 192.168.55.0 */
-		if (!(addr & 0xFF)) continue;
-
+		if (!(addr & 0xFF)) goto next_addr;
+ 
 		/* ie, 192.168.55.255 */
-		if ((addr & 0xFF) == 0xFF) continue;
+		if ((addr & 0xFF) == 0xFF) goto next_addr;
+
+		/* check if an IP is used by LAN IP */
+		if (addr == ntohl(server_config.server)) goto next_addr;
 
 		/* lease is not taken */
 		ret = htonl(addr);
@@ -176,14 +178,16 @@ u_int32_t find_address(int check_expired)
 		     (check_expired  && lease_expired(lease))) &&
 
 		     /* and it isn't on the network */
-	    	     !check_ip(ret) &&
-	    	     
-	    	     /* and different from LAN IP */
-	    	     check_lan_ip(ret)) {
+	    	     !check_ip(ret)) {
 			return ret;
 			break;
 		}
-	}
+
+	 next_addr:
+		addr++;
+		if (addr > ntohl(server_config.end))
+			addr = ntohl(server_config.start);
+	} while (addr != start);
 	return 0;
 }
 
@@ -201,16 +205,3 @@ int check_ip(u_int32_t addr)
 		return 1;
 	} else return 0;
 }
-
-/* check if an IP is used by LAN IP */
-int check_lan_ip(u_int32_t addr)
-{
-	struct in_addr temp;
-	temp.s_addr = addr;
-
-	if (nvram_match("lan_ipaddr_t", inet_ntoa(temp)))
-		return 0;
-	else
-		return 1;
-}
-

@@ -72,7 +72,7 @@ typedef unsigned char bool;
 #endif // BTN_SETUP
 
 static int ddns_timer = 1;
-static int ushare_timer = 0;
+static int media_timer = 0;
 static int nm_timer = 0;
 static int cpu_timer = 0;
 static int mem_timer = -1;
@@ -147,7 +147,7 @@ httpd_check()
 
 	remove(DETECT_HTTPD_FILE);
 	snprintf(cmd, sizeof(cmd), "/usr/sbin/httpdcheck 4 127.0.0.1:80 > %s", DETECT_HTTPD_FILE);
-//	fprintf(stderr, "cmd: %s\n", cmd);
+//	dbg("cmd: %s\n", cmd);
 	system(cmd);
 
 	if ((fp = fopen(DETECT_HTTPD_FILE, "r")) != NULL)
@@ -156,7 +156,7 @@ httpd_check()
 		{
 			if (strstr(line, "alive"))
 			{
-//				fprintf(stderr, "httpd is alive!\n");
+//				dbg("httpd is alive!\n");
 				ret = 1;
 			}
 		}
@@ -165,7 +165,7 @@ httpd_check()
 	}
 	else
 	{
-		fprintf(stderr, "fopen %s error!\n", DETECT_HTTPD_FILE);
+		dbg("fopen %s error!\n", DETECT_HTTPD_FILE);
 	}
 
 	if (!ret)
@@ -173,11 +173,11 @@ httpd_check()
 	else
 		httpd_error_count = 0;
 
-//	fprintf(stderr, "httpd_error_count: %d\n", httpd_error_count);
+//	dbg("httpd_error_count: %d\n", httpd_error_count);
 
 	if (httpd_error_count > 3)
 	{
-		fprintf(stderr, "httpd is so dead!!!\n");
+		dbg("httpd is so dead!!!\n");
 		httpd_error_count = 0;
 		return 0;
 	}
@@ -212,12 +212,12 @@ httpd_check_v2()
         if (httpd_timer) return 1;
 
 	if (nvram_match("v2_debug", "1"))
-		fprintf(stderr, "uptime: %d\n", now);
+		dbg("uptime: %d\n", now);
 
 	if (nvram_get("login_timestamp") && ((unsigned long)(now - strtoul(nvram_safe_get("login_timestamp"), NULL, 10)) < 60))
 	{
 		if (nvram_match("v2_debug", "1"))
-			fprintf(stderr, "user login within 1 minutu: %d\n", (unsigned long)(now - strtoul(nvram_safe_get("login_timestamp"), NULL, 10)));
+			dbg("user login within 1 minutu: %d\n", (unsigned long)(now - strtoul(nvram_safe_get("login_timestamp"), NULL, 10)));
 
 		httpd_error_count = 0;
 		return 1;
@@ -251,7 +251,7 @@ httpd_check_v2()
 			if (strstr(line, "ASUSTeK"))
 			{
 				if (nvram_match("v2_debug", "1"))
-					fprintf(stderr, "httpd is alive!\n");
+					dbg("httpd is alive!\n");
 
 				ret = 1;
 			}
@@ -262,7 +262,7 @@ httpd_check_v2()
 	else
 	{
 		if (nvram_match("v2_debug", "1"))
-			fprintf(stderr, "fopen %s error!\n", DETECT_HTTPD_FILE);
+			dbg("fopen %s error!\n", DETECT_HTTPD_FILE);
 
 		if (pids("wget"))
 			system("killall wget");
@@ -273,7 +273,7 @@ httpd_check_v2()
 	if (!ret)
 	{
 		if (nvram_match("v2_debug", "1"))
-			fprintf(stderr, "httpd no response!\n");
+			dbg("httpd no response!\n");
 
 		httpd_error_count++;
 	}
@@ -281,11 +281,11 @@ httpd_check_v2()
 		httpd_error_count = 0;
 
 	if (nvram_match("v2_debug", "1"))
-		fprintf(stderr, "httpd_error_count: %d\n", httpd_error_count);
+		dbg("httpd_error_count: %d\n", httpd_error_count);
 
 	if (httpd_error_count > 2)
 	{
-		fprintf(stderr, "httpd is so dead!!!\n");
+		dbg("httpd is so dead!!!\n");
 		httpd_error_count = 0;
 		return 0;
 	}
@@ -392,7 +392,7 @@ void btn_check(void)
 			{	/* Whenever it is pushed steady */
 				if (++btn_count > RESET_WAIT_COUNT)
 				{
-					fprintf(stderr, "You can release RESET button now!\n");
+					dbg("You can release RESET button now!\n");
 
 					btn_pressed = 2;
 				}
@@ -497,7 +497,7 @@ void btn_check(void)
 #if (!defined(W7_LOGO) && !defined(WIFI_LOGO))
 					nvram_set("wps_triggered", "1");	// psp fix
 #endif
-					fprintf(stderr, "pushed again...\n");
+					dbg("pushed again...\n");
 					btn_pressed_setup = BTNSETUP_START;
 					btn_count_setup_second = 0;
 #if defined (W7_LOGO) || defined (WIFI_LOGO)
@@ -515,7 +515,7 @@ void btn_check(void)
 #if 0
 				else
 				{
-					fprintf(stderr, "pushed again... do nothing...\n");
+					dbg("pushed again... do nothing...\n");
 /*
 					btn_pressed_setup = BTNSETUP_START;
 					btn_count_setup_second = 0;
@@ -548,13 +548,13 @@ void btn_check(void)
 		if (WscStatus_old != WscStatus)
 		{
 			WscStatus_old = WscStatus;
-			fprintf(stderr, "WscStatus: %d\n", WscStatus);
+			dbg("WscStatus: %d\n", WscStatus);
 		}
 
 		if (nvram_match("wps_mode", "2") && WscStatus_old_2g != WscStatus_2g)
 		{
 			WscStatus_old_2g = WscStatus_2g;
-			fprintf(stderr, "WscStatus_2g: %d\n", WscStatus_2g);
+			dbg("WscStatus_2g: %d\n", WscStatus_2g);
 		}
 
 		if (WscStatus == 2 || WscStatus_2g == 2)// Wsc Process failed
@@ -564,14 +564,14 @@ void btn_check(void)
 			else
 			{
 				int_stop_wps_led = 1;
-				fprintf(stderr, "%s", "Error occured. Is the PIN correct?\n");
+				dbg("%s", "Error occured. Is the PIN correct?\n");
 			}
 		}
 
 		// Driver 1.9 supports AP PBC Session Overlapping Detection.
 		if (WscStatus == 0x109 /* PBC_SESSION_OVERLAP */ || WscStatus_2g == 0x109)
 		{
-			fprintf(stderr, "PBC_SESSION_OVERLAP\n");
+			dbg("PBC_SESSION_OVERLAP\n");
 			int_stop_wps_led = 1;
 		}
 
@@ -580,7 +580,7 @@ void btn_check(void)
 			if (WscStatus == 34 /* Configured*/)
 			{
 /*
-				fprintf(stderr, "getWscProfile()\n");
+				dbg("getWscProfile()\n");
 				getWscProfile(WIF, &wsc_value, sizeof(WSC_CONFIGURED_VALUE));
 */
 				if (!g_wsc_configured)
@@ -761,7 +761,7 @@ int timecheck_item(char *activeDate, char *activeTime)
 		}
 	}
 
-//	fprintf(stderr, "[watchdog] time check: %2d:%2d, active: %d\n", tm->tm_hour, tm->tm_min, active);
+//	dbg("[watchdog] time check: %2d:%2d, active: %d\n", tm->tm_hour, tm->tm_min, active);
 
 	return active;
 }
@@ -783,7 +783,7 @@ int svc_timecheck(void)
 			activeNow = timecheck_item(nvram_safe_get("url_date_x"), nvram_safe_get("url_time_x"));
 			if (activeNow != svcStatus[URLACTIVE])
 			{
-				fprintf(stderr, "[watchdog] url filter 0: %s\n", activeNow ? "Enabled": "Disabled");
+				dbg("[watchdog] url filter 0: %s\n", activeNow ? "Enabled": "Disabled");
 				svcStatus[URLACTIVE] = activeNow;
 				stop_dns();
 				start_dns();
@@ -796,7 +796,7 @@ int svc_timecheck(void)
 
 			if (activeNow != svcStatus[URLACTIVE1])
 			{
-				fprintf(stderr, "[watchdog] url filter 1: %s\n", activeNow ? "Enabled": "Disabled");
+				dbg("[watchdog] url filter 1: %s\n", activeNow ? "Enabled": "Disabled");
 				svcStatus[URLACTIVE1] = activeNow;
 				stop_dns();
 				start_dns();
@@ -807,17 +807,28 @@ int svc_timecheck(void)
 	if (!nvram_match("wl_radio_x", "0"))
 	{
 		/* Initialize */
-		if (svcStatus[RADIOACTIVE] == -1)
+		if (svcStatus[RADIOACTIVE] == -1 || nvram_match("reload_svc_wl", "1"))
 		{
+			if (nvram_match("reload_svc_wl", "1"))
+			{
+//				dbg("5G radio svc changed!\n");	
+				nvram_set("reload_svc_wl", "0");
+			}
+
 			strcpy(svcDate[RADIOACTIVE], nvram_safe_get("wl_radio_date_x"));
 			strcpy(svcTime[RADIOACTIVE], nvram_safe_get("wl_radio_time_x"));
 			svcStatus[RADIOACTIVE] = -2;
+
+			if (!timecheck_item(svcDate[RADIOACTIVE], svcTime[RADIOACTIVE]))
+				radio_main(0);
 		}
 		else
 		{
 			activeNow = timecheck_item(svcDate[RADIOACTIVE], svcTime[RADIOACTIVE]);
 			if (activeNow != svcStatus[RADIOACTIVE])
 			{
+//				dbg("5G radio activity status changed!\n");
+
 				svcStatus[RADIOACTIVE] = activeNow;
 
 				if (activeNow)
@@ -825,23 +836,35 @@ int svc_timecheck(void)
 				else
 					radio_main(0);
 			}
+//			else dbg("5G radio activity status: %d\n", activeNow);
 		}
 	}
 
 	if (!nvram_match("rt_radio_x", "0"))
 	{
 		/* Initialize */
-		if (svcStatus[RADIO2ACTIVE] == -1)
+		if (svcStatus[RADIO2ACTIVE] == -1 || nvram_match("reload_svc_rt", "1"))
 		{
+			if (nvram_match("reload_svc_rt", "1"))
+			{
+//				dbg("2.4G radio svc changed!\n");
+				nvram_set("reload_svc_rt", "0");
+			}
+
 			strcpy(svcDate[RADIO2ACTIVE], nvram_safe_get("rt_radio_date_x"));
 			strcpy(svcTime[RADIO2ACTIVE], nvram_safe_get("rt_radio_time_x"));
 			svcStatus[RADIO2ACTIVE] = -2;
+
+			if (!timecheck_item(svcDate[RADIO2ACTIVE], svcTime[RADIO2ACTIVE]))
+				radio_main_rt(0);
 		}
 		else
 		{
 			activeNow = timecheck_item(svcDate[RADIO2ACTIVE], svcTime[RADIO2ACTIVE]);
 			if (activeNow != svcStatus[RADIO2ACTIVE])
 			{
+//				dbg("2.4G radio activity status changed!\n");
+
 				svcStatus[RADIO2ACTIVE] = activeNow;
 
 				if (activeNow)
@@ -849,6 +872,7 @@ int svc_timecheck(void)
 				else
 					radio_main_rt(0);
 			}
+//			else dbg("2.4G radio activity status: %d\n", activeNow);
 		}
 	}
 
@@ -902,23 +926,24 @@ void u2ec_processcheck(void)
 	}
 }
 
-void ushare_processcheck(void)
+void media_processcheck(void)
 {
-	ushare_timer = (ushare_timer + 1) % 6;
+	media_timer = (media_timer + 1) % 6;
 
-	if (!ushare_timer)
+	if (!media_timer)
 	{
-		if (nvram_match("apps_ushare_ex", "1") && pids("ushare"))
+#if 0
+		if (nvram_match("apps_dms_ex", "1") && nvram_match("dms_comp_mode", "1") && pids("ushare"))
 		{
 			if (nvram_match("ushare_debug", "1"))
 			{
 				system("date");
-				fprintf(stderr, "ushare reloading media content...\n");
+				dbg("ushare reloading media content...\n");
 			}
 
 			kill_pidfile_s("/var/run/ushare.pid", SIGHUP);
 		}
-
+#endif
 		if (	nvram_match("wan_route_x", "IP_Routed") &&
 			nvram_match("apps_itunes_ex", "1") &&
 			pids("mt-daapd") &&
@@ -944,7 +969,7 @@ void samba_processcheck(void)
 
         if (samba_error_count > 3)
         {
-//		fprintf(stderr, "nmbd is so dead!!!\n");
+//		dbg("nmbd is so dead!!!\n");
                 samba_error_count = 0;
 
 		eval("/sbin/nmbd", "-D", "-s", "/etc/smb.conf");
@@ -961,13 +986,13 @@ void nm_processcheck(void)
 /*
 	if (1)
 	{
-		fprintf(stderr, "fullscan_timestamp: %s\n", nvram_safe_get("fullscan_timestamp"));
-		fprintf(stderr, "timeout: %d\n", (unsigned long)(now - strtoul(nvram_safe_get("fullscan_timestamp"), NULL, 10)));
+		dbg("fullscan_timestamp: %s\n", nvram_safe_get("fullscan_timestamp"));
+		dbg("timeout: %d\n", (unsigned long)(now - strtoul(nvram_safe_get("fullscan_timestamp"), NULL, 10)));
 	}
 */
-	if (nvram_match("networkmap_fullscan", "1") && ((unsigned long)(now - strtoul(nvram_safe_get("fullscan_timestamp"), NULL, 10)) > 360))
+	if (nvram_match("networkmap_fullscan", "1") && ((unsigned long)(now - strtoul(nvram_safe_get("fullscan_timestamp"), NULL, 10)) > 600))
 	{
-//		fprintf(stderr, "networkmap is busy looping!\n");
+//		dbg("networkmap is busy looping!\n");
 		stop_networkmap();
 		nvram_set("networkmap_fullscan", "0");
 	}
@@ -1026,11 +1051,11 @@ static void catch_sig(int sig)
 {
 	if (sig == SIGUSR1)
 	{
-		fprintf(stderr, "[watchdog] Catch Reset to Default Signal 1\n");
+		dbg("[watchdog] Catch Reset to Default Signal 1\n");
 	}
 	else if (sig == SIGUSR2)
 	{
-		fprintf(stderr, "[watchdog] Catch Reset to Default Signal 2\n");
+		dbg("[watchdog] Catch Reset to Default Signal 2\n");
 	}
 	else if (sig == SIGTSTP && !nvram_match("sw_mode_ex", "3"))
 	{
@@ -1361,7 +1386,7 @@ void watchdog(void)
 	ddns_timer = (ddns_timer + 1) % 4320;
 
 	if (nvram_match("asus_debug", "1"))
-		mem_timer = (mem_timer + 1) % 180;
+		mem_timer = (mem_timer + 1) % 60;
 
 	if (!watchdog_count)
 		watchdog_count++;
@@ -1375,7 +1400,7 @@ void watchdog(void)
 		{
 //			if (has_wan_ip())
 			{
-				fprintf(stderr, "[watchdog] starting upnp...\n");
+				dbg("[watchdog] starting upnp...\n");
 				stop_upnp();
 				start_upnp();
 			}
@@ -1392,7 +1417,7 @@ void watchdog(void)
 
 	u2ec_processcheck();
 
-	ushare_processcheck();
+	media_processcheck();
 
 	samba_processcheck();
 
@@ -1406,12 +1431,13 @@ void watchdog(void)
 	if (nvram_match("asus_debug", "1") && !mem_timer)
 	{
 		print_num_of_connections();
-		fprintf(stderr, "Hardware NAT: %s\n", is_hwnat_loaded() ? "Enabled": "Disabled");
-		fprintf(stderr, "Software QoS: %s\n", nvram_match("qos_enable", "1") ? "Enabled": "Disabled");
-		fprintf(stderr, "pppd running: %s\n", pids("pppd") ? "Yes": "No");
-		fprintf(stderr, "CPU usage: %d\n", get_cpu_usage());
+		dbg("Hardware NAT: %s\n", is_hwnat_loaded() ? "Enabled": "Disabled");
+		dbg("Software QoS: %s\n", nvram_match("qos_enable", "1") ? "Enabled": "Disabled");
+		dbg("pppd running: %s\n", pids("pppd") ? "Yes": "No");
+		dbg("CPU usage: %d\n", get_cpu_usage());
 		system("free");
 		system("date");
+		print_uptime();
 	}
 
 #ifdef CDMA
@@ -1585,7 +1611,8 @@ int radio_main(int ctrl)
 	}
 	else
 	{
-		doSystem("iwpriv %s set RadioOn=1", WIF);
+		if (nvram_match("wl_radio_x", "1"))
+			doSystem("iwpriv %s set RadioOn=1", WIF);
 	}
 }
 
@@ -1597,6 +1624,7 @@ int radio_main_rt(int ctrl)
 	}
 	else
 	{
-		doSystem("iwpriv %s set RadioOn=1", WIF2G);
+		if (nvram_match("rt_radio_x", "1"))
+			doSystem("iwpriv %s set RadioOn=1", WIF2G);
 	}
 }

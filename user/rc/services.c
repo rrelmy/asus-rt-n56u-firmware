@@ -73,12 +73,11 @@ start_dhcpd(void)
 	fprintf(fp, "lease_file /tmp/udhcpd.leases\n");
 	fprintf(fp, "option subnet %s\n", nvram_safe_get("lan_netmask"));
 	fprintf(fp, "option router %s\n", nvram_safe_get("lan_ipaddr"));
-	if ((dhcp_lease_time = atoi(nvram_safe_get(dhcp_lease))) <= 3)
-		fprintf(fp, "option lease 86400\n");
-	else
-		fprintf(fp, "option lease %d\n", dhcp_lease_time);
 	fprintf(fp, "option dns %s\n", nvram_safe_get("lan_ipaddr"));
-//	fprintf(fp, "option lease %s\n", nvram_safe_get("lan_lease"));
+	dhcp_lease_time = atoi(nvram_safe_get(dhcp_lease));
+	if (dhcp_lease_time <= 3)
+		dhcp_lease_time = 86400;
+	fprintf(fp, "option lease %d\n", dhcp_lease_time);
 	snprintf(name, sizeof(name), "%s_wins", nvram_safe_get("dhcp_wins"));
 	if (nvram_invmatch(name, ""))
 		fprintf(fp, "option wins %s\n", nvram_get(name));
@@ -405,6 +404,7 @@ start_services(void)
 {
 	printf("[rc] start services\n");	// tmp test
 
+	start_telnetd();
 	start_logger();
 
 	if (!nvram_match("computer_name", ""))
@@ -439,7 +439,6 @@ start_services(void)
 	start_infosvr();
 	start_u2ec();
 	start_lpd();
-	start_telnetd();
         
 	start_networkmap();
 
@@ -457,7 +456,7 @@ start_services(void)
 
 	if (nvram_match("lan_stp", "1") && !is_ap_mode())
 	{
-		fprintf(stderr, "resume stp forwarding delay and hello time\n");
+		dbg("resume stp forwarding delay and hello time\n");
 		system("brctl setfd br0 15");
 		system("brctl sethello br0 2");
 	}
@@ -514,6 +513,7 @@ start_services(void)
 	}
 #endif
 
+	if (is_RT3090_loaded())
 	nvram_set("success_start_service", "1");	// For judging if the system is ready.
 
 	return 0;

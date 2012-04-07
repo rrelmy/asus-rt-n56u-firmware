@@ -94,6 +94,7 @@ typedef unsigned char   bool;
 #include <semaphore_mfp.h>
 
 #define wan_prefix(unit, prefix)	snprintf(prefix, sizeof(prefix), "wan%d_", unit)
+
 /*
 #define csprintf(fmt, args...) do{\
 	FILE *cp = fopen("/dev/console", "w");\
@@ -120,6 +121,8 @@ typedef unsigned char   bool;
 
 //#define sys_restart() kill(1, SIGHUP)
 //#define sys_reboot() nvram_set("stop_wps_led", "1"); nvram_set("reboot", "1")
+#define sys_reboot_rc() kill(1, SIGTERM)
+
 
 #ifdef WEBS
 #define init_cgi(query)
@@ -135,7 +138,8 @@ static void nvram_commit_safe()
         spinlock_unlock(SPINLOCK_NVRAMCommit);
 }
 
-#define sys_upgrade(image ) eval("/bin/mtd_write", "-r", "write", image, "Kernel");
+//#define sys_upgrade(image ) eval("/bin/mtd_write", "-r", "write", image, "Kernel");
+#define sys_upgrade(image ) eval("/bin/mtd_write", "write", image, "Kernel");
 #define sys_upload(image) eval("nvram", "restore", image)
 #define sys_download(file) eval("nvram", "save", file)
 #define sys_stats(url) eval("stats", (url))
@@ -447,12 +451,12 @@ void sys_script(char *name)
 	   kill_pidfile_s("/var/run/lpdparent.pid", SIGUSR2);
      }
 //#ifdef U2EC
-	else if (!strcmp(name, "mfp_requeue")){
+	else if (!strcmp(name, "mfp_requeue")) {
 		unsigned int login_ip = (unsigned int)atoll(nvram_safe_get("login_ip"));
 
 		if (login_ip == 0x100007f || login_ip == 0x0)
 			nvram_set("mfp_ip_requeue", "");
-		else{
+		else {
 			struct in_addr addr;
 
 			addr.s_addr = login_ip;
@@ -464,7 +468,7 @@ void sys_script(char *name)
 		write(u2ec_fifo, "q", 1);
 		close(u2ec_fifo);
 	}
-	else if (!strcmp(name, "mfp_monopolize")){
+	else if (!strcmp(name, "mfp_monopolize")) {
 		unsigned int login_ip = (unsigned int)atoll(nvram_safe_get("login_ip"));
 
 		//printf("[httpd] run mfp monopolize\n");	// tmp test
@@ -524,11 +528,11 @@ void sys_script(char *name)
      else if (strcmp(name,"hostname_check") == 0)
      {
 
-	fprintf(stderr, "bak_ddns_enable_x: %s\n", nvram_safe_get("bak_ddns_enable_x"));
-	fprintf(stderr, "bak_ddns_wildcard_x: %s\n", nvram_safe_get("bak_ddns_wildcard_x"));
+//	fprintf(stderr, "bak_ddns_enable_x: %s\n", nvram_safe_get("bak_ddns_enable_x"));
+//	fprintf(stderr, "bak_ddns_wildcard_x: %s\n", nvram_safe_get("bak_ddns_wildcard_x"));
 
-	fprintf(stderr, "ddns_enable_x: %s\n", nvram_safe_get("ddns_enable_x"));
-	fprintf(stderr, "ddns_wildcard_x: %s\n", nvram_safe_get("ddns_wildcard_x"));
+//	fprintf(stderr, "ddns_enable_x: %s\n", nvram_safe_get("ddns_enable_x"));
+//	fprintf(stderr, "ddns_wildcard_x: %s\n", nvram_safe_get("ddns_wildcard_x"));
 
 	int i = 0;
 	char return_buf[32];
@@ -1295,7 +1299,7 @@ char *svc_pop_list(char *value, char key)
 }
 
 //2008.08 magic {
-extern char *read_whole_file(const char *target){
+extern char *read_whole_file(const char *target) {
 	FILE *fp = fopen(target, "r");
 	char *buffer, *new_str;
 	int i;
@@ -1306,17 +1310,17 @@ extern char *read_whole_file(const char *target){
 		return NULL;
 	
 	buffer = (char *)malloc(sizeof(char)*each_size+read_bytes);
-	if (buffer == NULL){
+	if (buffer == NULL) {
 		csprintf("No memory \"buffer\".\n");
 		fclose(fp);
 		return NULL;
 	}
 	memset(buffer, 0, sizeof(char)*each_size+read_bytes);
 	
-	while ((i = fread(buffer+read_bytes, sizeof(char), each_size, fp)) == each_size){
+	while ((i = fread(buffer+read_bytes, sizeof(char), each_size, fp)) == each_size) {
 		read_bytes += each_size;
 		new_str = (char *)malloc(sizeof(char)*each_size+read_bytes);
-		if (new_str == NULL){
+		if (new_str == NULL) {
 			csprintf("No memory \"new_str\".\n");
 			free(buffer);
 			fclose(fp);
@@ -1336,7 +1340,7 @@ extern char *read_whole_file(const char *target){
 static char post_buf[10000] = { 0 };
 static char post_buf_backup[10000] = { 0 };
 
-static void do_html_post_and_get(char *url, FILE *stream, int len, char *boundary){
+static void do_html_post_and_get(char *url, FILE *stream, int len, char *boundary) {
 	char *query = NULL;
 	
 	init_cgi(NULL);
@@ -1344,7 +1348,7 @@ static void do_html_post_and_get(char *url, FILE *stream, int len, char *boundar
 	memset(post_buf, 0, 10000);
 	memset(post_buf_backup, 0, 10000);
 	
-	if (fgets(post_buf, MIN(len+1, sizeof(post_buf)), stream)){
+	if (fgets(post_buf, MIN(len+1, sizeof(post_buf)), stream)) {
 		len -= strlen(post_buf);
 		
 		while (len--)
@@ -1354,7 +1358,7 @@ static void do_html_post_and_get(char *url, FILE *stream, int len, char *boundar
 	query = url;
 	strsep(&query, "?");
 	
-	if (query && strlen(query) > 0){
+	if (query && strlen(query) > 0) {
 		if (strlen(post_buf) > 0)
 			sprintf(post_buf_backup, "?%s&%s", post_buf, query);
 		else
@@ -1371,7 +1375,7 @@ static void do_html_post_and_get(char *url, FILE *stream, int len, char *boundar
 
 static char *error_msg_console = NULL, *error_msg = NULL;
 
-static char *get_msg_from_dict(char *lang, const char *const msg_name){
+static char *get_msg_from_dict(char *lang, const char *const msg_name) {
 #define MAX_FILE_LENGTH 512
 	char current_dir[MAX_FILE_LENGTH];
 	char dict_file[MAX_FILE_LENGTH], *dict_info;
@@ -1387,13 +1391,13 @@ static char *get_msg_from_dict(char *lang, const char *const msg_name){
 	sprintf(dict_file, "%s/%s.dict", current_dir, lang);
 	
 	dict_info = read_whole_file(dict_file);
-	if (dict_info == NULL){
+	if (dict_info == NULL) {
 		csprintf("No dictionary file, \"%s\".\n", dict_file);
 		return NULL;
 	}
 	
 	follow_info = strstr(dict_info, msg_name);
-	if (follow_info == NULL){
+	if (follow_info == NULL) {
 		csprintf("No \"%s\" in the dictionary file.\n", msg_name);
 		free(dict_info);
 		return NULL;
@@ -1407,7 +1411,7 @@ static char *get_msg_from_dict(char *lang, const char *const msg_name){
 	len = follow_info_end-follow_info;
 	
 	target = (char *)malloc(sizeof(char)*(len+1));
-	if (target == NULL){
+	if (target == NULL) {
 		csprintf("No memory \"target\".\n");
 		free(dict_info);
 		return NULL;
@@ -1420,7 +1424,7 @@ static char *get_msg_from_dict(char *lang, const char *const msg_name){
 	return target;
 }
 
-static void show_error_msg(const char *const msg_num){
+static void show_error_msg(const char *const msg_num) {
 	char msg_name[32];
 	
 	memset(msg_name, 0, 32);
@@ -1432,7 +1436,7 @@ static void show_error_msg(const char *const msg_num){
 	return;
 }
 
-static void clean_error_msg(){
+static void clean_error_msg() {
 	if (error_msg_console != NULL)
 		free(error_msg_console);
 	
@@ -1443,26 +1447,36 @@ static void clean_error_msg(){
 }
 
 int nvram_modified = 0;
+int wl_modified = 0;
+int rt_modified = 0;
 
-static int validate_asp_apply(webs_t wp, int sid, int groupFlag){
+static int validate_asp_apply(webs_t wp, int sid, int groupFlag) {
 	struct variable *v;
 	char *value;
 	char name[64];
 	char buff[100];
 	
 	/* Validate and set variables in table order */
-	for (v = GetVariables(sid); v->name != NULL; ++v){
+	for (v = GetVariables(sid); v->name != NULL; ++v) {
 		memset(name, 0, 64);
 		sprintf(name, "%s", v->name);
 
-		if ((value = websGetVar(wp, name, NULL))){
+		if ((value = websGetVar(wp, name, NULL))) {
 
-			if (!strcmp(v->longname, "Group")){
+			if (!strcmp(v->longname, "Group")) {
 //printf("set sid: %s, name: %s, value: %s.\n", GetServiceId(sid), name, value);	// tmp test
 				;
 			}
-			else if (strcmp(nvram_safe_get(name), value)){
+			else if (strcmp(nvram_safe_get(name), value) && strncmp(v->name, "wsc", 3) && strncmp(v->name, "wps", 3)) {
 //csprintf("set sid: %s, name: %s, value: %s.\n", GetServiceId(sid), v->name, value);	// tmp test
+
+//				if (!strncmp(v->name, "wl_", 3))
+//					dbg("$$$ name: %s, org value: %s, new value: %s, restart_needed_bits: %x\n", name, nvram_safe_get(name), value, v->event);
+//				else if (!strncmp(v->name, "rt_", 3))
+//					dbg("### name: %s, org value: %s, new value: %s, restart_needed_bits: %x\n", name, nvram_safe_get(name), value, v->event);
+//				else
+//					dbg("@@@ name: %s, org value: %s, new value: %s, restart_needed_bits: %x\n", name, nvram_safe_get(name), value, v->event);
+
 				nvram_set_x(GetServiceId(sid), v->name, value);
 				
 // 2008.03 James. {
@@ -1473,13 +1487,83 @@ static int validate_asp_apply(webs_t wp, int sid, int groupFlag){
 // 2007.11 James {
 				nvram_modified = 1;
 
-				if (!strcmp(v->name, "wl_ssid")){
+				if (!wl_modified && !strncmp(v->name, "wl_", 3))
+				{
+					if (!strcmp(v->name, "wl_radio_x"))
+					{
+						if (!strncmp(value, "0", 2))
+						{
+							dbg("5G radio off!\n");
+							doSystem("iwpriv ra0 set RadioOn=0");
+						}
+						else if (!strncmp(value, "1", 2))
+						{
+							dbg("5G radio on!\n");
+							doSystem("iwpriv ra0 set RadioOn=1");
+						}
+					}
+					else if (!strcmp(v->name, "wl_ssid2"))
+					{
+					}
+					else
+					{
+						dbg("5G setting changed!\n");
+						wl_modified = 1;
+					}
+				}
+
+				if (!wl_modified)
+				{
+					if (	!strcmp(v->name, "TxPower") ||
+						!strcmp(v->name, "TxBurst") ||
+						!strcmp(v->name, "PktAggregate") ||
+						!strcmp(v->name, "HT_OpMode") ||
+						!strcmp(v->name, "HT_BW") ||
+						!strcmp(v->name, "HT_GI") ||
+						!strcmp(v->name, "HT_MCS") ||
+						!strcmp(v->name, "HT_RDG") ||
+						!strcmp(v->name, "HT_AMSDU") ||
+						!strcmp(v->name, "HT_EXTCHA") ||
+						!strcmp(v->name, "APSDCapable") ||
+						!strcmp(v->name, "DLSCapable")	)
+					{
+						dbg("5G setting changed!!!\n");
+						wl_modified = 1;
+					}
+				}
+
+				if (!rt_modified && !strncmp(v->name, "rt_", 3) && strcmp(v->name, "rt_wsc_config_state"))
+				{
+					if (!strcmp(v->name, "rt_radio_x"))
+					{
+						if (!strncmp(value, "0", 2))
+						{
+							dbg("2.4G radio off!\n");
+							doSystem("iwpriv rai0 set RadioOn=0");
+						}
+						else if (!strncmp(value, "1", 2))
+						{
+							dbg("2.4G radio on!\n");
+							doSystem("iwpriv rai0 set RadioOn=1");
+						}
+					}
+					else if (!strcmp(v->name, "rt_ssid2"))
+					{
+					}
+					else
+					{
+						dbg("2.4G setting changed!\n");
+						rt_modified = 1;
+					}
+				}
+
+				if (!strcmp(v->name, "wl_ssid")) {
 					memset(buff, 0, 100);
 					char_to_ascii(buff, value);
 					nvram_set("wl_ssid2", buff);
 				}
 
-				if (!strcmp(v->name, "rt_ssid")){
+				if (!strcmp(v->name, "rt_ssid")) {
 					memset(buff, 0, 100);
 					char_to_ascii(buff, value);
 					nvram_set("rt_ssid2", buff);
@@ -1564,7 +1648,7 @@ static int validate_asp_apply(webs_t wp, int sid, int groupFlag){
 	return nvram_modified;
 }
 
-static int update_variables_ex(int eid, webs_t wp, int argc, char_t **argv){
+static int update_variables_ex(int eid, webs_t wp, int argc, char_t **argv) {
 	int sid;
 //	char *value;
 	char *action_mode;
@@ -1592,36 +1676,37 @@ static int update_variables_ex(int eid, webs_t wp, int argc, char_t **argv){
 //	websWrite(wp, " ");	// for strange web write, must stay
 	csprintf("Apply: [%s] [%s]\n", action_mode, script); //2009.01 magic for debug
 
-	while ((serviceId = svc_pop_list(sid_list, ';'))){
+	while ((serviceId = svc_pop_list(sid_list, ';'))) {
 		sid = 0;
-		while (GetServiceId(sid) != NULL){
+		while (GetServiceId(sid) != NULL) {
 			if (!strcmp(GetServiceId(sid), serviceId))
 				break;
 			
 			sid++;
 		}
 		
-		if (serviceId != NULL){
-			if (!strcmp(action_mode, "  Save  ") || !strcmp(action_mode, " Apply ")){
-				if (!validate_asp_apply(wp, sid, TRUE)){
+		if (serviceId != NULL) {
+			if (!strcmp(action_mode, "  Save  ") || !strcmp(action_mode, " Apply ")) {
+				if (!validate_asp_apply(wp, sid, TRUE)) {
 					websWrite(wp, "<script>no_changes_and_no_committing();</script>\n");
 				}
-				else{
+				else {
 					nvram_set("x_Setting", "1");
 					nvram_set("w_Setting", "1");	// J++
 					websWrite(wp, "<script>done_committing();</script>\n");
 				}
 			}
-			else if (!strcmp(action_mode, "Update")){
+			else if (!strcmp(action_mode, "Update")) {
 				validate_asp_apply(wp, sid, TRUE);
 			}
-			else{
+			else {
 				strcpy(groupId, websGetVar(wp, "group_id", ""));
 				
-				if (strlen(action_mode) > 0){
+				if (strlen(action_mode) > 0) {
 					groupName = groupId;
 //printf("--- groupName: %s. ---\n", groupName);
-					if (!strcmp(action_mode, " Add ")){
+//dbg("action mode: %s, group_id: %s\n", action_mode, groupName);
+					if (!strcmp(action_mode, " Add ")) {
 						result = apply_cgi_group(wp, sid, NULL, groupName, GROUP_FLAG_ADD);
 						
 						if (result == 1)
@@ -1629,7 +1714,7 @@ static int update_variables_ex(int eid, webs_t wp, int argc, char_t **argv){
 						
 						websWrite(wp, "<script>done_validating(\"%s\");</script>\n", action_mode);
 					}
-					else if (!strcmp(action_mode, " Del ")){
+					else if (!strcmp(action_mode, " Del ")) {
 						result = apply_cgi_group(wp, sid, NULL, groupName, GROUP_FLAG_REMOVE);
 						
 						if (result == 1)
@@ -1637,16 +1722,21 @@ static int update_variables_ex(int eid, webs_t wp, int argc, char_t **argv){
 						
 						websWrite(wp, "<script>done_validating(\"%s\");</script>\n", action_mode);
 					}
-					else if (!strcmp(action_mode, " Restart ")){
+					else if (!strcmp(action_mode, " Restart ")) {
 						struct variable *v;
 						
-						for (v = GetVariables(sid); v->name != NULL; ++v){
+						for (v = GetVariables(sid); v->name != NULL; ++v) {
        	   					if (!strcmp(v->name, groupName))
        	   						break;
        					}
        					printf("--- Restart group %s. ---\n", groupName);
        	   				
 						restart_needed_bits |= v->event;
+
+					if (!strcmp(groupName, "RBRList") || !strcmp(groupName, "ACLList"))
+						wl_modified = 1;
+					if (!strcmp(groupName, "rt_RBRList") || !strcmp(groupName, "rt_ACLList"))
+						rt_modified = 1;
 						
 						validate_asp_apply(wp, sid, FALSE);	// for some nvram with this group
 						
@@ -1654,15 +1744,15 @@ static int update_variables_ex(int eid, webs_t wp, int argc, char_t **argv){
 						nvram_set("x_Setting", "1");
 						nvram_set("w_Setting", "1");	// J++
 						
-						if (!strcmp(script, "goonsetting")){
+						if (!strcmp(script, "goonsetting")) {
 							websWrite(wp, "<script>done_validating(\"%s\");</script>\n", action_mode);
 							script = "";
 						}
-						else{
+						else {
 							websWrite(wp, "<script>done_committing();</script>\n");
 						}
 					}
-					
+
 					validate_cgi(wp, sid, FALSE);	// for some nvram with this group group
 				}
 			}
@@ -1671,10 +1761,10 @@ static int update_variables_ex(int eid, webs_t wp, int argc, char_t **argv){
 		sid_list = sid_list+strlen(serviceId)+1;
 	}
 
-	if (strlen(script) > 0){
+	if (strlen(script) > 0) {
 		printf("There is a script!: %s\n", script);	// tmp test
 #ifdef DLM
-		if (!strcmp(script, "usbfs_check")){
+		if (!strcmp(script, "usbfs_check")) {
 			nvram_set("st_tool_t", "/bin/fscheck");
 			nvram_set("st_toolstatus_t", "USBstarting");
 			nvram_set("st_time_t", "3");
@@ -1748,8 +1838,8 @@ static int update_variables_ex(int eid, webs_t wp, int argc, char_t **argv){
 			goto WPS_refresh;
 			//return 0;
 		}
-		else if (!strcmp(script, "Switch_band")){ // jerry5chang added to switch wps working band for n56u
-			if(nvram_match("wps_band", "1"))
+		else if (!strcmp(script, "Switch_band")) { // jerry5chang added to switch wps working band for n56u
+			if (nvram_match("wps_band", "1"))
 				 nvram_set("wps_band", "0");
 			else
 				 nvram_set("wps_band", "1");
@@ -1824,9 +1914,11 @@ static int update_variables_ex(int eid, webs_t wp, int argc, char_t **argv){
 		}
 		else if (!strcmp(script, "update_UPnP")) // jerry5chang
 		{
+/*
 			printf("### Media Server: refresh media content ###\n"); // tmp test
 			if (pids("ushare"))
 				kill_pidfile_s("/var/run/ushare.pid", SIGHUP);
+*/
 		}
 		else //End of Yau add
 		{
@@ -1841,79 +1933,79 @@ static int update_variables_ex(int eid, webs_t wp, int argc, char_t **argv){
 	
 WPS_refresh:
 
-	printf("chk restart bits=%d\n", restart_needed_bits);	// tmp test
-	if (restart_needed_bits != 0 && (!strcmp(action_mode, " Apply ") || !strcmp(action_mode, " Restart ") || !strcmp(action_mode, " WPS_Apply "))){
-		if ((restart_needed_bits & RESTART_REBOOT) != 0){
+	printf("chk restart bits=%d 0x%x\n", restart_needed_bits, restart_needed_bits);	// tmp test
+	if (restart_needed_bits != 0 && (!strcmp(action_mode, " Apply ") || !strcmp(action_mode, " Restart ") || !strcmp(action_mode, " WPS_Apply "))) {
+		if ((restart_needed_bits & RESTART_REBOOT) != 0) {
 csprintf("*** set ITVL_RESTART_REBOOT(%d).\n", ITVL_RESTART_REBOOT);
 			restart_tatal_time = ITVL_RESTART_REBOOT;
 		}
-		else if ((restart_needed_bits & RESTART_NETWORKING) != 0){
+		else if ((restart_needed_bits & RESTART_NETWORKING) != 0) {
 csprintf("*** set ITVL_RESTART_NETWORKING(%d).\n", ITVL_RESTART_NETWORKING);
 			restart_tatal_time = ITVL_RESTART_NETWORKING;
 		}
-		else{
-			if ((restart_needed_bits & RESTART_FTPSAMBA) != 0){
+		else {
+			if ((restart_needed_bits & RESTART_FTPSAMBA) != 0) {
 csprintf("*** add ITVL_RESTART_FTPSAMBA(%d).\n", ITVL_RESTART_FTPSAMBA);
 				restart_tatal_time += ITVL_RESTART_FTPSAMBA;
 			}
-			if ((restart_needed_bits & RESTART_DDNS) != 0){
+			if ((restart_needed_bits & RESTART_DDNS) != 0) {
 csprintf("*** add ITVL_RESTART_DDNS(%d).\n", ITVL_RESTART_DDNS);
 				restart_tatal_time += ITVL_RESTART_DDNS;
 			}
-			if ((restart_needed_bits & RESTART_HTTPD) != 0){
+			if ((restart_needed_bits & RESTART_HTTPD) != 0) {
 csprintf("*** add ITVL_RESTART_HTTPD(%d).\n", ITVL_RESTART_HTTPD);
 				restart_tatal_time += ITVL_RESTART_HTTPD;
 			}
-			if ((restart_needed_bits & RESTART_DNS) != 0){
+			if ((restart_needed_bits & RESTART_DNS) != 0) {
 csprintf("*** add ITVL_RESTART_DNS(%d).\n", ITVL_RESTART_DNS);
 				restart_tatal_time += ITVL_RESTART_DNS;
 			}
-			if ((restart_needed_bits & RESTART_DHCPD) != 0){
+			if ((restart_needed_bits & RESTART_DHCPD) != 0) {
 csprintf("*** add ITVL_RESTART_DHCPD(%d).\n", ITVL_RESTART_DHCPD);
 				restart_tatal_time += ITVL_RESTART_DHCPD;
 			}
-			if ((restart_needed_bits & RESTART_UPNP) != 0){
+			if ((restart_needed_bits & RESTART_UPNP) != 0) {
 csprintf("*** add ITVL_RESTART_UPNP(%d).\n", ITVL_RESTART_UPNP);
 				restart_tatal_time += ITVL_RESTART_UPNP;
 			}
-                        if ((restart_needed_bits & RESTART_DMS) != 0){
+                        if ((restart_needed_bits & RESTART_DMS) != 0) {
 csprintf("*** add ITVL_RESTART_DMS(%d).\n", ITVL_RESTART_DMS);
                                 restart_tatal_time += ITVL_RESTART_DMS;
                         }
-			if ((restart_needed_bits & RESTART_QOS) != 0){
+			if ((restart_needed_bits & RESTART_QOS) != 0) {
 csprintf("*** add ITVL_RESTART_QOS(%d).\n", ITVL_RESTART_QOS);
 				restart_tatal_time += ITVL_RESTART_QOS;
 			}
-			if ((restart_needed_bits & RESTART_SYSLOG) != 0){
+			if ((restart_needed_bits & RESTART_SYSLOG) != 0) {
 csprintf("*** add ITVL_RESTART_SYSLOG(%d).\n", ITVL_RESTART_SYSLOG);
 				restart_tatal_time += ITVL_RESTART_SYSLOG;
 			}
-			if ((restart_needed_bits & RESTART_FIREWALL) != 0){
+			if ((restart_needed_bits & RESTART_FIREWALL) != 0) {
 csprintf("*** add ITVL_RESTART_FIREWALL(%d).\n", ITVL_RESTART_FIREWALL);
 				restart_tatal_time += ITVL_RESTART_FIREWALL;
 			}
-			if ((restart_needed_bits & RESTART_NTPC) != 0){
+			if ((restart_needed_bits & RESTART_NTPC) != 0) {
 csprintf("*** add ITVL_RESTART_NTPC(%d).\n", ITVL_RESTART_NTPC);
 				restart_tatal_time += ITVL_RESTART_NTPC;
 			}
-			if ((restart_needed_bits & RESTART_NAS) != 0){
+			if ((restart_needed_bits & RESTART_NAS) != 0) {
 csprintf("*** add ITVL_RESTART_NAS(%d).\n", ITVL_RESTART_NAS);
 				restart_tatal_time += ITVL_RESTART_NAS;
 			}
-			if ((restart_needed_bits & RESTART_NASDOCK) != 0){
+			if ((restart_needed_bits & RESTART_NASDOCK) != 0) {
 csprintf("*** add ITVL_RESTART_NASDOCK(%d).\n", ITVL_RESTART_NASDOCK);
 				restart_tatal_time += ITVL_RESTART_NASDOCK;
 			}
 // 2008.01 James. {
-			if ((restart_needed_bits & RESTART_TIME) != 0){
+			if ((restart_needed_bits & RESTART_TIME) != 0) {
 csprintf("*** add ITVL_RESTART_TIME(%d).\n", ITVL_RESTART_TIME);
 				restart_tatal_time += ITVL_RESTART_TIME;
 			}
-                        if((restart_needed_bits & RESTART_RSTATS) != 0){
+                        if ((restart_needed_bits & RESTART_RSTATS) != 0) {
                                 notify_rc("restart_rstats");
                                 restart_needed_bits &= ~(u32)RESTART_RSTATS;
                         }
-			if ((restart_needed_bits & RESTART_WPS) != 0){
+			if ((restart_needed_bits & RESTART_WPS) != 0) {
 csprintf("*** add ITVL_RESTART_WPS(%d).\n", ITVL_RESTART_WPS);
 				/*char *wsc_mode = nvram_safe_get("wsc_mode");
 				char *old_wsc_mode = nvram_safe_get("old_wsc_mode");
@@ -1925,9 +2017,21 @@ csprintf("*** add ITVL_RESTART_WPS(%d).\n", ITVL_RESTART_WPS);
 				else*/
 					restart_tatal_time += ITVL_RESTART_WPS;
 			}
-			if ((restart_needed_bits & RESTART_APCLI) != 0){
+			if ((restart_needed_bits & RESTART_APCLI) != 0) {
 csprintf("*** add ITVL_RESTART_APCLI(%d).\n", ITVL_RESTART_APCLI);
 				restart_tatal_time += ITVL_RESTART_APCLI;
+			}
+			if ((restart_needed_bits & RESTART_WIFI) != 0) {
+				if (wl_modified == 1)
+				{
+csprintf("*** add ITVL_RESTART_WIFI(%d).\n", ITVL_RESTART_WIFI);
+					restart_tatal_time += ITVL_RESTART_WIFI;
+				}
+				else if (rt_modified == 1)
+				{
+csprintf("*** add ITVL_RESTART_WIFI(%d).\n", ITVL_RESTART_WIFI);
+					restart_tatal_time += ITVL_RESTART_WIFI;
+				}
 			}
 // 2008.01 James. }
 		}
@@ -1940,8 +2044,8 @@ csprintf("*** restart_time needs %d seconds.\n", restart_tatal_time);
 	return 0;
 }
 
-static int convert_asus_variables(int eid, webs_t wp, int argc, char_t **argv){
-	if (restart_needed_bits != 0){
+static int convert_asus_variables(int eid, webs_t wp, int argc, char_t **argv) {
+	if (restart_needed_bits != 0) {
 csprintf("*** run convert_asus_variables.\n");
 			eval("/sbin/convert_asus_values");
 			
@@ -1953,11 +2057,11 @@ csprintf("*** Don't run convert_asus_variables.\n");
 	return 0;
 }
 
-static int asus_nvram_commit(int eid, webs_t wp, int argc, char_t **argv){
-	if (restart_needed_bits != 0 || nvram_modified == 1){
+static int asus_nvram_commit(int eid, webs_t wp, int argc, char_t **argv) {
+	if (restart_needed_bits != 0 || nvram_modified == 1) {
 csprintf("*** run asus_nvram_commit!\n");
 		nvram_modified = 0;
-		
+
 		nvram_commit_safe();
 	}
 	else
@@ -1966,98 +2070,122 @@ csprintf("*** Don't run asus_nvram_commit!\n");
 	return 0;
 }
 
-static int ej_notify_services(int eid, webs_t wp, int argc, char_t **argv){
+static int ej_notify_services(int eid, webs_t wp, int argc, char_t **argv) {
 	restart_tatal_time = 0;
 	int no_run_str = 0;
 
 	//printf("notify service: %d\n", restart_needed_bits);	// tmp test
-	if (restart_needed_bits != 0){
+	if (restart_needed_bits != 0) {
 		no_run_str = 1;
-		if ((restart_needed_bits & RESTART_REBOOT) != 0){
+		if ((restart_needed_bits & RESTART_REBOOT) != 0) {
 			printf("*** Run notify_rc restart_reboot! \n");
 			nvram_set("reboot", "1");
 //			notify_rc("restart_reboot");
 		}
-		else if ((restart_needed_bits & RESTART_NETWORKING) != 0){
+		else if ((restart_needed_bits & RESTART_NETWORKING) != 0) {
 			csprintf("*** run notify_rc restart_networking! \n");
 			notify_rc("restart_networking");
 		}
-		else{
-			if ((restart_needed_bits & RESTART_FTPSAMBA) != 0){
+		else {
+			if ((restart_needed_bits & RESTART_FTPSAMBA) != 0) {
 				notify_rc("restart_cifs");
 				restart_needed_bits &= ~(u32)RESTART_FTPSAMBA;
 			}
-			if ((restart_needed_bits & RESTART_DDNS) != 0){
+			if ((restart_needed_bits & RESTART_DDNS) != 0) {
 				notify_rc("restart_ddns");
 				restart_needed_bits &= ~(u32)RESTART_DDNS;
 			}
-			if ((restart_needed_bits & RESTART_HTTPD) != 0){
+			if ((restart_needed_bits & RESTART_HTTPD) != 0) {
 				notify_rc("restart_httpd");
 				restart_needed_bits &= ~(u32)RESTART_HTTPD;
 			}
-			if ((restart_needed_bits & RESTART_DNS) != 0){
+			if ((restart_needed_bits & RESTART_DNS) != 0) {
 				csprintf("*** run notify_rc restart_dns! \n");
 				notify_rc("restart_dns");
 				restart_needed_bits &= ~(u32)RESTART_DNS;
 			}
-			if ((restart_needed_bits & RESTART_DHCPD) != 0){
+			if ((restart_needed_bits & RESTART_DHCPD) != 0) {
 				csprintf("*** run notify_rc restart_dhcpd! \n");
 				notify_rc("restart_dhcpd");
 				restart_needed_bits &= ~(u32)RESTART_DHCPD;
 			}
-			if ((restart_needed_bits & RESTART_UPNP) != 0){
+			if ((restart_needed_bits & RESTART_UPNP) != 0) {
 				csprintf("*** run notify_rc restart_upnp! \n");
 				notify_rc("restart_upnp");
 				restart_needed_bits &= ~(u32)RESTART_UPNP;
 			}
-                        if ((restart_needed_bits & RESTART_DMS) != 0){
+                        if ((restart_needed_bits & RESTART_DMS) != 0) {
                                 csprintf("*** run notify_rc restart_dms! \n");
                                 notify_rc("restart_dms");
                                 restart_needed_bits &= ~(u32)RESTART_DMS;
                         }
-			if ((restart_needed_bits & RESTART_QOS) != 0){
+			if ((restart_needed_bits & RESTART_QOS) != 0) {
 				csprintf("*** run notify_rc restart_qos! \n");
 				notify_rc("restart_qos");
 				restart_needed_bits &= ~(u32)RESTART_QOS;
 			}
-			if ((restart_needed_bits & RESTART_SYSLOG) != 0){
+			if ((restart_needed_bits & RESTART_SYSLOG) != 0) {
 				notify_rc("restart_syslog");
 				restart_needed_bits &= ~(u32)RESTART_SYSLOG;
 			}
-			if ((restart_needed_bits & RESTART_FIREWALL) != 0){
+			if ((restart_needed_bits & RESTART_FIREWALL) != 0) {
 				notify_rc("restart_firewall");
 				restart_needed_bits &= ~(u32)RESTART_FIREWALL;
 			}
-			if ((restart_needed_bits & RESTART_NTPC) != 0){
+			if ((restart_needed_bits & RESTART_NTPC) != 0) {
 				notify_rc("restart_ntpc");
 				restart_needed_bits &= ~(u32)RESTART_NTPC;
 			}
-			if ((restart_needed_bits & RESTART_NAS) != 0){
+			if ((restart_needed_bits & RESTART_NAS) != 0) {
 				notify_rc("restart_nas");
 				restart_needed_bits &= ~(u32)RESTART_NAS;
 			}
-			if ((restart_needed_bits & RESTART_NASDOCK) != 0){
+			if ((restart_needed_bits & RESTART_NASDOCK) != 0) {
 				notify_rc("restart_nasdock");
 				restart_needed_bits &= ~(u32)RESTART_NASDOCK;
 			}
-			if ((restart_needed_bits & RESTART_TIME) != 0){
+			if ((restart_needed_bits & RESTART_TIME) != 0) {
 				notify_rc("restart_time");
 				restart_needed_bits &= ~(u32)RESTART_TIME;
 			}
-                        if((restart_needed_bits & RESTART_RSTATS) != 0){
+                        if ((restart_needed_bits & RESTART_RSTATS) != 0) {
 				printf("*** add ITVL_RESTART_RSTATS(%d).\n", ITVL_RESTART_RSTATS);
                                 restart_tatal_time += ITVL_RESTART_RSTATS;
                         }
 
 #ifdef WSC
-			if ((restart_needed_bits & RESTART_WPS) != 0){
+			if ((restart_needed_bits & RESTART_WPS) != 0) {
 				notify_rc("restart_wps");
 				restart_needed_bits &= ~(u32)RESTART_WPS;
 			}
 #endif
-			if ((restart_needed_bits & RESTART_APCLI) != 0){
+			if ((restart_needed_bits & RESTART_APCLI) != 0) {
 				notify_rc("restart_apcli");
 				restart_needed_bits &= ~(u32)RESTART_APCLI;
+			}
+
+			if ((restart_needed_bits & RESTART_WIFI) != 0) {
+				nvram_set("wps_enable", "0");
+				nvram_set("wps_start_flag", "0");
+				doSystem("killall -%d watchdog", SIGTSTP);
+
+				sleep(1);
+
+				if (wl_modified == 1)
+				{
+//dbg("notify_rc: restart_wifi\n");
+					wl_modified = 0;
+					notify_rc("restart_wifi");
+				}
+
+				if (rt_modified == 1)
+				{
+//dbg("notify_rc: restart_wifi_rt\n");
+					rt_modified = 0;
+					notify_rc("restart_wifi_rt");
+				}
+
+				restart_needed_bits &= ~(u32)RESTART_WIFI;
 			}
 		}
 		
@@ -2071,7 +2199,7 @@ static int ej_notify_services(int eid, webs_t wp, int argc, char_t **argv){
 }
 
 // for error_page.htm's detection
-static int detect_if_wan(int eid, webs_t wp, int argc, char_t **argv){
+static int detect_if_wan(int eid, webs_t wp, int argc, char_t **argv) {
 	int if_wan = is_phyconnected();
 	
 	websWrite(wp, "%d", if_wan);
@@ -2108,9 +2236,10 @@ static int enable_hwnat()
 	if (nvram_invmatch("sw_mode_ex", "1"))
 		return 0;
 
-	if (    nvram_match("wan0_proto", "pptp") ||
-		nvram_match("wan0_proto", "l2tp"))
-		return 0;
+	/* Allow hwnat with dual wan */
+	//if (    nvram_match("wan0_proto", "pptp") ||
+	//	nvram_match("wan0_proto", "l2tp"))
+	//	return 0;
 
 	/* Add class for User specify, 10:20(high), 10:40(middle), 10:60(low)*/
 	if (rulenum) {
@@ -2146,15 +2275,15 @@ static int enable_hwnat()
 	return ret;
 }
 
-static int check_hwnat(int eid, webs_t wp, int argc, char_t **argv){
+static int check_hwnat(int eid, webs_t wp, int argc, char_t **argv) {
 //	printf("####[hook] check_hwnat####");
-	if(!enable_hwnat())
+	if (!enable_hwnat())
 		websWrite(wp, "0");
 	else
 		websWrite(wp, "1");
 }
 
-/*static int detect_wan_connection(int eid, webs_t wp, int argc, char_t **argv){
+/*static int detect_wan_connection(int eid, webs_t wp, int argc, char_t **argv) {
 	int ret =	detectWAN();
 	
 	if (ret < 0)
@@ -2189,7 +2318,7 @@ static int detect_wan_connection(int eid, webs_t wp, int argc, char_t **argv) {
 }
 #else
 // Define of return value: 1st bit is NTP, 2nd bit is WAN DNS, 3rd bit is more open DNS.
-static int detect_wan_connection(int eid, webs_t wp, int argc, char_t **argv){
+static int detect_wan_connection(int eid, webs_t wp, int argc, char_t **argv) {
 	int MAX_LOOKUP_NUM = 1, lookup_num;
 	//int got_ntp = 0, got_ping = 0;
 	int result = 0;
@@ -2203,44 +2332,44 @@ static int detect_wan_connection(int eid, webs_t wp, int argc, char_t **argv){
 	
 	memset(buf, 0, 128);
 	
-	for(lookup_num = 0; lookup_num < MAX_LOOKUP_NUM; ++lookup_num){
-		if(nvram_match("ntp_ready", "1"))
+	for(lookup_num = 0; lookup_num < MAX_LOOKUP_NUM; ++lookup_num) {
+		if (nvram_match("ntp_ready", "1"))
 			//got_ntp = 1;
 			result += 1;
 
-		if(nvram_match("wan_proto", "static"))
+		if (nvram_match("wan_proto", "static"))
 			dns_list = nvram_safe_get("wan_dns_t");
 		else
 			dns_list = nvram_safe_get("wan0_dns");
 
-		foreach(word, dns_list, next){
+		foreach(word, dns_list, next) {
 			dbg("Try to ping dns: %s...\n", word);
 			_eval(ping_cmd, ">/tmp/log.txt", 0, NULL);
 			
-			if((fp = fopen("/tmp/log.txt", "r")) == NULL)
+			if ((fp = fopen("/tmp/log.txt", "r")) == NULL)
 				continue;
 			
-			for(i = 0; i < 2 && fgets(buf, 128, fp) != NULL; ++i){
+			for(i = 0; i < 2 && fgets(buf, 128, fp) != NULL; ++i) {
 				dbg("%d. Got the results: %s.\n", i+1, buf);
-				if(strstr(buf, "alive") || strstr(buf, " ms"))
+				if (strstr(buf, "alive") || strstr(buf, " ms"))
 					//got_ping = 1;
 					result += 2;
 				
-				//if(got_ping)
-				if(result >= 2)
+				//if (got_ping)
+				if (result >= 2)
 					break;
 			}
 			fclose(fp);
 			
-			//if(got_ping)
-			if(result >= 2)
+			//if (got_ping)
+			if (result >= 2)
 				break;
 		}
 
 		dbg("Try to ping more dns: %s...\n", MORE_DNS);
 		int dns_test = 0;
-		foreach(word, MORE_DNS, next){
-			if(dns_test == 0 && !strcmp(nvram_safe_get("dns_test"), "1")){
+		foreach(word, MORE_DNS, next) {
+			if (dns_test == 0 && !strcmp(nvram_safe_get("dns_test"), "1")) {
 				dns_test = 1;
 				continue;
 			}
@@ -2249,43 +2378,43 @@ static int detect_wan_connection(int eid, webs_t wp, int argc, char_t **argv){
 //			_eval(ping_cmd, ">/tmp/log.txt", 0, NULL);
 			doSystem("/usr/sbin/tcpcheck 4 %s:53 >/tmp/log.txt", word);
 			
-			if((fp = fopen("/tmp/log.txt", "r")) == NULL)
+			if ((fp = fopen("/tmp/log.txt", "r")) == NULL)
 				continue;
 			
-			for(i = 0; i < 2 && fgets(buf, 128, fp) != NULL; ++i){
+			for(i = 0; i < 2 && fgets(buf, 128, fp) != NULL; ++i) {
 				dbg("%d. Got the results: %s.\n", i+1, buf);
-				if(strstr(buf, "alive") || strstr(buf, " ms"))
+				if (strstr(buf, "alive") || strstr(buf, " ms"))
 					//got_ping = 1;
 					result += 4;
 				
-				//if(got_ping)
-				if(result >= 4)
+				//if (got_ping)
+				if (result >= 4)
 					break;
 			}
 			fclose(fp);
 			
-			//if(got_ping)
-			if(result >= 4)
+			//if (got_ping)
+			if (result >= 4)
 				break;
 		}
 		
-		/*if(got_ntp && got_ping){
+		/*if (got_ntp && got_ping) {
 			websWrite(wp, "3");
 			break;
 		}
-		else if(got_ntp && !got_ping){
+		else if (got_ntp && !got_ping) {
 			websWrite(wp, "2");
 			break;
 		}
-		else if(!got_ntp && got_ping){
+		else if (!got_ntp && got_ping) {
 			websWrite(wp, "1");
 			break;
 		}//*/
-		if(result > 0){
+		if (result > 0) {
 			websWrite(wp, "%d", result);
 			break;
 		}
-		else if(lookup_num == MAX_LOOKUP_NUM-1){
+		else if (lookup_num == MAX_LOOKUP_NUM-1) {
 			dbg("Can't get the host from ntp or response from DNS!\n");
 			websWrite(wp, "-1");
 			break;
@@ -2310,7 +2439,7 @@ void logmessage(char *logheader, char *fmt, ...)
   va_end(args);
 }
 
-static int detect_dhcp_pppoe(int eid, webs_t wp, int argc, char_t **argv){
+static int detect_dhcp_pppoe(int eid, webs_t wp, int argc, char_t **argv) {
 	int ret;
 //	printf("#### [hook] detect_dhcp_pppoe ####");
 	eprintf("detect dhcp pppoe\n");	// tmp test
@@ -2318,21 +2447,21 @@ static int detect_dhcp_pppoe(int eid, webs_t wp, int argc, char_t **argv){
 		;
 	else if (nvram_match("wan_route_x", "IP_Routed"))	// Router mode
 		;
-	else{   // AP mode
+	else {   // AP mode
 		websWrite(wp, "AP mode");
 		return 0;
 	}
 
-	/*if (nvram_match("wan_status_t", "Connected")){
+	/*if (nvram_match("wan_status_t", "Connected")) {
 		if (!nvram_match("hsdpa_product", ""))
 			websWrite(wp, "3.5G HSDPA");
 		else
 			websWrite(wp, "%s", nvram_safe_get("wan_proto"));
 	}*/
 	// jerry5 edited for n56u
-	if(nvram_match("wan_proto","3g") && nvram_match("sw_mode","1"))
+	if (nvram_match("wan_proto","3g") && nvram_match("sw_mode","1"))
 		websWrite(wp, "3.5G HSDPA");
-	else{
+	else {
 		eprintf("discover all\n");			// tmp test
 		ret = discover_all();
 
@@ -2358,19 +2487,19 @@ static int detect_dhcp_pppoe(int eid, webs_t wp, int argc, char_t **argv){
 	return 0;
 }
 
-static int get_wan_status_log(int eid, webs_t wp, int argc, char_t **argv){
+static int get_wan_status_log(int eid, webs_t wp, int argc, char_t **argv) {
 	FILE *fp = fopen("/tmp/wanstatus.log", "r");
 	char log_info[64];
 	int i;
 	
 	memset(log_info, 0, 64);
 	
-	if (fp != NULL){
+	if (fp != NULL) {
 		fgets(log_info, 64, fp);
 		
 		i = 0;
-		while (log_info[i] != 0){
-			if (log_info[i] == '\n'){
+		while (log_info[i] != 0) {
+			if (log_info[i] == '\n') {
 				log_info[i] = 0;
 				break;
 			}
@@ -2385,11 +2514,11 @@ static int get_wan_status_log(int eid, webs_t wp, int argc, char_t **argv){
 	return 0;
 }
 
-int file_to_buf(char *path, char *buf, int len){
+int file_to_buf(char *path, char *buf, int len) {
 	FILE *fp;
 	memset(buf, 0 , len);
 	
-	if ((fp = fopen(path, "r")) != NULL){
+	if ((fp = fopen(path, "r")) != NULL) {
 		fgets(buf, len, fp);
 		fclose(fp);
 		
@@ -2399,7 +2528,7 @@ int file_to_buf(char *path, char *buf, int len){
 	return 0;
 }
 
-int get_ppp_pid(char *conntype){
+int get_ppp_pid(char *conntype) {
 	int pid = -1;
 	char tmp[80], tmp1[80];
 	
@@ -2411,7 +2540,7 @@ int get_ppp_pid(char *conntype){
 }
 
 /* Find process name by pid from /proc directory */
-char *find_name_by_proc(int pid){
+char *find_name_by_proc(int pid) {
 	FILE *fp;
 	char line[254];
 	char filename[80];
@@ -2419,7 +2548,7 @@ char *find_name_by_proc(int pid){
 	
 	snprintf(filename, sizeof(filename), "/proc/%d/status", pid);
 	
-	if ((fp = fopen(filename, "r")) != NULL){
+	if ((fp = fopen(filename, "r")) != NULL) {
 		fgets(line, sizeof(line), fp);
 		/* Buffer should contain a string like "Name:   binary_name" */
 		sscanf(line, "%*s %s", name);
@@ -2430,29 +2559,29 @@ char *find_name_by_proc(int pid){
 	return "";
 }
 
-int check_ppp_exist(){
+int check_ppp_exist() {
 	DIR *dir;
 	struct dirent *dent;
 	char task_file[64], cmdline[64];
 	int pid, fd;
 	
-	if((dir = opendir("/proc")) == NULL){
+	if ((dir = opendir("/proc")) == NULL) {
 		perror("open proc");
 		return -1;
 	}
 	
-	while((dent = readdir(dir)) != NULL){
-		if((pid = atoi(dent->d_name)) > 1){
+	while((dent = readdir(dir)) != NULL) {
+		if ((pid = atoi(dent->d_name)) > 1) {
 			memset(task_file, 0, 64);
 			sprintf(task_file, "/proc/%d/cmdline", pid);
-			if((fd = open(task_file, O_RDONLY)) > 0){
+			if ((fd = open(task_file, O_RDONLY)) > 0) {
 				memset(cmdline, 0, 64);
 				read(fd, cmdline, 64);
 				close(fd);
 				
-				if(strstr(cmdline, "pppoecd")
+				if (strstr(cmdline, "pppoecd")
 						|| strstr(cmdline, "pppd")
-						){
+						) {
 					closedir(dir);
 					return 0;
 				}
@@ -2467,7 +2596,7 @@ int check_ppp_exist(){
 }
 
 #if 0
-int check_subnet(){
+int check_subnet() {
 	char lan_ipaddr_t[16];
 	char lan_netmask_t[16];
 //	static 
@@ -2477,7 +2606,7 @@ int check_subnet(){
 //	static 
 	unsigned int wan_subnet = 0;
 
-//	if(lan_subnet == 0)
+//	if (lan_subnet == 0)
 	{
 		memset(lan_ipaddr_t, 0, 16);
 		strcpy(lan_ipaddr_t, nvram_safe_get("lan_ipaddr_t"));
@@ -2487,7 +2616,7 @@ int check_subnet(){
 //		printf("httpd get lan_subnet=%x!\n", lan_subnet);
 	}
 	
-//	if(wan_subnet == 0)
+//	if (wan_subnet == 0)
 	{
 		memset(wan_ipaddr_t, 0, 16);
 		memset(wan_netmask_t, 0, 16);
@@ -2509,15 +2638,15 @@ int check_subnet(){
 	return (lan_subnet == wan_subnet);
 }
 #else
-int check_subnet(){
-	if(!strcmp(nvram_safe_get("wan_subnet_t"), nvram_safe_get("lan_subnet_t")))
+int check_subnet() {
+	if (!strcmp(nvram_safe_get("wan_subnet_t"), nvram_safe_get("lan_subnet_t")))
 		return 1;
 	else
 		return 0;
 }
 #endif
 
-static int wanlink_hook(int eid, webs_t wp, int argc, char_t **argv){
+static int wanlink_hook(int eid, webs_t wp, int argc, char_t **argv) {
 	FILE *fp;
 	char type[32], ip[32], netmask[32], gateway[32], dns[128], statusstr[32];
 	int status = 0, unit, s;
@@ -2557,12 +2686,12 @@ static int wanlink_hook(int eid, webs_t wp, int argc, char_t **argv){
 
 		}
 	}
-	else if (!is_phyconnected()){
+	else if (!is_phyconnected()) {
 		status = 0;
 		strcpy(statusstr, "Cable is not attached");
 	}
 // 2008.07 James. {
-	else if(!strcmp(nvram_safe_get("manually_disconnect_wan"), "1")){
+	else if (!strcmp(nvram_safe_get("manually_disconnect_wan"), "1")) {
 		status = 0;
 		strcpy(statusstr, "Disconnected");
 	}
@@ -2578,17 +2707,17 @@ static int wanlink_hook(int eid, webs_t wp, int argc, char_t **argv){
 		int got_ppp_link;
 		struct dirent *entry;
 
-		if((ppp_dir = opendir("/tmp/ppp")) == NULL){
+		if ((ppp_dir = opendir("/tmp/ppp")) == NULL) {
 			status = 0;
 			strcpy(statusstr, "Disconnected");
 		}
-		else{
+		else {
 			got_ppp_link = 0;
-			while((entry = readdir(ppp_dir)) != NULL){
-				if(!strcmp(entry->d_name, ".") || !strcmp(entry->d_name, ".."))
+			while((entry = readdir(ppp_dir)) != NULL) {
+				if (!strcmp(entry->d_name, ".") || !strcmp(entry->d_name, ".."))
 					continue;
 				
-				if(strstr(entry->d_name, "link") != NULL){
+				if (strstr(entry->d_name, "link") != NULL) {
 					got_ppp_link = 1;
 					
 					break;
@@ -2596,15 +2725,15 @@ static int wanlink_hook(int eid, webs_t wp, int argc, char_t **argv){
 			}
 			closedir(ppp_dir);
 			
-			if(got_ppp_link == 0){
+			if (got_ppp_link == 0) {
 				status = 0;
 				strcpy(statusstr, "Disconnected");
 			}
-			else if(check_ppp_exist() == -1){
+			else if (check_ppp_exist() == -1) {
 				status = 0;
 				strcpy(statusstr, "Disconnected");
 			}
-			else{
+			else {
 				status = 1;
 				strcpy(statusstr, "Connected");
 			}
@@ -2619,17 +2748,17 @@ static int wanlink_hook(int eid, webs_t wp, int argc, char_t **argv){
 		memset(filename, 0, 80);
 		
 		ppp_dir = opendir("/tmp/ppp");
-		if (ppp_dir == NULL){
+		if (ppp_dir == NULL) {
 			printf("wanlink_hook ppp_dir == NULL\n");	// tmp test
 			status = 0;
 			strcpy(statusstr, "Disconnected");
 		}
 		
-		while ((entry = readdir(ppp_dir)) != NULL){
+		while ((entry = readdir(ppp_dir)) != NULL) {
 			if (!strcmp(entry->d_name, ".") || !strcmp(entry->d_name, ".."))
 				continue;
 			
-			if ((pos = strstr(entry->d_name, "link")) != NULL){
+			if ((pos = strstr(entry->d_name, "link")) != NULL) {
 				sprintf(filename, "/tmp/ppp/%s", entry->d_name);
 				strcpy(conntype, pos+5);
 				
@@ -2638,11 +2767,11 @@ static int wanlink_hook(int eid, webs_t wp, int argc, char_t **argv){
 		}
 		closedir(ppp_dir);
 		
-    		if (strlen(filename) > 0 && (fp = fopen(filename, "r")) != NULL){
+    		if (strlen(filename) > 0 && (fp = fopen(filename, "r")) != NULL) {
 	    		int pid = -1;
 	    		fclose(fp);
 			
-			if (nvram_match(strcat_r(prefix, "proto", tmp), "heartbeat")){
+			if (nvram_match(strcat_r(prefix, "proto", tmp), "heartbeat")) {
 				char buf[20];
 				
 				file_to_buf(filename, buf, sizeof(buf));
@@ -2656,7 +2785,7 @@ static int wanlink_hook(int eid, webs_t wp, int argc, char_t **argv){
 			if (!strncmp(name, "pppoecd", 7) ||	// for PPPoE
 				!strncmp(name, "pppd", 4)	// for PPTP
 				/*!strncmp(name, "bpalogin", 8)	// for HearBeat*/
-			){
+			) {
 				if (!strcmp(nvram_safe_get("manually_disconnect_wan"), "1"))
 				{
 					status = 0;
@@ -2670,7 +2799,7 @@ static int wanlink_hook(int eid, webs_t wp, int argc, char_t **argv){
 					strcpy(statusstr, "Connected");
 				}
 			}
-			else{
+			else {
 				status = 0;
 				strcpy(statusstr, "Disconnected");
 				//printf("[status str] chk disconn 1\n");	// tmp test
@@ -2678,7 +2807,7 @@ static int wanlink_hook(int eid, webs_t wp, int argc, char_t **argv){
 				unlink(filename);
 			}
 		}
-		else{
+		else {
 			//wendebug
 			//printf("filename : open fail\n");	  
 			//csprintf("wanlink_hook filename : open fail\n");	   
@@ -2690,50 +2819,50 @@ static int wanlink_hook(int eid, webs_t wp, int argc, char_t **argv){
 	}
 	else {
 // 2009.05 James. {
-		//if(!strcmp(nvram_safe_get("wan_gateway_t"), nvram_safe_get("lan_ipaddr_t"))){
-		if(check_subnet()){
+		//if (!strcmp(nvram_safe_get("wan_gateway_t"), nvram_safe_get("lan_ipaddr_t"))) {
+		if (check_subnet()) {
 			status = 0;
 			strcpy(statusstr, "Disconnected");
 		}
 		else
 // 2009.05 James. }
 		/* Open socket to kernel */
-		if ((s = socket(AF_INET, SOCK_DGRAM, 0)) < 0){
+		if ((s = socket(AF_INET, SOCK_DGRAM, 0)) < 0) {
 			//printf("wanlink_hook Open socket to kernel : open fail\n");	// tmp test
 			status = 0;
 			strcpy(statusstr, "Disconnected");
 			//printf("[status str] chk disconn 3\n");	// tmp test
 		}
-		else{
+		else {
 			/* Check for valid IP address */
 			strncpy(ifr.ifr_name, nvram_safe_get(strcat_r(prefix, "ifname", tmp)), IFNAMSIZ);
 			
-			if (!ioctl(s, SIOCGIFADDR, &ifr)){
+			if (!ioctl(s, SIOCGIFADDR, &ifr)) {
 				our_ip = (struct sockaddr_in *) &ifr.ifr_addr;
 				in.s_addr = our_ip->sin_addr.s_addr;
 				pwanip = inet_ntoa(in);
 				
-				if (!strcmp(pwanip, "") || pwanip == NULL){
+				if (!strcmp(pwanip, "") || pwanip == NULL) {
 				//	csprintf("wanlink_hook !strcmp(pwanip, "") || pwanip == NULL\n");
 					status = 0;
 					strcpy(statusstr, "Disconnected");
 					//printf("[status str] chk disconn 4\n");	// tmp test
 				}
 // 2008.07 James. {
-				else if (!strcmp(nvram_safe_get("manually_disconnect_wan"), "1")){
+				else if (!strcmp(nvram_safe_get("manually_disconnect_wan"), "1")) {
 					//printf("wanlink_hook manually_disconnect_wan=1\n");	// tmp test
 					status = 0;
 					strcpy(statusstr, "Disconnected");
 					//printf("[status str] chk disconn 5\n");	// tmp test
 				}
 // 2008.07 James. }
-				else{
+				else {
 					status = 1;
 					strcpy(statusstr, "Connected");
 					//printf("[status str] chk conn 2\n");	// tmp test
 				}
 			}
-			else{
+			else {
 				status = 0;
 				strcpy(statusstr, "Disconnected");
 				//printf("[status str] chk disconn 6\n");	// tmp test
@@ -2812,20 +2941,20 @@ static int wanlink_hook(int eid, webs_t wp, int argc, char_t **argv){
 	return 0;
 }
 
-static int wan_action_hook(int eid, webs_t wp, int argc, char_t **argv){
+static int wan_action_hook(int eid, webs_t wp, int argc, char_t **argv) {
 	char *action;
 	int needed_seconds = 0;
 	
 	// assign control variables
 	action = websGetVar(wp, "wanaction", "");
-	if (strlen(action) <= 0){
+	if (strlen(action) <= 0) {
 		fprintf(stderr, "No connect action in wan_action_hook!\n");
 		return -1;
 	}
 	
 	fprintf(stderr, "wan action: %s\n", action);
 	
-	if (!strcmp(action, "Connect")){
+	if (!strcmp(action, "Connect")) {
 		nvram_set("link_internet", "2");
 		nvram_unset("manually_disconnect_wan");	// 2008.01 James.
 		nvram_set("rc_service", "wan_connect");
@@ -2835,7 +2964,7 @@ csprintf("kill -USR1 1.\n");
 csprintf("sleep 1 second.\n");
 		sleep(1);
 	}
-	else if (!strcmp(action, "Disconnect")){
+	else if (!strcmp(action, "Disconnect")) {
 		nvram_set("link_internet", "2");
 		nvram_set("manually_disconnect_wan", "1");	// 2008.01 James.
 		nvram_set("rc_service", "wan_disconnect");
@@ -2852,12 +2981,12 @@ csprintf("sleep 1 second.\n");
 	return 0;
 }
 
-static int ej_get_parameter(int eid, webs_t wp, int argc, char_t **argv){
+static int ej_get_parameter(int eid, webs_t wp, int argc, char_t **argv) {
 //	char *c;
 	bool last_was_escaped;
 	int ret = 0;
 	
-	if (argc < 1){
+	if (argc < 1) {
 		websError(wp, 400,
 				"get_parameter() used with no arguments, but at least one "
 				"argument is required to specify the parameter name\n");
@@ -2868,7 +2997,7 @@ static int ej_get_parameter(int eid, webs_t wp, int argc, char_t **argv){
 	
 	char *value = websGetVar(wp, argv[0], "");
 	websWrite(wp, "%s", value);//*/
-	/*for (c = websGetVar(wp, argv[0], ""); *c; c++){
+	/*for (c = websGetVar(wp, argv[0], ""); *c; c++) {
 		if (isprint((int)*c) &&
 			*c != '"' && *c != '&' && *c != '<' && *c != '>' && *c != '\\' &&
 			((!last_was_escaped) || !isdigit(*c)))
@@ -2891,7 +3020,7 @@ static int ej_get_parameter(int eid, webs_t wp, int argc, char_t **argv){
 	return ret;
 }
 
-unsigned int getpeerip(webs_t wp){
+unsigned int getpeerip(webs_t wp) {
 	int fd, ret;
 	struct sockaddr peer;
 	socklen_t peerlen = sizeof(struct sockaddr);
@@ -2901,11 +3030,11 @@ unsigned int getpeerip(webs_t wp){
 	ret = getpeername(fd, (struct sockaddr *)&peer, &peerlen);
 	sa = (struct sockaddr_in *)&peer;
 	
-	if (!ret){
+	if (!ret) {
 //		csprintf("peer: %x\n", sa->sin_addr.s_addr);	// J++
 		return (unsigned int)sa->sin_addr.s_addr;
 	}
-	else{
+	else {
 		csprintf("error: %d %d \n", ret, errno);
 		return 0;
 	}
@@ -2913,7 +3042,7 @@ unsigned int getpeerip(webs_t wp){
 
 extern long uptime(void);
 
-static int login_state_hook(int eid, webs_t wp, int argc, char_t **argv){
+static int login_state_hook(int eid, webs_t wp, int argc, char_t **argv) {
 	unsigned int ip, login_ip;
 	char ip_str[16], login_ip_str[16];
 	time_t login_timestamp;
@@ -2940,14 +3069,14 @@ static int login_state_hook(int eid, webs_t wp, int argc, char_t **argv){
 	login_timestamp = strtoul(nvram_safe_get("login_timestamp"), NULL, 10);
 	
 	FILE *fp = fopen("/proc/net/arp", "r");
-	if (fp){
+	if (fp) {
 		memset(buffer, 0, MAX);
 		memset(values, 0, 6*VALUELEN);
 		
-		while (fgets(buffer, MAX, fp)){
-			if (strstr(buffer, "br0") && !strstr(buffer, "00:00:00:00:00:00")){
-				if (sscanf(buffer, "%s%s%s%s%s%s", values[0], values[1], values[2], values[3], values[4], values[5]) == 6){
-					if (!strcmp(values[0], ip_str)){
+		while (fgets(buffer, MAX, fp)) {
+			if (strstr(buffer, "br0") && !strstr(buffer, "00:00:00:00:00:00")) {
+				if (sscanf(buffer, "%s%s%s%s%s%s", values[0], values[1], values[2], values[3], values[4], values[5]) == 6) {
+					if (!strcmp(values[0], ip_str)) {
 						break;
 					}
 				}
@@ -2961,7 +3090,7 @@ static int login_state_hook(int eid, webs_t wp, int argc, char_t **argv){
 		fclose(fp);
 	}
 	
-	if (ip != 0 && login_ip == ip){
+	if (ip != 0 && login_ip == ip) {
 		websWrite(wp, "function is_logined() { return 1; }\n");
 		websWrite(wp, "function login_ip_dec() { return '%u'; }\n", login_ip);
 		websWrite(wp, "function login_ip_str() { return '%s'; }\n", login_ip_str);
@@ -2974,7 +3103,7 @@ static int login_state_hook(int eid, webs_t wp, int argc, char_t **argv){
 //		time(&login_timestamp);
 		login_timestamp = uptime();
 	}
-	else{
+	else {
 		websWrite(wp, "function is_logined() { return 0; }\n");
 		websWrite(wp, "function login_ip_dec() { return '%u'; }\n", login_ip);
 		
@@ -2994,7 +3123,7 @@ static int login_state_hook(int eid, webs_t wp, int argc, char_t **argv){
 	return 0;
 }
 
-static int ej_get_nvram_list(int eid, webs_t wp, int argc, char_t **argv){
+static int ej_get_nvram_list(int eid, webs_t wp, int argc, char_t **argv) {
 	struct variable *v, *gv;
 	char buf[MAX_LINE_SIZE+MAX_LINE_SIZE];
 	char *serviceId, *groupName;
@@ -3021,7 +3150,7 @@ static int ej_get_nvram_list(int eid, webs_t wp, int argc, char_t **argv){
 	groupCount = atoi(nvram_safe_get_x(serviceId, v->argv[3]));
 	
 	firstRow = 1;
-	for (i = 0; i < groupCount; ++i){
+	for (i = 0; i < groupCount; ++i) {
 		if (firstRow == 1)
 			firstRow = 0;
 		else
@@ -3029,7 +3158,7 @@ static int ej_get_nvram_list(int eid, webs_t wp, int argc, char_t **argv){
 		websWrite(wp, "[");
 		
 		firstItem = 1;
-		for (gv = (struct variable *)v->argv[0]; gv->name != NULL; ++gv){
+		for (gv = (struct variable *)v->argv[0]; gv->name != NULL; ++gv) {
 			if (firstItem == 1)
 				firstItem = 0;
 			else
@@ -3046,7 +3175,7 @@ static int ej_get_nvram_list(int eid, webs_t wp, int argc, char_t **argv){
 	return 0;
 }
 
-static int ej_dhcp_leases(int eid, webs_t wp, int argc, char_t **argv){
+static int ej_dhcp_leases(int eid, webs_t wp, int argc, char_t **argv) {
 	FILE *fp = NULL;
 	struct lease_t lease;
 	struct in_addr addr;
@@ -3061,7 +3190,7 @@ static int ej_dhcp_leases(int eid, webs_t wp, int argc, char_t **argv){
 		return 0;
 	
 	firstRow = 1;
-	while (fread(&lease, sizeof(lease), 1, fp)){
+	while (fread(&lease, sizeof(lease), 1, fp)) {
 		/* Do not display reserved leases */
 		if (ETHER_ISNULLADDR(lease.chaddr))
 			continue;
@@ -3079,7 +3208,7 @@ static int ej_dhcp_leases(int eid, webs_t wp, int argc, char_t **argv){
 		websWrite(wp, "\"%s\", ", str);
 		
 		websWrite(wp, "\"");
-		for (i = 0; i < 6; ++i){
+		for (i = 0; i < 6; ++i) {
 			websWrite(wp, "%02X", lease.chaddr[i]);
 			if (i != 5)
 				websWrite(wp, ":");
@@ -3098,7 +3227,7 @@ static int ej_dhcp_leases(int eid, webs_t wp, int argc, char_t **argv){
 			websWrite(wp, "\"Manual\"");
 		else if (!expires)
 			websWrite(wp, "\"Expired\"");
-		else{
+		else {
 			char lease_buf[128];
 			memset(lease_buf, 0, sizeof(lease_buf));
 			memset(str, 0, 80);
@@ -3117,7 +3246,7 @@ static int ej_dhcp_leases(int eid, webs_t wp, int argc, char_t **argv){
 	return 0;
 }
 
-static int ej_get_arp_table(int eid, webs_t wp, int argc, char_t **argv){
+static int ej_get_arp_table(int eid, webs_t wp, int argc, char_t **argv) {
 	const int MAX = 80;
 	const int FIELD_NUM = 6;
 	const int VALUELEN = 18;
@@ -3125,19 +3254,19 @@ static int ej_get_arp_table(int eid, webs_t wp, int argc, char_t **argv){
 	int num, firstRow;
 	
 	FILE *fp = fopen("/proc/net/arp", "r");
-	if (fp){
+	if (fp) {
 		memset(buffer, 0, MAX);
 		memset(values, 0, FIELD_NUM*VALUELEN);
 		
 		firstRow = 1;
-		while (fgets(buffer, MAX, fp)){
-			if (strstr(buffer, "br0") && !strstr(buffer, "00:00:00:00:00:00")){
+		while (fgets(buffer, MAX, fp)) {
+			if (strstr(buffer, "br0") && !strstr(buffer, "00:00:00:00:00:00")) {
 				if (firstRow == 1)
 					firstRow = 0;
 				else
 					websWrite(wp, ", ");
 				
-				if ((num = sscanf(buffer, "%s%s%s%s%s%s", values[0], values[1], values[2], values[3], values[4], values[5])) == FIELD_NUM){
+				if ((num = sscanf(buffer, "%s%s%s%s%s%s", values[0], values[1], values[2], values[3], values[4], values[5])) == FIELD_NUM) {
 					websWrite(wp, "[\"%s\", \"%s\", \"%s\", \"%s\", \"%s\", \"%s\"]", values[0], values[1], values[2], values[3], values[4], values[5]);
 				}
 				
@@ -3154,12 +3283,12 @@ static int ej_get_arp_table(int eid, webs_t wp, int argc, char_t **argv){
 }
 
 // for detect static IP's client.
-static int ej_get_static_client(int eid, webs_t wp, int argc, char_t **argv){
+static int ej_get_static_client(int eid, webs_t wp, int argc, char_t **argv) {
 	FILE *fp = fopen("/tmp/static_ip.inf", "r");
 	char buf[1024], *head, *tail, field[1024];
 	int len, i, first_client, first_field;
 	
-	if (fp == NULL){
+	if (fp == NULL) {
 		csprintf("Don't detect static clients!\n");
 		return 0;
 	}
@@ -3167,7 +3296,7 @@ static int ej_get_static_client(int eid, webs_t wp, int argc, char_t **argv){
 	memset(buf, 0, 1024);
 	
 	first_client = 1;
-	while (fgets(buf, 1024, fp)){
+	while (fgets(buf, 1024, fp)) {
 		if (first_client == 1)
 			first_client = 0;
 		else
@@ -3177,14 +3306,14 @@ static int ej_get_static_client(int eid, webs_t wp, int argc, char_t **argv){
 		buf[len-1] = ',';
 		head = buf;
 		first_field = 1;
-		for (i = 0; i < 7; ++i){
+		for (i = 0; i < 7; ++i) {
 			tail = strchr(head, ',');
-			if (tail != NULL){
+			if (tail != NULL) {
 				memset(field, 0, 1024);
 				strncpy(field, head, (tail-head));
 			}
 			
-			if (first_field == 1){
+			if (first_field == 1) {
 				first_field = 0;
 				websWrite(wp, "[");
 			}
@@ -3211,7 +3340,7 @@ static int ej_get_static_client(int eid, webs_t wp, int argc, char_t **argv){
 }
 
 
-static int ej_get_changed_status(int eid, webs_t wp, int argc, char_t **argv){
+static int ej_get_changed_status(int eid, webs_t wp, int argc, char_t **argv) {
 	char *arp_info = read_whole_file("/proc/net/arp");
 	char *disk_info = read_whole_file(PARTITION_FILE); 
 	char *mount_info = read_whole_file("/proc/mounts"); 
@@ -3220,36 +3349,36 @@ static int ej_get_changed_status(int eid, webs_t wp, int argc, char_t **argv){
 	
 	//printf("get changed status\n");	// tmp test
 
-	if (arp_info != NULL){
+	if (arp_info != NULL) {
 		arp_info_len = strlen(arp_info);
 		free(arp_info);
 	}
 	else
 		arp_info_len = 0;
 	
-	if (disk_info != NULL){
+	if (disk_info != NULL) {
 		disk_info_len = strlen(disk_info);
 		free(disk_info);
 	}
 	else
 		disk_info_len = 0;
 	
-	if (mount_info != NULL){
+	if (mount_info != NULL) {
 		mount_info_len = strlen(mount_info);
 		free(mount_info);
 	}
 	else
 		mount_info_len = 0;
 
-	websWrite(wp, "function get_client_status_changed(){\n");
+	websWrite(wp, "function get_client_status_changed() {\n");
 	websWrite(wp, "    return %u;\n", arp_info_len);
 	websWrite(wp, "}\n\n");
 	
-	websWrite(wp, "function get_disk_status_changed(){\n");
+	websWrite(wp, "function get_disk_status_changed() {\n");
 	websWrite(wp, "    return %u;\n", disk_info_len);
 	websWrite(wp, "}\n\n");
 	
-	websWrite(wp, "function get_mount_status_changed(){\n");
+	websWrite(wp, "function get_mount_status_changed() {\n");
 	websWrite(wp, "    return %u;\n", mount_info_len);
 	websWrite(wp, "}\n\n");
 	
@@ -3311,21 +3440,21 @@ exit:
 	return 0;
 }						     /* End --Alicia, 08.09.23 */
 
-static int ej_disk_pool_mapping_info(int eid, webs_t wp, int argc, char_t **argv){
+static int ej_disk_pool_mapping_info(int eid, webs_t wp, int argc, char_t **argv) {
 	disk_info_t *disks_info, *follow_disk;
 	partition_info_t *follow_partition;
 	int first;
 
 	disks_info = read_disk_data();
-	if (disks_info == NULL){
+	if (disks_info == NULL) {
 		websWrite(wp, "%s", initial_disk_pool_mapping_info());
 		return -1;
 	}
 
-	websWrite(wp, "function total_disk_sizes(){\n");
+	websWrite(wp, "function total_disk_sizes() {\n");
 	websWrite(wp, "    return [");
 	first = 1;
-	for (follow_disk = disks_info; follow_disk != NULL; follow_disk = follow_disk->next){
+	for (follow_disk = disks_info; follow_disk != NULL; follow_disk = follow_disk->next) {
 		if (first == 1)
 			first = 0;
 		else
@@ -3336,10 +3465,10 @@ static int ej_disk_pool_mapping_info(int eid, webs_t wp, int argc, char_t **argv
 	websWrite(wp, "];\n");
 	websWrite(wp, "}\n\n");
 
-	websWrite(wp, "function disk_interface_names(){\n");
+	websWrite(wp, "function disk_interface_names() {\n");
 	websWrite(wp, "    return [");
 	first = 1;
-	for (follow_disk = disks_info; follow_disk != NULL; follow_disk = follow_disk->next){
+	for (follow_disk = disks_info; follow_disk != NULL; follow_disk = follow_disk->next) {
 		if (first == 1)
 			first = 0;
 		else
@@ -3351,24 +3480,24 @@ static int ej_disk_pool_mapping_info(int eid, webs_t wp, int argc, char_t **argv
 	websWrite(wp, "}\n\n");
 	char *Ptr;
 
-	websWrite(wp, "function pool_names(){\n");
+	websWrite(wp, "function pool_names() {\n");
 	websWrite(wp, "    return [");
 
 	first = 1;
 	for (follow_disk = disks_info; follow_disk != NULL; follow_disk = follow_disk->next)
-		for (follow_partition = follow_disk->partitions; follow_partition != NULL; follow_partition = follow_partition->next){
+		for (follow_partition = follow_disk->partitions; follow_partition != NULL; follow_partition = follow_partition->next) {
 			if (first == 1)
 				first = 0;
 			else
 				websWrite(wp, ", ");
 
-			if (follow_partition->mount_point == NULL){
+			if (follow_partition->mount_point == NULL) {
 				websWrite(wp, "\"unknown\"");
 				continue;
 			}
 
 			Ptr = rindex(follow_partition->mount_point, '/');
-			if (Ptr == NULL){
+			if (Ptr == NULL) {
 				websWrite(wp, "\"unknown\"");
 				continue;
 			}
@@ -3384,17 +3513,17 @@ static int ej_disk_pool_mapping_info(int eid, webs_t wp, int argc, char_t **argv
 	websWrite(wp, "];\n");
 	websWrite(wp, "}\n\n");
 
-	websWrite(wp, "function pool_types(){\n");
+	websWrite(wp, "function pool_types() {\n");
 	websWrite(wp, "    return [");
 	first = 1;
 	for (follow_disk = disks_info; follow_disk != NULL; follow_disk = follow_disk->next)
-		for (follow_partition = follow_disk->partitions; follow_partition != NULL; follow_partition = follow_partition->next){
+		for (follow_partition = follow_disk->partitions; follow_partition != NULL; follow_partition = follow_partition->next) {
 			if (first == 1)
 				first = 0;
 			else
 				websWrite(wp, ", ");
 
-			if (follow_partition->mount_point == NULL){
+			if (follow_partition->mount_point == NULL) {
 				websWrite(wp, "\"unknown\"");
 				continue;
 			}
@@ -3404,11 +3533,11 @@ static int ej_disk_pool_mapping_info(int eid, webs_t wp, int argc, char_t **argv
 	websWrite(wp, "];\n");
 	websWrite(wp, "}\n\n");
 
-	websWrite(wp, "function pool_mirror_counts(){\n");
+	websWrite(wp, "function pool_mirror_counts() {\n");
 	websWrite(wp, "    return [");
 	first = 1;
 	for (follow_disk = disks_info; follow_disk != NULL; follow_disk = follow_disk->next)
-		for (follow_partition = follow_disk->partitions; follow_partition != NULL; follow_partition = follow_partition->next){
+		for (follow_partition = follow_disk->partitions; follow_partition != NULL; follow_partition = follow_partition->next) {
 			if (first == 1)
 				first = 0;
 			else
@@ -3419,17 +3548,17 @@ static int ej_disk_pool_mapping_info(int eid, webs_t wp, int argc, char_t **argv
 	websWrite(wp, "];\n");
 	websWrite(wp, "}\n\n");
 
-	websWrite(wp, "function pool_status(){\n");
+	websWrite(wp, "function pool_status() {\n");
 	websWrite(wp, "    return [");
 	first = 1;
 	for (follow_disk = disks_info; follow_disk != NULL; follow_disk = follow_disk->next)
-		for (follow_partition = follow_disk->partitions; follow_partition != NULL; follow_partition = follow_partition->next){
+		for (follow_partition = follow_disk->partitions; follow_partition != NULL; follow_partition = follow_partition->next) {
 			if (first == 1)
 				first = 0;
 			else
 				websWrite(wp, ", ");
 
-			if (follow_partition->mount_point == NULL){
+			if (follow_partition->mount_point == NULL) {
 				websWrite(wp, "\"unmounted\"");
 				continue;
 			}
@@ -3442,11 +3571,11 @@ static int ej_disk_pool_mapping_info(int eid, webs_t wp, int argc, char_t **argv
 	websWrite(wp, "];\n");
 	websWrite(wp, "}\n\n");
 
-	websWrite(wp, "function pool_kilobytes(){\n");
+	websWrite(wp, "function pool_kilobytes() {\n");
 	websWrite(wp, "    return [");
 	first = 1;
 	for (follow_disk = disks_info; follow_disk != NULL; follow_disk = follow_disk->next)
-		for (follow_partition = follow_disk->partitions; follow_partition != NULL; follow_partition = follow_partition->next){
+		for (follow_partition = follow_disk->partitions; follow_partition != NULL; follow_partition = follow_partition->next) {
 			if (first == 1)
 				first = 0;
 			else
@@ -3457,11 +3586,11 @@ static int ej_disk_pool_mapping_info(int eid, webs_t wp, int argc, char_t **argv
 	websWrite(wp, "];\n");
 	websWrite(wp, "}\n\n");
 
-	websWrite(wp, "function pool_encryption_password_is_missing(){\n");
+	websWrite(wp, "function pool_encryption_password_is_missing() {\n");
 	websWrite(wp, "    return [");
 	first = 1;
 	for (follow_disk = disks_info; follow_disk != NULL; follow_disk = follow_disk->next)
-		for (follow_partition = follow_disk->partitions; follow_partition != NULL; follow_partition = follow_partition->next){
+		for (follow_partition = follow_disk->partitions; follow_partition != NULL; follow_partition = follow_partition->next) {
 			if (first == 1)
 				first = 0;
 			else
@@ -3472,11 +3601,11 @@ static int ej_disk_pool_mapping_info(int eid, webs_t wp, int argc, char_t **argv
 	websWrite(wp, "];\n");
 	websWrite(wp, "}\n\n");
 
-	websWrite(wp, "function pool_kilobytes_in_use(){\n");
+	websWrite(wp, "function pool_kilobytes_in_use() {\n");
 	websWrite(wp, "    return [");
 	first = 1;
 	for (follow_disk = disks_info; follow_disk != NULL; follow_disk = follow_disk->next)
-		for (follow_partition = follow_disk->partitions; follow_partition != NULL; follow_partition = follow_partition->next){
+		for (follow_partition = follow_disk->partitions; follow_partition != NULL; follow_partition = follow_partition->next) {
 			if (first == 1)
 				first = 0;
 			else
@@ -3491,10 +3620,10 @@ static int ej_disk_pool_mapping_info(int eid, webs_t wp, int argc, char_t **argv
 
 	u64 disk_used_kilobytes;
 
-	websWrite(wp, "function disk_usage(){\n");
+	websWrite(wp, "function disk_usage() {\n");
 	websWrite(wp, "    return [");
 	first = 1;
-	for (follow_disk = disks_info; follow_disk != NULL; follow_disk = follow_disk->next){
+	for (follow_disk = disks_info; follow_disk != NULL; follow_disk = follow_disk->next) {
 		if (first == 1)
 			first = 0;
 		else
@@ -3511,15 +3640,16 @@ static int ej_disk_pool_mapping_info(int eid, webs_t wp, int argc, char_t **argv
 
 	disk_info_t *follow_disk2;
 	u32 disk_num, pool_num;
-	websWrite(wp, "function per_pane_pool_usage_kilobytes(pool_num, disk_num){\n");
-	for (follow_disk = disks_info, pool_num = 0; follow_disk != NULL; follow_disk = follow_disk->next){
-		for (follow_partition = follow_disk->partitions; follow_partition != NULL; follow_partition = follow_partition->next, ++pool_num){
-			websWrite(wp, "    if (pool_num == %d){\n", pool_num);
+	websWrite(wp, "function per_pane_pool_usage_kilobytes(pool_num, disk_num) {\n");
+	for (follow_disk = disks_info, pool_num = 0; follow_disk != NULL; follow_disk = follow_disk->next) {
+		for (follow_partition = follow_disk->partitions; follow_partition != NULL; follow_partition = follow_partition->next, ++pool_num) {
+			websWrite(wp, "    if (pool_num == %d) {\n", pool_num);
 			if (follow_partition->mount_point != NULL)
-				for (follow_disk2 = disks_info, disk_num = 0; follow_disk2 != NULL; follow_disk2 = follow_disk2->next, ++disk_num){
-					websWrite(wp, "	if (disk_num == %d){\n", disk_num);
+				for (follow_disk2 = disks_info, disk_num = 0; follow_disk2 != NULL; follow_disk2 = follow_disk2->next, ++disk_num) {
+					websWrite(wp, "	if (disk_num == %d) {\n", disk_num);
 
-					if (strcmp(follow_disk2->tag, follow_disk->tag) == 0)
+//					if (strcmp(follow_disk2->tag, follow_disk->tag) == 0)
+					if (follow_disk2->major == follow_disk->major && follow_disk2->minor == follow_disk->minor)
 						websWrite(wp, "	    return [%llu];\n", follow_partition->size_in_kilobytes);
 					else
 						websWrite(wp, "	    return [0];\n");
@@ -3537,34 +3667,34 @@ static int ej_disk_pool_mapping_info(int eid, webs_t wp, int argc, char_t **argv
 	return 0;
 }
 
-static int ej_available_disk_names_and_sizes(int eid, webs_t wp, int argc, char_t **argv){
+static int ej_available_disk_names_and_sizes(int eid, webs_t wp, int argc, char_t **argv) {
 	disk_info_t *disks_info, *follow_disk;
 	int first;
 
-	websWrite(wp, "function available_disks(){ return [];}\n\n");
-	websWrite(wp, "function available_disk_sizes(){ return [];}\n\n");
-	websWrite(wp, "function claimed_disks(){ return [];}\n\n");
-	websWrite(wp, "function claimed_disk_interface_names(){ return [];}\n\n");
-	websWrite(wp, "function claimed_disk_model_info(){ return [];}\n\n");
-	websWrite(wp, "function claimed_disk_total_size(){ return [];}\n\n");
-	websWrite(wp, "function claimed_disk_total_mounted_number(){ return [];}\n\n");
-	websWrite(wp, "function blank_disks(){ return [];}\n\n");
-	websWrite(wp, "function blank_disk_interface_names(){ return [];}\n\n");
-	websWrite(wp, "function blank_disk_model_info(){ return [];}\n\n");
-	websWrite(wp, "function blank_disk_total_size(){ return [];}\n\n");
-	websWrite(wp, "function blank_disk_total_mounted_number(){ return [];}\n\n");
+	websWrite(wp, "function available_disks() { return [];}\n\n");
+	websWrite(wp, "function available_disk_sizes() { return [];}\n\n");
+	websWrite(wp, "function claimed_disks() { return [];}\n\n");
+	websWrite(wp, "function claimed_disk_interface_names() { return [];}\n\n");
+	websWrite(wp, "function claimed_disk_model_info() { return [];}\n\n");
+	websWrite(wp, "function claimed_disk_total_size() { return [];}\n\n");
+	websWrite(wp, "function claimed_disk_total_mounted_number() { return [];}\n\n");
+	websWrite(wp, "function blank_disks() { return [];}\n\n");
+	websWrite(wp, "function blank_disk_interface_names() { return [];}\n\n");
+	websWrite(wp, "function blank_disk_model_info() { return [];}\n\n");
+	websWrite(wp, "function blank_disk_total_size() { return [];}\n\n");
+	websWrite(wp, "function blank_disk_total_mounted_number() { return [];}\n\n");
 
 	disks_info = read_disk_data();
-	if (disks_info == NULL){
+	if (disks_info == NULL) {
 		websWrite(wp, "%s", initial_available_disk_names_and_sizes());
 		return -1;
 	}
 
 	/* show name of the foreign disks */
-	websWrite(wp, "function foreign_disks(){\n");
+	websWrite(wp, "function foreign_disks() {\n");
 	websWrite(wp, "    return [");
 	first = 1;
-	for (follow_disk = disks_info; follow_disk != NULL; follow_disk = follow_disk->next){
+	for (follow_disk = disks_info; follow_disk != NULL; follow_disk = follow_disk->next) {
 		if (first == 1)
 			first = 0;
 		else
@@ -3576,10 +3706,10 @@ static int ej_available_disk_names_and_sizes(int eid, webs_t wp, int argc, char_
 	websWrite(wp, "}\n\n");
 
 	/* show interface of the foreign disks */
-	websWrite(wp, "function foreign_disk_interface_names(){\n");
+	websWrite(wp, "function foreign_disk_interface_names() {\n");
 	websWrite(wp, "    return [");
 	first = 1;
-	for (follow_disk = disks_info; follow_disk != NULL; follow_disk = follow_disk->next){
+	for (follow_disk = disks_info; follow_disk != NULL; follow_disk = follow_disk->next) {
 		if (first == 1)
 			first = 0;
 		else
@@ -3592,10 +3722,10 @@ static int ej_available_disk_names_and_sizes(int eid, webs_t wp, int argc, char_
 	websWrite(wp, "}\n\n");
 
 	/* show model info of the foreign disks */
-	websWrite(wp, "function foreign_disk_model_info(){\n");
+	websWrite(wp, "function foreign_disk_model_info() {\n");
 	websWrite(wp, "    return [");
 	first = 1;
-	for (follow_disk = disks_info; follow_disk != NULL; follow_disk = follow_disk->next){
+	for (follow_disk = disks_info; follow_disk != NULL; follow_disk = follow_disk->next) {
 		if (first == 1)
 			first = 0;
 		else
@@ -3605,7 +3735,7 @@ static int ej_available_disk_names_and_sizes(int eid, webs_t wp, int argc, char_
 
 		if (follow_disk->vendor != NULL)
 			websWrite(wp, "%s", follow_disk->vendor);
-		if (follow_disk->model != NULL){
+		if (follow_disk->model != NULL) {
 			if (follow_disk->vendor != NULL)
 				websWrite(wp, " ");
 
@@ -3617,10 +3747,10 @@ static int ej_available_disk_names_and_sizes(int eid, webs_t wp, int argc, char_
 	websWrite(wp, "}\n\n");
 
 	/* show total_size of the foreign disks */
-	websWrite(wp, "function foreign_disk_total_size(){\n");
+	websWrite(wp, "function foreign_disk_total_size() {\n");
 	websWrite(wp, "    return [");
 	first = 1;
-	for (follow_disk = disks_info; follow_disk != NULL; follow_disk = follow_disk->next){
+	for (follow_disk = disks_info; follow_disk != NULL; follow_disk = follow_disk->next) {
 		if (first == 1)
 			first = 0;
 		else
@@ -3631,10 +3761,10 @@ static int ej_available_disk_names_and_sizes(int eid, webs_t wp, int argc, char_
 	websWrite(wp, "];\n");
 	websWrite(wp, "}\n\n");
 	/* show total number of the mounted partition in this foreign disk */
-	websWrite(wp, "function foreign_disk_total_mounted_number(){\n");
+	websWrite(wp, "function foreign_disk_total_mounted_number() {\n");
 	websWrite(wp, "    return [");
 	first = 1;
-	for (follow_disk = disks_info; follow_disk != NULL; follow_disk = follow_disk->next){
+	for (follow_disk = disks_info; follow_disk != NULL; follow_disk = follow_disk->next) {
 		if (first == 1)
 			first = 0;
 		else
@@ -3649,24 +3779,24 @@ static int ej_available_disk_names_and_sizes(int eid, webs_t wp, int argc, char_
 	return 0;
 }
 
-static int ej_get_printer_info(int eid, webs_t wp, int argc, char_t **argv){
+static int ej_get_printer_info(int eid, webs_t wp, int argc, char_t **argv) {
 	FILE *lpfp;
 	char manufacturer[100], models[100], serialnos[100], pool[100];
 	char buf[500];
 	char *lpparam, *value, *v1 = NULL;
 	
-	if (!(lpfp = fopen("/proc/usblp/usblpid", "r"))){
+	if (!(lpfp = fopen("/proc/usblp/usblpid", "r"))) {
 		strcpy(manufacturer, "");
 		strcpy(models, "");
 		strcpy(serialnos, "");
 		strcpy(pool, "");
 	}
-	else{
-		while (fgets(buf, 500, lpfp)){
+	else {
+		while (fgets(buf, 500, lpfp)) {
 			value = &buf[0];
 			lpparam = strsep(&value, "=")?:&buf[0];
 			
-			if (value){
+			if (value) {
 				v1 = strchr(value, '\n');
 				*v1 = '\0';
 				
@@ -3688,7 +3818,7 @@ static int ej_get_printer_info(int eid, webs_t wp, int argc, char_t **argv){
 	websWrite(wp, "function printer_pool() {\n return [\"%s\"];\n}\n", pool);
 }
 
-int ej_shown_time(int eid, webs_t wp, int argc, char **argv){
+int ej_shown_time(int eid, webs_t wp, int argc, char **argv) {
 	time_t t1;
 	
 	time(&t1);
@@ -3698,7 +3828,7 @@ int ej_shown_time(int eid, webs_t wp, int argc, char **argv){
 	return 0;
 }
 
-int ej_shown_language_option(int eid, webs_t wp, int argc, char **argv){
+int ej_shown_language_option(int eid, webs_t wp, int argc, char **argv) {
 	struct language_table *pLang = NULL;
 	char lang[4];
 	int i, len;
@@ -3706,7 +3836,7 @@ int ej_shown_language_option(int eid, webs_t wp, int argc, char **argv){
 	char buffer[1024], key[16], target[16];
 	char *follow_info, *follow_info_end;
 
-	if (fp == NULL){
+	if (fp == NULL) {
 		fprintf(stderr, "No English dictionary!\n");
 		return 0;
 	}
@@ -3714,9 +3844,9 @@ int ej_shown_language_option(int eid, webs_t wp, int argc, char **argv){
 	memset(lang, 0, 4);
 	strcpy(lang, nvram_safe_get("preferred_lang"));
 
-	for (i = 0; i < 20; ++i){
+	for (i = 0; i < 20; ++i) {
 		memset(buffer, 0, sizeof(buffer));
-		if ((follow_info = fgets(buffer, sizeof(buffer), fp)) != NULL){
+		if ((follow_info = fgets(buffer, sizeof(buffer), fp)) != NULL) {
 			if (strncmp(follow_info, "LANG_", 5))    // 5 = strlen("LANG_")
 				continue;
 
@@ -3726,7 +3856,7 @@ int ej_shown_language_option(int eid, webs_t wp, int argc, char **argv){
 			memset(key, 0, sizeof(key));
 			strncpy(key, follow_info, len);
 
-			for (pLang = language_tables; pLang->Lang != NULL; ++pLang){
+			for (pLang = language_tables; pLang->Lang != NULL; ++pLang) {
 				if (strcmp(key, pLang->Target_Lang))
 					continue;
 				follow_info = follow_info_end+1;
@@ -3929,6 +4059,7 @@ apply_cgi(webs_t wp, char_t *urlPrefix, char_t *webDir, int arg,
 							{
 								apply_cgi_group(wp, sid, NULL, groupName, GROUP_FLAG_REFRESH);
 							}
+
 							sprintf(urlStr, "%s#%s", current_url, groupName);
 							validate_cgi(wp, sid, FALSE);
 						}
@@ -4403,7 +4534,7 @@ do_lang_cgi(char *url, FILE *stream)
 		websWrite(stream, "<head></head><title>REDIRECT TO INDEX.ASP</title>");
 
 		// The text between <body> and </body> content may be rendered in Opera browser.
-		websWrite(stream, "<body onLoad='if (navigator.appVersion.indexOf(\"Firefox\")!=-1||navigator.appName == \"Netscape\"){top.location=\"index.asp\";}else{top.location.reload(true);}'></body>");
+		websWrite(stream, "<body onLoad='if (navigator.appVersion.indexOf(\"Firefox\")!=-1||navigator.appName == \"Netscape\") {top.location=\"index.asp\";}else {top.location.reload(true);}'></body>");
 		websFooter(stream);
 		websDone(stream, 200);
 	} else {
@@ -4752,10 +4883,17 @@ do_upgrade_cgi(char *url, FILE *stream)
 #ifndef WRITE2FLASH
 		system("killall watchdog");
 		websApply(stream, "Updating.asp");
+		/* Close the stream to force browser display the content,
+		 * flushed by websApply, or it will be closed only on reboot
+		 * AFTER flashing.
+		 */
+		fclose(stream);
 		sys_upgrade("/tmp/linux.trx");
 #else
 		websApply(stream, "Restarting.asp");
 #endif
+		/* can't nvram 'coz there's watchdog already */
+		sys_reboot_rc();
 	}	
 	else    
 	{
@@ -5121,7 +5259,7 @@ struct mime_handler mime_handlers[] = {
 };
 //2008.08 magic}
 
-int ej_get_AiDisk_status(int eid, webs_t wp, int argc, char **argv){
+int ej_get_AiDisk_status(int eid, webs_t wp, int argc, char **argv) {
 	disk_info_t *disks_info, *follow_disk;
 	partition_info_t *follow_partition;
 	char *follow_info;
@@ -5129,21 +5267,21 @@ int ej_get_AiDisk_status(int eid, webs_t wp, int argc, char **argv){
 	char **folder_list = NULL;
 	int first_pool, first_folder, result, i;
 
-	websWrite(wp, "function get_cifs_status(){\n");
+	websWrite(wp, "function get_cifs_status() {\n");
 	//websWrite(wp, "    return %d;\n", atoi(nvram_safe_get("samba_running")));
 	websWrite(wp, "    return %d;\n", atoi(nvram_safe_get("enable_samba")));
 	websWrite(wp, "}\n\n");
 
-	websWrite(wp, "function get_ftp_status(){\n");
+	websWrite(wp, "function get_ftp_status() {\n");
 	//websWrite(wp, "    return %d;\n", atoi(nvram_safe_get("ftp_running")));
 	websWrite(wp, "    return %d;\n", atoi(nvram_safe_get("enable_ftp")));
 	websWrite(wp, "}\n\n");
 
-	websWrite(wp, "function get_dms_status(){\n");
+	websWrite(wp, "function get_dms_status() {\n");
 	websWrite(wp, "    return %d;\n", pids("ushare"));
 	websWrite(wp, "}\n\n");
 
-	websWrite(wp, "function get_share_management_status(protocol){\n");
+	websWrite(wp, "function get_share_management_status(protocol) {\n");
 	websWrite(wp, "    if (protocol == \"cifs\")\n");
 	websWrite(wp, "	return %d;\n", atoi(nvram_safe_get("st_samba_mode")));
 	websWrite(wp, "    else if (protocol == \"ftp\")\n");
@@ -5154,15 +5292,15 @@ int ej_get_AiDisk_status(int eid, webs_t wp, int argc, char **argv){
 	websWrite(wp, "}\n\n");
 
 	disks_info = read_disk_data();
-	if (disks_info == NULL){
-		websWrite(wp, "function get_sharedfolder_in_pool(poolName){}\n");
+	if (disks_info == NULL) {
+		websWrite(wp, "function get_sharedfolder_in_pool(poolName) {}\n");
 		return -1;
 	}
 	first_pool = 1;
-	websWrite(wp, "function get_sharedfolder_in_pool(poolName){\n");
+	websWrite(wp, "function get_sharedfolder_in_pool(poolName) {\n");
 	for (follow_disk = disks_info; follow_disk != NULL; follow_disk = follow_disk->next)
-		for (follow_partition = follow_disk->partitions; follow_partition != NULL; follow_partition = follow_partition->next){
-			if (follow_partition->mount_point != NULL && strlen(follow_partition->mount_point) > 0){
+		for (follow_partition = follow_disk->partitions; follow_partition != NULL; follow_partition = follow_partition->next) {
+			if (follow_partition->mount_point != NULL && strlen(follow_partition->mount_point) > 0) {
 				websWrite(wp, "    ");
 
 				if (first_pool == 1)
@@ -5171,11 +5309,11 @@ int ej_get_AiDisk_status(int eid, webs_t wp, int argc, char **argv){
 					websWrite(wp, "else ");
 
 				follow_info = rindex(follow_partition->mount_point, '/');
-				websWrite(wp, "if (poolName == \"%s\"){\n", follow_info+1);
+				websWrite(wp, "if (poolName == \"%s\") {\n", follow_info+1);
 				websWrite(wp, "	return [");
 
 				result = get_all_folder_in_mount_path(follow_partition->mount_point, &sh_num, &folder_list);
-				if (result < 0){
+				if (result < 0) {
 					websWrite(wp, "];\n");
 					websWrite(wp, "    }\n");
 
@@ -5187,7 +5325,7 @@ int ej_get_AiDisk_status(int eid, webs_t wp, int argc, char **argv){
 				}
 
 				first_folder = 1;
-				for (i = 0; i < sh_num; ++i){
+				for (i = 0; i < sh_num; ++i) {
 					if (first_folder == 1)
 						first_folder = 0;
 					else
@@ -5214,7 +5352,7 @@ int ej_get_AiDisk_status(int eid, webs_t wp, int argc, char **argv){
 
 	websWrite(wp, "}\n\n");
 
-	if (disks_info != NULL){
+	if (disks_info != NULL) {
 		free_2_dimension_list(&sh_num, &folder_list);
 		free_disk_data(&disks_info);
 	}
@@ -5222,18 +5360,18 @@ int ej_get_AiDisk_status(int eid, webs_t wp, int argc, char **argv){
 	return 0;
 }
 
-int ej_get_all_accounts(int eid, webs_t wp, int argc, char **argv){
+int ej_get_all_accounts(int eid, webs_t wp, int argc, char **argv) {
 	int acc_num;
 	char **account_list = NULL;
 	int result, i, first;
 
-	if ((result = get_account_list(&acc_num, &account_list)) < 0){
+	if ((result = get_account_list(&acc_num, &account_list)) < 0) {
 		printf("Failed to get the account list!\n");
 		return -1;
 	}
 
 	first = 1;
-	for (i = 0; i < acc_num; ++i){
+	for (i = 0; i < acc_num; ++i) {
 		if (first == 1)
 			first = 0;
 		else
@@ -5287,7 +5425,7 @@ int stop_usbled()
         return 0;
 }
 
-static int ej_safely_remove_disk(int eid, webs_t wp, int argc, char_t **argv){
+static int ej_safely_remove_disk(int eid, webs_t wp, int argc, char_t **argv) {
 	int result;
         char *disk_port = websGetVar(wp, "disk", "");
 //	disk_info_t *disks_info = NULL, *follow_disk = NULL;
@@ -5300,7 +5438,7 @@ static int ej_safely_remove_disk(int eid, webs_t wp, int argc, char_t **argv){
 
 	result = eval("/sbin/ejusb", disk_port);
 
-	if (result != 0){
+	if (result != 0) {
 		show_error_msg("Action9");
 
 		websWrite(wp, "<script>\n");
@@ -5348,7 +5486,7 @@ static int ej_safely_remove_disk(int eid, webs_t wp, int argc, char_t **argv){
 
 
 
-int ej_get_permissions_of_account(int eid, webs_t wp, int argc, char **argv){
+int ej_get_permissions_of_account(int eid, webs_t wp, int argc, char **argv) {
 	disk_info_t *disks_info, *follow_disk;
 	partition_info_t *follow_partition;
 	int acc_num = 0, sh_num = 0;
@@ -5360,9 +5498,9 @@ int ej_get_permissions_of_account(int eid, webs_t wp, int argc, char **argv){
 	//printf("[httpd] get permission of account chk\n");	// tmp test
 
 	disks_info = read_disk_data();
-	if (disks_info == NULL){
-		websWrite(wp, "function get_account_permissions_in_pool(account, pool){return [];}\n");
-		websWrite(wp, "function get_dms_permissions_in_pool(pool){return [];}\n");
+	if (disks_info == NULL) {
+		websWrite(wp, "function get_account_permissions_in_pool(account, pool) {return [];}\n");
+		websWrite(wp, "function get_dms_permissions_in_pool(pool) {return [];}\n");
 		return -1;
 	}
 
@@ -5370,43 +5508,43 @@ int ej_get_permissions_of_account(int eid, webs_t wp, int argc, char **argv){
 	result = get_account_list(&acc_num, &account_list);
 	//printf("chk b\n");	// tmp test
 
-	if (result < 0){
+	if (result < 0) {
 		printf("1. Can't get the account list.\n");
 		free_2_dimension_list(&acc_num, &account_list);
 		free_disk_data(&disks_info);
 	}
 
-	websWrite(wp, "function get_account_permissions_in_pool(account, pool){\n");
+	websWrite(wp, "function get_account_permissions_in_pool(account, pool) {\n");
 
 	if (acc_num <= 0)
 		websWrite(wp, "    return [];\n");
 
 	first_account = 1;
-	for (i = 0; i < acc_num; ++i){
+	for (i = 0; i < acc_num; ++i) {
 		websWrite(wp, "    ");
 		if (first_account == 1)
 			first_account = 0;
 		else
 			websWrite(wp, "else ");
 
-		websWrite(wp, "if (account == \"%s\"){\n", account_list[i]);
+		websWrite(wp, "if (account == \"%s\") {\n", account_list[i]);
 
 		first_pool = 1;
-		for (follow_disk = disks_info; follow_disk != NULL; follow_disk = follow_disk->next){
-			for (follow_partition = follow_disk->partitions; follow_partition != NULL; follow_partition = follow_partition->next){
-				if (follow_partition->mount_point != NULL && strlen(follow_partition->mount_point) > 0){
+		for (follow_disk = disks_info; follow_disk != NULL; follow_disk = follow_disk->next) {
+			for (follow_partition = follow_disk->partitions; follow_partition != NULL; follow_partition = follow_partition->next) {
+				if (follow_partition->mount_point != NULL && strlen(follow_partition->mount_point) > 0) {
 					websWrite(wp, "	");
 					if (first_pool == 1)
 						first_pool = 0;
 					else
 						websWrite(wp, "else ");
 
-					websWrite(wp, "if (pool == \"%s\"){\n", rindex(follow_partition->mount_point, '/')+1);
+					websWrite(wp, "if (pool == \"%s\") {\n", rindex(follow_partition->mount_point, '/')+1);
 
 					websWrite(wp, "	    return [");
 
 					result = get_all_folder_in_mount_path(follow_partition->mount_point, &sh_num, &folder_list);
-					if (result != 0){
+					if (result != 0) {
 						websWrite(wp, "];\n");
 						websWrite(wp, "	}\n");
 
@@ -5417,7 +5555,7 @@ int ej_get_permissions_of_account(int eid, webs_t wp, int argc, char **argv){
 						continue;
 					}
 					first_folder = 1;
-					for (j = 0; j < sh_num; ++j){
+					for (j = 0; j < sh_num; ++j) {
 						samba_right = get_permission(account_list[i],
 													 follow_partition->mount_point,
 													 folder_list[j],
@@ -5426,21 +5564,21 @@ int ej_get_permissions_of_account(int eid, webs_t wp, int argc, char **argv){
 												   follow_partition->mount_point,
 												   folder_list[j],
 												   "ftp");
-						if (samba_right < 0 || samba_right > 3){
+						if (samba_right < 0 || samba_right > 3) {
 							printf("Can't get the CIFS permission abount \"%s\"!\n", folder_list[j]);
 
 //							samba_right = DEFAULT_SAMBA_RIGHT;	// J++
 							samba_right = 0;	
 						}
 
-						if (ftp_right < 0 || ftp_right > 3){
+						if (ftp_right < 0 || ftp_right > 3) {
 							printf("Can't get the FTP permission abount \"%s\"!\n", folder_list[j]);
 
 //							ftp_right = DEFAULT_FTP_RIGHT;		// J++
 							ftp_right = 0;
 						}
 
-						if (first_folder == 1){
+						if (first_folder == 1) {
 							first_folder = 0;
 							websWrite(wp, "[\"%s\", %d, %d]", folder_list[j], samba_right, ftp_right);
 						}
@@ -5465,25 +5603,25 @@ int ej_get_permissions_of_account(int eid, webs_t wp, int argc, char **argv){
 		free_2_dimension_list(&sh_num, &folder_list);
 
 	//printf("chk 1\n");	// tmp test
-	websWrite(wp, "function get_dms_permissions_in_pool(pool){\n");
+	websWrite(wp, "function get_dms_permissions_in_pool(pool) {\n");
 
 	first_pool = 1;
-	for (follow_disk = disks_info; follow_disk != NULL; follow_disk = follow_disk->next){
-		for (follow_partition = follow_disk->partitions; follow_partition != NULL; follow_partition = follow_partition->next){
-			if (follow_partition->mount_point != NULL && strlen(follow_partition->mount_point) > 0){
+	for (follow_disk = disks_info; follow_disk != NULL; follow_disk = follow_disk->next) {
+		for (follow_partition = follow_disk->partitions; follow_partition != NULL; follow_partition = follow_partition->next) {
+			if (follow_partition->mount_point != NULL && strlen(follow_partition->mount_point) > 0) {
 				websWrite(wp, "    ");
 				if (first_pool == 1)
 					first_pool = 0;
 				else
 					websWrite(wp, "else ");
-				websWrite(wp, "if (pool == \"%s\"){\n", rindex(follow_partition->mount_point, '/')+1);
+				websWrite(wp, "if (pool == \"%s\") {\n", rindex(follow_partition->mount_point, '/')+1);
 
 				websWrite(wp, "	return [");
 
 				//printf("chk p1\n");	// tmp test
 				result = get_all_folder_in_mount_path(follow_partition->mount_point, &sh_num, &folder_list);
 				//printf("chk p2\n");	// tmp test
-				if (result != 0){
+				if (result != 0) {
 					websWrite(wp, "];\n");
 					websWrite(wp, "    }\n");
 
@@ -5496,18 +5634,18 @@ int ej_get_permissions_of_account(int eid, webs_t wp, int argc, char **argv){
 
 				//printf("chk p3\n");	// tmp test
 				first_folder = 1;
-				for (j = 0; j < sh_num; ++j){
+				for (j = 0; j < sh_num; ++j) {
 					dms_right = get_permission("MediaServer",
 											   follow_partition->mount_point,
 											   folder_list[j],
 											   "dms");
-					if (dms_right < 0 || dms_right > 1){
+					if (dms_right < 0 || dms_right > 1) {
 						printf("Can't get the DMS permission abount \"%s\"!\n", folder_list[j]);
 
 						dms_right = DEFAULT_DMS_RIGHT;
 					}
 
-					if (first_folder == 1){
+					if (first_folder == 1) {
 						first_folder = 0;
 						websWrite(wp, "[\"%s\", %d]", folder_list[j], dms_right);
 					}
@@ -5541,7 +5679,7 @@ int ej_get_permissions_of_account(int eid, webs_t wp, int argc, char **argv){
 }
 
 
-int ej_get_folder_tree(int eid, webs_t wp, int argc, char **argv){
+int ej_get_folder_tree(int eid, webs_t wp, int argc, char **argv) {
 	char *layer_order = websGetVar(wp, "layer_order", ""), folder_code[1024];
 	char *follow_info, *follow_info_end, backup;
 	int layer = 0, first;
@@ -5554,13 +5692,13 @@ int ej_get_folder_tree(int eid, webs_t wp, int argc, char **argv){
 	struct dirent *dp1, *dp2;
 	char dir1_Path[4096], dir2_Path[4096];
 
-	if (strlen(layer_order) <= 0){
+	if (strlen(layer_order) <= 0) {
 		printf("No input \"layer_order\"!\n");
 		return -1;
 	}
 
 	follow_info = index(layer_order, '_');
-	while (follow_info != NULL && *follow_info != 0){
+	while (follow_info != NULL && *follow_info != 0) {
 		++layer;
 
 		++follow_info;
@@ -5580,7 +5718,7 @@ int ej_get_folder_tree(int eid, webs_t wp, int argc, char **argv){
 			folder_order = atoi(follow_info);
 		*follow_info_end = backup;
 
-		if (layer == 3){
+		if (layer == 3) {
 			memset(folder_code, 0, 1024);
 			strcpy(folder_code, follow_info);
 		}
@@ -5590,15 +5728,15 @@ int ej_get_folder_tree(int eid, webs_t wp, int argc, char **argv){
 	follow_info = folder_code;
 
 	disks_info = read_disk_data();
-	if (disks_info == NULL){
+	if (disks_info == NULL) {
 		printf("Can't read the information of disks.\n");
 		return -1;
 	}
 
 	first = 1;
 	disk_count = 0;
-	for (follow_disk = disks_info; follow_disk != NULL; follow_disk = follow_disk->next, ++disk_count){
-		if (layer == 0){ // get disks.
+	for (follow_disk = disks_info; follow_disk != NULL; follow_disk = follow_disk->next, ++disk_count) {
+		if (layer == 0) { // get disks.
 			partition_count = 0;
 			for (follow_partition = follow_disk->partitions; follow_partition != NULL; follow_partition = follow_partition->next, ++partition_count)
 				;
@@ -5616,20 +5754,20 @@ int ej_get_folder_tree(int eid, webs_t wp, int argc, char **argv){
 			continue;
 
 		partition_count = 0;
-		for (follow_partition = follow_disk->partitions; follow_partition != NULL; follow_partition = follow_partition->next, ++partition_count){
+		for (follow_partition = follow_disk->partitions; follow_partition != NULL; follow_partition = follow_partition->next, ++partition_count) {
 			if (follow_partition->mount_point == NULL || strlen(follow_partition->mount_point) <= 0)
 				continue;
 
 			pool_mount_dir = rindex(follow_partition->mount_point, '/')+1;
 
-			if (layer == 1){ // get pools.
+			if (layer == 1) { // get pools.
 				dir2 = opendir(follow_partition->mount_point);
 				/* pool_mount_dir isn't file. */
 				if (dir2 == NULL)
 					continue;
 
 				folder_count2 = 0;
-				while ((dp2 = readdir(dir2)) != NULL){
+				while ((dp2 = readdir(dir2)) != NULL) {
 					if (dp2->d_name[0] == '.')
 						continue;
 
@@ -5652,7 +5790,7 @@ int ej_get_folder_tree(int eid, webs_t wp, int argc, char **argv){
 			memset(dir1_Path, 0, 4096);
 			sprintf(dir1_Path, "%s", follow_partition->mount_point);
 			dir1 = opendir(dir1_Path);
-			if (dir1 == NULL){
+			if (dir1 == NULL) {
 				printf("Can't open the directory, %s.\n", dir1_Path);
 
 				free_disk_data(&disks_info);
@@ -5661,20 +5799,20 @@ int ej_get_folder_tree(int eid, webs_t wp, int argc, char **argv){
 			}
 
 			folder_count1 = -1;
-			while ((dp1 = readdir(dir1)) != NULL){
+			while ((dp1 = readdir(dir1)) != NULL) {
 				if (dp1->d_name[0] == '.')
 					continue;
 
 				++folder_count1;
 
-				if (layer == 2){ // get L1's folders.
+				if (layer == 2) { // get L1's folders.
 					memset(dir2_Path, 0, 4096);
 					sprintf(dir2_Path, "%s/%s", dir1_Path, dp1->d_name);
 					dir2 = opendir(dir2_Path);
 
 					folder_count2 = 0;
-					if (dir2 != NULL){
-						while ((dp2 = readdir(dir2)) != NULL){
+					if (dir2 != NULL) {
+						while ((dp2 = readdir(dir2)) != NULL) {
 							if (dp2->d_name[0] == '.')
 								continue;
 
@@ -5701,7 +5839,7 @@ int ej_get_folder_tree(int eid, webs_t wp, int argc, char **argv){
 	free_disk_data(&disks_info);
 	layer -= 3;
 
-	while (layer >= 0){      // get Ln's folders.
+	while (layer >= 0) {      // get Ln's folders.
 		/* get the current folder_code and folder_order. */
 		follow_info_end = index(follow_info, '_');
 		if (follow_info_end != NULL)
@@ -5711,25 +5849,25 @@ int ej_get_folder_tree(int eid, webs_t wp, int argc, char **argv){
 		folder_order = atoi(follow_info);
 
 		dir1 = opendir(dir1_Path);
-		if (dir1 == NULL){
+		if (dir1 == NULL) {
 			printf("Can't open the directory, %s.\n", dir1_Path);
 
 			return -1;
 		}
 		folder_count1 = -1;
-		while ((dp1 = readdir(dir1)) != NULL){
+		while ((dp1 = readdir(dir1)) != NULL) {
 			if (dp1->d_name[0] == '.')
 				continue;
 
 			++folder_count1;
 
-			if (layer == 0){
+			if (layer == 0) {
 				memset(dir2_Path, 0, 4096);
 				sprintf(dir2_Path, "%s/%s", dir1_Path, dp1->d_name);
 				dir2 = opendir(dir2_Path);
 				folder_count2 = 0;
-				if (dir2 != NULL){
-					while ((dp2 = readdir(dir2)) != NULL){
+				if (dir2 != NULL) {
+					while ((dp2 = readdir(dir2)) != NULL) {
 						if (dp2->d_name[0] == '.')
 							continue;
 
@@ -5758,7 +5896,7 @@ int ej_get_folder_tree(int eid, webs_t wp, int argc, char **argv){
 	return 0;
 }
 
-int ej_get_share_tree(int eid, webs_t wp, int argc, char **argv){
+int ej_get_share_tree(int eid, webs_t wp, int argc, char **argv) {
 	char *layer_order = websGetVar(wp, "layer_order", "");
 	char *follow_info, *follow_info_end, backup;
 	int layer = 0, first;
@@ -5767,13 +5905,13 @@ int ej_get_share_tree(int eid, webs_t wp, int argc, char **argv){
 	disk_info_t *disks_info, *follow_disk;
 	partition_info_t *follow_partition;
 
-	if (strlen(layer_order) <= 0){
+	if (strlen(layer_order) <= 0) {
 		printf("No input \"layer_order\"!\n");
 		return -1;
 	}
 
 	follow_info = index(layer_order, '_');
-	while (follow_info != NULL && *follow_info != 0){
+	while (follow_info != NULL && *follow_info != 0) {
 		++layer;
 		++follow_info;
 		if (*follow_info == 0)
@@ -5788,7 +5926,7 @@ int ej_get_share_tree(int eid, webs_t wp, int argc, char **argv){
 			disk_order = atoi(follow_info);
 		else if (layer == 2)
 			partition_order = atoi(follow_info);
-		else{
+		else {
 			*follow_info_end = backup;
 			printf("Input \"%s\" is incorrect!\n", layer_order);
 			return -1;
@@ -5799,29 +5937,29 @@ int ej_get_share_tree(int eid, webs_t wp, int argc, char **argv){
 	}
 
 	disks_info = read_disk_data();
-	if (disks_info == NULL){
+	if (disks_info == NULL) {
 		printf("Can't read the information of disks.\n");
 		return -1;
 	}
 
 	first = 1;
 	disk_count = 0;
-	for (follow_disk = disks_info; follow_disk != NULL; follow_disk = follow_disk->next, ++disk_count){
+	for (follow_disk = disks_info; follow_disk != NULL; follow_disk = follow_disk->next, ++disk_count) {
 		partition_count = 0;
-		for (follow_partition = follow_disk->partitions; follow_partition != NULL; follow_partition = follow_partition->next, ++partition_count){
-			if (layer != 0 && follow_partition->mount_point != NULL && strlen(follow_partition->mount_point) > 0){
+		for (follow_partition = follow_disk->partitions; follow_partition != NULL; follow_partition = follow_partition->next, ++partition_count) {
+			if (layer != 0 && follow_partition->mount_point != NULL && strlen(follow_partition->mount_point) > 0) {
 				int i;
 				char **folder_list;
 				int result;
 				result = get_all_folder_in_mount_path(follow_partition->mount_point, &share_count, &folder_list);
-				if (result < 0){
+				if (result < 0) {
 					printf("get_disk_tree: Can't get the folder list in \"%s\".\n", follow_partition->mount_point);
 
 					share_count = 0;
 				}
 
-				if (layer == 2 && partition_count == partition_order){
-					for (i = 0; i < share_count; ++i){
+				if (layer == 2 && partition_count == partition_order && disk_count == disk_order) {
+					for (i = 0; i < share_count; ++i) {
 						if (first == 1)
 							first = 0;
 						else
@@ -5830,7 +5968,7 @@ int ej_get_share_tree(int eid, webs_t wp, int argc, char **argv){
 						websWrite(wp, "\"%s#%u#0\"", folder_list[i], i);
 					}
 				}
-				else if (layer == 1 && disk_count == disk_order){
+				else if (layer == 1 && disk_count == disk_order) {
 					if (first == 1)
 						first = 0;
 					else
@@ -5843,7 +5981,7 @@ int ej_get_share_tree(int eid, webs_t wp, int argc, char **argv){
 				free_2_dimension_list(&share_count, &folder_list);
 			}
 		}
-		if (layer == 0){
+		if (layer == 0) {
 			if (first == 1)
 				first = 0;
 			else
@@ -5861,7 +5999,7 @@ int ej_get_share_tree(int eid, webs_t wp, int argc, char **argv){
 	return 0;
 }
 
-int ej_start3g(int eid, webs_t wp, int argc, char **argv){
+int ej_start3g(int eid, webs_t wp, int argc, char **argv) {
 
 	printf("[httpd start 3g process\n]");	// tmp test
 
@@ -5869,7 +6007,7 @@ int ej_start3g(int eid, webs_t wp, int argc, char **argv){
 	return 0;
 }
 
-int ej_stop3g(int eid, webs_t wp, int argc, char **argv){
+int ej_stop3g(int eid, webs_t wp, int argc, char **argv) {
 
 	printf("[httpd stop 3g process\n]");	// tmp test
 
@@ -5902,7 +6040,7 @@ int ej_initial_folder_var_file(int eid, webs_t wp, int argc, char **argv)	// J++
 	return 0;
 }
 
-int ej_set_share_mode(int eid, webs_t wp, int argc, char **argv){
+int ej_set_share_mode(int eid, webs_t wp, int argc, char **argv) {
 	int samba_mode = atoi(nvram_safe_get("st_samba_mode"));
 	int ftp_mode = atoi(nvram_safe_get("st_ftp_mode"));
 	char *dummyShareway = websGetVar(wp, "dummyShareway", "");
@@ -5916,7 +6054,7 @@ int ej_set_share_mode(int eid, webs_t wp, int argc, char **argv){
 	else
 		nvram_set("dummyShareway", "0");
 
-	if (strlen(protocol) <= 0){
+	if (strlen(protocol) <= 0) {
 		show_error_msg("Input1");
 
 		websWrite(wp, "<script>\n");
@@ -5926,7 +6064,7 @@ int ej_set_share_mode(int eid, webs_t wp, int argc, char **argv){
 		clean_error_msg();
 		return -1;
 	}
-	if (strlen(mode) <= 0){
+	if (strlen(mode) <= 0) {
 		show_error_msg("Input3");
 
 		websWrite(wp, "<script>\n");
@@ -5936,20 +6074,20 @@ int ej_set_share_mode(int eid, webs_t wp, int argc, char **argv){
 		clean_error_msg();
 		return -1;
 	}
-	if (!strcmp(mode, "share")){
-		if (!strcmp(protocol, "cifs")){
+	if (!strcmp(mode, "share")) {
+		if (!strcmp(protocol, "cifs")) {
 			if (samba_mode == 1 || samba_mode == 3)
 				goto SET_SHARE_MODE_SUCCESS;
 
 			nvram_set("st_samba_mode", "1");	// for test
 		}
-		else if (!strcmp(protocol, "ftp")){
+		else if (!strcmp(protocol, "ftp")) {
 			if (ftp_mode == 1)
 				goto SET_SHARE_MODE_SUCCESS;
 
 			nvram_set("st_ftp_mode", "1");
 		}
-		else{
+		else {
 			show_error_msg("Input2");
 
 			websWrite(wp, "<script>\n");
@@ -5960,20 +6098,20 @@ int ej_set_share_mode(int eid, webs_t wp, int argc, char **argv){
 			return -1;
 		}
 	}
-	else if (!strcmp(mode, "account")){
-		if (!strcmp(protocol, "cifs")){
+	else if (!strcmp(mode, "account")) {
+		if (!strcmp(protocol, "cifs")) {
 			if (samba_mode == 2 || samba_mode == 4)
 				goto SET_SHARE_MODE_SUCCESS;
 
 			nvram_set("st_samba_mode", "4");
 		}
-		else if (!strcmp(protocol, "ftp")){
+		else if (!strcmp(protocol, "ftp")) {
 			if (ftp_mode == 2)
 				goto SET_SHARE_MODE_SUCCESS;
 
 			nvram_set("st_ftp_mode", "2");
 		}
-		else{
+		else {
 			show_error_msg("Input2");
 
 			websWrite(wp, "<script>\n");
@@ -5984,7 +6122,7 @@ int ej_set_share_mode(int eid, webs_t wp, int argc, char **argv){
 			return -1;
 		}
 	}
-	else{
+	else {
 		show_error_msg("Input4");
 
 		websWrite(wp, "<script>\n");
@@ -6006,7 +6144,7 @@ int ej_set_share_mode(int eid, webs_t wp, int argc, char **argv){
 	}
 	else if (!strcmp(protocol, "ftp"))
 		result = eval("/sbin/run_ftp");
-	else{
+	else {
 		show_error_msg("Input2");
 
 		websWrite(wp, "<script>\n");
@@ -6017,7 +6155,7 @@ int ej_set_share_mode(int eid, webs_t wp, int argc, char **argv){
 		return -1;
 	}
 
-	if (result != 0){
+	if (result != 0) {
 		show_error_msg("Action8");
 
 		websWrite(wp, "<script>\n");
@@ -6036,14 +6174,14 @@ SET_SHARE_MODE_SUCCESS:
 }
 
 
-int ej_modify_sharedfolder(int eid, webs_t wp, int argc, char **argv){
+int ej_modify_sharedfolder(int eid, webs_t wp, int argc, char **argv) {
 	char *pool = websGetVar(wp, "pool", "");
 	char *folder = websGetVar(wp, "folder", "");
 	char *new_folder = websGetVar(wp, "new_folder", "");
 	char *mount_path;
 
 	//printf("[httpd] mod share folder\n");	// tmp test
-	if (strlen(pool) <= 0){
+	if (strlen(pool) <= 0) {
 		show_error_msg("Input7");
 
 		websWrite(wp, "<script>\n");
@@ -6053,7 +6191,7 @@ int ej_modify_sharedfolder(int eid, webs_t wp, int argc, char **argv){
 		clean_error_msg();
 		return -1;
 	}
-	if (strlen(folder) <= 0){
+	if (strlen(folder) <= 0) {
 		show_error_msg("Input9");
 
 		websWrite(wp, "<script>\n");
@@ -6063,7 +6201,7 @@ int ej_modify_sharedfolder(int eid, webs_t wp, int argc, char **argv){
 		clean_error_msg();
 		return -1;
 	}
-	if (strlen(new_folder) <= 0){
+	if (strlen(new_folder) <= 0) {
 		show_error_msg("Input17");
 
 		websWrite(wp, "<script>\n");
@@ -6073,7 +6211,7 @@ int ej_modify_sharedfolder(int eid, webs_t wp, int argc, char **argv){
 		clean_error_msg();
 		return -1;
 	}
-	if (get_mount_path(pool, &mount_path) < 0){
+	if (get_mount_path(pool, &mount_path) < 0) {
 		show_error_msg("System1");
 
 		websWrite(wp, "<script>\n");
@@ -6084,7 +6222,7 @@ int ej_modify_sharedfolder(int eid, webs_t wp, int argc, char **argv){
 		return -1;
 	}
 
-	if (mod_folder(mount_path, folder, new_folder) < 0){
+	if (mod_folder(mount_path, folder, new_folder) < 0) {
 		show_error_msg("Action7");
 
 		websWrite(wp, "<script>\n");
@@ -6097,7 +6235,7 @@ int ej_modify_sharedfolder(int eid, webs_t wp, int argc, char **argv){
 	}
 	free(mount_path);
 
-	if (eval("/sbin/run_ftpsamba") != 0){
+	if (eval("/sbin/run_ftpsamba") != 0) {
 		show_error_msg("Action7");
 
 		websWrite(wp, "<script>\n");
@@ -6114,12 +6252,12 @@ int ej_modify_sharedfolder(int eid, webs_t wp, int argc, char **argv){
 	return 0;
 }
 
-int ej_delete_sharedfolder(int eid, webs_t wp, int argc, char **argv){
+int ej_delete_sharedfolder(int eid, webs_t wp, int argc, char **argv) {
 	char *pool = websGetVar(wp, "pool", "");
 	char *folder = websGetVar(wp, "folder", "");
 	char *mount_path;
 
-	if (strlen(pool) <= 0){
+	if (strlen(pool) <= 0) {
 		show_error_msg("Input7");
 
 		websWrite(wp, "<script>\n");
@@ -6129,7 +6267,7 @@ int ej_delete_sharedfolder(int eid, webs_t wp, int argc, char **argv){
 		clean_error_msg();
 		return -1;
 	}
-	if (strlen(folder) <= 0){
+	if (strlen(folder) <= 0) {
 		show_error_msg("Input9");
 
 		websWrite(wp, "<script>\n");
@@ -6140,7 +6278,7 @@ int ej_delete_sharedfolder(int eid, webs_t wp, int argc, char **argv){
 		return -1;
 	}
 
-	if (get_mount_path(pool, &mount_path) < 0){
+	if (get_mount_path(pool, &mount_path) < 0) {
 		show_error_msg("System1");
 
 		websWrite(wp, "<script>\n");
@@ -6150,7 +6288,7 @@ int ej_delete_sharedfolder(int eid, webs_t wp, int argc, char **argv){
 		clean_error_msg();
 		return -1;
 	}
-	if (del_folder(mount_path, folder) < 0){
+	if (del_folder(mount_path, folder) < 0) {
 		show_error_msg("Action6");
 
 		websWrite(wp, "<script>\n");
@@ -6163,7 +6301,7 @@ int ej_delete_sharedfolder(int eid, webs_t wp, int argc, char **argv){
 	}
 	free(mount_path);
 
-	if (eval("/sbin/run_ftpsamba") != 0){
+	if (eval("/sbin/run_ftpsamba") != 0) {
 		show_error_msg("Action6");
 
 		websWrite(wp, "<script>\n");
@@ -6181,13 +6319,13 @@ int ej_delete_sharedfolder(int eid, webs_t wp, int argc, char **argv){
 	return 0;
 }
 
-int ej_create_sharedfolder(int eid, webs_t wp, int argc, char **argv){
+int ej_create_sharedfolder(int eid, webs_t wp, int argc, char **argv) {
 	char *pool = websGetVar(wp, "pool", "");
 	char *folder = websGetVar(wp, "folder", "");
 	char *mount_path;
 
 	printf("[httpd] create share folder\n");	// tmp test
-	if (strlen(pool) <= 0){
+	if (strlen(pool) <= 0) {
 		show_error_msg("Input7");
 
 		websWrite(wp, "<script>\n");
@@ -6197,7 +6335,7 @@ int ej_create_sharedfolder(int eid, webs_t wp, int argc, char **argv){
 		clean_error_msg();
 		return -1;
 	}
-	if (strlen(folder) <= 0){
+	if (strlen(folder) <= 0) {
 		show_error_msg("Input9");
 
 		websWrite(wp, "<script>\n");
@@ -6208,7 +6346,7 @@ int ej_create_sharedfolder(int eid, webs_t wp, int argc, char **argv){
 		return -1;
 	}
 
-	if (get_mount_path(pool, &mount_path) < 0){
+	if (get_mount_path(pool, &mount_path) < 0) {
 		fprintf(stderr, "Can't get the mount_path of %s.\n", pool);
 
 		show_error_msg("System1");
@@ -6220,7 +6358,7 @@ int ej_create_sharedfolder(int eid, webs_t wp, int argc, char **argv){
 		clean_error_msg();
 		return -1;
 	}
-	if (add_folder(mount_path, folder) < 0){
+	if (add_folder(mount_path, folder) < 0) {
 		show_error_msg("Action5");
 
 		websWrite(wp, "<script>\n");
@@ -6234,7 +6372,7 @@ int ej_create_sharedfolder(int eid, webs_t wp, int argc, char **argv){
 	free(mount_path);
 
 	system("nvram set chk=1");	// tmp test
-	if (eval("/sbin/run_samba") != 0){
+	if (eval("/sbin/run_samba") != 0) {
 		show_error_msg("Action5");
 
 		websWrite(wp, "<script>\n");
@@ -6251,13 +6389,13 @@ int ej_create_sharedfolder(int eid, webs_t wp, int argc, char **argv){
 	return 0;
 }
 
-int ej_set_AiDisk_status(int eid, webs_t wp, int argc, char **argv){
+int ej_set_AiDisk_status(int eid, webs_t wp, int argc, char **argv) {
 	char *protocol = websGetVar(wp, "protocol", "");
 	char *flag = websGetVar(wp, "flag", "");
 	int result = 0;
 
 	printf("[httpd] set aidisk status\n");	// tmp test
-	if (strlen(protocol) <= 0){
+	if (strlen(protocol) <= 0) {
 		show_error_msg("Input1");
 
 		websWrite(wp, "<script>\n");
@@ -6267,7 +6405,7 @@ int ej_set_AiDisk_status(int eid, webs_t wp, int argc, char **argv){
 		clean_error_msg();
 		return -1;
 	}
-	if (strlen(flag) <= 0){
+	if (strlen(flag) <= 0) {
 		show_error_msg("Input18");
 
 		websWrite(wp, "<script>\n");
@@ -6277,13 +6415,13 @@ int ej_set_AiDisk_status(int eid, webs_t wp, int argc, char **argv){
 		clean_error_msg();
 		return -1;
 	}
-	if (!strcmp(protocol, "cifs")){
-		if (!strcmp(flag, "on")){
+	if (!strcmp(protocol, "cifs")) {
+		if (!strcmp(flag, "on")) {
 			nvram_set("enable_samba", "1");
 			nvram_commit_safe();
 			result = system("/sbin/run_samba");
 		}
-		else if (!strcmp(flag, "off")){
+		else if (!strcmp(flag, "off")) {
 			nvram_set("enable_samba", "0");
 			nvram_commit_safe();
 			if (!pids("smbd"))
@@ -6291,7 +6429,7 @@ int ej_set_AiDisk_status(int eid, webs_t wp, int argc, char **argv){
 
 			result = system("/sbin/stop_samba");
 		}
-		else{
+		else {
 			show_error_msg("Input19");
 
 			websWrite(wp, "<script>\n");
@@ -6302,13 +6440,13 @@ int ej_set_AiDisk_status(int eid, webs_t wp, int argc, char **argv){
 			return -1;
 		}
 	}
-	else if (!strcmp(protocol, "ftp")){
-		if (!strcmp(flag, "on")){
+	else if (!strcmp(protocol, "ftp")) {
+		if (!strcmp(flag, "on")) {
 			nvram_set("enable_ftp", "1");
 			nvram_commit_safe();
 			result = system("run_ftp");
 		}
-		else if (!strcmp(flag, "off")){
+		else if (!strcmp(flag, "off")) {
 			nvram_set("enable_ftp", "0");
 			nvram_commit_safe();
 			if (!pids("vsftpd"))
@@ -6316,7 +6454,7 @@ int ej_set_AiDisk_status(int eid, webs_t wp, int argc, char **argv){
 
 			result = system("/sbin/stop_ftp");
 		}
-		else{
+		else {
 			show_error_msg("Input19");
 
 			websWrite(wp, "<script>\n");
@@ -6327,7 +6465,7 @@ int ej_set_AiDisk_status(int eid, webs_t wp, int argc, char **argv){
 			return -1;
 		}
 	}
-	else{
+	else {
 		show_error_msg("Input2");
 
 		websWrite(wp, "<script>\n");
@@ -6338,7 +6476,7 @@ int ej_set_AiDisk_status(int eid, webs_t wp, int argc, char **argv){
 		return -1;
 	}
 
-	if (result != 0){
+	if (result != 0) {
 		show_error_msg("Action8");
 
 		websWrite(wp, "<script>\n");
@@ -6359,12 +6497,12 @@ SET_AIDISK_STATUS_SUCCESS:
 	return 0;
 }
 
-int ej_modify_account(int eid, webs_t wp, int argc, char **argv){
+int ej_modify_account(int eid, webs_t wp, int argc, char **argv) {
 	char *account = websGetVar(wp, "account", "");
 	char *new_account = websGetVar(wp, "new_account", "");
 	char *new_password = websGetVar(wp, "new_password", "");
 
-	if (strlen(account) <= 0){
+	if (strlen(account) <= 0) {
 		show_error_msg("Input5");
 
 		websWrite(wp, "<script>\n");
@@ -6374,7 +6512,7 @@ int ej_modify_account(int eid, webs_t wp, int argc, char **argv){
 		clean_error_msg();
 		return -1;
 	}
-	if (strlen(new_account) <= 0 && strlen(new_password) <= 0){
+	if (strlen(new_account) <= 0 && strlen(new_password) <= 0) {
 		show_error_msg("Input16");
 
 		websWrite(wp, "<script>\n");
@@ -6385,7 +6523,7 @@ int ej_modify_account(int eid, webs_t wp, int argc, char **argv){
 		return -1;
 	}
 
-	if (mod_account(account, new_account, new_password) < 0){
+	if (mod_account(account, new_account, new_password) < 0) {
 		show_error_msg("Action4");
 
 		websWrite(wp, "<script>\n");
@@ -6401,11 +6539,11 @@ int ej_modify_account(int eid, webs_t wp, int argc, char **argv){
 	return 0;
 }
 
-int ej_delete_account(int eid, webs_t wp, int argc, char **argv){
+int ej_delete_account(int eid, webs_t wp, int argc, char **argv) {
 	char *account = websGetVar(wp, "account", "");
 
 	printf("[httpd] delete account\n");	// tmp test
-	if (strlen(account) <= 0){
+	if (strlen(account) <= 0) {
 		show_error_msg("Input5");
 
 		websWrite(wp, "<script>\n");
@@ -6418,7 +6556,7 @@ int ej_delete_account(int eid, webs_t wp, int argc, char **argv){
 
 	not_ej_initial_folder_var_file();	// J++
 
-	if (del_account(account) < 0){
+	if (del_account(account) < 0) {
 		show_error_msg("Action3");
 
 		websWrite(wp, "<script>\n");
@@ -6435,7 +6573,7 @@ int ej_delete_account(int eid, webs_t wp, int argc, char **argv){
 	return 0;
 }
 
-int ej_initial_account(int eid, webs_t wp, int argc, char **argv){
+int ej_initial_account(int eid, webs_t wp, int argc, char **argv) {
 	disk_info_t *disks_info, *follow_disk;
 	partition_info_t *follow_partition;
 	char *command;
@@ -6446,7 +6584,7 @@ int ej_initial_account(int eid, webs_t wp, int argc, char **argv){
 	nvram_commit_safe();
 
 	disks_info = read_disk_data();
-	if (disks_info == NULL){
+	if (disks_info == NULL) {
 		show_error_msg("System2");
 
 		websWrite(wp, "<script>\n");
@@ -6459,10 +6597,10 @@ int ej_initial_account(int eid, webs_t wp, int argc, char **argv){
 
 	for (follow_disk = disks_info; follow_disk != NULL; follow_disk = follow_disk->next)
 		for (follow_partition = follow_disk->partitions; follow_partition != NULL; follow_partition = follow_partition->next)
-			if (follow_partition->mount_point != NULL && strlen(follow_partition->mount_point) > 0){
+			if (follow_partition->mount_point != NULL && strlen(follow_partition->mount_point) > 0) {
 				len = strlen("rm -f ")+strlen(follow_partition->mount_point)+strlen("/.__*");
 				command = (char *)malloc(sizeof(char)*(len+1));
-				if (command == NULL){
+				if (command == NULL) {
 					show_error_msg("System1");
 
 					websWrite(wp, "<script>\n");
@@ -6484,7 +6622,7 @@ int ej_initial_account(int eid, webs_t wp, int argc, char **argv){
 
 	free_disk_data(&disks_info);
 
-	if (eval("/sbin/run_ftpsamba") != 0){
+	if (eval("/sbin/run_ftpsamba") != 0) {
 		show_error_msg("System1");
 
 		websWrite(wp, "<script>\n");
@@ -6501,12 +6639,12 @@ int ej_initial_account(int eid, webs_t wp, int argc, char **argv){
 	return 0;
 }
 
-int ej_create_account(int eid, webs_t wp, int argc, char **argv){
+int ej_create_account(int eid, webs_t wp, int argc, char **argv) {
 	char *account = websGetVar(wp, "account", "");
 	char *password = websGetVar(wp, "password", "");
 
 	printf("[httpd] create account\n");	// tmp test
-	if (strlen(account) <= 0){
+	if (strlen(account) <= 0) {
 		show_error_msg("Input5");
 
 		websWrite(wp, "<script>\n");
@@ -6516,7 +6654,7 @@ int ej_create_account(int eid, webs_t wp, int argc, char **argv){
 		clean_error_msg();
 		return -1;
 	}
-	if (strlen(password) <= 0){
+	if (strlen(password) <= 0) {
 		show_error_msg("Input14");
 
 		websWrite(wp, "<script>\n");
@@ -6529,7 +6667,7 @@ int ej_create_account(int eid, webs_t wp, int argc, char **argv){
 
 	not_ej_initial_folder_var_file();	// J++
 
-	if (add_account(account, password) < 0){
+	if (add_account(account, password) < 0) {
 		show_error_msg("Action2");
 
 		websWrite(wp, "<script>\n");
@@ -6546,7 +6684,7 @@ int ej_create_account(int eid, webs_t wp, int argc, char **argv){
 	return 0;
 }
 
-int ej_set_account_permission(int eid, webs_t wp, int argc, char **argv){
+int ej_set_account_permission(int eid, webs_t wp, int argc, char **argv) {
 	char *mount_path;
 	char *account = websGetVar(wp, "account", "");
 	char *pool = websGetVar(wp, "pool", "");
@@ -6555,7 +6693,7 @@ int ej_set_account_permission(int eid, webs_t wp, int argc, char **argv){
 	char *permission = websGetVar(wp, "permission", "");
 	int right;
 
-	if (strlen(account) <= 0){
+	if (strlen(account) <= 0) {
 		show_error_msg("Input5");
 
 		websWrite(wp, "<script>\n");
@@ -6565,7 +6703,7 @@ int ej_set_account_permission(int eid, webs_t wp, int argc, char **argv){
 		clean_error_msg();
 		return -1;
 	}
-	if (test_if_exist_account(account) != 1){
+	if (test_if_exist_account(account) != 1) {
 		show_error_msg("Input6");
 
 		websWrite(wp, "<script>\n");
@@ -6576,7 +6714,7 @@ int ej_set_account_permission(int eid, webs_t wp, int argc, char **argv){
 		return -1;
 	}
 
-	if (strlen(pool) <= 0){
+	if (strlen(pool) <= 0) {
 		show_error_msg("Input7");
 
 		websWrite(wp, "<script>\n");
@@ -6586,7 +6724,7 @@ int ej_set_account_permission(int eid, webs_t wp, int argc, char **argv){
 		clean_error_msg();
 		return -1;
 	}
-	if (get_mount_path(pool, &mount_path) < 0){
+	if (get_mount_path(pool, &mount_path) < 0) {
 		fprintf(stderr, "Can't get the mount_path of %s.\n", pool);
 
 		show_error_msg("System1");
@@ -6599,7 +6737,7 @@ int ej_set_account_permission(int eid, webs_t wp, int argc, char **argv){
 		return -1;
 	}
 
-	if (strlen(folder) <= 0){
+	if (strlen(folder) <= 0) {
 		show_error_msg("Input9");
 
 		websWrite(wp, "<script>\n");
@@ -6610,7 +6748,7 @@ int ej_set_account_permission(int eid, webs_t wp, int argc, char **argv){
 		clean_error_msg();
 		return -1;
 	}
-	if (strlen(protocol) <= 0){
+	if (strlen(protocol) <= 0) {
 		show_error_msg("Input1");
 
 		websWrite(wp, "<script>\n");
@@ -6621,7 +6759,7 @@ int ej_set_account_permission(int eid, webs_t wp, int argc, char **argv){
 		clean_error_msg();
 		return -1;
 	}
-	if (strcmp(protocol, "cifs") && strcmp(protocol, "ftp") && strcmp(protocol, "dms")){
+	if (strcmp(protocol, "cifs") && strcmp(protocol, "ftp") && strcmp(protocol, "dms")) {
 		show_error_msg("Input2");
 
 		websWrite(wp, "<script>\n");
@@ -6633,7 +6771,7 @@ int ej_set_account_permission(int eid, webs_t wp, int argc, char **argv){
 		return -1;
 	}
 
-	if (strlen(permission) <= 0){
+	if (strlen(permission) <= 0) {
 		show_error_msg("Input12");
 
 		websWrite(wp, "<script>\n");
@@ -6645,7 +6783,7 @@ int ej_set_account_permission(int eid, webs_t wp, int argc, char **argv){
 		return -1;
 	}
 	right = atoi(permission);
-	if (right < 0 || right > 3){
+	if (right < 0 || right > 3) {
 		show_error_msg("Input13");
 
 		websWrite(wp, "<script>\n");
@@ -6657,7 +6795,7 @@ int ej_set_account_permission(int eid, webs_t wp, int argc, char **argv){
 		return -1;
 	}
 
-	if (set_permission(account, mount_path, folder, protocol, right) < 0){
+	if (set_permission(account, mount_path, folder, protocol, right) < 0) {
 		show_error_msg("Action1");
 
 		websWrite(wp, "<script>\n");
@@ -6677,7 +6815,7 @@ int ej_set_account_permission(int eid, webs_t wp, int argc, char **argv){
 }
 
 // 2010.09 James. {
-int start_mac_clone(int eid, webs_t wp, int argc, char **argv){
+int start_mac_clone(int eid, webs_t wp, int argc, char **argv) {
 	char *cmd[] = {"start_mac_clone", NULL};
 	int pid;
 
@@ -6686,7 +6824,7 @@ int start_mac_clone(int eid, webs_t wp, int argc, char **argv){
 	return 0;
 }
 
-int setting_lan(int eid, webs_t wp, int argc, char **argv){
+int setting_lan(int eid, webs_t wp, int argc, char **argv) {
 	char lan_ipaddr_t[16];
 	char lan_netmask_t[16];
 	unsigned int lan_ip_num;
@@ -6732,14 +6870,14 @@ dbg("http: get lan_subnet=%x!\n", lan_subnet);
 	wan_subnet = wan_ip_num&wan_mask_num;
 dbg("http: get wan_subnet=%x!\n", wan_subnet);
 	
-	if(strcmp(nvram_safe_get("wan_ready"), "1")
+	if (strcmp(nvram_safe_get("wan_ready"), "1")
 			|| lan_subnet != wan_subnet
-			){
+			) {
 		websWrite(wp, "0");
 		return 0;
 	}
 	
-	if(lan_subnet >= MAX_SUBNET)
+	if (lan_subnet >= MAX_SUBNET)
 		new_lan_ip_num = MIN_LAN_IP;
 	else
 		new_lan_ip_num = lan_ip_num+(~lan_mask_num)+1;

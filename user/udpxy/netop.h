@@ -1,6 +1,6 @@
 /* @(#) interface to network operations for udpxy
  *
- * Copyright 2008 Pavel V. Cherenkov
+ * Copyright 2008-2011 Pavel V. Cherenkov (pcherenkov@gmail.com) (pcherenkov@gmail.com)
  *
  *  This file is part of udpxy.
  *

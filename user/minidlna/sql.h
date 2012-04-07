@@ -3,10 +3,24 @@
  * Project : minidlna
  * Website : http://sourceforge.net/projects/minidlna/
  * Author  : Justin Maggard
- * Copyright (c) 2008-2009 Justin Maggard
- * This software is subject to the conditions detailed in the
- * LICENCE file provided in this distribution.
- * */
+ *
+ * MiniDLNA media server
+ * Copyright (C) 2008-2009  Justin Maggard
+ *
+ * This file is part of MiniDLNA.
+ *
+ * MiniDLNA is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2 as
+ * published by the Free Software Foundation.
+ *
+ * MiniDLNA is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with MiniDLNA. If not, see <http://www.gnu.org/licenses/>.
+ */
 #ifndef __SQL_H__
 #define __SQL_H__
 
@@ -20,5 +34,8 @@ sql_get_table(sqlite3 *db, const char *zSql, char ***pazResult, int *pnRow, int 
 
 int
 sql_get_int_field(sqlite3 *db, const char *fmt, ...);
+
+char *
+sql_get_text_field(void *dbh, const char *fmt, ...);
 
 #endif

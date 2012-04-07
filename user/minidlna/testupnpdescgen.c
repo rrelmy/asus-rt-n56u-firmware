@@ -1,10 +1,32 @@
-/* $Id: testupnpdescgen.c,v 1.7 2009/05/21 01:20:31 jmaggard Exp $ */
+/* $Id: testupnpdescgen.c,v 1.9 2011/02/17 23:17:24 jmaggard Exp $ */
 /* MiniUPnP project
  * http://miniupnp.free.fr/ or http://miniupnp.tuxfamily.org/
- * (c) 2006-2008 Thomas Bernard 
- * This software is subject to the conditions detailed
- * in the LICENCE file provided within the distribution */
-
+ *
+ * Copyright (c) 2006-2008, Thomas Bernard
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *     * Redistributions of source code must retain the above copyright
+ *       notice, this list of conditions and the following disclaimer.
+ *     * Redistributions in binary form must reproduce the above copyright
+ *       notice, this list of conditions and the following disclaimer in the
+ *       documentation and/or other materials provided with the distribution.
+ *     * The name of the author may not be used to endorse or promote products
+ *       derived from this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ */
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -15,9 +37,13 @@
 char uuidvalue[] = "uuid:12345678-0000-0000-0000-00000000abcd";
 char friendly_name[] = "localhost: system_type";
 char serialnumber[] = "12345678";
+char modelname[] = "MiniDLNA";
 char modelnumber[] = "1";
 char presentationurl[] = "http://192.168.0.1:8080/";
 unsigned int updateID = 0;
+#if PNPX
+char pnpx_hwid[] = "VEN_01F2&amp;DEV_0101&amp;REV_01 VEN_0033&amp;DEV_0001&amp;REV_01";
+#endif
 
 int getifaddr(const char * ifname, char * buf, int len)
 {

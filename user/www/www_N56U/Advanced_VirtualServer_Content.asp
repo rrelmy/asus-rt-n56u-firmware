@@ -467,6 +467,13 @@ function changeBgColor(obj, num){
 					<select name="KnownGames" id="KnownGames" class="input" onchange="change_wizard(this, 'KnownGames');"></select>
 				</td>
 			</tr>
+
+		  <tr>
+				<th colspan="3" align="right"><#IPConnection_VSList_ftpport#></th>
+				<td colspan="3">
+			  	<input type="text" maxlength="5" name="port_ftp" onblur="return validate_portrange(this, '')" class="input" size="4" value="<% nvram_get_x("IPConnection", "port_ftp"); %>">
+				</td>
+		  </tr>
       </table>			
 		<table width="100%" border="1" align="center" cellpadding="3" cellspacing="0" class="FormTable">
 		  <thead>

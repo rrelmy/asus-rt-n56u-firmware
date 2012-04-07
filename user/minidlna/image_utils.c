@@ -1,19 +1,19 @@
-/*  MiniDLNA media server
- *  Copyright (C) 2009  Justin Maggard
+/* MiniDLNA media server
+ * Copyright (C) 2009  Justin Maggard
  *
- *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
+ * This file is part of MiniDLNA.
  *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * MiniDLNA is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2 as
+ * published by the Free Software Foundation.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * MiniDLNA is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with MiniDLNA. If not, see <http://www.gnu.org/licenses/>.
  */
 
 /* These functions are mostly based on code from other projects.
@@ -475,7 +475,7 @@ image_new_from_jpeg(const char * path, int is_file, const char * buf, int size, 
 	if(cinfo.output_components == 3)
 	{
 		ofs = 0;
-		if((ptr = (unsigned char *)malloc(w * 3 * cinfo.rec_outbuf_height)) == NULL)
+		if((ptr = (unsigned char *)malloc(w * 3 * cinfo.rec_outbuf_height + 8)) == NULL)
 		{
 			DPRINTF(E_WARN, L_METADATA, "malloc failed\n");
 			return NULL;

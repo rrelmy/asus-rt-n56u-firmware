@@ -105,11 +105,12 @@ ipup_main(int argc, char **argv)
 		sprintf(buf + strlen(buf), "%s%s", strlen(buf) ? " " : "", getenv("DNS2"));
 	nvram_set(strcat_r(prefix, "dns", tmp), buf);
 
+/* Isn't it set by pppd + rp-pppoe plugin?
 	if (nvram_match("wan0_proto", "pppoe"))
 	{
 		if ((fd = socket(AF_INET, SOCK_RAW, IPPROTO_RAW)) < 0)
 		{
-        		/* Give a more helpful message for the common error case */
+        		/* Give a more helpful message for the common error case *//*
 			if (errno == EPERM)
 				perror("Cannot create raw socket");
 
@@ -123,11 +124,11 @@ ipup_main(int argc, char **argv)
 				perror("ioctl(SIOCGIFMTU)");
 			else
 			{	
-				fprintf(stderr, "current MTU: %d\n", ifr.ifr_mtu);
+				dbg("current MTU: %d\n", ifr.ifr_mtu);
 				if (	ifr.ifr_mtu != atoi(nvram_safe_get(strcat_r(prefix, "pppoe_mtu", tmp))) &&
 					atoi(nvram_safe_get(strcat_r(prefix, "pppoe_mtu", tmp))) <= 1492	)
 				{
-					fprintf(stderr, "change MTU manually...\n");
+					dbg("change MTU manually...\n");
 					doSystem("ifconfig ppp%d mtu %s", unit, nvram_safe_get(strcat_r(prefix, "pppoe_mtu", tmp)));
 				}
 			}	
@@ -135,6 +136,7 @@ ipup_main(int argc, char **argv)
 			close(fd);
 		}
 	}
+*/
 
 	wan_up(wan_ifname);
 

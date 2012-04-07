@@ -33,7 +33,7 @@ function onSubmitCtrl(o, s) {
 	<tbody>
 	<tr>
 		<td>
-			<input class="input" style="font-size:12pt;" type="text" maxlength="42" size="52" name="SystemCmd" onkeydown="onSubmitCtrl(this, ' Refresh ')" value="">
+			<input class="input" style="font-size:12pt;" type="text" maxlength="255" size="52" name="SystemCmd" onkeydown="onSubmitCtrl(this, ' Refresh ')" value="">
 			
 			<input class="button" onClick="onSubmitCtrl(this, ' Refresh ')" type="submit" value="<#CTL_refresh#>" name="action">
 		</td>

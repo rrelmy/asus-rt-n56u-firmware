@@ -218,7 +218,8 @@ typedef struct ws_info_t	{
 #define APPS_STATUS_BLOCKED             0x1000  // 12
 #define APPS_STATUS_SMBUSER             0x2000  // 13
 #define APPS_SLOW_DISK			0x4000	// 14
-
+#define APPS_STATUS_FS_FAT		0x8000	// 15
+#define APPS_STATUS_READONLY		0x10000	// 16
 
 // appended after wave server
 typedef struct storage_info_t

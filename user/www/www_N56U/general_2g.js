@@ -499,7 +499,7 @@ function validate_range(o, min, max) {
 		if (o.value.charAt(i)<'0' || o.value.charAt(i)>'9')
 		{
 			alert('<#JS_validrange#> ' + min + ' <#JS_validrange_to#> ' + max);
-			//o.value = max;
+			//o.value = "";
 			o.focus();
 			o.select();
 			return false;
@@ -507,7 +507,7 @@ function validate_range(o, min, max) {
 	}
 	if(o.value<min || o.value>max) {
 		alert('<#JS_validrange#> ' + min + ' <#JS_validrange_to#> ' + max);
-		//o.value = max;
+		o.value = "";
 		o.focus();
 		o.select();
 		return false;
@@ -2836,7 +2836,7 @@ function openLink(s)
 {if (document.form.ddns_server_x.value.indexOf("WWW.DYNDNS.ORG")!=-1)
 tourl = "https://www.dyndns.org/account/create.html"
 else if (document.form.ddns_server_x.value == 'WWW.ZONEEDIT.COM')
-tourl = "https://www.zoneedit.com/signup.html"
+tourl = "http://www.zoneedit.com/signUp.html"
 else if (document.form.ddns_server_x.value == 'WWW.ASUS.COM')
 tourl = "";
 else

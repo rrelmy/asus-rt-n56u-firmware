@@ -1,19 +1,19 @@
-/*  MiniDLNA media server
- *  Copyright (C) 2009  Justin Maggard
+/* MiniDLNA media server
+ * Copyright (C) 2009  Justin Maggard
  *
- *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
+ * This file is part of MiniDLNA.
  *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * MiniDLNA is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2 as
+ * published by the Free Software Foundation.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * MiniDLNA is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with MiniDLNA. If not, see <http://www.gnu.org/licenses/>.
  */
 #include "config.h"
 #ifdef TIVO_SUPPORT
@@ -46,7 +46,7 @@ SendRootContainer(struct upnphttp * h)
 			  "<Title>%s</Title>"
 			 "</Details>"
 			 "<ItemStart>0</ItemStart>"
-			 "<ItemCount>2</ItemCount>"
+			 "<ItemCount>3</ItemCount>"
 			 "<Item>"
 			  "<Details>"
 			   "<ContentType>x-container/tivo-photos</ContentType>"
@@ -146,6 +146,7 @@ int callback(void *args, int argc, char **argv, char **azColName)
 			{
 				struct tm tm;
 				memset(&tm, 0, sizeof(tm));
+				tm.tm_isdst = -1; // Have libc figure out if DST is in effect or not
 				strptime(date, "%Y-%m-%dT%H:%M:%S", &tm);
 				ret = sprintf(str_buf, "<CaptureDate>0x%X</CaptureDate>", (unsigned int)mktime(&tm));
 				memcpy(passed_args->resp+passed_args->size, &str_buf, ret+1);
@@ -186,6 +187,7 @@ int callback(void *args, int argc, char **argv, char **azColName)
 			{
 				struct tm tm;
 				memset(&tm, 0, sizeof(tm));
+				tm.tm_isdst = -1; // Have libc figure out if DST is in effect or not
 				strptime(date, "%Y-%m-%dT%H:%M:%S", &tm);
 				ret = sprintf(str_buf, "<CaptureDate>0x%X</CaptureDate>", (unsigned int)mktime(&tm));
 				memcpy(passed_args->resp+passed_args->size, &str_buf, ret+1);
@@ -347,10 +349,11 @@ SendContainer(struct upnphttp * h, const char * objectID, int itemStart, int ite
 	char *sql, *item, *saveptr;
 	char *zErrMsg = NULL;
 	char **result;
-	char *title;
+	char *title = NULL;
 	char what[10], order[64]={0}, order2[64]={0}, myfilter[256]={0};
 	char str_buf[1024];
 	char *which;
+	char type[8];
 	char groupBy[19] = {0};
 	struct Response args;
 	int totalMatches = 0;
@@ -369,6 +372,22 @@ SendContainer(struct upnphttp * h, const char * objectID, int itemStart, int ite
 		if( itemCount == -100 )
 			itemCount = 1;
 		args.requested = itemCount * -1;
+	}
+
+	switch( *objectID )
+	{
+		case '1':
+			strcpy(type, "music");
+			break;
+		case '2':
+			strcpy(type, "videos");
+			break;
+		case '3':
+			strcpy(type, "photos");
+			break;
+		default:
+			strcpy(type, "server");
+			break;
 	}
 
 	if( strlen(objectID) == 1 )
@@ -393,7 +412,11 @@ SendContainer(struct upnphttp * h, const char * objectID, int itemStart, int ite
 	{
 		sql = sqlite3_mprintf("SELECT NAME from OBJECTS where OBJECT_ID = '%s'", objectID);
 		if( (sql_get_table(db, sql, &result, &ret, NULL) == SQLITE_OK) && ret )
-			title = strdup(result[1]);
+		{
+			title = escape_tag(result[1]);
+			if( !title )
+				title = strdup(result[1]);
+		}
 		else
 			title = strdup("UNKNOWN");
 		sqlite3_free(sql);
@@ -589,6 +612,10 @@ SendContainer(struct upnphttp * h, const char * objectID, int itemStart, int ite
 	                            " where %s and (%s)",
 	                            which, myfilter);
 	totalMatches = (ret > 0) ? ret : 0;
+	if( itemCount < 0 && !args.start )
+	{
+		args.start = totalMatches + itemCount;
+	}
 
 	sql = sqlite3_mprintf("SELECT o.OBJECT_ID, o.CLASS, o.DETAIL_ID, d.SIZE, d.TITLE,"
 	                      " d.DURATION, d.BITRATE, d.SAMPLERATE, d.ARTIST, d.ALBUM,"
@@ -617,8 +644,7 @@ SendContainer(struct upnphttp * h, const char * objectID, int itemStart, int ite
 	                         "</Details>"
 	                         "<ItemStart>%d</ItemStart>"
 	                         "<ItemCount>%d</ItemCount>",
-	                         (objectID[0]=='1' ? "music":"photos"),
-	                         totalMatches, title, args.start, args.returned);
+	                         type, totalMatches, title, args.start, args.returned);
 	args.resp = resp+1024-ret;
 	memcpy(args.resp, &str_buf, ret);
 	ret = sprintf(str_buf, "</TiVoContainer>");
@@ -705,9 +731,11 @@ ProcessTiVoCommand(struct upnphttp * h, const char * orig_path)
 			if( val )
 				detailItem = strtoll(basename(val), NULL, 10);
 		}
-		else if( strcasecmp(key, "Format") == 0 )
+		else if( strcasecmp(key, "Format") == 0 || // Only send XML
+		         strcasecmp(key, "SerialNum") == 0 || // Unused for now
+		         strcasecmp(key, "DoGenres") == 0 ) // Not sure what this is, so ignore it
 		{
-			// Only send XML
+			;;
 		}
 		else
 		{
@@ -719,7 +747,6 @@ ProcessTiVoCommand(struct upnphttp * h, const char * orig_path)
 	{
 		strip_ext(anchorItem);
 	}
-	free(path);
 
 	if( command )
 	{
@@ -742,9 +769,11 @@ ProcessTiVoCommand(struct upnphttp * h, const char * orig_path)
 		{
 			DPRINTF(E_DEBUG, L_GENERAL, "Unhandled command [%s]\n", command);
 			Send501(h);
+			free(path);
 			return;
 		}
 	}
+	free(path);
 	CloseSocket_upnphttp(h);
 }
 #endif // TIVO_SUPPORT

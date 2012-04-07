@@ -396,7 +396,7 @@ establish_session(l2tp_session *ses)
 	    /* Handle readability on slave end */
 	    sl->event = Event_AddHandler(es, m_pty, EVENT_FLAG_READABLE,
 			 readable, ses);
-	} 
+	} else
 	    sl->event = NULL;
 
 	ses->private = sl;

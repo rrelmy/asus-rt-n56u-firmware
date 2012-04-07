@@ -40,7 +40,7 @@ function validForm(){
 	}
 	
 	if($("account").value == "root" || $("account").value == "admin" || $("account").value == "family" || $("account").value == "Family"){
-		alert("User's account can not be 'root', 'admin', 'family' or 'Family'! Please enter a valid account.");
+		alert("<#USB_Application_account_alert#>");
 		$("account").focus();
 		return false;
 	}

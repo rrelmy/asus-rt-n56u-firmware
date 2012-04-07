@@ -1,6 +1,6 @@
 /* @(#) client/server context data structures and interfaces
  *
- * Copyright 2008 Pavel V. Cherenkov (pcherenkov@gmail.com)
+ * Copyright 2008-2011 Pavel V. Cherenkov (pcherenkov@gmail.com) (pcherenkov@gmail.com)
  *
  *  This file is part of udpxy.
  *

@@ -93,7 +93,7 @@ DEBUG_FALSE =
 DEBUG_TRUE = #
 DEFS = -DHAVE_CONFIG_H
 DEPDIR = .deps
-DOCBOOK_TO_MAN = docbook2man
+DOCBOOK_TO_MAN = 
 DOXYGEN = doxygen
 ECHO = echo
 ECHO_C = 
@@ -115,8 +115,8 @@ FLaC__HAS_AS_FALSE =
 FLaC__HAS_AS_TRUE = #
 FLaC__HAS_AS__TEMPORARILY_DISABLED_FALSE = 
 FLaC__HAS_AS__TEMPORARILY_DISABLED_TRUE = #
-FLaC__HAS_DOCBOOK_TO_MAN_FALSE = #
-FLaC__HAS_DOCBOOK_TO_MAN_TRUE = 
+FLaC__HAS_DOCBOOK_TO_MAN_FALSE = 
+FLaC__HAS_DOCBOOK_TO_MAN_TRUE = #
 FLaC__HAS_DOXYGEN_FALSE = #
 FLaC__HAS_DOXYGEN_TRUE = 
 FLaC__HAS_GAS_FALSE = #
@@ -234,7 +234,8 @@ target_alias =
 
 AUTOMAKE_OPTIONS = foreign 1.7
 
-SUBDIRS = doc include m4 man src examples test build obj
+#SUBDIRS = doc include m4 man src examples test build obj
+SUBDIRS = include m4 man src examples test build obj
 
 DISTCLEANFILES = libtool-disable-static
 

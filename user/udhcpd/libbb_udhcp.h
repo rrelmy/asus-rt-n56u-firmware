@@ -31,7 +31,7 @@
 #endif
 
 #define COMBINED_BINARY
-#define VERSION "0.9.8-pre"
+#define VERSION "0.9.8-asus"
 
 #else /* ! BB_VER */
 

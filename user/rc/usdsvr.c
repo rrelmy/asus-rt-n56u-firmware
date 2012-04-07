@@ -25,6 +25,7 @@
 #include <arpa/inet.h>
 #include <netdb.h>
 #include <signal.h>
+#include <shutils.h>
 #include <nvram/bcmnvram.h>
 
 #define MAXSENDLEN 256
@@ -46,7 +47,7 @@ void sendInfo(char *buf, int len, int port)
 
 	if (setsockopt(sockfd_broadcast, SOL_SOCKET, SO_BINDTODEVICE, LAN_DEV, IFNAMSIZ) != 0)
 	{
-		fprintf(stderr, "setsockopt error: %s\n", LAN_DEV);
+		dbg("setsockopt error: %s\n", LAN_DEV);
 		perror("setsockopt set:");
 	}
 
@@ -54,7 +55,7 @@ void sendInfo(char *buf, int len, int port)
 
 	if (setsockopt(sockfd_broadcast, SOL_SOCKET, SO_BINDTODEVICE, "", IFNAMSIZ) != 0)
 	{
-		fprintf(stderr, "setsockopt error: %s\n", "");
+		dbg("setsockopt error: %s\n", "");
 		perror("setsockopt reset:");
 	}
 }

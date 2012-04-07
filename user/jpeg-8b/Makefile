@@ -23,7 +23,13 @@ configure:
 clean:
 	$(MAKE) -C source clean
 	rm -rf install
+	rm -f libjpeg.so.8.0.2
 	rm -f config_done
 
 romfs:
-	echo "do nothing"
+#	echo "do nothing"
+	cp install/lib/libjpeg.so.8.0.2 .
+	$(ROMFSINST) /lib/libjpeg.so.8.0.2
+	cd $(INSTALLDIR)/lib && ln -sf libjpeg.so.8.0.2 libjpeg.so.8
+	cd $(INSTALLDIR)/lib && ln -sf libjpeg.so.8.0.2 libjpeg.so
+

@@ -320,7 +320,7 @@ struct nvram_tuple router_defaults[] = {
 	{ "wl_mode", "ap", 0 },			/* AP mode (ap|sta|wds) */
 
 	/* WPA parameters */
-	{ "wl_crypto", "tkip", 0 },		/* WPA data encryption */
+	{ "wl_crypto", "aes", 0 },		/* WPA data encryption */
 	{ "wl_wpa_psk", "", 0 },		/* WPA pre-shared key */
 	{ "wl_wpa_gtk_rekey", "0", 0 },		/* GTK rotation interval */
 
@@ -348,7 +348,7 @@ struct nvram_tuple router_defaults[] = {
 
 	{ "wl_wme_apsd", "on", 0 },				/* WME APSD mode */
 #endif
-	{ "wl_txbf", "0", 0 },					/* TxBF */
+	{ "wl_txbf", "1", 0 },					/* TxBF */
 
 	/* Wireless parameters  for RT3092 */
 	{ "rt_TxPower", "100", 0 },
@@ -404,7 +404,7 @@ struct nvram_tuple router_defaults[] = {
 	{ "rt_IgmpSnEnable", "1", 0 },
 
 	{ "rt_auth_mode", "open", 0 },
-	{ "rt_crypto", "tkip", 0 },
+	{ "rt_crypto", "aes", 0 },
 	{ "rt_wpa_psk", "", 0 },
 	{ "rt_wpa_gtk_rekey", "0", 0 },
 	{ "rt_key", "1", 0 },

@@ -15,7 +15,13 @@ LANG_TR=Türkçe
 LANG_TH=ไทย
 LANG_MS=Malaysia
 [untranslate]
-LANHostConfig_x_TimeZone_itemhint_2=Router wykrył, że strefa czasowa NTP różni się od bieżących ustawień czasu routera. Czy chcesz użyć strefy czasowej NTP, jako strefy czasowej routera?
+IPConnection_VSList_ftpport=FTP Server Port:
+Adm_System_telnetd=Enable Telnet Server?
+wps_start_btn=Rozpocząć
+USB_Application_account_alert=Nazwą konta użytkownika nie może być ‘root’, ‘Root’, ‘ROOT’, ‘admin’, ‘Admin’, ‘ADMIN’, ‘family’, ‘Family’, ‘FAMILY’! Proszę wpisać poprawną nazwę konta.
+BasicConfig_USBStorageWhiteist_itemdesc=Zakres wartości dla tego pola wynosi od hex 1 do FFFF. Wpisz 0 (zero), aby wyłączyć tą funkcję.
+BasicConfig_USBStorageWhiteist_itemname=Lista uprawnionych urządzenia pamięci USB VID
+LANHostConfig_x_TimeZone_itemhint_2=Wybrane ustawienia strefy czasowej są inne niż wykryte przez urządzenie. Czy chcesz zmienić wykrytą strefę czasową?
 RouterConfig_GWMulticast_Multicast_all_itemdesc=Włącz tę funkcję, aby kontrolować ruch sieciowy i uniknąć burzy transmisyjnej, spowodowanej zwolnieniem sieci lub nieużyteczną siecią. Zakres dla tego pola wynosi 1 do 1024. Wprowadź 0 (zero), aby wyłączyć tę funkcję.
 RouterConfig_GWMulticast_unknownUni_itemname=Nieznana kontrola pojedynczej burzy transmisyjnej (Mbps):
 RouterConfig_GWMulticast_unknownMul_itemname=Nieznana kontrola wielokrotnej burzy transmisyjnej (Mbps):

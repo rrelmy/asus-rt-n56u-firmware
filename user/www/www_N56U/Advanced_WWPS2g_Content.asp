@@ -92,7 +92,7 @@ function applyRule(){
 	showLoading();
 	stopFlag = 1;
 	
-	document.form.current_page.value = "/Advanced_WWPS_Content.asp";
+	document.form.current_page.value = "/Advanced_WWPS2g_Content.asp";
 	document.form.next_page.value = "";
 	
 	document.form.submit();
@@ -264,11 +264,13 @@ function show_wsc_status(wps_infos){
 		$("switchWPSbtn5").style.display = "none";
 		$("switchWPSbtn2").style.display = "none";
 		$("Reset_OOB").style.display = "";
+		$("wps_connect_tr").style.display = "";
 	}
 	else{
 		$("Reset_OOB").style.display = "none";
 		$("wps_enable_word").innerHTML = "<#btn_Disabled#>"
 		$("enableWPSbtn").value = "<#btn_Enable#>";
+		$("wps_connect_tr").style.display = "none";
 		if(document.form.wps_band.value == 0){
 			$("wps_band_word").innerHTML = "5GHz";
 			$("switchWPSbtn2").style.display = "";
@@ -335,9 +337,6 @@ function show_wsc_status(wps_infos){
 			$("wps_config_td").innerHTML = "No";
 	else
 			$("wps_config_td").innerHTML = "Yes";
-
-	if(wps_infos[0].firstChild.nodeValue == "Idle")
-		$("wps_connect_hint").style.display = "";
 }
 </script>
 </head>
@@ -360,7 +359,7 @@ function show_wsc_status(wps_infos){
 		<td valign="top">
 	<div id="tabMenu" class="submenuBlock"></div><br />
 		<!--===================================Beginning of Main Content===========================================-->
-<input type="hidden" name="current_page" value="/Advanced_WWPS_Content.asp">
+<input type="hidden" name="current_page" value="/Advanced_WWPS2g_Content.asp">
 <input type="hidden" name="next_page" value="">
 <input type="hidden" name="next_host" value="">
 <input type="hidden" name="sid_list" value="">
@@ -437,7 +436,7 @@ function show_wsc_status(wps_infos){
 			  	<span id="devicePIN_name"><a class="hintstyle" href="javascript:void(0);" onclick="openHint(13,4);"><#WLANConfig11b_x_DevicePIN_itemname#></a></span>			  
 			  </th>
 			  <td>
-			  	<input type="text" name="devicePIN" id="devicePIN" value="" onmouseover="this.select();" class="devicepin" readonly="1" style="float:left;"></input>
+			  	<input type="text" name="devicePIN" id="devicePIN" value="" onclick="this.select();" class="devicepin" readonly="1" style="float:left;"></input>
 			  </td>
 			</tr>
 			
@@ -452,13 +451,12 @@ function show_wsc_status(wps_infos){
 				</td>
 			</tr>
 			
-			<tr>
+  		<tr id="wps_connect_tr" style="display:none">
 				<td colspan="2" align="right">								
 					<table>
 						<tr>
 						<td>
-							<span id="wps_connect_hint" style="color:#ff0000;display:none;"><#WPS_PBCbutton_hint_timeout#>
-							<input class="sbtn" type="button" onClick="configCommand();" id="addEnrolleebtn" name="addEnrolleebtn"  value="<#CTL_Add_enrollee#>"></td>
+							<input class="sbtn" type="button" onClick="configCommand();" id="addEnrolleebtn" name="addEnrolleebtn"  value="<#wps_start_btn#>"></td>
 						</tr>
 					</table>
 				</td>					

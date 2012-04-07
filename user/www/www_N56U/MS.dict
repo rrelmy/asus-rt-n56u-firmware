@@ -15,7 +15,13 @@ LANG_TR=Türkçe
 LANG_TH=ไทย
 LANG_MS=Malaysia
 [untranslate]
-LANHostConfig_x_TimeZone_itemhint_2=Penghala mengesan bahawa zon masa NTP adalah berbeza daripada seting masa semasa penghala anda. Adakah anda mahu menggunakan zon masa NTP sebagai zon masa penghala anda?RouterConfig_GWMulticast_Multicast_all_itemdesc=Dayakan ciri ini untuk mengawal trafik rangkaian dan elakkan ribut siaran, yang akan menyebabkan rangkaian menjadi lambat atau tidak boleh digunakan. Julat untuk medan ini adalah 1 hingga 1024.  Masukkan 0 (sifar) untuk menyahdayakan ciri ini.
+IPConnection_VSList_ftpport=FTP Server Port:
+Adm_System_telnetd=Enable Telnet Server?
+wps_start_btn=Mulai
+USB_Application_account_alert=Akaun penguna tidak boleh dimasukkan sebagai ‘root’, ‘Root’, ‘ROOT’, ‘admin’, ‘Admin’, ‘ADMIN’, ‘family’, ‘Family’, ‘FAMILY’ ! Sila masukkan akaun yang sah
+BasicConfig_USBStorageWhiteist_itemdesc=Julat untuk medan ini adalah hex 1 hingga FFFF. Masukkan 0 (kosong) untuk menyahdayakan ciri ini.
+BasicConfig_USBStorageWhiteist_itemname=Senarai putih VID Peranti Simpanan USB
+LANHostConfig_x_TimeZone_itemhint_2=Tetapan zon masa yang dipilih berbeza dengan apa yang telah dikesan oleh peranti ini. Adakah anda hendak menukar ke zon masa yang telah di kesan?
 RouterConfig_GWMulticast_unknownUni_itemname=Kawalan ribut siaran tunggal(Mbps) tidak diketahui:
 RouterConfig_GWMulticast_unknownMul_itemname=Kawalan ribut berbilang siaran(Mbps) tidak diketahui:
 RouterConfig_GWMulticast_Multicast_itemname=Kawalan ribut berbilang siaran(Mbps):

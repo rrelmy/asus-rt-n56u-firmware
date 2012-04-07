@@ -867,6 +867,7 @@ int main(int argc, char *argv[]) {
     }
 
     /* start up the web server */
+
     ws_config.web_root=config.web_root;
     ws_config.port=config.port;
 

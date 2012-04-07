@@ -71,6 +71,8 @@
 #define ASUS_NVRAM
 #include <nvram/bcmnvram.h>
 
+#define atoi(str) simple_strtoul(((str != NULL) ? str : ""), NULL, 0)
+
 #ifdef CONFIG_USB_STORAGE_USBAT
 #include "shuttle_usbat.h"
 #endif
@@ -1001,7 +1003,9 @@ static int storage_probe(struct usb_interface *intf,
 	if (us->pusb_dev->actconfig->desc.bNumInterfaces > 1)	// patch for U2EC
 	{
 		if (	(us->pusb_dev->descriptor.idVendor != 0x0bc2) &&	// Seagate VID
-			(us->pusb_dev->descriptor.idVendor != 0x1058) )		// WD VID
+			(us->pusb_dev->descriptor.idVendor != 0x1058) &&	// WD VID
+			(us->pusb_dev->descriptor.idVendor != 0x059f) &&	// LaCie VID
+			(us->pusb_dev->descriptor.idVendor != atoi(nvram_get("usb_vid_allow")))	)
 		{
 			printk("We only support single-interface storage device!\n");
 			result = -ENOMEM;

@@ -38,17 +38,17 @@ PRE_UNINSTALL = :
 POST_UNINSTALL = :
 build_triplet = i686-pc-linux-gnu
 host_triplet = mipsel-unknown-linux-gnu
-am__append_1 = $(HTML_APIDOC_DIR).uploaded
-am__append_2 = $(HTML_APIDOC_DIR).stamp
-am__append_3 = $(HTML_APIDOC_DIR).tar.gz
-#am__append_4 = $(HTML_APIDOC_INTERNALS_DIR).uploaded
-#am__append_5 = $(HTML_APIDOC_INTERNALS_DIR).stamp
-#am__append_6 = $(HTML_APIDOC_INTERNALS_DIR).tar.gz
-#am__append_7 = install-apidocs-internals
-#am__append_8 = uninstall-apidocs-internals
-am__append_9 = install-apidocs
-am__append_10 = uninstall-apidocs
-am__append_11 = clean-apidocs
+#am__append_1 = $(HTML_APIDOC_DIR).uploaded
+#am__append_2 = $(HTML_APIDOC_DIR).stamp
+#am__append_3 = $(HTML_APIDOC_DIR).tar.gz
+##am__append_4 = $(HTML_APIDOC_INTERNALS_DIR).uploaded
+##am__append_5 = $(HTML_APIDOC_INTERNALS_DIR).stamp
+##am__append_6 = $(HTML_APIDOC_INTERNALS_DIR).tar.gz
+##am__append_7 = install-apidocs-internals
+##am__append_8 = uninstall-apidocs-internals
+#am__append_9 = install-apidocs
+#am__append_10 = uninstall-apidocs
+#am__append_11 = clean-apidocs
 subdir = doc
 DIST_COMMON = $(srcdir)/Doxyfile-internals.in $(srcdir)/Doxyfile.in \
 	$(srcdir)/Makefile.am $(srcdir)/Makefile.in
@@ -479,44 +479,44 @@ uninstall-am: uninstall-docDATA uninstall-local
 #        Depending on libexif.la works at least.
 $(top_builddir)/libexif/libexif.la:
 	cd $(top_builddir)/libexif && $(MAKE) libexif.la
-$(HTML_APIDOC_DIR).stamp: Doxyfile $(top_builddir)/libexif/libexif.la
-	$(DOXYGEN) $<
-	echo > $@
-$(HTML_APIDOC_DIR).tar.gz: $(HTML_APIDOC_DIR).stamp
-	(cd $(DOXYGEN_OUTPUT_DIR) && $(AMTAR) chof - $(HTML_APIDOC_DIR) | GZIP=--best gzip -c) > $@
-#$(HTML_APIDOC_INTERNALS_DIR).stamp: Doxyfile-internals $(top_builddir)/libexif/libexif.la
+#$(HTML_APIDOC_DIR).stamp: Doxyfile $(top_builddir)/libexif/libexif.la
 #	$(DOXYGEN) $<
 #	echo > $@
-#$(HTML_APIDOC_INTERNALS_DIR).tar.gz: $(HTML_APIDOC_INTERNALS_DIR).stamp
-#	(cd $(DOXYGEN_OUTPUT_DIR) && $(AMTAR) chof - $(HTML_APIDOC_INTERNALS_DIR) | GZIP=--best gzip -c) > $@
-#install-apidocs-internals: $(HTML_APIDOC_INTERNALS_DIR).stamp
+#$(HTML_APIDOC_DIR).tar.gz: $(HTML_APIDOC_DIR).stamp
+#	(cd $(DOXYGEN_OUTPUT_DIR) && $(AMTAR) chof - $(HTML_APIDOC_DIR) | GZIP=--best gzip -c) > $@
+##$(HTML_APIDOC_INTERNALS_DIR).stamp: Doxyfile-internals $(top_builddir)/libexif/libexif.la
+##	$(DOXYGEN) $<
+##	echo > $@
+##$(HTML_APIDOC_INTERNALS_DIR).tar.gz: $(HTML_APIDOC_INTERNALS_DIR).stamp
+##	(cd $(DOXYGEN_OUTPUT_DIR) && $(AMTAR) chof - $(HTML_APIDOC_INTERNALS_DIR) | GZIP=--best gzip -c) > $@
+##install-apidocs-internals: $(HTML_APIDOC_INTERNALS_DIR).stamp
+##	mkdir -p "$(DESTDIR)$(docdir)"
+##	find "$(DOXYGEN_OUTPUT_DIR)/$(HTML_APIDOC_INTERNALS_DIR)" \
+##		\( -type d -exec chmod 0755 {} \; \) -or \
+##		\( -type f -exec chmod 0644 {} \; \)
+##	(unset CDPATH; cd "$(DOXYGEN_OUTPUT_DIR)" && tar cpf - "$(HTML_APIDOC_INTERNALS_DIR)") \
+##		| (cd "$(DESTDIR)$(docdir)" && tar xpf -)
+##uninstall-apidocs-internals:
+##	rm -rf "$(DESTDIR)$(docdir)/$(HTML_APIDOC_INTERNALS_DIR)"
+#install-apidocs: $(HTML_APIDOC_DIR).stamp
 #	mkdir -p "$(DESTDIR)$(docdir)"
-#	find "$(DOXYGEN_OUTPUT_DIR)/$(HTML_APIDOC_INTERNALS_DIR)" \
+#	find "$(DOXYGEN_OUTPUT_DIR)/$(HTML_APIDOC_DIR)" \
 #		\( -type d -exec chmod 0755 {} \; \) -or \
 #		\( -type f -exec chmod 0644 {} \; \)
-#	(unset CDPATH; cd "$(DOXYGEN_OUTPUT_DIR)" && tar cpf - "$(HTML_APIDOC_INTERNALS_DIR)") \
+#	(unset CDPATH; cd "$(DOXYGEN_OUTPUT_DIR)" && tar cpf - "$(HTML_APIDOC_DIR)") \
 #		| (cd "$(DESTDIR)$(docdir)" && tar xpf -)
-#uninstall-apidocs-internals:
-#	rm -rf "$(DESTDIR)$(docdir)/$(HTML_APIDOC_INTERNALS_DIR)"
-install-apidocs: $(HTML_APIDOC_DIR).stamp
-	mkdir -p "$(DESTDIR)$(docdir)"
-	find "$(DOXYGEN_OUTPUT_DIR)/$(HTML_APIDOC_DIR)" \
-		\( -type d -exec chmod 0755 {} \; \) -or \
-		\( -type f -exec chmod 0644 {} \; \)
-	(unset CDPATH; cd "$(DOXYGEN_OUTPUT_DIR)" && tar cpf - "$(HTML_APIDOC_DIR)") \
-		| (cd "$(DESTDIR)$(docdir)" && tar xpf -)
-uninstall-apidocs:
-	rm -rf "$(DESTDIR)$(docdir)/$(HTML_APIDOC_DIR)"
-clean-apidocs:
-	rm -rf $(DOXYGEN_OUTPUT_DIR)
-	rm -f $(HTML_APIDOC_DIR).tar.gz $(HTML_APIDOC_INTERNALS_DIR).tar.gz
+#uninstall-apidocs:
+#	rm -rf "$(DESTDIR)$(docdir)/$(HTML_APIDOC_DIR)"
+#clean-apidocs:
+#	rm -rf $(DOXYGEN_OUTPUT_DIR)
+#	rm -f $(HTML_APIDOC_DIR).tar.gz $(HTML_APIDOC_INTERNALS_DIR).tar.gz
 
-$(DOXYGEN_UPLOAD): $(DOXYGEN_STAMPS)
-	find $(DOXYGEN_OUTPUT_DIR) \( -type d -exec chmod a+rx,go-w,g+s {} \; \) \
-		-or \( -type f -exec chmod a+r {} \; \)
-	rsync -avz --progress $(DOXYGEN_OUTPUT_DIR)/$(HTML_APIDOC_DIR)/ sf:/home/users/h/hu/hun/libexif/htdocs/api/
-#	rsync -avz --progress $(DOXYGEN_OUTPUT_DIR)/$(HTML_APIDOC_INTERNALS_DIR)/ sf:/home/users/h/hu/hun/libexif/htdocs/internals/
-	ssh "sf" "find /home/groups/l/li/libexif/htdocs/internals /home/groups/l/li/libexif/htdocs/api \( -type d -exec chgrp libexif {} \; -exec chmod g+rwxs,a+rx {} \; \) -or \( -type f -exec chgrp libexif {} \; -exec chmod g+rw {} \; \( -name '*.html' -or -name '*.png' -or -name '*.php' -or -name '*.jpg' -or -name '*.css' -name '*.dot' -name '*.map' \) -exec chmod a+r {} \; \)"
+#$(DOXYGEN_UPLOAD): $(DOXYGEN_STAMPS)
+#	find $(DOXYGEN_OUTPUT_DIR) \( -type d -exec chmod a+rx,go-w,g+s {} \; \) \
+#		-or \( -type f -exec chmod a+r {} \; \)
+#	rsync -avz --progress $(DOXYGEN_OUTPUT_DIR)/$(HTML_APIDOC_DIR)/ sf:/home/users/h/hu/hun/libexif/htdocs/api/
+##	rsync -avz --progress $(DOXYGEN_OUTPUT_DIR)/$(HTML_APIDOC_INTERNALS_DIR)/ sf:/home/users/h/hu/hun/libexif/htdocs/internals/
+#	ssh "sf" "find /home/groups/l/li/libexif/htdocs/internals /home/groups/l/li/libexif/htdocs/api \( -type d -exec chgrp libexif {} \; -exec chmod g+rwxs,a+rx {} \; \) -or \( -type f -exec chgrp libexif {} \; -exec chmod g+rw {} \; \( -name '*.html' -or -name '*.png' -or -name '*.php' -or -name '*.jpg' -or -name '*.css' -name '*.dot' -name '*.map' \) -exec chmod a+r {} \; \)"
 
 all-local: $(DOXYGEN_STAMPS)
 

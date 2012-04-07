@@ -129,7 +129,7 @@ function done_validating(action){
 			  <a class="hintstyle" href="javascript:void(0);"  onClick="openHint(2,2);">
 			  <#WLANAuthentication11a_ExAuthDBPortNumber_itemname#></a></th>
 			  <td>
-			    <input type="text" maxlength="5" class="input" size="5" name="wl_radius_port" value="<% nvram_get_x("WLANAuthentication11a","wl_radius_port"); %>" onkeypress="return is_number(this)" /></td>
+			    <input type="text" maxlength="5" class="input" size="5" name="wl_radius_port" value="<% nvram_get_x("WLANAuthentication11a","wl_radius_port"); %>" onkeypress="return is_number(this)" onblur="return validate_portrange(this, '')"/></td>
 			  </tr>
 			<tr>
 				<th >

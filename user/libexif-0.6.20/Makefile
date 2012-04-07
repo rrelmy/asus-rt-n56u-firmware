@@ -18,13 +18,20 @@ configure:
 		--host=mipsel-linux \
 		--enable-static \
 		--disable-nls \
+		--disable-docs \
 		--prefix=$(LIBEXIF_HOME)/../install \
 	)
 
 clean:
 	$(MAKE) -C source clean
 	rm -rf install
+	rm -f libexif.so.12.3.2
 	rm -f config_done
 
 romfs:
-	echo "do nothing"
+#	echo "do nothing"
+	cp install/lib/libexif.so.12.3.2 .
+	$(ROMFSINST) /lib/libexif.so.12.3.2
+	cd $(INSTALLDIR)/lib && ln -sf libexif.so.12.3.2 libexif.so.12
+	cd $(INSTALLDIR)/lib && ln -sf libexif.so.12.3.2 libiconv.so
+

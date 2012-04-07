@@ -24,6 +24,7 @@ ROMFS_DIRS = \
 	etc_ro/Wireless/RT2860STA \
 	lib lib/modules lib/ipsec \
 	mnt \
+	opt \
 	proc \
 	sbin \
 	sys \
@@ -49,18 +50,19 @@ endif
 #	$(ROMFSINST) /etc_ro/rcS
 #	$(ROMFSINST) /etc_ro/inittab
 #	$(ROMFSINST) /etc_ro/motd
+	$(ROMFSINST) /etc_ro/protocols
 	$(ROMFSINST) /etc/fstab
 
 	$(ROMFSINST) -e CONFIG_RT2860V2_AP /etc_ro/wlan/RT3662_AP_2T2R_V0_0.bin
-	$(ROMFSINST) -e CONFIG_RT2860V2_AP /etc_ro/wlan/RT3883_AP_3T3R_V0_1.bin
+#	$(ROMFSINST) -e CONFIG_RT2860V2_AP /etc_ro/wlan/RT3883_AP_3T3R_V0_1.bin
 
 #	$(ROMFSINST) -e CONFIG_RALINK_RT3883_3T3R RT2860_default_novlan_3s /etc_ro/Wireless/RT2860AP/RT2860_default_novlan
 #	$(ROMFSINST) -e CONFIG_RALINK_RT3883_3T3R RT2860_default_vlan_3s /etc_ro/Wireless/RT2860AP/RT2860_default_vlan
 #	$(ROMFSINST) -e CONFIG_RALINK_RT3662_2T2R /etc_ro/Wireless/RT2860AP/RT2860_default_novlan
 #	$(ROMFSINST) -e CONFIG_RALINK_RT3662_2T2R /etc_ro/Wireless/RT2860AP/RT2860_default_vlan
 
-	$(ROMFSINST) -e CONFIG_RT3090_AP /etc_ro/Wireless/iNIC/RT2860AP.dat
-	$(ROMFSINST) -e CONFIG_RT3090_AP /etc_ro/Wireless/iNIC/RT2860AP.bin
+#	$(ROMFSINST) -e CONFIG_RT3090_AP /etc_ro/Wireless/iNIC/RT2860AP.dat
+#	$(ROMFSINST) -e CONFIG_RT3090_AP /etc_ro/Wireless/iNIC/RT2860AP.bin
 	$(ROMFSINST) -e CONFIG_RT3090_AP /etc_ro/Wireless/RT2860AP/RT3092_PCIe_LNA_2T2R_ALC_V1_2.bin
 
 #	$(ROMFSINST) -e CONFIG_RT3572_AP /etc_ro/Wireless/iNIC/RT2860AP.dat

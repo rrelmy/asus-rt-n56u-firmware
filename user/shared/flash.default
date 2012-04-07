@@ -251,6 +251,7 @@
 { "apps_dl_share", "0", 0 },
 { "apps_dl_seed", "24", 0 },
 { "apps_dms", "1", 0 },
+//{ "dms_comp_mode", "0", 0 },
 { "apps_caps", "0", 0 },
 { "apps_comp", "0", 0 },
 { "apps_pool", "harddisk/part0", 0 },
@@ -381,3 +382,6 @@
 #else
 {"telnetd", "1", 0 },
 #endif
+
+{"usb_vid_allow", "0", 0 },
+{"port_ftp", "21", 0 },

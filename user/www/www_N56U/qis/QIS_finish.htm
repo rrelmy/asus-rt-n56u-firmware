@@ -45,9 +45,9 @@ function QKfinish_load_body(){
 	
 	// Wireless Security
 	$("#ssid_2_item")[0].innerHTML = "2.4GHz - <#QIS_finish_wireless_item1#>";
-	$("#ssid_2")[0].innerHTML = decodeURIComponent(document.form.rt_ssid2.value);
+	$("#ssid_2")[0].innerHTML = decodeURIComponent(check_string_len(document.form.rt_ssid2.value));
 	$("#ssid_5_item")[0].innerHTML = "5GHz - <#QIS_finish_wireless_item1#>";
-	$("#ssid_5")[0].innerHTML = decodeURIComponent(document.form.wl_ssid2.value);
+	$("#ssid_5")[0].innerHTML = decodeURIComponent(check_string_len(document.form.wl_ssid2.value));
 	$("#security_item2")[0].innerHTML = "<#QIS_finish_wireless_item2#>";
 	$("#security_item5")[0].innerHTML = "<#QIS_finish_wireless_item2#>";
 	
@@ -62,8 +62,8 @@ function QKfinish_load_body(){
 		$("#security5")[0].innerHTML = "WPA-Auto-Personal - AES + TKIP";
 		$("#key2_item")[0].innerHTML = "<#QIS_finish_wireless_item3#>";
 		$("#key5_item")[0].innerHTML = "<#QIS_finish_wireless_item3#>";
-		$("#key2")[0].innerHTML = decodeURIComponent(document.form.rt_wpa_psk.value);
-		$("#key5")[0].innerHTML = decodeURIComponent(document.form.wl_wpa_psk.value);
+		$("#key2")[0].innerHTML = decodeURIComponent(check_string_len(document.form.rt_wpa_psk.value));
+		$("#key5")[0].innerHTML = decodeURIComponent(check_string_len(document.form.wl_wpa_psk.value));
 	}
 	else{
 		$("#title_item")[0].innerHTML = "<#QKSet_finish_desc#>";
@@ -115,6 +115,13 @@ function addBookmarkForBrowser(sTitle) {
 				alert("<#Browser_action_not_support_addfavorite#>");
 			}
    }
+}
+
+function check_string_len(str){
+	if(str.length > 33)
+		str = str.substring(0,30) + "...";
+ 	
+	return str;
 }
 </script>
 </head>

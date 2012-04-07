@@ -31,7 +31,7 @@ OBJS=auth.o debug.o dgram.o main.o md5.o network.o options.o peer.o session.o tu
 EXTRA_LIBS=libevent/*.o -ldl
 
 SRCS=$(OBJS:.o=.c)
-CFLAGS=-g -I.. -Ilibevent -Wall -Wstrict-prototypes -ansi -pedantic -D_GNU_SOURCE -DVERSION=\"$(VERSION)\" -DPREFIX=\"$(prefix)\"
+CFLAGS=-g -I.. -Ilibevent -lresolv -Wall -Wstrict-prototypes -ansi -pedantic -D_GNU_SOURCE -DVERSION=\"$(VERSION)\" -DPREFIX=\"$(prefix)\"
 
 TARGETS=l2tpd libl2tp.a handlers
 
@@ -60,7 +60,6 @@ libevent/libevent.a:
 #depend: .depend
 
 #.depend: $(SRCS)
-	#mipsel-uclibc-gcc -M $(CFLAGS) $^ > .depend
 #	$(CC) -M $(CFLAGS) $^ > .depend
 
 handlers:

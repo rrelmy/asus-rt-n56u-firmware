@@ -25,6 +25,7 @@
 #include <netinet/ip_icmp.h>
 #include <netdb.h>
 
+#include <shutils.h>
 #include <nvram/bcmnvram.h>
 
 #define	MAXPACKET	4096	/* max packet size */
@@ -58,7 +59,7 @@ void ping_keep_alive()
 	datalen = 64-8;
 
 	if (datalen > MAXPACKET) {
-		fprintf(stderr, "ping: packet size too largen");
+		dbg("ping: packet size too largen");
 		exit(1);
 	}
 	if (datalen >= sizeof(struct timeval))	/* can we time 'em? */
@@ -67,7 +68,7 @@ void ping_keep_alive()
 	ident = getpid() & 0xFFFF;
 /*
 	if ((proto = getprotobyname("icmp")) == NULL) {
-		fprintf(stderr, "icmp: unknown protocoln");
+		dbg("icmp: unknown protocoln");
 		exit(10);
 	}
 */

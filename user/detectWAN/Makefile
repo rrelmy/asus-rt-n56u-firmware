@@ -4,7 +4,7 @@ OBJS = detectWAN.o
 SHDIR = $(ROOTDIR)/user/shared
 USERDIR = $(ROOTDIR)/user
 
-CFLAGS  += -Wall -DASUS -DASUS_NVRAM -DBCMNVRAM -I. -I$(SHDIR)/include -I$(ROOTDIR)/linux-2.6.21.x/include 
+CFLAGS  += -Wall -DASUS_NVRAM -I. -I$(SHDIR)/include -I$(ROOTDIR)/linux-2.6.21.x/include 
 LDFLAGS += -L$(SHDIR) -lshared
 
 all: $(LIB) detectWan	

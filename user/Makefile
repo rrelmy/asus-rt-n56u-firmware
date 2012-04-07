@@ -51,7 +51,8 @@ dir_$(CONFIG_USER_ETHTOOL)		    += ethtool
 dir_$(CONFIG_USER_GDBSERVER_GDBREPLAY)      += gdbserver
 dir_$(CONFIG_USER_GDBSERVER_GDBSERVER)      += gdbserver
 dir_$(CONFIG_USER_MATRIXSSL)                += matrixssl-1.8.3
-dir_$(CONFIG_USER_MTDAAPD)                  += mt-daapd-0.2.4.2
+dir_$(CONFIG_USER_MTDAAPD)		    += mt-daapd-0.2.4.2
+#dir_$(CONFIG_USER_MTDAAPD)		    += mt-daapd-0.2.4.2.iconv
 dir_$(CONFIG_USER_DNS_RESPONDER)            += mDNSResponder-214.3.2
 dir_$(CONFIG_USER_GOAHEAD_HTTPD)            += goahead
 #ifeq ($(CONFIG_LINUXDIR), linux-2.6.21.x)
@@ -165,9 +166,9 @@ dir_y						+= extra_bin
 #dir_y						+= xfr_test
 #dir_y						+= libmplus
 #dir_y						+= ffmpeg-0.5.1
-dir_y						+= libupnp-1.6.6
+#dir_y						+= libupnp-1.6.6
 #dir_y						+= libdlna-0.2.3
-dir_y						+= ushare-1.1a
+#dir_y						+= ushare-1.1a
 dir_y						+= udpxy
 dir_y						+= rstats
 dir_y						+= tcpcheck
@@ -176,14 +177,14 @@ dir_y						+= e2fsprogs
 dir_y						+= dosfstools-3.0.10
 #dir_y						+= cutter-1.03
 #dir_y						+= epi_ttcp
-#dir_y						+= ffmpeg-0.6.1
-#dir_y						+= sqlite-autoconf-3070400
-#dir_y						+= libexif-0.6.20
-#dir_y						+= jpeg-8b
-#dir_y						+= libogg-1.2.2
-#dir_y						+= libvorbis-1.3.2
-#dir_y						+= flac-1.2.1
-#dir_y						+= minidlna
+dir_y						+= ffmpeg-0.6.1
+dir_y						+= sqlite-autoconf-3070400
+dir_y						+= libexif-0.6.20
+dir_y						+= jpeg-8b
+dir_y						+= libogg-1.2.2
+dir_y						+= libvorbis-1.3.2
+dir_y						+= flac-1.2.1
+dir_y						+= minidlna
 
 all: config
 #	$(MAKE) -j$(HOST_NCPU) $(sort $(dir_y) $(dir_v) $(dir_p)) || exit $$?

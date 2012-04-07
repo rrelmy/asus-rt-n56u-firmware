@@ -17,8 +17,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
 /*
@@ -729,15 +728,19 @@ _get_mp3fileinfo(char *file, struct song_metadata *psong)
 	psong->vbr_scale = -1;
 	if(!strncasecmp((char*)&buffer[index + fi.xing_offset + 4], "XING", 4))
 	{
-		xing_flags = *((int*)&buffer[index + fi.xing_offset + 4 + 4]);
-		xing_flags = ntohs(xing_flags);
+		xing_flags = buffer[index+fi.xing_offset+4+4] << 24 |
+		             buffer[index+fi.xing_offset+4+5] << 16 |
+		             buffer[index+fi.xing_offset+4+6] << 8 |
+		             buffer[index+fi.xing_offset+4+7];
 		psong->vbr_scale = 78;
 
 		if(xing_flags & 0x1)
 		{
 			/* Frames field is valid... */
-			fi.number_of_frames = *((int*)&buffer[index + fi.xing_offset + 4 + 8]);
-			fi.number_of_frames = ntohs(fi.number_of_frames);
+			fi.number_of_frames = buffer[index+fi.xing_offset+4+8] << 24 |
+			                      buffer[index+fi.xing_offset+4+9] << 16 |
+			                      buffer[index+fi.xing_offset+4+10] << 8 |
+			                      buffer[index+fi.xing_offset+4+11];
 		}
 	}
 

@@ -78,7 +78,18 @@ if [ $mounted == "0" ]; then
 # echo "mount try 1 fail" >> /tmp/auto01
 #ntfs-3g "/dev/$1" "/media/$2" -o force
 #ntfs-3g "/dev/$1" "/media/$2" -o force,umask=0,locale=utf8	# ntfs
-mount -t ufsd -o iocharset=utf8 -o force "/dev/$1" "/media/$2"	# ntfs
+#mount -t ufsd -o iocharset=utf8 -o force "/dev/$1" "/media/$2"	# ntfs
+
+if [ $country_code = "TW" ]; then
+	echo "ntfs country_code TW case" >> /tmp/auto01
+	mount -t ufsd -o iocharset=utf8,codepage=950 -o force "/dev/$1" "/media/$2"
+elif [ $country_code = "CN" ]; then
+	echo "ntfs country_code CN case" >> /tmp/auto01
+	mount -t ufsd -o iocharset=utf8,codepage=936 -o force "/dev/$1" "/media/$2"
+else
+	echo "ntfs country_code XX case" >> /tmp/auto01
+	mount -t ufsd -o iocharset=utf8 -o force "/dev/$1" "/media/$2"
+fi
 
 mounted=`mount | grep $1 | wc -l`
 if [ $mounted == "0" ]; then

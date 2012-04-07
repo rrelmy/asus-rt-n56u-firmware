@@ -15,7 +15,13 @@ LANG_TR=Türkçe
 LANG_TH=ไทย
 LANG_MS=Malaysia
 [untranslate]
-LANHostConfig_x_TimeZone_itemhint_2=เราเตอร์ตรวจพบว่าเขตเวลา NTP แตกต่างจากการตั้งค่าเวลาปัจจุบันของเราเตอร์ คุณต้องการใช้เขตเวลา NTP เป็นเขตเวลาของเราเตอร์ของคุณหรือไม่?
+IPConnection_VSList_ftpport=FTP Server Port:
+Adm_System_telnetd=Enable Telnet Server?
+wps_start_btn=การเริ่มต้น
+USB_Application_account_alert=บัญชีของผู้ใช้ ไม่สามารถ เป็น ‘root’, ‘Root’, ‘ROOT’, ‘admin’, ‘Admin’, ‘ADMIN’, ‘family’, ‘Family’, ‘FAMILY’ ได้! โปรดป้อนบัญชีที่ถูกต้อง
+BasicConfig_USBStorageWhiteist_itemdesc=ช่วงสำหรับฟิลด์นี้คือเลขฐานสิบหก 1 ถึง FFFF  ป้อน 0 (ศูนย์) เพื่อปิดทำงานคุณสมบัตินี้
+BasicConfig_USBStorageWhiteist_itemname=รายการสีขาว VID อุปกรณ์เก็บข้อมูล USB
+LANHostConfig_x_TimeZone_itemhint_2=การตั้งค่าเขตเวลาที่เลือกแตกต่างจากที่อุปกรณ์ตรวจจับได้ คุณต้องการเปลี่ยนไปเป็นเขตเวลาที่ตรวจจับได้หรือไม่?
 RouterConfig_GWMulticast_Multicast_all_itemdesc=เปิดทำงานคุณสมบัตินี้ เพื่อควบคุมการจราจรบนเครือข่าย และหลีกเลี่ยงบรอดแคสต์สตรอม ซึ่งเป็นผลให้เครือข่ายช้าลง หรือกลายเป็นเครือข่ายที่ใช้ไม่ได้ ช่วงสำหรับฟิลด์นี้คือ 1 ถึง 1024  ป้อน 0 (ศูนย์) เพื่อปิดทำงานคุณสมบัตินี้
 RouterConfig_GWMulticast_unknownUni_itemname=ยูนิแคสต์ สตรอม คอนโทรลที่ไม่รู้จัก (Mbps):
 RouterConfig_GWMulticast_unknownMul_itemname=มัลติแคสต์ สตรอม คอนโทรลที่ไม่รู้จัก (Mbps):

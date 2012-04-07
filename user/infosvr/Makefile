@@ -38,7 +38,7 @@ install: all
 romfs:
 	$(ROMFSINST) /usr/sbin/infosvr
 
-infosvr: ./infosvr.o ./wlutils.o ./common.o ./packet.o ./service.o ./interface.o ./storage.o
+infosvr: ./infosvr.o ./common.o ./packet.o ./service.o ./interface.o ./storage.o #./wlutils.o
 	$(CC) -o $@ $^ $(LDFLAGS) $(CFLAGS)
 	$(STRIP) $@
 

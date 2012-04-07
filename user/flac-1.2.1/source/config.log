@@ -1198,8 +1198,7 @@ configure:23230: result: yes
 configure:23245: checking for docbook-to-man
 configure:23274: result: no
 configure:23245: checking for docbook2man
-configure:23261: found /usr/bin/docbook2man
-configure:23271: result: docbook2man
+configure:23274: result: no
 configure:23305: checking for nasm
 configure:23334: result: no
 configure:23365: checking for as
@@ -1300,8 +1299,8 @@ config.status:858: creating obj/release/Makefile
 config.status:858: creating obj/release/bin/Makefile
 config.status:858: creating obj/release/lib/Makefile
 config.status:962: creating config.h
-config.status:1098: config.h is unchanged
-config.status:1278: executing depfiles commands
+config.status:1096: config.h is unchanged
+config.status:1276: executing depfiles commands
 
 ## ---------------- ##
 ## Cache variables. ##
@@ -1365,7 +1364,6 @@ ac_cv_prog_CC='/opt/buildroot-gcc342/bin/mipsel-linux-uclibc-gcc '
 ac_cv_prog_CPP='/opt/buildroot-gcc342/bin/mipsel-linux-uclibc-gcc  -E'
 ac_cv_prog_CXX='/opt/buildroot-gcc342/bin/mipsel-linux-uclibc-g++ '
 ac_cv_prog_CXXCPP='/opt/buildroot-gcc342/bin/mipsel-linux-uclibc-g++  -E'
-ac_cv_prog_DOCBOOK_TO_MAN=docbook2man
 ac_cv_prog_DOXYGEN=doxygen
 ac_cv_prog_RANLIB=/opt/buildroot-gcc342/bin/mipsel-linux-uclibc-ranlib
 ac_cv_prog_STRIP=/opt/buildroot-gcc342/bin/mipsel-linux-uclibc-strip
@@ -1458,7 +1456,7 @@ DEBUG_FALSE=''
 DEBUG_TRUE='#'
 DEFS='-DHAVE_CONFIG_H'
 DEPDIR='.deps'
-DOCBOOK_TO_MAN='docbook2man'
+DOCBOOK_TO_MAN=''
 DOXYGEN='doxygen'
 ECHO='echo'
 ECHO_C=''
@@ -1480,8 +1478,8 @@ FLaC__HAS_AS_FALSE=''
 FLaC__HAS_AS_TRUE='#'
 FLaC__HAS_AS__TEMPORARILY_DISABLED_FALSE=''
 FLaC__HAS_AS__TEMPORARILY_DISABLED_TRUE='#'
-FLaC__HAS_DOCBOOK_TO_MAN_FALSE='#'
-FLaC__HAS_DOCBOOK_TO_MAN_TRUE=''
+FLaC__HAS_DOCBOOK_TO_MAN_FALSE=''
+FLaC__HAS_DOCBOOK_TO_MAN_TRUE='#'
 FLaC__HAS_DOXYGEN_FALSE='#'
 FLaC__HAS_DOXYGEN_TRUE=''
 FLaC__HAS_GAS_FALSE='#'
@@ -1601,7 +1599,6 @@ target_alias=''
 ## confdefs.h. ##
 ## ----------- ##
 
-#define FLAC__HAS_DOCBOOK_TO_MAN 1
 #define FLAC__HAS_GAS 1
 #define FLAC__HAS_OGG 1
 #define FLAC__USE_3DNOW 1

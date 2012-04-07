@@ -178,7 +178,7 @@ void getsyspara(void)
 
 	if (FRead(dst, OFFSET_MAC_ADDR, bytes)<0)
 	{
-		fprintf(stderr, "READ MAC address: Out of scope\n");
+		dbg("READ MAC address: Out of scope\n");
 	}
 	else
 	{
@@ -191,7 +191,7 @@ void getsyspara(void)
 
 	if (FRead(dst, OFFSET_MAC_ADDR_2G, bytes)<0)
 	{
-		fprintf(stderr, "READ MAC address 2G: Out of scope\n");
+		dbg("READ MAC address 2G: Out of scope\n");
 	}
 	else
 	{
@@ -213,7 +213,7 @@ void getsyspara(void)
 	bytes = 2;
 	if (FRead(dst, OFFSET_COUNTRY_CODE, bytes)<0)
 	{
-		fprintf(stderr, "READ ASUS country code: Out of scope\n");
+		dbg("READ ASUS country code: Out of scope\n");
 		nvram_set("wl_country_code", "");
 	}
 	else
@@ -235,7 +235,7 @@ void getsyspara(void)
 	bytes = 8;
 	if (FRead(dst, OFFSET_PIN_CODE, bytes)<0)
 	{
-		fprintf(stderr, "READ ASUS pin code: Out of scope\n");
+		dbg("READ ASUS pin code: Out of scope\n");
 		nvram_set("wl_pin_code", "");
 	}
 	else
@@ -251,7 +251,7 @@ void getsyspara(void)
 	bytes = 16;
 	if (FRead(dst, src, bytes)<0)
 	{
-		fprintf(stderr, "READ firmware header: Out of scope\n");
+		dbg("READ firmware header: Out of scope\n");
 		nvram_set("productid", "unknown");
 		nvram_set("firmver", "unknown");
 	}
@@ -270,14 +270,14 @@ void getsyspara(void)
 	sprintf(blver, "%s-0%c-0%c-0%c-0%c", trim_r(productid), buffer[0], buffer[1], buffer[2], buffer[3]);
 	nvram_set("blver", trim_r(blver));
 
-	fprintf(stderr, "bootloader version: %s\n", nvram_safe_get("blver"));
-	fprintf(stderr, "firmware version: %s\n", nvram_safe_get("firmver"));
+	dbg("bootloader version: %s\n", nvram_safe_get("blver"));
+	dbg("firmware version: %s\n", nvram_safe_get("firmver"));
 
 	dst = (unsigned int *)txbf_para;
 	int count_0xff = 0;
 	if (FRead(dst, OFFSET_TXBF_PARA, 33) < 0)
 	{
-		fprintf(stderr, "READ TXBF PARA address: Out of scope\n");
+		dbg("READ TXBF PARA address: Out of scope\n");
 	}
 	else
 	{
@@ -286,14 +286,14 @@ void getsyspara(void)
 			if (txbf_para[i] == 0xff)
 				count_0xff++;
 /*
-			if ((i % 16) == 0) fprintf(stderr, "\n");
-			fprintf(stderr, "%02x ", (unsigned char) txbf_para[i]);
+			if ((i % 16) == 0) dbg("\n");
+			dbg("%02x ", (unsigned char) txbf_para[i]);
 */
 		}
 /*
-		fprintf(stderr, "\n");
+		dbg("\n");
 
-		fprintf(stderr, "TxBF parameter 0xFF count: %d\n", count_0xff);
+		dbg("TxBF parameter 0xFF count: %d\n", count_0xff);
 */
 	}
 
@@ -924,8 +924,8 @@ void convert_asus_values(int skipflag)
 */
 	nvram_set("usb_disc0_index", "0");
 	nvram_set("usb_disc1_index", "0");
-	nvram_set("usb_disc0_port", "0");
-	nvram_set("usb_disc1_port", "0");
+//	nvram_set("usb_disc0_port", "0");
+//	nvram_set("usb_disc1_port", "0");
 //	nvram_set("usb_disc0_dev", "");
 //	nvram_set("usb_disc1_dev", "");
 	nvram_set("usb_dev_state", "none");
@@ -1053,11 +1053,16 @@ void convert_asus_values(int skipflag)
 	nvram_set("bak_ddns_enable_x", nvram_safe_get("ddns_enable_x"));
 	nvram_set("bak_ddns_wildcard_x", nvram_safe_get("ddns_wildcard_x"));
 	nvram_set("dhcp_renew", "0");
-	nvram_set("apps_ushare_ex", "0");
+	nvram_set("apps_dms_ex", "0");
 	nvram_set("apps_itunes_ex", "0");
 	nvram_set("apps_smb_ex", "0");
 	nvram_set("apps_u2ec_ex", "0");
 
+	if (!nvram_get("usb_vid_allow"))
+		nvram_set("usb_vid_allow", "0");
+
+	nvram_set("reload_svc_wl", "0");
+	nvram_set("reload_svc_rt", "0");
 	}
 }
 
