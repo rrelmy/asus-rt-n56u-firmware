@@ -148,8 +148,7 @@ function ValidateChecksum(PIN)
 	accum += 3 * (parseInt(PIN / 10) % 10);
 	accum += 1 * (parseInt(PIN / 1) % 10);
 
-	//return ((accum % 10) == 0);
-	return true;
+	return ((accum % 10) == 0);
 }
 
 function PIN_PBC_Check(){

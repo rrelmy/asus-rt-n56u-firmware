@@ -52,7 +52,6 @@ dir_$(CONFIG_USER_GDBSERVER_GDBREPLAY)      += gdbserver
 dir_$(CONFIG_USER_GDBSERVER_GDBSERVER)      += gdbserver
 dir_$(CONFIG_USER_MATRIXSSL)                += matrixssl-1.8.3
 dir_$(CONFIG_USER_MTDAAPD)		    += mt-daapd-0.2.4.2
-#dir_$(CONFIG_USER_MTDAAPD)		    += mt-daapd-svn-1696
 dir_$(CONFIG_USER_DNS_RESPONDER)            += mDNSResponder-214.3.2
 dir_$(CONFIG_USER_GOAHEAD_HTTPD)            += goahead
 #ifeq ($(CONFIG_LINUXDIR), linux-2.6.21.x)
@@ -82,12 +81,13 @@ dir_$(CONFIG_ASUS_WWW)				+= www
 dir_$(CONFIG_PPPD)				+= pppd
 dir_$(CONFIG_PPPOE_RELAY)			+= pppoe-relay
 dir_$(CONFIG_BPALOGIN)				+= bpalogin
-dir_$(CONFIG_DPROXY)				+= dproxy
+#dir_$(CONFIG_DPROXY)				+= dproxy
 dir_$(CONFIG_UDHCPD)				+= udhcpd
 dir_$(CONFIG_ASUS_INFOSVR)			+= infosvr
 dir_$(CONFIG_ASUS_NTPCLIENT)			+= ntpclient.asus
 dir_$(CONFIG_EZ_IPUPDATE)			+= ez-ipupdate
-dir_$(CONFIG_ASUS_NETWORK_MAP)			+= network_map
+#dir_$(CONFIG_ASUS_NETWORK_MAP)			+= network_map
+dir_$(CONFIG_ASUS_NETWORK_MAP)			+= networkmap
 dir_$(CONFIG_ASUS_LPRNG)			+= LPRng
 dir_$(CONFIG_ASUS_U2EC)				+= u2ec
 #dir_$(CONFIG_ASUS_NTFS3G)			+= ntfs-3g.asus
@@ -181,6 +181,8 @@ dir_y						+= libogg-1.2.2
 dir_y						+= libvorbis-1.3.2
 dir_y						+= flac-1.2.1
 dir_y						+= minidlna
+#dir_$(CONFIG_USER_MTDAAPD)			+= mt-daapd-svn-1696
+dir_y						+= dnsmasq-2.40
 
 all: config
 #	$(MAKE) -j$(HOST_NCPU) $(sort $(dir_y) $(dir_v) $(dir_p)) || exit $$?

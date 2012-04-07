@@ -123,6 +123,8 @@ bound(void)	// udhcpc bound here, also call wanup
 		nvram_set(strcat_r(prefix, "dns", tmp), trim_r(value));
 	if ((value = getenv("wins")))
 		nvram_set(strcat_r(prefix, "wins", tmp), trim_r(value));
+	else
+		nvram_set(strcat_r(prefix, "wins", tmp), "");
 
 	nvram_set(strcat_r(prefix, "routes", tmp), getenv("routes"));
 	nvram_set(strcat_r(prefix, "msroutes", tmp), getenv("msroutes"));
@@ -193,6 +195,8 @@ renew(void)
 
 	if ((value = getenv("wins")))
 		nvram_set(strcat_r(prefix, "wins", tmp), trim_r(value));
+	else
+		nvram_set(strcat_r(prefix, "wins", tmp), "");
 #if 0
 	if ((value = getenv("hostname")))
 		sethostname(trim_r(value), strlen(value) + 1);

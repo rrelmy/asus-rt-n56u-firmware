@@ -117,7 +117,6 @@ stop_dhcpd(void)
 
 	dprintf("done\n");
 }
-
 #endif	// ASUS_EXT
 
 int
@@ -358,7 +357,14 @@ start_ntpc(void)
 		system("killall ntpclient");
 
 	if (!pids("ntp"))
+	{
+		int delay_count = 3;
+
+		while (pids("ntpclient") && (delay_count-- > 0))
+			sleep(1);
+
 		system("ntp &");
+	}
 #else
 	char *servers = nvram_safe_get("ntp_server");
 	
@@ -377,8 +383,9 @@ stop_ntpc(void)
 //	if (nvram_match("wan_nat_x", "0"))
 //		return 0;
 #ifdef ASUS_EXT
-	if (pids("ntp"))
-		system("killall -SIGTERM ntp");
+//	if (pids("ntp"))
+//		system("killall -SIGTERM ntp");
+
 	if (pids("ntpclient"))
 		system("killall ntpclient");
 #else
@@ -436,6 +443,7 @@ void init_spinlock()
 	spinlock_lock(SPINLOCK_DHCPRenew);
 	nvram_set("dhcp_renew", "0");
 	spinlock_unlock(SPINLOCK_DHCPRenew);
+	spinlock_lock(SPINLOCK_Networkmap);
 }
 
 void nvram_commit_safe()
@@ -462,7 +470,7 @@ start_services(void)
 
         start_telnetd();
 	start_klogd();
-	start_dns();
+	start_dns_dhcpd();
 	start_8021x();
 	start_8021x_rt();
 	start_infosvr();
@@ -573,13 +581,7 @@ stop_services(void)
 #ifdef ASUS_EXT
 	stop_logger();
 #endif
-#if 0
-#ifdef GUEST_ACCOUNT
-	stop_dhcpd_guest();
-#endif
-#endif	// #if 0
-	stop_dhcpd();
-//	stop_dns();
+//	stop_dns_dhcpd();
 //	stop_httpd();
 
 	stop_lpd();

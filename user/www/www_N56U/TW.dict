@@ -238,7 +238,7 @@ AP_survey=基地台搜尋
 statusTitle_AP=遠端基地台狀態
 [USB Application - HSDPA]
 HSDPAConfig_connection=連結設定
-HSDPAConfig_pin_code_itemdesc=請填入SIM卡的PIN碼，須為長度介於3到9之間的數字。若您不知道SIM卡PIN碼為何，請洽詢您的ISP業者。
+HSDPAConfig_pin_code_itemdesc=請填入SIM卡的PIN碼，須為長度介於4到8之間的數字。若您不知道SIM卡PIN碼為何，請洽詢您的ISP業者。
 HSDPAConfig_private_apn_itemname=APN服務名稱（選填）
 HSDPAConfig_private_apn_itemdesc=若您不知道APN服務名稱為何，請洽詢您的ISP業者。
 HSDPAConfig_hsdpa_mode_Backup=Backup(備援)
@@ -1028,7 +1028,7 @@ LANHostConfig_display1_sectiondesc=設定RT-N56U的內部網路位址。當您�
 LANHostConfig_lanipaddr_changed_hint=更改內部網路IP後，RT-N56U將重新啟動。\n若稍後無法連上此設定畫面，請檢查您電腦的IP設定是否與RT-N56U於相同網段下。
 LANHostConfig_x_LANDHCPClient_itemname=自動取得IP？
 LANHostConfig_IPRouters_itemname=IP位址：
-LANHostConfig_IPRouters_itemdesc=RT-N56U在內部網路的 IP位址，預設為192.168.1.1。內部網路的地址範圍: 192.168.0.1 - 192.168.255.254, 172.16.0.1 – 172.31.255.254, 10.0.0.1 – 10.255.255.254
+LANHostConfig_IPRouters_itemdesc=RT-N56U在內部網路的 IP位址，預設為192.168.1.1。
 LANHostConfig_SubnetMask_itemname=子網路遮罩：
 LANHostConfig_SubnetMask_itemdesc=RT-N56U在內部網路的子網路遮罩，預設為255.255.255.0。
 LANHostConfig_x_LANIPAddress_itemname=IP位址：

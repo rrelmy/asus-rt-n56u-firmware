@@ -15,4 +15,5 @@ dialerror:
 system "nvram set connerr=1"
 system "nvram set g3err=1"
 printf "Dial number is wrong!\n"
+send "ATH^m"
 exit 1

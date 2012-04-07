@@ -113,7 +113,8 @@ function clearLog(){
 										</td>										
 									</tr>
 									<tr>
-										<th><!--a class="hintstyle" href="javascript:void(0);" onClick="openHint(12, 1);"--><#General_x_SystemUpTime_itemname#></a></th>
+										<!--th><a class="hintstyle" href="javascript:void(0);" onClick="openHint(12, 1);"><#General_x_SystemUpTime_itemname#></a></th-->
+										<th><#General_x_SystemUpTime_itemname#></th>
 										<td><span id="boot_days"></span> <#Day#> <span id="boot_hours"></span> <#Hour#> <span id="boot_minutes"></span> <#Minute#> <span id="boot_seconds"></span> <#Second#></td>
 									</tr>
 								</table>

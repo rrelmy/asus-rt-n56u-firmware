@@ -27,6 +27,28 @@ config  RA_HW_NAT_MANUAL_BIND
 
 endchoice
 
+choice
+        prompt "Direction"
+	depends on RA_HW_NAT && !RA_HW_NAT_MANUAL_BIND
+	default RA_HW_NAT_SPEEDUP_BIDIRECTION
+
+config  RA_HW_NAT_SPEEDUP_UPSTREAM
+        bool "Upstream Only"
+	help
+	only speed up upstream flow
+
+config  RA_HW_NAT_SPEEDUP_DOWNSTREAM
+        bool "Downstream Only"
+	help
+	only speed up downstream flow
+
+config  RA_HW_NAT_SPEEDUP_BIDIRECTION
+        bool "Bi-direction"
+	help
+	Speed up bi-direction
+
+endchoice
+
 
 config  RA_HW_NAT_LAN_VLANID
         int "VLAN ID of LAN Ports"
@@ -295,9 +317,24 @@ config  RA_HW_NAT_IPV6
 	help
 	"ipv6 routing accelerated by HNAT"
 
+choice
+        prompt "Marker Rule"
+	depends on RA_HW_NAT
+	default RA_HW_NAT_NONE2UP
+
 config  RA_HW_NAT_ACL2UP_HELPER
-        bool "ACL -> UP helper"
+        bool "Acl Remark Helper"
 	depends on RA_HW_NAT
 	help
-	"use ACL rule to get user priority"
+	"use FoE UP to remark VPRI value"
 
+config  RA_HW_NAT_DSCP2UP_HELPER
+        bool "DSCP Remark Helper"
+	depends on RA_HW_NAT
+	help
+	"use FoE UP to remark DSCP value"
+
+config  RA_HW_NAT_NONE2UP
+	bool "No Remark Helper"
+
+endchoice

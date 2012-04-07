@@ -50,6 +50,8 @@ static	devfs_handle_t devfs_handle;
 #endif
 
 int	mtr_major =  MTR_MAJOR;
+extern  uint32_t ChipVer;
+extern  uint32_t ChipId;
 
 struct _MtrParam {
         enum MtrType Type;
@@ -124,8 +126,6 @@ int MtrIoctl(struct inode *inode, struct file *filp,
 #endif
 {
 	struct mtr_args *opt=(struct mtr_args *)arg;
-	struct mtr_list_args *opt2=(struct mtr_list_args *)arg;
-
 	MtrPlcyNode node;
 
 	MacReverse(opt->mac);
@@ -133,14 +133,19 @@ int MtrIoctl(struct inode *inode, struct file *filp,
 	node.IpS=opt->ip_s; 
 	node.IpE=opt->ip_e; 
 
-	if(opt->mtr_mode==0) {//Byte Mode
-	    node.ByteBase.MtrMode = 0;
-	    node.ByteBase.MaxBkSize = opt->bk_size;
-	    node.ByteBase.TokenRate = opt->token_rate;
-	}else { //Pkt Mode
-	    node.PktBase.MtrMode = 1;
-	    node.PktBase.MaxBkSize = opt->bk_size;
-	    node.PktBase.MtrIntval = opt->mtr_intval;
+	if(ChipId==RT2880 && ChipVer < RT2880_MP2) { 
+		node.TokenRate=opt->token_rate; 
+		node.BkSize=opt->bk_size; 
+	}else{ 
+		if(opt->mtr_mode==0) {//Byte Mode
+			node.ByteBase.MtrMode = 0;
+			node.ByteBase.MaxBkSize = opt->bk_size;
+			node.ByteBase.TokenRate = opt->token_rate;
+		}else { //Pkt Mode
+			node.PktBase.MtrMode = 1;
+			node.PktBase.MaxBkSize = opt->bk_size;
+			node.PktBase.MtrIntval = opt->mtr_intval;
+		}
 	}
 
 	node.Type=MtrParam[cmd].Type;
@@ -174,8 +179,10 @@ int MtrIoctl(struct inode *inode, struct file *filp,
 	case MTR_CLEAN_TBL:
 		MtrCleanTbl();
 		break;
-	case MTR_GET_ALL_ENTRIES:
-		opt2->result = MtrGetAllEntries(opt2);
+	case MTR_GET_CHIP_VER:
+		opt->chip_ver=ChipVer;
+		opt->chip_id=ChipId;
+		opt->result=MTR_SUCCESS;
 		break;
 	default:
 		break;

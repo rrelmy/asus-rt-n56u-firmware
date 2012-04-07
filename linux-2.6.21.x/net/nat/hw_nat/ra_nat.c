@@ -24,8 +24,6 @@
   Who         When            What
   --------    ----------      ----------------------------------------------
   Name        Date            Modification logs
-  Steven Liu  2011-04-11      Support RT63365
-  Steven Liu  2011-02-08      Support IPv6 over PPPoE
   Steven Liu  2010-11-25      Fix double VLAN + PPPoE header bug
   Steven Liu  2010-11-24      Support upstream/downstream/bi-direction acceleration
   Steven Liu  2010-11-17      Support Linux 2.6.36 kernel
@@ -77,7 +75,6 @@
 #include "mtr_policy.h"
 #include "ac_policy.h"
 #include "util.h"
-#include "ra_rfrw.h"
 
 #if !defined (CONFIG_RA_HW_NAT_MANUAL_BIND)
 #define LAN_PORT_VLAN_ID	CONFIG_RA_HW_NAT_LAN_VLANID
@@ -86,13 +83,13 @@
 
 extern int (*ra_sw_nat_hook_rx) (struct sk_buff * skb);
 extern int (*ra_sw_nat_hook_tx) (struct sk_buff * skb, int gmac_no);
-extern unsigned char bind_dir;
 
 struct FoeEntry    *PpeFoeBase;
 dma_addr_t	    PpePhyFoeBase;
 struct net_device  *DstPort[MAX_IF_NUM];
-uint32_t	    DscpReMarkerEbl=0;
 uint32_t	    DebugLevel=0;
+uint32_t	    ChipVer=0;
+uint32_t	    ChipId=0;
 #if 0  //we cannot use GPL-only symbol
 struct class	   *hnat_class;
 #endif
@@ -122,7 +119,7 @@ void skb_dump(struct sk_buff* sk) {
 
                 if(i==(unsigned int)sk->head) printk("@h");
                 if(i==(unsigned int)sk->data) printk("@d");
-#if LINUX_VERSION_CODE > KERNEL_VERSION(2,6,21)
+#if LINUX_VERSION_CODE > KERNEL_VERSION(2,6,35)
                 if(i==(unsigned int)sk->mac_header) printk("*");
 #else
                 if(i==(unsigned int)sk->mac.raw) printk("@m");
@@ -139,7 +136,7 @@ int RemoveVlanTag(struct sk_buff *skb)
     struct vlan_ethhdr *veth;
     uint16_t VirIfIdx;
 
-#if LINUX_VERSION_CODE > KERNEL_VERSION(2,6,21)
+#if LINUX_VERSION_CODE > KERNEL_VERSION(2,6,35)
     veth = (struct vlan_ethhdr *)(skb->mac_header);
 #else
     veth = (struct vlan_ethhdr *)(skb->mac.raw);
@@ -164,7 +161,7 @@ int RemoveVlanTag(struct sk_buff *skb)
     }
 
     /* remove VLAN tag */
-#if LINUX_VERSION_CODE > KERNEL_VERSION(2,6,21)
+#if LINUX_VERSION_CODE > KERNEL_VERSION(2,6,35)
     skb->data= skb->mac_header;
     skb->mac_header += VLAN_HLEN;
     memmove(skb->mac_header, skb->data, ETH_ALEN * 2);
@@ -176,7 +173,7 @@ int RemoveVlanTag(struct sk_buff *skb)
     skb_pull(skb, VLAN_HLEN);
     skb->data += ETH_HLEN;  //pointer to layer3 header
 
-#if LINUX_VERSION_CODE > KERNEL_VERSION(2,6,21)
+#if LINUX_VERSION_CODE > KERNEL_VERSION(2,6,35)
     eth = (struct ethhdr *)(skb->mac_header);
 #else
     eth = (struct ethhdr *)(skb->mac.raw);
@@ -409,10 +406,8 @@ int32_t PpeRxHandler(struct sk_buff * skb)
     uint32_t vlan2_gap = 0;
     uint32_t pppoe_gap=0;
     uint16_t eth_type=0;
-#if defined  (CONFIG_RA_HW_NAT_WIFI)
     uint32_t SrcPortNo=0;
     uint16_t VirIfIdx=0;
-#endif
 
     foe_entry=&PpeFoeBase[FOE_ENTRY_NUM(skb)];
     eth_type=ntohs(skb->protocol);
@@ -464,10 +459,9 @@ int32_t PpeRxHandler(struct sk_buff * skb)
 #if defined (CONFIG_RT2860V2_AP_MESH)
 	    else if(skb->dev == DstPort[DP_MESH0]) { VirIfIdx=DP_MESH0; }
 #endif // CONFIG_RT2860V2_AP_MESH //
-#if defined (CONFIG_RTDEV_MII) || defined (CONFIG_RTDEV_USB) || defined (CONFIG_RTDEV_PCI)
+#if defined (CONFIG_RT3090_AP) || defined (CONFIG_RT3090_AP_MODULE)
 	    else if(skb->dev == DstPort[DP_RAI0]) { VirIfIdx=DP_RAI0; }
-#if defined (CONFIG_RT3090_AP_MBSS) || defined (CONFIG_RT5392_AP_MBSS) || \
-    defined (CONFIG_RT3572_AP_MBSS) || defined (CONFIG_RT5572_AP_MBSS)
+#if defined (CONFIG_RT3090_AP_MBSS)
 	    else if(skb->dev == DstPort[DP_RAI1]) { VirIfIdx=DP_RAI1; }
 	    else if(skb->dev == DstPort[DP_RAI2]) { VirIfIdx=DP_RAI2; }
 	    else if(skb->dev == DstPort[DP_RAI3]) { VirIfIdx=DP_RAI3; }
@@ -483,16 +477,14 @@ int32_t PpeRxHandler(struct sk_buff * skb)
 	    else if(skb->dev == DstPort[DP_RAI13]) { VirIfIdx=DP_RAI13; }
 	    else if(skb->dev == DstPort[DP_RAI14]) { VirIfIdx=DP_RAI14; }
 	    else if(skb->dev == DstPort[DP_RAI15]) { VirIfIdx=DP_RAI15; }
-#endif // CONFIG_RTDEV_AP_MBSS //
-#endif // CONFIG_RTDEV_MII || CONFIG_RTDEV_USB || CONFIG_RTDEV_PCI
-#if defined (CONFIG_RT3090_AP_APCLI) || defined (CONFIG_RT5392_AP_APCLI) || \
-    defined (CONFIG_RT3572_AP_APCLI) || defined (CONFIG_RT5572_AP_APCLI)
+#endif // CONFIG_RT3090_AP_MBSS //
+#endif
+#if defined (CONFIG_RT3090_AP_APCLI)
 	    else if(skb->dev == DstPort[DP_APCLII0]) { VirIfIdx=DP_APCLII0; }
-#endif // CONFIG_RTDEV_AP_APCLI //
-#if defined (CONFIG_RT3090_AP_MESH) || defined (CONFIG_RT5392_AP_MESH) || \
-    defined (CONFIG_RT3572_AP_MESH) || defined (CONFIG_RT5572_AP_MESH)
+#endif // CONFIG_RT3090_AP_APCLI //
+#if defined (CONFIG_RT3090_AP_MESH)
 	    else if(skb->dev == DstPort[DP_MESHI0]) { VirIfIdx=DP_MESHI0; }
-#endif // CONFIG_RTDEV_AP_MESH //
+#endif // CONFIG_RT3090_AP_MESH //
 	    else if(skb->dev == DstPort[DP_PCI]) { VirIfIdx=DP_PCI; }
 	    else { printk("HNAT: The interface %s is unknown\n", skb->dev->name); }
 
@@ -522,7 +514,7 @@ int32_t PpeRxHandler(struct sk_buff * skb)
      * rax<->raix binded traffic: HIT_BIND_FORCE_TO_CPU + FOE_AIS=1 + FOE_SP = 0 or 6
      */
     if((FOE_AI(skb)==HIT_BIND_FORCE_TO_CPU)) {
-	    skb->dev = DstPort[foe_entry->act_dp];
+	    skb->dev = DstPort[foe_entry->iblk2.act_dp];
 	    skb_push(skb, ETH_HLEN); //pointer to layer2 header
 #if LINUX_VERSION_CODE > KERNEL_VERSION(2,6,35)
 	    skb->dev->netdev_ops->ndo_start_xmit(skb,skb->dev);
@@ -532,9 +524,8 @@ int32_t PpeRxHandler(struct sk_buff * skb)
 	    return 0;
     }
 
-#if defined (CONFIG_RA_HW_NAT_WIFI)
     /* 
-     * RT3883/RT3352/RT6855:
+     * RT3883/RT3352:
      * If FOE_AIS=1 and FOE_SP=0/6, it means this is reentry packet.
      * (WLAN->CPU->PPE->CPU or PCI->CPU->PPE->CPU)
      *
@@ -568,7 +559,7 @@ int32_t PpeRxHandler(struct sk_buff * skb)
 	    printk("HNAT: unknow interface (VirIfIdx=%d)\n", VirIfIdx);
 	}
 	
-#if LINUX_VERSION_CODE > KERNEL_VERSION(2,6,21)
+#if LINUX_VERSION_CODE > KERNEL_VERSION(2,6,35)
 	eth=(struct ethhdr *)(skb->mac_header);
 #else
 	eth=(struct ethhdr *)(skb->mac.raw);
@@ -592,34 +583,11 @@ int32_t PpeRxHandler(struct sk_buff * skb)
 
 	return 1;
     }
-#endif
+
 
 
     if( (FOE_AI(skb)==HIT_BIND_KEEPALIVE) && (DFL_FOE_KA_ORG==0)){
 
-#ifdef RELEASE_EXCLUDE
-	    /* Notes: 	 
-	     *
-	     *	 PPE_FOE_CFG->FOE_KA_ORG(bit12)
-	     *	 
-	     *	 Keep alive packet with original header
-	     *	 1: Original header
-	     *	 0: New header
-	     *
-	     *	 Either original or new header mode, all of the keepalive packets from 
-	     *	 PPE to cpu will carry "keep alive with original header" in cpu reason field.
-	     *
-	     *	 If PPE in keepalive with new header mode:
-	     *
-	     *	 Step1: Recover to original packet and pass to cpu to refresh
-	     *	 	uppler table (We have to recover SMAC/DMAC/SIP/DIP/SP/DP 
-	     *	        and recalculate IP/TCP/UDP checksum)
-	     *	
-	     *	 Step2: TxHandler have to drop this packet because PPE forwards
-	     *	        packet to cpu and output port at the same time.
-	     *
-	     */
-#endif
 
 	  /* FIXME:	 
 	   * Recover to original SMAC/DMAC, but we don't know that.
@@ -629,29 +597,11 @@ int32_t PpeRxHandler(struct sk_buff * skb)
 					 
 	    FoeGetMacInfo(eth->h_dest, foe_entry->smac_hi);	 
 	    FoeGetMacInfo(eth->h_source, foe_entry->dmac_hi);
-	    eth->h_source[0]=0x1;//change to multicast packet, make bridge not learn this packet
 #ifdef ASUS_REMOVE
 	    if(eth_type==ETH_P_8021Q) {
 		    vlan1_gap = VLAN_HLEN;
 		    vh = (struct vlan_hdr *) skb->data;
 
-#ifdef RELEASE_EXCLUDE
-		    /* 
-		     * Recover to original vlan header 
-		     *
-		     * LAN Ports VID=1, WAN Ports VID=2
-		     * Packet from WAN to LAN: VLANID 2 --(FOE)--> VLANID 1
-		     * Packet from LAN to WAN: VLANID 1 --(FOE)--> VLANID 2
-		     *
-		     * Keepalive in new header mode: 
-		     * FOE pass packet with new header to cpu after packet modified
-		     * 
-		     * Packet from WAN to LAN: New VLANID = 1, change to VLANID=2 which mean 
-		     *              	       packet is coming from WAN port.
-		     * Packet from LAN to WAN: New VLANID = 2, change VLANID=2 which mean 
-		     *              	       packet is coming from WAN port.
-		     */
-#endif
 		    if(ntohs(vh->h_vlan_TCI)==LAN_PORT_VLAN_ID){
 			    /* It make packet like coming from WAN port */
 			    vh->h_vlan_TCI=htons(WAN_PORT_VLAN_ID);
@@ -721,12 +671,12 @@ int32_t PpeRxHandler(struct sk_buff * skb)
 	
 	memset(&NewRateReach, 0, sizeof(AclClassifyKey));
 	memcpy(NewRateReach.Mac, eth->h_source,ETH_ALEN);
-        NewRateReach.Ethertype = eth_type; //Ethertype
+
 	if(eth_type==ETH_P_8021Q)
 	{
 	    vlan1_gap = VLAN_HLEN;
 	    vh = (struct vlan_hdr *) skb->data;
-            NewRateReach.Vid = ntohs(vh->h_vlan_TCI); //VID
+
 	    if(ntohs(vh->h_vlan_encapsulated_proto)==ETH_P_PPP_SES) {
 		pppoe_gap = 8;
 	    }else if(ntohs(vh->h_vlan_encapsulated_proto)==ETH_P_8021Q) {
@@ -753,7 +703,7 @@ int32_t PpeRxHandler(struct sk_buff * skb)
 
 	    NewRateReach.Sip = ntohl(iph->saddr);
 	    NewRateReach.Dip = ntohl(iph->daddr);
-            NewRateReach.Tos = iph->tos; //TOS
+
 	    if (iph->protocol == IPPROTO_TCP) 
 	    {
 		th = (struct tcphdr *) ((uint8_t *) iph + iph->ihl * 4);
@@ -786,7 +736,7 @@ int32_t PpeRxHandler(struct sk_buff * skb)
 /* is_in = 1 --> in  */
 /* is_in = 0 --> out */
 int32_t GetPppoeSid(struct sk_buff *skb, uint32_t vlan_gap, 
-		uint16_t *sid, uint16_t *ppp_tag, uint32_t is_in)
+		uint16_t *sid, uint32_t is_in)
 {
 	struct pppoe_hdr *peh = NULL;
 	uint32_t offset = 0;
@@ -809,12 +759,8 @@ int32_t GetPppoeSid(struct sk_buff *skb, uint32_t vlan_gap,
 		NAT_PRINT("=================\n");
 	}
 
-	*ppp_tag = ntohs(peh->tag[0].tag_type);
-#if defined (CONFIG_RA_HW_NAT_IPV6)
-	if (peh->ver != 1 || peh->type != 1 || (*ppp_tag != PPP_IP && *ppp_tag != PPP_IPV6) ) {
-#else
-	if (peh->ver != 1 || peh->type != 1 || *ppp_tag != PPP_IP ) {
-#endif
+	if (peh->ver != 1 || peh->type != 1
+			|| (ntohs(peh->tag[0].tag_type) != PPP_IP)){
 		return 1;
 	}
 
@@ -827,23 +773,20 @@ int32_t PpeTxHandler(struct sk_buff *skb, int gmac_no)
 	struct vlan_hdr *vh = NULL;
 	struct iphdr *iph = NULL;
 	struct tcphdr *th = NULL;
-#if defined (CONFIG_RALINK_RT6855) || defined (CONFIG_RALINK_RT63365) || defined (CONFIG_RALINK_RT3352)
 	struct udphdr *uh = NULL;
-#elif defined (CONFIG_RALINK_RT3052)
-	struct udphdr *uh = NULL;
-	uint32_t phy_val;
-#endif
 	struct ethhdr *eth = NULL;
 	uint32_t vlan1_gap = 0;
 	uint32_t vlan2_gap = 0;
 	uint32_t pppoe_gap = 0;
 	uint16_t pppoe_sid = 0;
-	uint16_t ppp_tag = 0;
 	struct FoeEntry *foe_entry;
 	uint32_t current_time;
 	struct FoeEntry entry;
 	uint16_t eth_type=0;
 	uint32_t offset=0;
+#if defined (CONFIG_RA_HW_NAT_DSCP2UP_HELPER)
+	uint32_t dscp=0;
+#endif
 #if defined (CONFIG_RA_HW_NAT_SEMIAUTO_BIND)
 	uint32_t now=0;
 #endif
@@ -864,7 +807,7 @@ int32_t PpeTxHandler(struct sk_buff *skb, int gmac_no)
 		// bind mode, so there is no need to update any 
 		// information within refresh interval.
 #define SEMIAUTO_REFRESH_INTERVAL	30
-		now = RegRead(FOE_TS)&0xFFFF;
+		now = RegRead(FOE_TS_T)&0xFFFF;
 		if(time_before((unsigned long)now, 
 			    (unsigned long)foe_entry->tmp_buf.time_stamp 
 			    + SEMIAUTO_REFRESH_INTERVAL)) {
@@ -895,7 +838,7 @@ int32_t PpeTxHandler(struct sk_buff *skb, int gmac_no)
 			/* VLAN + PPPoE */
 			if(ntohs(vh->h_vlan_encapsulated_proto)==ETH_P_PPP_SES){
 				pppoe_gap = 8;
-				if (GetPppoeSid(skb, vlan1_gap, &pppoe_sid, &ppp_tag, 0)) {
+				if (GetPppoeSid(skb, vlan1_gap, &pppoe_sid, 0)) {
 					memset(FOE_INFO_START_ADDR(skb), 0, FOE_INFO_LEN);
 					return 1;
 				}
@@ -910,7 +853,7 @@ int32_t PpeTxHandler(struct sk_buff *skb, int gmac_no)
 			    /* VLAN + VLAN + PPPoE */
 			    if(ntohs(vh->h_vlan_encapsulated_proto)==ETH_P_PPP_SES){
 				pppoe_gap = 8;
-				if (GetPppoeSid(skb, (vlan1_gap + vlan2_gap), &pppoe_sid, &ppp_tag, 0)) {
+				if (GetPppoeSid(skb, (vlan1_gap + vlan2_gap), &pppoe_sid, 0)) {
 					memset(FOE_INFO_START_ADDR(skb), 0, FOE_INFO_LEN);
 					return 1;
 				}
@@ -955,14 +898,48 @@ int32_t PpeTxHandler(struct sk_buff *skb, int gmac_no)
 		}
 
 		/* Set Layer3 Info */
-		/* IPv4 or IPv4 over PPPoE */
-		if( (eth_type == ETH_P_IP) || (eth_type == ETH_P_PPP_SES && ppp_tag == PPP_IP) ) {
+		/* FIXME: we assume that IPv4 over PPPoE */
+		if( (eth_type == ETH_P_IP) || (eth_type == ETH_P_PPP_SES)) {
 		    iph = (struct iphdr *) (skb->data + ETH_HLEN + vlan1_gap + vlan2_gap + pppoe_gap);
 		    entry.new_sip = ntohl(iph->saddr);
 		    entry.new_dip = ntohl(iph->daddr);
-		    entry.iblk2.rmdscp = DscpReMarkerEbl;
-		    entry.iblk2.dscp = iph->tos;
 
+#if defined (CONFIG_RA_HW_NAT_DSCP2UP_HELPER)
+		    /* Org DSCP |  UP |NewDSCP | WMM_AC
+		     * ---------+-----+--------+--------
+		     *   00-07  |  0  |  0     |  BE
+		     *   24-31  |  3  |  24    |  BE
+		     *   08-15  |  1  |  08    |  BG
+		     *   16-23  |  2  |  16    |  BG
+		     *   32-39  |  4  |  32    |  VI
+		     *   40-47  |  5  |  40    |  VI
+		     *   48-55  |  6  |  48    |  VO
+		     *   56-63  |  7  |  56    |  VO
+		     * ---------+-----+--------+--------
+		     */
+		    dscp = iph->tos>>2; //get DSCP field
+
+		    if(dscp >= 56) {
+			entry.iblk2.up = 7;
+		    }else if(dscp >= 48) {
+			entry.iblk2.up = 6;
+		    }else if(dscp >= 40) {
+			entry.iblk2.up = 5;
+		    }else if(dscp >= 32) {
+			entry.iblk2.up = 4;
+		    }else if(dscp >= 24) {
+			entry.iblk2.up = 3;
+		    }else if(dscp >= 16) {
+			entry.iblk2.up = 2;
+		    }else if(dscp >= 8) {
+			entry.iblk2.up = 1;
+		    }else {
+			entry.iblk2.up = 0;
+		    }
+
+		    entry.iblk2.fp = 1;
+
+#endif
 
 		    /* Set Layer4 Info - NEW_SPORT, NEW_DPORT */
 		    if (iph->protocol == IPPROTO_TCP) {
@@ -971,59 +948,29 @@ int32_t PpeTxHandler(struct sk_buff *skb, int gmac_no)
 			entry.new_dport = ntohs(th->dest);
 			entry.bfib1.t_u = TCP;
 		    } else if (iph->protocol == IPPROTO_UDP) {
-#if defined (CONFIG_RALINK_RT6855) || defined (CONFIG_RALINK_RT63365)
 			uh = (struct udphdr *) ((uint8_t *) iph + iph->ihl * 4);
+
+			/* ChipBug: if udp check is zero, it cannot be accelerated by HNAT */
+			if(uh->check == 0) {
+			    return 1;
+			}
+
 			entry.new_sport = ntohs(uh->source);
 			entry.new_dport = ntohs(uh->dest);
 			entry.bfib1.t_u = UDP;
-#elif defined (CONFIG_RALINK_RT3352)
-			if(RegRead(0xB000000C)> 0x0104) {
-			    uh = (struct udphdr *) ((uint8_t *) iph + iph->ihl * 4);
-			    entry.new_sport = ntohs(uh->source);
-			    entry.new_dport = ntohs(uh->dest);
-			    entry.bfib1.t_u = UDP;
-			}else {
-			    memset(FOE_INFO_START_ADDR(skb), 0, FOE_INFO_LEN);
-			    return 1;
-			}
-#elif defined (CONFIG_RALINK_RT3052)
-			rw_rf_reg(0, 0, &phy_val);
-			phy_val = phy_val & 0xFF;
-
-			if(phy_val > 0x53) {
-			    uh = (struct udphdr *) ((uint8_t *) iph + iph->ihl * 4);
-			    entry.new_sport = ntohs(uh->source);
-			    entry.new_dport = ntohs(uh->dest);
-			    entry.bfib1.t_u = UDP;
-			} else {
-			    memset(FOE_INFO_START_ADDR(skb), 0, FOE_INFO_LEN);
-			    return 1;
-			}
-#else
-			/* if udp check is zero, it cannot be accelerated by HNAT */
-			/* we found the application is possible to use udp checksum=0 at first stage, 
-			 * then use non-zero checksum in the same session later, so we disable HNAT acceleration
-			 * for all UDP traffic */
+		    }else {
 			memset(FOE_INFO_START_ADDR(skb), 0, FOE_INFO_LEN);
 			return 1;
-#endif
-		    }else {
-			/* we support IPv4 NAT mode */
-			;
 		    }
-#if defined (CONFIG_RA_HW_NAT_IPV6)
-		/* IPv6 or IPv6 over PPPoE */
-		} else if (eth_type == ETH_P_IPV6 || (eth_type == ETH_P_PPP_SES && ppp_tag == PPP_IPV6) ) {
+		} else if (eth_type == ETH_P_IPV6) {
 		    /* Nothing to do */
-		    ;
-#endif
 		} else {
 		    memset(FOE_INFO_START_ADDR(skb), 0, FOE_INFO_LEN);
 		    return 1;
 		}
 
 		/* Set Current time to time_stamp field in information block 1 */
-		current_time =RegRead(FOE_TS)&0xFFFF;
+		current_time =RegRead(FOE_TS_T)&0xFFFF;
 		entry.bfib1.time_stamp=(uint16_t)current_time;
               
 #if defined (CONFIG_RA_HW_NAT_ACL2UP_HELPER)
@@ -1050,49 +997,49 @@ int32_t PpeTxHandler(struct sk_buff *skb, int gmac_no)
 /* RT3883 with 2xGMAC - Assuming GMAC2=WAN  and GMAC1=LAN */
 #if defined (CONFIG_RAETH_GMAC2) 
 			if(gmac_no==1) {
-			    if((bind_dir == DOWNSTREAM_ONLY) || (bind_dir == BIDIRECTION)) {
-				entry.iblk2.dp=1; 
-			    }else {
-				return 1;
-			    }
+#if defined (CONFIG_RA_HW_NAT_SPEEDUP_DOWNSTREAM) || defined (CONFIG_RA_HW_NAT_SPEEDUP_BIDIRECTION)
+			    entry.iblk2.dp=1; 
+#else
+			    return 1;
+#endif
 			}else if(gmac_no==2) {
-			    if((bind_dir == UPSTREAM_ONLY) || (bind_dir == BIDIRECTION)) {
-				entry.iblk2.dp=2;
-			    }else {
-				return 1;
-			    }
+#if defined (CONFIG_RA_HW_NAT_SPEEDUP_UPSTREAM) || defined (CONFIG_RA_HW_NAT_SPEEDUP_BIDIRECTION)
+			    entry.iblk2.dp=2;
+#else
+			    return 1;
+#endif
 			}
 
 /* RT2880, RT3883 */
 #elif defined (CONFIG_RALINK_RT2880) || defined (CONFIG_RALINK_RT3883)
 			if((entry.vlan1 & VLAN_VID_MASK)==LAN_PORT_VLAN_ID) {
-			    if((bind_dir == DOWNSTREAM_ONLY) || (bind_dir == BIDIRECTION)) {
-				entry.iblk2.dp=1; 
-			    }else {
-				return 1;	
-			    }
+#if defined (CONFIG_RA_HW_NAT_SPEEDUP_DOWNSTREAM) || defined (CONFIG_RA_HW_NAT_SPEEDUP_BIDIRECTION)
+			    entry.iblk2.dp=1; 
+#else
+			    return 1;	
+#endif
 			}else if((entry.vlan1 & VLAN_VID_MASK)==WAN_PORT_VLAN_ID) {
-			    if((bind_dir == UPSTREAM_ONLY) || (bind_dir == BIDIRECTION)) {
-				entry.iblk2.dp=1; 
-			    }else {
-				return 1;
-			    }
+#if defined (CONFIG_RA_HW_NAT_SPEEDUP_UPSTREAM) || defined (CONFIG_RA_HW_NAT_SPEEDUP_BIDIRECTION)
+			    entry.iblk2.dp=1; 
+#else
+			    return 1;	
+#endif
 			}
 /*  RT3052, RT335x */
 #else
 
 			if((entry.vlan1 & VLAN_VID_MASK)==LAN_PORT_VLAN_ID) {
-			    if((bind_dir == DOWNSTREAM_ONLY) || (bind_dir == BIDIRECTION)) {
-				entry.iblk2.dp=1; /* LAN traffic use VirtualPort1 in GMAC1*/
-			    }else {
-				return 1;
-			    }
+#if defined (CONFIG_RA_HW_NAT_SPEEDUP_DOWNSTREAM) || defined (CONFIG_RA_HW_NAT_SPEEDUP_BIDIRECTION)
+			    entry.iblk2.dp=1; /* LAN traffic use VirtualPort1 in GMAC1*/
+#else
+			    return 1;	
+#endif
 			}else if((entry.vlan1 & VLAN_VID_MASK)==WAN_PORT_VLAN_ID) {
-			    if((bind_dir == UPSTREAM_ONLY) || (bind_dir == BIDIRECTION)) {
-				entry.iblk2.dp=2; /* WAN traffic use VirtualPort2 in GMAC1*/
-			    }else {
-				return 1;
-			    }
+#if defined (CONFIG_RA_HW_NAT_SPEEDUP_UPSTREAM) || defined (CONFIG_RA_HW_NAT_SPEEDUP_BIDIRECTION)
+			    entry.iblk2.dp=2; /* WAN traffic use VirtualPort2 in GMAC1*/
+#else
+			    return 1;	
+#endif
 			}else {
 			    /* for one arm NAT test -> no vlan tag */
 			    entry.iblk2.dp=1; 
@@ -1119,32 +1066,29 @@ int32_t PpeTxHandler(struct sk_buff *skb, int gmac_no)
 #define MIN_NET_DEVICE_FOR_MESH                 0x30
 
 		/* Set actual output port info */
-#if defined (CONFIG_RTDEV_MII) || defined (CONFIG_RTDEV_USB) || defined (CONFIG_RTDEV_PCI)
+#if defined (CONFIG_RT3090_AP) || defined (CONFIG_RT3090_AP_MODULE)
 		if(strncmp(skb->dev->name, "rai", 3)==0) {
-#if defined (CONFIG_RT3090_AP_MESH) || defined (CONFIG_RT5392_AP_MESH) || \
-    defined (CONFIG_RT3572_AP_MESH) || defined (CONFIG_RT5572_AP_MESH)
+#if defined (CONFIG_RT3090_AP_MESH)
 		    if(RTMP_GET_PACKET_IF(skb) >= MIN_NET_DEVICE_FOR_MESH) {
 			offset = (RTMP_GET_PACKET_IF(skb) - MIN_NET_DEVICE_FOR_MESH + DP_MESHI0);
 		    }else 
-#endif // CONFIG_RTDEV_AP_MESH //
+#endif // CONFIG_RT3090_AP_MESH //
 
-#if defined (CONFIG_RT3090_AP_APCLI) || defined (CONFIG_RT5392_AP_APCLI) || \
-    defined (CONFIG_RT3572_AP_APCLI) || defined (CONFIG_RT5572_AP_APCLI)
+#if defined (CONFIG_RT3090_AP_APCLI)
 		    if (RTMP_GET_PACKET_IF(skb) >= MIN_NET_DEVICE_FOR_APCLI) {
 			offset = (RTMP_GET_PACKET_IF(skb) - MIN_NET_DEVICE_FOR_APCLI + DP_APCLII0);
 		    }else 
-#endif // CONFIG_RTDEV_AP_APCLI //
-#if defined (CONFIG_RT3090_AP_WDS) || defined (CONFIG_RT5392_AP_WDS) || \
-    defined (CONFIG_RT3572_AP_WDS) || defined (CONFIG_RT5572_AP_WDS)
+#endif // CONFIG_RT3090_AP_APCLI //
+#if defined (CONFIG_RT3090_AP_WDS)
 	   	    if (RTMP_GET_PACKET_IF(skb) >= MIN_NET_DEVICE_FOR_WDS) {
 			offset = (RTMP_GET_PACKET_IF(skb) - MIN_NET_DEVICE_FOR_WDS + DP_WDSI0);
 		    }else 
-#endif // CONFIG_RTDEV_AP_WDS //
+#endif // CONFIG_RT3090_AP_WDS //
 		    {
 			offset = RTMP_GET_PACKET_IF(skb) + DP_RAI0;
 		    }
 		}else 
-#endif // CONFIG_RTDEV_MII || CONFIG_RTDEV_USB || CONFIG_RTDEV_PCI
+#endif // CONFIG_RT3090_AP || CONFIG_RT3090_AP_MODULE // 
 
 		if(strncmp(skb->dev->name, "ra", 2)==0) {
 #if defined (CONFIG_RT2860V2_AP_MESH)
@@ -1177,7 +1121,7 @@ int32_t PpeTxHandler(struct sk_buff *skb, int gmac_no)
 		    printk("HNAT: unknow interface %s\n",skb->dev->name);
 		}
 		
-		entry.act_dp = offset; 
+		entry.iblk2.act_dp = offset; 
 
 		/* Ipv4: TTL / Ipv6: Hot Limit filed */
 		entry.bfib1.ttl = DFL_FOE_TTL_REGEN;
@@ -1191,15 +1135,15 @@ int32_t PpeTxHandler(struct sk_buff *skb, int gmac_no)
 #endif
 		memcpy(foe_entry, &entry, sizeof(entry));
 		if(DebugLevel==7) {
-//		    FoeDumpEntry(FOE_ENTRY_NUM(skb));	// ASUS EXT
+//		    FoeDumpEntry(FOE_ENTRY_NUM(skb));		// ASUS EXT
 		}
 
-	}else if(IS_MAGIC_TAG_VALID(skb) && (FOE_AI(skb)==HIT_BIND_KEEPALIVE) && (DFL_FOE_KA_ORG==0)){
+	}else if((FOE_AI(skb)==HIT_BIND_KEEPALIVE) && (DFL_FOE_KA_ORG==0)){
 		/* this is duplicate packet in keepalive new header mode, 
 		 * just drop it */
 		memset(FOE_INFO_START_ADDR(skb), 0, FOE_INFO_LEN);
 		return 0;
-	}else if(IS_MAGIC_TAG_VALID(skb) && (FOE_AI(skb)==HIT_UNBIND_RATE_REACH)&& FOE_ALG(skb)==1) {
+	}else if( (FOE_AI(skb)==HIT_UNBIND_RATE_REACH)&& FOE_ALG(skb)==1) {
 		if(DebugLevel==1) {
 		    NAT_PRINT("%s: I cannot bind it becuase of FOE_ALG=1\n",__FUNCTION__);
 		}
@@ -1258,6 +1202,19 @@ static void PpeSetFoeHashMode(uint32_t HashMode)
 	case 16384:
 		RegModifyBits(PPE_FOE_CFG, FoeTblSize_16K, 0, 3);
 		break;
+	}
+
+	/*
+	 * RT2880-Shuttle/RT2880_MP Bug
+	 *
+	 * HashMode=0/1 in 1K table size -> set HashMode =0/1
+	 * HashMode=0/1 in 2K,4K,8K,16K table size -> set HashMode =1/0
+	 *
+	 */
+	if(ChipId==RT2880 && ChipVer < RT2880_MP2) {
+		if(FOE_4TB_SIZ!=1024){
+			HashMode=~HashMode;
+		}
 	}
 
 	/* Set Hash Mode */
@@ -1388,35 +1345,16 @@ static void PpeSetFoeGloCfgEbl(uint32_t Ebl)
 		
 		/* Set switch scheduler to SPQ */
 		RegModifyBits(RALINK_ETH_SW_BASE+0x10, 0x0, 0, 16);
-#elif defined (CONFIG_RALINK_RT3352) || defined (CONFIG_RALINK_RT5350) || defined (CONFIG_RALINK_RT6855) || defined (CONFIG_RALINK_RT63365)
+#elif defined (CONFIG_RALINK_RT3352) || defined (CONFIG_RALINK_RT5350) || defined (CONFIG_RALINK_RT6855)
 #if 0
 		/* Set switch port 6 flow control only tx on for QOS support*/
 		RegModifyBits(RALINK_ETH_SW_BASE+0xC8, 0x2, 8, 2);
 #endif
-
-#if defined (CONFIG_RAETH_SPECIAL_TAG)
-		/* Set GDMA1 GDM1_TCI_81xx */
-		RegModifyBits(FE_GDMA1_FWD_CFG, 0x1, 24, 1);
-		/* Set GDMA2 GDM2_TCI_81xx */
-		RegModifyBits(FE_GDMA2_FWD_CFG, 0x1, 24, 1);
-		/* Set EXT_SW_EN = 1 */
-		RegModifyBits(FE_COS_MAP, 0x1, 30, 1);
-#endif
-
 #endif
 
 	} else {
 		/* PPE Engine Disable */ 
 		RegModifyBits(PPE_GLO_CFG, 0, 0, 1);
-
-#if defined (CONFIG_RAETH_SPECIAL_TAG)
-		/* Remove GDMA1 GDM1_TCI_81xx */
-		RegModifyBits(FE_GDMA1_FWD_CFG, 0x0, 24, 1);
-		/* Remove GDMA2 GDM2_TCI_81xx */
-		RegModifyBits(FE_GDMA2_FWD_CFG, 0x0, 24, 1);
-		/* Remove EXT_SW_EN = 1 */
-		RegModifyBits(FE_COS_MAP, 0x0, 30, 1);
-#endif	
 	}
 
 }
@@ -1429,12 +1367,12 @@ static void PpeSetFoeGloCfgEbl(uint32_t Ebl)
  *
  * VLAN | DSCP |  UP |VLAN Pri|In-DSCP |Out-DSCP| AC | WMM_AC
  * -----+------+-----+--------+--------+--------+----+-------
- *   0	| 00-07|  0  |   0    |  0x00  |  0x00	|  0 |  BE
- *   3	| 24-31|  3  |   3    |  0x18  |  0x10	|  0 |  BE
- *   1	| 08-15|  1  |   1    |  0x08  |  0x00	|  0 |  BG
- *   2  | 16-23|  2  |   2    |  0x10  |  0x08	|  0 |  BG
- *   4	| 32-39|  4  |   4    |  0x20  |  0x18	|  1 |  VI
- *   5  | 40-47|  5  |   5    |  0x28  |  0x20	|  1 |  VI
+ *   0	| 00-07|  0  |   0    |  0x00  |  0x00	|  2 |  BE
+ *   3	| 24-31|  3  |   3    |  0x18  |  0x10	|  2 |  BE
+ *   1	| 08-15|  1  |   1    |  0x08  |  0x00	|  2 |  BG
+ *   2  | 16-23|  2  |   2    |  0x10  |  0x08	|  2 |  BG
+ *   4	| 32-39|  4  |   4    |  0x20  |  0x18	|  2 |  VI
+ *   5  | 40-47|  5  |   5    |  0x28  |  0x20	|  2 |  VI
  *   6  | 48-55|  6  |   6    |  0x30  |  0x28	|  2 |  VO
  *   7	| 56-63|  7  |   7    |  0x38  |  0x30	|  2 |  VO
  * -----+------+-----+--------+--------+--------+----+--------
@@ -1593,7 +1531,7 @@ static void PpeSetDstPort(uint32_t Ebl)
 	DstPort[DP_RA5]=ra_dev_get_by_name("ra5"); 
 	DstPort[DP_RA6]=ra_dev_get_by_name("ra6"); 
 	DstPort[DP_RA7]=ra_dev_get_by_name("ra7"); 
-#if defined (CONFIG_RALINK_RT3883) || defined (CONFIG_RALINK_RT3352) || defined (CONFIG_RALINK_RT6855) || defined (CONFIG_RALINK_RT63365)
+#if defined (CONFIG_RALINK_RT3883) || defined (CONFIG_RALINK_RT3352) || defined (CONFIG_RALINK_RT6855)
 	DstPort[DP_RA8]=ra_dev_get_by_name("ra8"); 
 	DstPort[DP_RA9]=ra_dev_get_by_name("ra9"); 
 	DstPort[DP_RA10]=ra_dev_get_by_name("ra10"); 
@@ -1616,10 +1554,9 @@ static void PpeSetDstPort(uint32_t Ebl)
 #if defined (CONFIG_RT2860V2_AP_MESH)
 	DstPort[DP_MESH0]=ra_dev_get_by_name("mesh0");
 #endif
-#if defined (CONFIG_RTDEV_MII) || defined (CONFIG_RTDEV_USB) || defined (CONFIG_RTDEV_PCI)
+#if defined (CONFIG_RT3090_AP) || defined (CONFIG_RT3090_AP_MODULE)
 	DstPort[DP_RAI0]=ra_dev_get_by_name("rai0"); 
-#if defined (CONFIG_RT3090_AP_MBSS) || defined (CONFIG_RT5392_AP_MBSS) || \
-    defined (CONFIG_RT3572_AP_MBSS) || defined (CONFIG_RT5572_AP_MBSS)
+#if defined (CONFIG_RT3090_AP_MBSS)
 	DstPort[DP_RAI1]=ra_dev_get_by_name("rai1"); 
 	DstPort[DP_RAI2]=ra_dev_get_by_name("rai2"); 
 	DstPort[DP_RAI3]=ra_dev_get_by_name("rai3"); 
@@ -1635,16 +1572,14 @@ static void PpeSetDstPort(uint32_t Ebl)
 	DstPort[DP_RAI13]=ra_dev_get_by_name("rai13"); 
 	DstPort[DP_RAI14]=ra_dev_get_by_name("rai14"); 
 	DstPort[DP_RAI15]=ra_dev_get_by_name("rai15"); 
-#endif // CONFIG_RTDEV_AP_MBSS //
-#endif // CONFIG_RTDEV_MII || CONFIG_RTDEV_USB || CONFIG_RTDEV_PCI
-#if defined (CONFIG_RT3090_AP_APCLI) || defined (CONFIG_RT5392_AP_APCLI) || \
-    defined (CONFIG_RT3572_AP_APCLI) || defined (CONFIG_RT5572_AP_APCLI)
+#endif // CONFIG_RT3090_AP_MBSS //
+#endif
+#if defined (CONFIG_RT3090_AP_APCLI)
 	DstPort[DP_APCLII0]=ra_dev_get_by_name("apclii0");
-#endif // CONFIG_RTDEV_AP_APCLI //
-#if defined (CONFIG_RT3090_AP_MESH) || defined (CONFIG_RT5392_AP_MESH) || \
-    defined (CONFIG_RT3572_AP_MESH) || defined (CONFIG_RT5572_AP_MESH)
+#endif // CONFIG_RT3090_AP_APCLI //
+#if defined (CONFIG_RT3090_AP_MESH)
 	DstPort[DP_MESHI0]=ra_dev_get_by_name("meshi0");
-#endif // CONFIG_RTDEV_AP_MESH //
+#endif // CONFIG_RT3090_AP_MESH //
 	DstPort[DP_GMAC]=ra_dev_get_by_name("eth2");
 #ifdef CONFIG_RAETH_GMAC2
 	DstPort[DP_GMAC2]=ra_dev_get_by_name("eth3");
@@ -1660,7 +1595,7 @@ static void PpeSetDstPort(uint32_t Ebl)
 	if(DstPort[DP_RA5]!=NULL) { dev_put(DstPort[DP_RA5]); }
 	if(DstPort[DP_RA6]!=NULL) { dev_put(DstPort[DP_RA6]); }
 	if(DstPort[DP_RA7]!=NULL) { dev_put(DstPort[DP_RA7]); }
-#if defined (CONFIG_RALINK_RT3883) || defined (CONFIG_RALINK_RT3352) || defined (CONFIG_RALINK_RT6855) || defined (CONFIG_RALINK_RT63365)
+#if defined (CONFIG_RALINK_RT3883) || defined (CONFIG_RALINK_RT3352) || defined (CONFIG_RALINK_RT6855)
 	if(DstPort[DP_RA8]!=NULL) { dev_put(DstPort[DP_RA8]); }
 	if(DstPort[DP_RA9]!=NULL) { dev_put(DstPort[DP_RA9]); }
 	if(DstPort[DP_RA10]!=NULL) { dev_put(DstPort[DP_RA10]); }
@@ -1683,10 +1618,9 @@ static void PpeSetDstPort(uint32_t Ebl)
 #if defined (CONFIG_RT2860V2_AP_MESH)
 	if(DstPort[DP_MESH0]!=NULL) { dev_put(DstPort[DP_MESH0]); }
 #endif
-#if defined (CONFIG_RTDEV_MII) || defined (CONFIG_RTDEV_USB) || defined (CONFIG_RTDEV_PCI)
+#if defined (CONFIG_RT3090_AP) || defined (CONFIG_RT3090_AP_MODULE)
 	if(DstPort[DP_RAI0]!=NULL) { dev_put(DstPort[DP_RAI0]); }
-#if defined (CONFIG_RT3090_AP_MBSS) || defined (CONFIG_RT5392_AP_MBSS) || \
-    defined (CONFIG_RT3572_AP_MBSS) || defined (CONFIG_RT5572_AP_MBSS)
+#if defined (CONFIG_RT3090_AP_MBSS)
 	if(DstPort[DP_RAI1]!=NULL) { dev_put(DstPort[DP_RAI1]); }
 	if(DstPort[DP_RAI2]!=NULL) { dev_put(DstPort[DP_RAI2]); }
 	if(DstPort[DP_RAI3]!=NULL) { dev_put(DstPort[DP_RAI3]); }
@@ -1702,16 +1636,14 @@ static void PpeSetDstPort(uint32_t Ebl)
 	if(DstPort[DP_RAI13]!=NULL) { dev_put(DstPort[DP_RAI13]); }
 	if(DstPort[DP_RAI14]!=NULL) { dev_put(DstPort[DP_RAI14]); }
 	if(DstPort[DP_RAI15]!=NULL) { dev_put(DstPort[DP_RAI15]); }
-#endif // CONFIG_RTDEV_AP_MBSS //
-#endif // CONFIG_RTDEV_MII || CONFIG_RTDEV_USB || CONFIG_RTDEV_PCI
-#if defined (CONFIG_RT3090_AP_APCLI) || defined (CONFIG_RT5392_AP_APCLI) || \
-    defined (CONFIG_RT3572_AP_APCLI) || defined (CONFIG_RT5572_AP_APCLI)
+#endif // CONFIG_RT3090_AP_MBSS //
+#endif
+#if defined (CONFIG_RT3090_AP_APCLI)
 	if(DstPort[DP_APCLII0]!=NULL) { dev_put(DstPort[DP_APCLII0]); }
-#endif // CONFIG_RTDEV_AP_APCLI //
-#if defined (CONFIG_RT3090_AP_MESH) || defined (CONFIG_RT5392_AP_MESH) || \
-    defined (CONFIG_RT3572_AP_MESH) || defined (CONFIG_RT5572_AP_MESH)
+#endif // CONFIG_RT3090_AP_APCLI //
+#if defined (CONFIG_RT3090_AP_MESH)
 	if(DstPort[DP_MESHI0]!=NULL) { dev_put(DstPort[DP_MESHI0]); }
-#endif // CONFIG_RTDEV_AP_MESH //
+#endif // CONFIG_RT3090_AP_MESH //
 	if(DstPort[DP_GMAC]!=NULL) { dev_put(DstPort[DP_GMAC]); }
 #ifdef CONFIG_RAETH_GMAC2
 	if(DstPort[DP_GMAC2]!=NULL) { dev_put(DstPort[DP_GMAC2]); }
@@ -1781,12 +1713,51 @@ static uint32_t SetGdmaFwd(uint32_t Ebl)
 	return 0;  
 }
 
+static int32_t GetChipInfo(void)
+{
+    uint8_t Id[10];
+
+    memset(Id, 0, sizeof(Id));
+    strncpy(Id, (char *)CHIPID, 8);
+    ChipVer = RegRead(REVID);
+
+    NAT_PRINT("CHIPID=%s\n", Id);
+
+    if(strcmp(Id,"RT2880  ")==0) {
+	ChipId=RT2880;
+    }else if(strcmp(Id,"RT3052  ")==0) {
+	ChipId=RT3052;
+    }else if(strcmp(Id,"RT3883  ")==0) {
+	ChipId=RT3883;
+    }else if(strcmp(Id,"RT3350  ")==0) {
+	ChipId=RT3350;
+    }else if(strcmp(Id,"RT3352  ")==0) {
+	ChipId=RT3352;
+    }else if(strcmp(Id,"RT6855  ")==0) {
+	ChipId=RT6855;
+    }else {
+	return 0;
+    }
+
+    return 1;
+}
+
+
 /*
  * PPE Enabled: GMAC<->PPE<->CPU
  * PPE Disabled: GMAC<->CPU
  */
 static int32_t PpeInitMod(void)
 {
+
+    /* Get Chip Information */
+    if(!GetChipInfo()) {
+	NAT_PRINT("===========================\n");
+	NAT_PRINT("This Chip is not supported.\n");
+	NAT_PRINT("===========================\n");
+	return 1;
+    }
+
     NAT_PRINT("Ralink HW NAT Module Enabled\n");
 
     //Get net_device structure of Dest Port 
@@ -1848,7 +1819,7 @@ static void PpeCleanupMod(void)
     PpeSetDstPort(0);
 
 #if 0
-    /* defined (CONFIG_RALINK_RT3052) || defined (CONFIG_RALINK_RT3352) || defined (CONFIG_RALINK_RT5350) || defined (CONFIG_RALINK_RT6855) || defined (CONFIG_RALINK_RT63365) */  
+    /* defined (CONFIG_RALINK_RT3052) || defined (CONFIG_RALINK_RT3352) || defined (CONFIG_RALINK_RT5350) || defined (CONFIG_RALINK_RT6855) */  
     /* Restore switch port 6 flow control to default on */
     RegModifyBits(RALINK_ETH_SW_BASE+0xC8, 0x3, 8, 2);
 #endif
@@ -1864,13 +1835,8 @@ static void PpeCleanupMod(void)
 /*HNAT QOS*/
 int PpeSetDscpRemarkEbl(uint32_t enable)
 {
-#if defined (CONFIG_RALINK_RT6855)
-    /* Re-generate DSCP per flow */
-    DscpReMarkerEbl=enable;
-#else
     /* Re-generate DSCP */
     RegModifyBits(PPE_GLO_CFG, enable, 11, 1);
-#endif
     return HWNAT_SUCCESS;
 }
 
@@ -2096,61 +2062,25 @@ int PpeSetSchMode(uint32_t policy)
     return HWNAT_SUCCESS;
 }
 
-/* In general case, we only need 1/2/4/8 weight */
-int PpeWeightRemap(uint8_t W)
-{
-    switch(W)
-    {
-    case 8:
-#if defined (CONFIG_RALINK_RT3052) || defined (CONFIG_RALINK_RT3883)
-	return 3;
-#else
-	return 7;
-#endif
-    case 4:
-#if defined (CONFIG_RALINK_RT3052) || defined (CONFIG_RALINK_RT3883)
-	return 2;
-#else
-	return 3;
-#endif
-    case 2:
-	return 1;
-    case 1:
-	return 0;
-    default:
-	/* invalid value */
-	return -1;
-    }
-}
-
 int PpeSetSchWeight(uint8_t W0, uint8_t W1, uint8_t W2, uint8_t W3)
 {
-    int32_t _W0, _W1, _W2, _W3;
-
-    _W0=PpeWeightRemap(W0);
-    _W1=PpeWeightRemap(W1);
-    _W2=PpeWeightRemap(W2);
-    _W3=PpeWeightRemap(W3);
-
-    if((_W0==-1) || (_W1==-1) || (_W2==-1) || (_W3==-1)) {
-	return HWNAT_FAIL;
-    }
-
     /* Set GDMA1 Schduling Weight */
-    RegModifyBits(FE_GDMA1_SCH_CFG, _W0, 0, 3);
-    RegModifyBits(FE_GDMA1_SCH_CFG, _W1, 4, 3);
-    RegModifyBits(FE_GDMA1_SCH_CFG, _W2, 8, 3);
-    RegModifyBits(FE_GDMA1_SCH_CFG, _W3, 12, 3);
+    RegModifyBits(FE_GDMA1_SCH_CFG, W0, 0, 3);
+    RegModifyBits(FE_GDMA1_SCH_CFG, W1, 4, 3);
+    RegModifyBits(FE_GDMA1_SCH_CFG, W2, 8, 3);
+    RegModifyBits(FE_GDMA1_SCH_CFG, W3, 12, 3);
 
     /* Set GDMA2 Schduling Weight */
-    RegModifyBits(FE_GDMA2_SCH_CFG, _W0, 0, 3);
-    RegModifyBits(FE_GDMA2_SCH_CFG, _W1, 4, 3);
-    RegModifyBits(FE_GDMA2_SCH_CFG, _W2, 8, 3);
-    RegModifyBits(FE_GDMA2_SCH_CFG, _W3, 12, 3);
+    RegModifyBits(FE_GDMA2_SCH_CFG, W0, 0, 3);
+    RegModifyBits(FE_GDMA2_SCH_CFG, W1, 4, 3);
+    RegModifyBits(FE_GDMA2_SCH_CFG, W2, 8, 3);
+    RegModifyBits(FE_GDMA2_SCH_CFG, W3, 12, 3);
+
 
     return HWNAT_SUCCESS;
 }
 
+#if 1
 
 int PpeSetBindThreshold(uint32_t threshold)
 {
@@ -2273,10 +2203,11 @@ int PpeSetBindLifetime(uint16_t tcp_life, uint16_t udp_life, uint16_t fin_life)
 }
 
 
+#endif
 module_init(PpeInitMod);
 module_exit(PpeCleanupMod);
 
 MODULE_AUTHOR("Steven Liu/Kurtis Ke");
 MODULE_LICENSE("Proprietary");
-MODULE_DESCRIPTION("Ralink Hardware NAT v0.92\n");
+MODULE_DESCRIPTION("Ralink Hardware NAT v0.9\n");
 

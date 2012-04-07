@@ -5,6 +5,7 @@ function show_4G_country_list(){
 
 	var got_country = 0;
 	free_options($("isp_countrys"));
+	$("isp_countrys").options.length = countrylist.length;
 	for(var i = 0; i < countrylist.length; i++){
 		$("isp_countrys").options[i] = new Option(countrylist[i][0], countrylist[i][1]);
 		if(countrylist[i][1] == country){
@@ -14,7 +15,7 @@ function show_4G_country_list(){
 	}
 
 	if(!got_country)
-		$("isp_countrys").options[i-1].selected = "1";
+		$("isp_countrys").options[0].selected = "1";
 }
 
 function gen_4G_list(){

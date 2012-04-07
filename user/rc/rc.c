@@ -252,7 +252,7 @@ sysinit(void)
 	system("echo 1 > /proc/sys/net/ipv4/conf/default/rp_filter");
 */
 	system("echo 180 > /proc/sys/net/ipv4/netfilter/ip_conntrack_tcp_timeout_established");
-	system("echo 90 > /proc/sys/net/ipv4/netfilter/ip_conntrack_udp_timeout");
+//	system("echo 90 > /proc/sys/net/ipv4/netfilter/ip_conntrack_udp_timeout");
 //	system("echo 60 > /proc/sys/net/ipv4/netfilter/ip_conntrack_tcp_timeout_last_ack");
 #if (!defined(W7_LOGO) && !defined(WIFI_LOGO))
 //	system("echo 300000 > /proc/sys/net/nf_conntrack_max");
@@ -269,6 +269,7 @@ sysinit(void)
 	system("echo \"4096 4096 4096\" > /proc/sys/net/ipv4/tcp_mem");
 */
 	system("echo 10 > /proc/sys/kernel/panic");
+	system("echo 2 > /proc/sys/vm/overcommit_memory");	// never overcommit memory
 }
 
 static void
@@ -444,8 +445,6 @@ do_timer(void)
 	}
 
 	/* Sync time */
-//	stop_ntpc();
-//	start_ntpc();
 	refresh_ntpc();
 
 	set_timezone();
@@ -622,7 +621,12 @@ void restart_qos()
 			//!nvram_match("wan0_proto", "l2tp") &&
 			is_hwnat_loaded() 
 		)
+		{
 			system("rmmod hw_nat");
+			sleep(1);
+			system("echo 0 > /proc/sys/net/ipv4/conf/default/force_igmp_version");
+			system("echo 0 > /proc/sys/net/ipv4/conf/all/force_igmp_version");
+		}
 
 		nvram_set("qos_enable", "1");
 		track_set("1");
@@ -671,7 +675,12 @@ Speedtest_Init_failed:
 		)
 		{
 			if (nvram_match("hwnat", "1") && nvram_match("fw_pt_l2tp", "0") && nvram_match("fw_pt_ipsec", "0"))
+			{
+				system("echo 2 > /proc/sys/net/ipv4/conf/default/force_igmp_version");
+				system("echo 2 > /proc/sys/net/ipv4/conf/all/force_igmp_version");
+				sleep(1);
 				system("insmod -q hw_nat.ko");
+			}
 		}
 	}
 
@@ -683,7 +692,12 @@ Speedtest_Init_failed:
 void restart_vpn_pt()
 {
 	if ((nvram_match("fw_pt_l2tp", "1") || nvram_match("fw_pt_ipsec", "1")) && is_hwnat_loaded())
+	{
 		system("rmmod hw_nat");
+		sleep(1);
+		system("echo 0 > /proc/sys/net/ipv4/conf/default/force_igmp_version");
+		system("echo 0 > /proc/sys/net/ipv4/conf/all/force_igmp_version");
+	}
 
 	system("rmmod nf_nat_pptp 1>/dev/null 2>&1");
 	system("rmmod nf_conntrack_pptp 1>/dev/null 2>&1");
@@ -708,7 +722,12 @@ void restart_vpn_pt()
 		(nvram_match("rt_radio_x", "0") || nvram_match("rt_mrate", "0")) &&
 		!enable_qos() &&
 		!is_hwnat_loaded())
+	{
+		system("echo 2 > /proc/sys/net/ipv4/conf/default/force_igmp_version");
+		system("echo 2 > /proc/sys/net/ipv4/conf/all/force_igmp_version");
+		sleep(1);
 		system("insmod -q hw_nat.ko");
+	}
 }
 
 void rc_restart_firewall()
@@ -897,7 +916,7 @@ usb_dbg("service_handle: End to restart_wan_line.\n");
 		}
 		else if (strcmp(entry->d_name, "restart_dhcpd") == 0)
 		{
-			dbg("rc restarting DHCPD.\n");
+			dbg("rc restarting DHCP Server.\n");
 			restart_dhcpd();
 		}
 		else if (strcmp(entry->d_name, "restart_upnp") == 0)
@@ -961,8 +980,6 @@ usb_dbg("service_handle: End to restart_wan_line.\n");
 		else if (strcmp(entry->d_name, "restart_ntpc") == 0)
 		{
 			dbg("rc restarting ntpc.\n");
-//			stop_ntpc();
-//			start_ntpc();
 			refresh_ntpc();
 		}
 		else if (strcmp(entry->d_name, "rebuild_cifs_config_and_password") ==
@@ -986,8 +1003,6 @@ usb_dbg("service_handle: End to restart_wan_line.\n");
 			start_logger();
 #endif
 			
-//			stop_ntpc();
-//			start_ntpc();
 			refresh_ntpc();
 		}
 #ifdef WSC
@@ -1676,7 +1691,6 @@ usb_dbg("# rc: End of PRT PLUG OFF\n");
 #endif
 #endif
 			start_wan();
-			start_dhcpd();
 
 			wan_proto_type = nvram_safe_get("wan0_proto");
 			if (wan_proto_type && (!strcmp(wan_proto_type, "pptp") || !strcmp(wan_proto_type, "l2tp")))	// delay run
@@ -2272,8 +2286,7 @@ main(int argc, char **argv)
 	}
 	else if (!strcmp(base, "start_ntp"))
 	{
-		stop_ntpc();
-		start_ntpc();
+		refresh_ntpc();
 		return 0;
 	}
 	else if (!strcmp(base, "get_sw"))

@@ -348,15 +348,30 @@ start_igmpproxy(char *wan_ifname)
 	FILE *fp;
 	char *altnet = nvram_safe_get("mr_altnet_x");
 	char *altnet_mask;
+	int delay_count;
+
+        if (pids("udpxy"))
+		system("killall -SIGTERM udpxy");
+
+	delay_count = 10;
+	while (pids("udpxy") && (delay_count-- > 0))
+		sleep(1);
+
+	if (pids("igmpproxy"))
+		system("killall -SIGTERM igmpproxy");
+
+	delay_count = 10;
+	while (pids("igmpproxy") && (delay_count-- > 0))
+		sleep(1);
 
 	if (atoi(nvram_safe_get("udpxy_enable_x")))
+	{
 		eval("/usr/sbin/udpxy", "-a", nvram_safe_get("lan_ifname") ? : "br0",
 			"-m", wan_ifname, "-p", nvram_safe_get("udpxy_enable_x"));
+	}
 
 	if (!nvram_match("mr_enable_x", "1"))
 		return;
-
-	printf("start igmpproxy [%s]\n", wan_ifname);   // tmp test
 
 	if ((fp = fopen(igmpproxy_conf, "w")) == NULL) {
 		perror(igmpproxy_conf);
@@ -367,7 +382,7 @@ start_igmpproxy(char *wan_ifname)
 		altnet_mask = altnet;
 	else
 		altnet_mask = "0.0.0.0/0";
-	printf("start igmpproxy: altnet_mask = %s\n", altnet_mask);	// tmp test
+
 	fprintf(fp, "# automagically generated from web settings\n"
 		"quickleave\n\n"
 		"phyint %s upstream  ratelimit 0  threshold 1\n"
@@ -382,7 +397,6 @@ start_igmpproxy(char *wan_ifname)
 
 	doSystem("/bin/igmpproxy -c %s", igmpproxy_conf);
 }
-
 
 static int
 add_lan_routes(char *lan_ifname)
@@ -591,6 +605,7 @@ vconfig()
 			{		
 				if(strstr(nvram_safe_get("vlan_isp"), "mio"))/* Connect Singtel MIO box to P3 */
 				{
+					system("8367m 40 1");
 					system("8367m 38 3");/* IPTV: P0  VoIP: P1 */
 					/* Internet */
 					system("8367m 36 10");
@@ -1396,7 +1411,12 @@ start_wan(void)
 	)
 	{
 		if (nvram_match("hwnat", "1") && nvram_match("fw_pt_l2tp", "0") && nvram_match("fw_pt_ipsec", "0"))
+		{
+			system("echo 2 > /proc/sys/net/ipv4/conf/default/force_igmp_version");
+			system("echo 2 > /proc/sys/net/ipv4/conf/all/force_igmp_version");
+			sleep(1);
 			system("insmod -q hw_nat.ko");
+		}
 	}
 #ifdef ASUS_EXT
 	update_wan_status(0);
@@ -1551,8 +1571,12 @@ start_wan(void)
 */
 #ifdef RTCONFIG_USB_MODEM
 		if(get_usb_modem_state()){
+
+
 #ifdef RTCONFIG_USB_MODEM_WIMAX
 			if(nvram_match("modem_enable", "4")){
+
+
 				char *wan_hostname = nvram_get(strcat_r(prefix, "hostname", tmp));
 				char *wimax_argv[] = { "udhcpc",
 						"-i", WIMAX_INTERFACE,
@@ -1591,6 +1615,8 @@ start_wan(void)
 		if (strcmp(wan_proto, "pppoe") == 0 || strcmp(wan_proto, "pptp") == 0 ||
 		    strcmp(wan_proto, "l2tp") == 0) 	// oleg patch
 		{
+
+
 //			int demand = atoi(nvram_safe_get(strcat_r(prefix, "pppoe_idletime", tmp)));
 			int demand = atoi(nvram_safe_get(strcat_r(prefix, "pppoe_idletime", tmp))) &&
 			strcmp(wan_proto, "l2tp") /* L2TP does not support idling */;	// oleg patch
@@ -1605,9 +1631,13 @@ start_wan(void)
 			if (strcmp(wan_proto, "pppoe") || (!strcmp(wan_proto, "pppoe") && nvram_match("pppoe_dhcp_route", "1")))
 			/* pptp, l2tp */ /* PPPoE doesn't need to run udhcpc. Cherry Cho modified in 2011/6/13. */
 			{
+
+
 				/* launch dhcp client and wait for lease forawhile */
 				if (nvram_match(strcat_r(prefix, "pppoe_ipaddr", tmp), "0.0.0.0")) 
 				{
+
+
 					char *wan_hostname = nvram_get(strcat_r(prefix, "hostname", tmp));
 					char *dhcp_argv[] = { "udhcpc",
 					     "-i", wan_ifname,
@@ -1622,6 +1652,8 @@ start_wan(void)
 					/* Start dhcp daemon */
 					_eval(dhcp_argv, NULL, 0, NULL);
 		 		} else {
+
+
 					printf("[rc] start 2\n");	// tmp test
 		 			/* do not use safe_get here, values are optional */
 					/* start firewall */
@@ -1786,7 +1818,12 @@ stop_wan(void)
 		//!nvram_match("wan0_proto", "l2tp") &&
 		is_hwnat_loaded()
 	)
+	{
 		system("rmmod hw_nat");
+		sleep(1);
+		system("echo 0 > /proc/sys/net/ipv4/conf/default/force_igmp_version");
+		system("echo 0 > /proc/sys/net/ipv4/conf/all/force_igmp_version");
+	}
 
 	if (pids("stats"))
 		system("killall stats");
@@ -1933,13 +1970,22 @@ add_dns(const char *wan_ifname)
 	char *wan_dns_final;
 
 	/* check if auto dns enabled */
-	if (nvram_match("wan0_proto", "static") || !nvram_match("wan0_dnsenable_x", "1"))
+	if (nvram_match("wan0_proto", "static"))
+	{
+		eval("touch", "/tmp/resolv.conf");
+		unlink("/etc/resolv.conf");
+		symlink("/tmp/resolv.conf", "/etc/resolv.conf");
+
+		return 0;
+	}
+	else if (!nvram_match("wan0_dnsenable_x", "1"))
 		return 0;
 
 	snprintf(prefix, sizeof(prefix), "wan%d_", unit);
 
 	/* Open resolv.conf to read */
 	if (!(fp = fopen("/tmp/resolv.conf", "r+"))) {
+		dbG("error open /tmp/resolv.conf\n");
 		perror("/tmp/resolv.conf");
 		return errno;
 	}
@@ -1983,7 +2029,7 @@ add_dns(const char *wan_ifname)
 
 	/* notify dns server */
 	snprintf(tmp, sizeof(tmp), "-%d", SIGHUP);
-	eval("killall", tmp, "dproxy");
+	eval("killall", tmp, "dnsmasq");
 	
 	return 0;
 }
@@ -2002,10 +2048,23 @@ del_dns(const char *wan_ifname)
 	char *wan_dns_final;
 	int match;
 
+	/* check if auto dns enabled */
+	if (nvram_match("wan0_proto", "static"))
+	{
+		eval("touch", "/tmp/resolv.conf");
+		unlink("/etc/resolv.conf");
+		symlink("/tmp/resolv.conf", "/etc/resolv.conf");
+                
+		return 0;
+	}
+	else if (!nvram_match("wan0_dnsenable_x", "1"))
+		return 0;
+
 	snprintf(prefix, sizeof(prefix), "wan%d_", unit);
 
 	/* Open resolv.conf to read */
 	if (!(fp = fopen("/tmp/resolv.conf", "r"))) {
+		dbG("error open /tmp/resolv.conf\n");
 		perror("fopen /tmp/resolv.conf");
 		return errno;
 	}
@@ -2064,7 +2123,7 @@ del_dns(const char *wan_ifname)
 	
 	/* notify dns server */
 	snprintf(tmp, sizeof(tmp), "-%d", SIGHUP);
-	eval("killall", tmp, "dproxy");
+	eval("killall", tmp, "dnsmasq");
 	
 	return 0;
 }
@@ -2080,6 +2139,7 @@ update_resolvconf(void)
 		return 0;
 
 	if (!(fp = fopen("/tmp/resolv.conf", "w+"))) {
+		dbG("error open /tmp/resolv.conf\n");
 		perror("/tmp/resolv.conf");
 		return errno;
 	}
@@ -2098,13 +2158,12 @@ update_resolvconf(void)
 void
 wan_up(char *wan_ifname)	// oleg patch, replace
 {
-	dbG("wan_ifname: %s\n", wan_ifname);
-
 	char tmp[100], prefix[] = "wanXXXXXXXXXX_";
 	char *wan_proto, *gateway;
 
-	logmessage("RT-N56U", "wan up");	// tmp test
-	
+	dbG("wan_ifname: %s\n", wan_ifname);
+	logmessage("RT-N56U", "wan up: %s", wan_ifname);	// tmp test
+
 	/* Figure out nvram variable name prefix for this i/f */
 	if (wan_prefix(wan_ifname, prefix) < 0)
 	{
@@ -2309,7 +2368,12 @@ wan_up(char *wan_ifname)	// oleg patch, replace
 			//!nvram_match("wan0_proto", "l2tp") &&
 			is_hwnat_loaded()
 		)
+		{
 			system("rmmod hw_nat");
+			sleep(1);
+			system("echo 0 > /proc/sys/net/ipv4/conf/default/force_igmp_version");
+			system("echo 0 > /proc/sys/net/ipv4/conf/all/force_igmp_version");
+		}
 
 		dbg("wan_up rebuild QoS rules...\n");
 		Speedtest_Init();
@@ -2356,7 +2420,12 @@ Speedtest_Init_failed_wan_up:
 		)
 		{
 			if (nvram_match("hwnat", "1") && nvram_match("fw_pt_l2tp", "0") && nvram_match("fw_pt_ipsec", "0"))
+			{
+				system("echo 2 > /proc/sys/net/ipv4/conf/default/force_igmp_version");
+				system("echo 2 > /proc/sys/net/ipv4/conf/all/force_igmp_version");
+				sleep(1);
 				system("insmod -q hw_nat.ko");
+			}
 		}
 	}
 
@@ -2373,12 +2442,11 @@ Speedtest_Init_failed_wan_up:
 
 	start_ddns();
 
-	stop_ntpc();
-	start_ntpc();
+	refresh_ntpc();
 #if (!defined(W7_LOGO) && !defined(WIFI_LOGO))
 	if (nvram_match("wan0_proto", "dhcp"))	// 0712 ASUS
 	{
-		if (!pids("detectWan"))
+		if (!nvram_match("detectWan", "0") && !pids("detectWan"))
 		{
 			printf("start detectWan\n");	// tmp test
 			system("detectWan &");
@@ -2464,6 +2532,7 @@ lan_up(char *lan_ifname)
 
 	/* Open resolv.conf to read */
 	if (!(fp = fopen("/tmp/resolv.conf", "w"))) {
+		dbG("error open /tmp/resolv.conf\n");
 		perror("/tmp/resolv.conf");
 		return;
 	}
@@ -2478,8 +2547,7 @@ lan_up(char *lan_ifname)
 	fclose(fp);
 
 	/* Sync time */
-	stop_ntpc();
-	start_ntpc();
+	refresh_ntpc();
 }
 
 void
@@ -2509,6 +2577,7 @@ lan_up_ex(char *lan_ifname)
 
 	/* Open resolv.conf to read */
 	if (!(fp = fopen("/tmp/resolv.conf", "w"))) {
+		dbG("error open /tmp/resolv.conf\n");
 		perror("/tmp/resolv.conf");
 		return;
 	}
@@ -2522,16 +2591,15 @@ lan_up_ex(char *lan_ifname)
 	}
 	fclose(fp);
 #if (!defined(W7_LOGO) && !defined(WIFI_LOGO))
-	if (!pids("detectWan"))
+	if (!nvram_match("detectWan", "0") && !pids("detectWan"))
 	{
 		printf("start detectWan\n");
 		system("detectWan &");
 	}
 #endif
 	/* Sync time */
-	stop_ntpc();
-	start_ntpc();
-	//update_lan_status(1);
+	refresh_ntpc();
+//	update_lan_status(1);
 }
 
 void

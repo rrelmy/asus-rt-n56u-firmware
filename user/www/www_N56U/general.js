@@ -1711,9 +1711,9 @@ function load_body(){
 	document.form.next_host.value = location.host;
 	if(document.form.current_page.value == "Advanced_WirelessGuest_Content.asp"){
 		final_flag = 1;
-masq_wepkey_guest();
-wl_auth_mode_reconf_guest();
-wl_auth_mode_change_guest(1);
+		masq_wepkey_guest();
+		wl_auth_mode_reconf_guest();
+		wl_auth_mode_change_guest(1);
 	}
 	else if(document.form.current_page.value == "Advanced_WMode_Content.asp"){
 		if (isCard() == 'ralink'){
@@ -3340,11 +3340,11 @@ function wl_auth_mode_reconf(){
 	}
 }
 
-function insertExtChannelOption(){
+function insertExtChannelOption(orig){
         var country = document.form.wl_country_code.value;
         var orig = document.form.wl_channel.value;
         free_options(document.form.wl_channel);   
-        if (document.form.wl_nband.value == "2"){
+        if (document.form.wl_nband.value == "2"){	//2.4GHz
         	if (document.form.HT_BW.value == "1"){
         		if (country == "AS" || 
         		 country == "CA" || 
@@ -3401,7 +3401,7 @@ function insertExtChannelOption(){
 				channels = new Array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13);						
 		}
 	}
-        else{
+        else{		//1 : 5GHz
                 if (document.form.HT_BW.value == "0"){ 
                 	if (country == "AL" || 
                 	 country == "DZ" || 
@@ -3750,7 +3750,10 @@ function insertExtChannelOption(){
         for(var i=0; i<channels.length; i++){
         	ch_v[i] = channels[i];
         }
-        channels[0] = "Auto";
+        
+        if(ch_v[0]=="0")
+        		channels[0] = "Auto";
+        		
         add_options_x2(document.form.wl_channel, channels, ch_v, orig);
 }
 

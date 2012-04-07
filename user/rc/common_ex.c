@@ -40,6 +40,7 @@ typedef unsigned char   bool;
 #include<stdarg.h>
 #include <arpa/inet.h>	// oleg patch
 #include <string.h>	// oleg patch
+#include <fcntl.h>
 #include "rc.h"	// oleg patch
 
 #include <ralink.h>
@@ -217,6 +218,30 @@ void getsyspara(void)
 	nvram_set("et0macaddr", macaddr);
 	nvram_set("br0hexaddr", macaddr3);
 	nvram_set("wanhexaddr", macaddr4);
+
+        char ea[ETHER_ADDR_LEN];
+
+        if (FRead(dst, OFFSET_MAC_GMAC0, bytes)<0)
+                dbg("READ MAC address GMAC0: Out of scope\n");
+        else
+        {
+                if (buffer[0]==0xff)
+                {
+        		if (ether_atoe(macaddr, ea))
+                		FWrite(ea, OFFSET_MAC_GMAC0, 6);
+                }
+        }
+
+        if (FRead(dst, OFFSET_MAC_GMAC2, bytes)<0)
+                dbg("READ MAC address GMAC2: Out of scope\n");
+        else
+        {
+                if (buffer[0]==0xff)
+                {
+        		if (ether_atoe(macaddr2, ea))
+                		FWrite(ea, OFFSET_MAC_GMAC2, 6);
+                }
+        }
 
 	/* reserved for Ralink. used as ASUS country code. */
 	dst = (unsigned int *)country_code;
@@ -830,6 +855,7 @@ void convert_asus_values(int skipflag)
 	nvram_set("wan0_dnsenable_x", nvram_safe_get("wan_dnsenable_x"));
 	nvram_unset("wan0_dns");	// oleg patch //2008.09 magic
 	nvram_unset("wanx_dns");	// oleg patch //2008.09 magic
+	nvram_unset("wan0_wins");
 
 	convert_routes();
 
@@ -1377,3 +1403,171 @@ void char_to_ascii(char *output, char *input)/* Transfer Char to ASCII */
 	*(ptr) = '\0';
 }
 
+#define FW_CREATE	0
+#define FW_APPEND	1
+#define FW_NEWLINE	2
+
+int f_read(const char *path, void *buffer, int max)
+{
+	int f;
+	int n;
+
+	if ((f = open(path, O_RDONLY)) < 0) return -1;
+	n = read(f, buffer, max);
+	close(f);
+	return n;
+}
+
+int f_write(const char *path, const void *buffer, int len, unsigned flags, unsigned cmode)
+{
+	static const char nl = '\n';
+	int f;
+	int r = -1;
+	mode_t m;
+
+	m = umask(0);
+	if (cmode == 0) cmode = 0666;
+	if ((f = open(path, (flags & FW_APPEND) ? (O_WRONLY|O_CREAT|O_APPEND) : (O_WRONLY|O_CREAT|O_TRUNC), cmode)) >= 0) {
+		if ((buffer == NULL) || ((r = write(f, buffer, len)) == len)) {
+			if (flags & FW_NEWLINE) {
+				if (write(f, &nl, 1) == 1) ++r;
+			}
+		}
+		close(f);
+	}
+	umask(m);
+	return r;
+}
+
+int f_read_string(const char *path, char *buffer, int max)
+{
+	if (max <= 0) return -1;
+	int n = f_read(path, buffer, max - 1);
+	buffer[(n > 0) ? n : 0] = 0;
+	return n;
+}
+
+int f_write_string(const char *path, const char *buffer, unsigned flags, unsigned cmode)
+{
+	return f_write(path, buffer, strlen(buffer), flags, cmode);
+}
+
+static void write_ct_timeout(const char *type, const char *name, unsigned int val)
+{
+	unsigned char buf[128];
+	char v[16];
+
+	sprintf(buf, "/proc/sys/net/ipv4/netfilter/ip_conntrack_%s_timeout%s%s",
+		type, (name && name[0]) ? "_" : "", name ? name : "");
+	sprintf(v, "%u", val);
+
+	f_write_string(buf, v, 0, 0);
+}
+
+#ifndef write_udp_timeout
+#define write_udp_timeout(name, val) write_ct_timeout("udp", name, val)
+#endif
+
+#ifndef write_icmp_timeout
+#define write_icmp_timeout(name, val) write_ct_timeout("icmp", name, val)
+#endif
+
+#ifndef write_generic_timeout
+#define write_generic_timeout(name, val) write_ct_timeout("generic", name, val)
+#endif
+
+static unsigned int read_ct_timeout(const char *type, const char *name)
+{
+	unsigned char buf[128];
+	unsigned int val = 0;
+	char v[16];
+
+	sprintf(buf, "/proc/sys/net/ipv4/netfilter/ip_conntrack_%s_timeout%s%s",
+		type, (name && name[0]) ? "_" : "", name ? name : "");
+	if (f_read_string(buf, v, sizeof(v)) > 0)
+		val = atoi(v);
+
+	return val;
+}
+
+#ifndef read_udp_timeout
+#define read_udp_timeout(name) read_ct_timeout("udp", name)
+#endif
+
+void setup_udp_timeout(int connflag) 
+{
+	unsigned int v[10];
+	const char *p;
+	char buf[70];
+
+	if (connflag) {
+		p = nvram_safe_get("ct_udp_timeout");
+		if (sscanf(p, "%u%u", &v[0], &v[1]) == 2) {
+			write_udp_timeout(NULL, v[0]);
+			write_udp_timeout("stream", v[1]);
+		}
+		else {
+			v[0] = read_udp_timeout(NULL);
+			v[1] = read_udp_timeout("stream");
+			sprintf(buf, "%u %u", v[0], v[1]);
+			nvram_set("ct_udp_timeout", buf);
+		}
+	}
+	else {
+		write_udp_timeout(NULL, 1);
+		write_udp_timeout("stream", 6); 
+	}
+}
+
+int scan_icmp_unreplied_conntrack()
+{
+	FILE *fp = fopen( "/proc/net/nf_conntrack", "r" );
+	char buff[1024], ipv[16], ipv_num[16], protocol[16], protocol_num[16];
+	int found = 0;
+
+	if (fp == NULL) {
+		perror( "openning /proc/net/nf_conntrack" );
+		return -1;
+	}
+
+	while (fgets(buff, sizeof(buff), fp) != NULL) {
+		sscanf(buff, "%s %s %s %s", ipv, ipv_num, protocol, protocol_num);
+
+		if (memcmp(protocol, "icmp", 4) || !strstr(buff, "UNREPLIED")) continue;
+
+//		dbG("\n%s %s %s %s\n", ipv, ipv_num, protocol, protocol_num);
+
+		found++;
+		break;
+	}
+
+	fclose(fp);
+
+//	if (!found)
+//		dbG("No matching conntrack found\n");
+
+	return found;
+}
+
+void setup_misc_timeout(int connflag)
+{
+	int i;
+
+	if (!connflag)
+	{
+                for (i = 0; i < 3; i++)
+                {
+                	if (scan_icmp_unreplied_conntrack() > 0)
+                	{
+//				write_generic_timeout(NULL, 0);
+				write_icmp_timeout(NULL, 0);
+				sleep(2);
+			}
+		}
+	}
+	else
+	{
+//		write_generic_timeout(NULL, 600);
+		write_icmp_timeout(NULL, 30);
+	}
+}

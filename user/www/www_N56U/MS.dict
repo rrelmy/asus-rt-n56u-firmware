@@ -45,7 +45,7 @@ BasicConfig_EnableiTunesServer_itemname=Mendayakan iTunes Server?
 OP_switch_button_hint1=Suis mod operasi terletak di bahagian bawah panel RT-N56U.
 OP_switch_button_hint2=Klik di sini untuk lihat
 OP_GW_item=Penghala Wayales (Lalai) 
-OP_GW_desc1=Dalam mod Penghala Wayales / mod perkongsian IP, RT-N56U menyambung kepada Internet melalui PPPoE, IP Automatik, PPTP, L2TP, atau IP Statik. 
+OP_GW_desc1=Dalam mod Penghala Wayales, RT-N56U menyambung kepada Internet melalui PPPoE, IP Automatik, PPTP, L2TP, atau IP Statik. 
 OP_GW_desc2=Ia menyediakan anda isyarat radio wayarles. NAT, tembok api, dan perkhidmatan perkongsian jalur lebar untuk pelanggan LAN didayakan. Ia juga menyokong UPnP dan Dynamic DNS untuk SOHO atau pengguna di rumah.
 OP_RT_item=Penghala (Nyahdayakan NAT)
 OP_RT_desc1=Dalam mod penghala, gunakan kabel Ethernet untuk menyambungkan RT-N56U dengan komputer anda dan wujudkan sambungan rangkaain wayarles, kemudian pilih tetapan untuk sambungan rangkaian wayarles anda.
@@ -237,7 +237,7 @@ AP_survey=Tinjauan AP
 statusTitle_AP=Status Titik Akses
 [USB Application - HSDPA]
 HSDPAConfig_connection=Seting sambungan
-HSDPAConfig_pin_code_itemdesc=Sila input kod PIN bagi kad SIM anda. Ia mestilah nombor yang panjangnya lebih daripada 3 dan lebih kecil daripada 8. Jika anda tidak tahu kod PIN, sila hubungi ISP anda.
+HSDPAConfig_pin_code_itemdesc=Sila input kod PIN bagi kad SIM anda. Ia mestilah nombor yang panjangnya lebih daripada 4 dan lebih kecil daripada 8. Jika anda tidak tahu kod PIN, sila hubungi ISP anda.
 HSDPAConfig_private_apn_itemname=Perkhidmatan APN(pilihan)
 HSDPAConfig_private_apn_itemdesc=Jika anda tidak tahu nama perkhidmatan APN, sila hubungi ISP anda.
 HSDPAConfig_hsdpa_mode_Backup=Sandaran
@@ -1447,7 +1447,7 @@ HSDPAConfig_username_itemdesc=Sila masukkan nama pengguna anda.
 HSDPAConfig_password_itemdesc=Sila masukkan kata laluan anda.
 HSDPAConfig_usbadaptor_itemdesc=Sila pilih penyesuai usb Modem anda.
 confirm_disableftp_dm=Menyahdayakan Perkongsian Sekitar Rangkaian akan menyahdayakan Muat Turun Utama.
-LANHostConfig_IPRouters_itemdesc=Alamat IP LAN bagi RT-N56U Nilai lalai adalah 192.168.1.1. Julat alamat LAN IP: 192.168.0.1 - 192.168.255.254, 172.16.0.1 – 172.31.255.254, 10.0.0.1 – 10.255.255.254
+LANHostConfig_IPRouters_itemdesc=Alamat IP LAN bagi RT-N56U Nilai lalai adalah 192.168.1.1.
 HSDPAConfig_hsdpa_mode_itemdesc=Pilih mod USB Modem mengikut keperluan dan persekitaran anda. Kami memberikan empat mod di bawah: Sandaran, Sama berat, Sentiasa tinggi dan Sentiasa rendah.Untuk mengeluarkan penyesuai USB Modem, sila rujuk pada <a href='/index.asp' target=\'_blank\'>Indeks</a> dan klik butang penyesuai.
 Not_authpage_login_again=Jika anda hendak log masuk kembali, sila tutup tetingkap ini dahulu.
 GO_HSDPA_SETTING=Pergi ke Seting USB Modem

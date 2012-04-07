@@ -108,6 +108,23 @@ typedef unsigned char   bool;
 #include <syslog.h>
 #define logs(s) syslog(LOG_NOTICE, s)
 
+//2011.02 Yau add for shared memory
+#include <sys/ipc.h>
+#include <sys/shm.h>
+#include <semaphore_mfp.h>
+//Device service info data structure
+typedef struct {
+        unsigned char   ip_addr[255][4];
+        unsigned char   mac_addr[255][6];
+        unsigned char   device_name[255][16];
+        int             type[255];
+        int             http[255];
+        int             printer[255];
+        int             itune[255];
+        int             ip_mac_num;
+        int             detail_info_num;
+} CLIENT_DETAIL_INFO_TABLE, *P_CLIENT_DETAIL_INFO_TABLE;
+
 #ifdef WEBS
 #define init_cgi(query)
 #define do_file(webs, file)
@@ -487,9 +504,10 @@ void sys_script(char *name)
 	  // do nothing	
      }
      else if (strcmp(name,"leases.sh")==0 || strcmp(name,"dleases.sh")==0) /* check here*/
-     {		
-		//csprintf("run sys_script\n");	// lan lease
-		sys_refresh_lease();	
+     {
+#if 0
+		sys_refresh_lease();
+#endif
      }
      else if (strcmp(name,"iptable.sh")==0) 
      {
@@ -1187,8 +1205,11 @@ ej_dump(int eid, webs_t wp, int argc, char_t **argv)
 		return (ej_wl_status(eid, wp, 0, NULL));
 	else if (strcmp(file, "wlan11b_2g.log")==0)
 		return (ej_wl_status_2g(eid, wp, 0, NULL));
-	else if (strcmp(file, "leases.log")==0) 
+	else if (strcmp(file, "leases.log")==0)
+	{
+		system("killall -SIGUSR1 dnsmasq");
 		return (ej_lan_leases(eid, wp, 0, NULL));
+	}
 	else if (strcmp(file, "iptable.log")==0) 
 		return (ej_nat_table(eid, wp, 0, NULL));
 	else if (strcmp(file, "route.log")==0)
@@ -1945,26 +1966,24 @@ static int update_variables_ex(int eid, webs_t wp, int argc, char_t **argv) {
 		//2008.07.24 Yau add
 		if (!strcmp(script, "networkmap_refresh")) {
 			printf("@@@ restarting networkmap!!!\n");
+#if 0
 			eval("restart_networkmap");
 			sleep(1);
 			websWrite(wp, "<script>restart_needed_time(%d);</script>\n", 1);
-/*
-			//signal to networkmap 
-			printf("@@@ Signal to networkmap!!!\n");	// tmp test
-			doSystem("killall -%d networkmap", SIGUSR1);
-
-			FILE *fp = fopen("/tmp/static_ip.inf", "r");
-			char buf[256];
-			int row = 10;
-			
-			if (fp != NULL)
-				while (fgets(buf, 256, fp) != NULL)
-					++row;
-
-			//printf("needed time(2) = %d\n", row);	// tmp test
-			//websWrite(wp, "<script>restart_needed_time(%d);</script>\n", row);
-			websWrite(wp, "<script>restart_needed_time(%d);</script>\n", row*15);	// ASUS
-*/
+#else
+			printf("[httpd] Signal to networkmap!!!\n");
+			if (pids("networkmap"))
+			{
+				kill_pidfile_s("/var/run/networkmap.pid", SIGUSR1);
+				websWrite(wp, "<script>restart_needed_time(5);</script>\n");
+			}
+			else
+			{
+				eval("restart_networkmap");
+				sleep(1);
+				websWrite(wp, "<script>restart_needed_time(%d);</script>\n", 1);
+			}
+#endif
 		}
 		else if (!strcmp(script, "mfp_monopolize"))
 		{
@@ -3422,6 +3441,57 @@ static int ej_get_arp_table(int eid, webs_t wp, int argc, char_t **argv) {
 	}
 	
 	return 0;
+}
+
+//2011.02 Yau add shared memory
+static int ej_get_client_detail_info(int eid, webs_t wp, int argc, char_t **argv){
+        int i, shm_client_info_id;
+        void *shared_client_info=(void *) 0;
+        char output_buf[256];
+        P_CLIENT_DETAIL_INFO_TABLE p_client_info_tab;
+
+	if (nvram_match("sw_mode_ex", "3")) return 0;
+
+printf("=== Httpd try to lock and get shared memory...\n");
+        spinlock_lock(SPINLOCK_Networkmap);
+        shm_client_info_id = shmget((key_t)1001, sizeof(CLIENT_DETAIL_INFO_TABLE), 0666|IPC_CREAT);
+        if (shm_client_info_id == -1){
+            fprintf(stderr,"shmget failed\n");
+            spinlock_unlock(SPINLOCK_Networkmap);
+            return 0;
+        }
+
+        shared_client_info = shmat(shm_client_info_id,(void *) 0,0);
+        if (shared_client_info == (void *)-1){
+                fprintf(stderr,"shmat failed\n");
+                spinlock_unlock(SPINLOCK_Networkmap);
+                return 0;
+        }
+
+        printf("Shared client info attached at %X\n", (int)shared_client_info);
+        p_client_info_tab = (P_CLIENT_DETAIL_INFO_TABLE)shared_client_info;
+
+        for(i=0; i<p_client_info_tab->ip_mac_num; i++) {
+                memset(output_buf, 0, 256);
+                sprintf(output_buf, "[\"%d.%d.%d.%d\",\"%02X%02X%02X%02X%02X%02X\",\"%s\",\"%d\",\"%d\",\"%d\",\"%d\"]",
+                p_client_info_tab->ip_addr[i][0],p_client_info_tab->ip_addr[i][1],
+                p_client_info_tab->ip_addr[i][2],p_client_info_tab->ip_addr[i][3],
+                p_client_info_tab->mac_addr[i][0],p_client_info_tab->mac_addr[i][1],
+                p_client_info_tab->mac_addr[i][2],p_client_info_tab->mac_addr[i][3],
+                p_client_info_tab->mac_addr[i][4],p_client_info_tab->mac_addr[i][5],
+                p_client_info_tab->device_name[i],
+                p_client_info_tab->type[i],
+                p_client_info_tab->http[i],
+                p_client_info_tab->printer[i],
+                p_client_info_tab->itune[i]
+                );
+                websWrite(wp, output_buf);
+                if(i < p_client_info_tab->ip_mac_num-1)
+                        websWrite(wp, ",");
+        }
+        spinlock_unlock(SPINLOCK_Networkmap);
+printf("=== Httpd unlock!\n");
+        return 0;
 }
 
 // for detect static IP's client.
@@ -5386,7 +5456,7 @@ do_upload_post(char *url, FILE *stream, int len, char *boundary)
 //	char *hwver;
 
 	cprintf("Start upload\n");
-	eval("/sbin/stopservice", "99");
+//	eval("/sbin/stopservice", "99");
 
 	/* Look for our part */
 	while (len > 0) {
@@ -7802,6 +7872,7 @@ struct ej_handler ej_handlers[] = {
 	{ "get_nvram_list", ej_get_nvram_list},
 	{ "dhcp_leases", ej_dhcp_leases},
 	{ "get_arp_table", ej_get_arp_table},
+	{ "get_client_detail_info", ej_get_client_detail_info},//2011.02 Yau add shared memory
 	{ "get_static_client", ej_get_static_client},
 	{ "get_changed_status", ej_get_changed_status},
 	{ "wl_auth_list", ej_wl_auth_list},

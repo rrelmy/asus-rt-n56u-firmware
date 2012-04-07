@@ -45,7 +45,7 @@ BasicConfig_EnableiTunesServer_itemname=Uruchom iTunes Server?
 OP_switch_button_hint1=Przełącznik trybu operacji znajduje się na dolnym panelu RT-N56U.
 OP_switch_button_hint2=Kliknij tu w celu podglądu
 OP_GW_item=Routera bezprzewodowego (domyślna)
-OP_GW_desc1=W Tryb routera bezprzewodowego/ Udostępnianie IP, RT-N56U łączy się z Internetem przez PPPoE,Automatic IP (Automatyczny IP), PPTP, L2TP lub Static IP (Statyczny IP).
+OP_GW_desc1=W Tryb routera bezprzewodowego, RT-N56U łączy się z Internetem przez PPPoE,Automatic IP (Automatyczny IP), PPTP, L2TP lub Static IP (Statyczny IP).
 OP_GW_desc2=Udostępnia radiowy sygnał bezprzewodowy. Wlączone są NAT, firewall i usługi udostępniania pasma klientom LAN. Obsługiwane są także UPnP i Dynamic DNS (Dynamiczny DNS) dla segmentu SOHO lub użytkowników domowych.
 OP_RT_item=Router(Disable NAT)
 OP_RT_desc1=W trybie routera, użyj kabla Ethernet do połączenia RT-N56U z komputerem i utwórz połączenie z siecią bezprzewodową, a następnie wybierz ustawienia dla połączenia z siecią bezprzewodową. 
@@ -237,7 +237,7 @@ AP_survey=Wyszukiwanie punktów dostępowych
 statusTitle_AP=Stan punktu dostępowego
 [USB Application - HSDPA]
 HSDPAConfig_connection=Ustawienia połączenia
-HSDPAConfig_pin_code_itemdesc=Wpisz kod PIN Twojej karty SIM. Musi być to liczba mająca więcej niż 3 cyfry i mniej niż 8 cyfr. Jeżeli nie znasz kodu PIN, skontaktuj się ze swoim dostawcą usług internetowych.
+HSDPAConfig_pin_code_itemdesc=Wpisz kod PIN Twojej karty SIM. Musi być to liczba mająca więcej niż 4 cyfry i mniej niż 8 cyfr. Jeżeli nie znasz kodu PIN, skontaktuj się ze swoim dostawcą usług internetowych.
 HSDPAConfig_private_apn_itemname=Usługa APN (opcja)
 HSDPAConfig_private_apn_itemdesc=Jeżeli nie znasz nazwy usługi APN, skontaktuj się ze swoim dostawcą usług internetowych.
 HSDPAConfig_hsdpa_mode_Backup=Backup
@@ -1447,7 +1447,7 @@ HSDPAConfig_username_itemdesc=Wprowadź nazwę użytkownika.
 HSDPAConfig_password_itemdesc=Wprowadź hasło.
 HSDPAConfig_usbadaptor_itemdesc=Wybierz adapter USB
 confirm_disableftp_dm=Wyłączenie Udostępnienie otoczenia sieciowego, wyłączy Download Master.
-LANHostConfig_IPRouters_itemdesc=Adres LAN IP routera RT-N56U. Domyślny adres to 192.168.1.1. Zakres adresów IP LAN: 192.168.0.1 - 192.168.255.254, 172.16.0.1 – 172.31.255.254, 10.0.0.1 – 10.255.255.254
+LANHostConfig_IPRouters_itemdesc=Adres LAN IP routera RT-N56U. Domyślny adres to 192.168.1.1.
 HSDPAConfig_hsdpa_mode_itemdesc=Choose the USB Modem mode according by your requirements and enviroments. We provide four mode below: Backup, Equal weight, Always high and Always low. W celu bezpiecznego odłączenia adaptera USB Modem, sprawdź <a href='/index.asp' target=\'_blank\'>Indeks</a> i kliknij przycisk adaptera.
 Not_authpage_login_again=Aby zalogować ponownie, najpierw zamknij to okno.  
 GO_HSDPA_SETTING=Idź do ustawień USB Modem

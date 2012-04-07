@@ -664,25 +664,38 @@ void convert_routes(void)
 	nvram_set("wan_route", mroutes);	// oleg patch
 }
 
-void write_static_leases(char *file)
+void convert_mac2(char *mac, char *mac2)
 {
-	FILE *fp;
-	char *ip, *mac;
-	int i;
+	int j;
+	char *p = mac2;
 
-	fp=fopen(file, "w");
+	if(!mac || !mac2)
+		return;
 
-	if (fp==NULL) return;
-	
+	for(j=0; j<6; ++j)
+	{
+		sprintf(p++, "%c", mac[2*j]);
+		sprintf(p++, "%c%s", mac[2*j+1], j<5?":":"");
+		if(j<5)
+			p++;
+	}
+}
+
+void write_static_leases(FILE *fp)
+{
+	char *ip, *mac, mac2[18];
+	int i, j;
+
 	g_buf_init();
-			
+
 	foreach_x("dhcp_staticnum_x")
 	{
 		ip = general_conv("dhcp_staticip_x", i);
 		mac = general_conv("dhcp_staticmac_x", i);
-		fprintf(fp, "%s,%s\r\n", ip, mac);
+		convert_mac2(mac, mac2);
+		dbG("mac2 is %s\n", mac2);   // tmp test
+		fprintf(fp, "dhcp-host=%s,%s\n", mac2, ip);
 	}
-	fclose(fp);
 }
 
 #ifndef NOIPTABLES
@@ -995,6 +1008,9 @@ void nat_setting(char *wan_if, char *wan_ip, char *lan_if, char *lan_ip, char *l
 	
 	fclose(fp);
 	//fclose(fp1);	// oleg patch
+	setup_misc_timeout(FALSE);
+	setup_misc_timeout(TRUE);
+	setup_udp_timeout(TRUE);
 	system("iptables-restore /tmp/nat_rules");
 	// for rebuild the rule of wanduck gary add 2008.9
 	//kill_pidfile_s("/var/run/wanduck.pid", SIGUSR1);	// 2008.03 James.

@@ -116,7 +116,8 @@ endif
 romfs: all
 	$(STRIP) udhcpd
 	$(ROMFSINST) /usr/sbin/udhcpd 
-	cd $(INSTALLDIR)/usr/sbin && ln -sf udhcpd udhcpc
+#	cd $(INSTALLDIR)/usr/sbin && ln -sf udhcpd udhcpc
+	cd $(INSTALLDIR)/usr/sbin && mv udhcpd udhcpc
 
 clean:
 	-rm -f udhcpd udhcpc dumpleases *.o core

@@ -499,8 +499,21 @@ void vlan_accept_none()
 	rtk_vlan_portAcceptFrameType_set(4, ACCEPT_FRAME_TYPE_UNTAG_ONLY);
 }
 
+unsigned int is_singtel_mio = 0;
+
 void vlan_accept_adv(int wan_stb_x)
 {
+	if (is_singtel_mio)
+	{
+		rtk_vlan_portAcceptFrameType_set(0, ACCEPT_FRAME_TYPE_ALL);
+		rtk_vlan_portAcceptFrameType_set(1, ACCEPT_FRAME_TYPE_ALL);
+		rtk_vlan_portAcceptFrameType_set(2, ACCEPT_FRAME_TYPE_ALL);
+		rtk_vlan_portAcceptFrameType_set(3, ACCEPT_FRAME_TYPE_ALL);
+		rtk_vlan_portAcceptFrameType_set(4, ACCEPT_FRAME_TYPE_ALL);
+	}
+	else
+	{
+
 	/* WAN */
 	if (wan_stb_x == 0)		// P4
 	{				// default mode
@@ -526,17 +539,19 @@ void vlan_accept_adv(int wan_stb_x)
 		rtk_vlan_portAcceptFrameType_set(LAN_PORT_4, ACCEPT_FRAME_TYPE_ALL);
 		rtk_vlan_portAcceptFrameType_set(4, ACCEPT_FRAME_TYPE_ALL);
 	}
-	else if (wan_stb_x == 5)	// P0,P1,P4
+	else if (wan_stb_x == 6)	// P0,P1,P4
 	{
 		rtk_vlan_portAcceptFrameType_set(LAN_PORT_3, ACCEPT_FRAME_TYPE_ALL);
 		rtk_vlan_portAcceptFrameType_set(LAN_PORT_4, ACCEPT_FRAME_TYPE_ALL);
 		rtk_vlan_portAcceptFrameType_set(4, ACCEPT_FRAME_TYPE_ALL);
 	}
-	else if (wan_stb_x == 6)	// P2,P3,P4
+	else if (wan_stb_x == 5)	// P2,P3,P4
 	{
 		rtk_vlan_portAcceptFrameType_set(LAN_PORT_1, ACCEPT_FRAME_TYPE_ALL);
 		rtk_vlan_portAcceptFrameType_set(LAN_PORT_2, ACCEPT_FRAME_TYPE_ALL);
 		rtk_vlan_portAcceptFrameType_set(4, ACCEPT_FRAME_TYPE_ALL);
+	}
+
 	}
 }
 
@@ -617,14 +632,14 @@ void LANWANPartition_adv(int wan_stb_x)
 		rtk_port_isolation_set(LAN_PORT_3, fwd_mask);
 		rtk_port_isolation_set(8, fwd_mask);
 	}
-	else if (wan_stb_x == 5)	// P2,P3
+	else if (wan_stb_x == 6)	// P2,P3
 	{
 		fwd_mask.bits[0] = 0x10C;
 		rtk_port_isolation_set(LAN_PORT_1, fwd_mask);
 		rtk_port_isolation_set(LAN_PORT_2, fwd_mask);
 		rtk_port_isolation_set(8, fwd_mask);
 	}
- 	else if (wan_stb_x == 6)	// P0,P1
+ 	else if (wan_stb_x == 5)	// P0,P1
 	{
 		fwd_mask.bits[0] = 0x103;
 		rtk_port_isolation_set(LAN_PORT_3, fwd_mask);
@@ -667,7 +682,7 @@ void LANWANPartition_adv(int wan_stb_x)
 		rtk_port_isolation_set(4, fwd_mask);
 		rtk_port_isolation_set(9, fwd_mask);
 	}
-	else if (wan_stb_x == 5)	// P0,P1,P4
+	else if (wan_stb_x == 6)	// P0,P1,P4
 	{
 		fwd_mask.bits[0] = 0x213;
 		rtk_port_isolation_set(LAN_PORT_3, fwd_mask);
@@ -675,7 +690,7 @@ void LANWANPartition_adv(int wan_stb_x)
 		rtk_port_isolation_set(4, fwd_mask);
 		rtk_port_isolation_set(9, fwd_mask);
 	}
-	else if (wan_stb_x == 6)	// P2,P3,P4
+	else if (wan_stb_x == 5)	// P2,P3,P4
 	{
 		fwd_mask.bits[0] = 0x21C;
 		rtk_port_isolation_set(LAN_PORT_2, fwd_mask);
@@ -721,13 +736,13 @@ void LANWANPartition_adv(int wan_stb_x)
 		rtk_port_efid_set(LAN_PORT_3, 0);
 		rtk_port_efid_set(8, 0);
 	}
-	else if (wan_stb_x == 5)	// P2,P3
+	else if (wan_stb_x == 6)	// P2,P3
 	{
 		rtk_port_efid_set(LAN_PORT_1, 0);
 		rtk_port_efid_set(LAN_PORT_2, 0);
 		rtk_port_efid_set(8, 0);
 	}
-	else if (wan_stb_x == 6)	// P0,P1
+	else if (wan_stb_x == 5)	// P0,P1
 	{
 		rtk_port_efid_set(LAN_PORT_4, 0);
 		rtk_port_efid_set(LAN_PORT_3, 0);
@@ -764,14 +779,14 @@ void LANWANPartition_adv(int wan_stb_x)
 		rtk_port_efid_set(4, 1);
 		rtk_port_efid_set(9, 1);
 	}
-	else if (wan_stb_x == 5)	// P0,P1,P4
+	else if (wan_stb_x == 6)	// P0,P1,P4
 	{
 		rtk_port_efid_set(LAN_PORT_3, 1);
 		rtk_port_efid_set(LAN_PORT_4, 1);
 		rtk_port_efid_set(4, 1);
 		rtk_port_efid_set(9, 1);
 	}
-	else if (wan_stb_x == 6)	// P2,P3,P4
+	else if (wan_stb_x == 5)	// P2,P3,P4
 	{
 		rtk_port_efid_set(LAN_PORT_2, 1);
 		rtk_port_efid_set(LAN_PORT_1, 1);
@@ -1475,11 +1490,11 @@ int rtl8367m_ioctl(struct inode *inode, struct file *file, unsigned int req,
 		{
 			printk("LAN: P1,P2,P3 WAN: P0,P4\n");
 		}
-		else if (wan_stb_x == 5)
+		else if (wan_stb_x == 6)
 		{
 			printk("LAN: P2,P3 WAN: P0,P1,P4\n");
 		}
-		else if (wan_stb_x == 6)
+		else if (wan_stb_x == 5)
 		{
 			printk("LAN: P0,P1 WAN: P2,P3,P4\n");
 		}
@@ -2052,6 +2067,10 @@ int rtl8367m_ioctl(struct inode *inode, struct file *file, unsigned int req,
 	case 39:/* Create VLAN. Cherry Cho added in 2011/7/15. */
 		copy_from_user(&portInfo, (int __user *)arg, sizeof(int));
 		createVlan((u32) portInfo);		
+		break;
+
+	case 40:
+		copy_from_user(&is_singtel_mio, (unsigned int __user *)arg, sizeof(unsigned int));
 		break;
 
 	default:

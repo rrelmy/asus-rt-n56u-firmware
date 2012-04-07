@@ -57,23 +57,17 @@ function initial(){
 	
 	document.form.rt_channel.value = document.form.rt_channel_orig.value;
 	
-	if(document.form.rt_gmode.value=='4' || document.form.rt_gmode.value=='0' || document.form.rt_gmode.value=='3'){
-		document.form.rt_gmode_check.checked = false;
-		$("rt_gmode_check").disabled = true;
+	//Viz modify 2011.11 if(document.form.rt_gmode.value=='4' || document.form.rt_gmode.value=='0' || document.form.rt_gmode.value=='3'){
+	if(document.form.rt_gmode.value=='0'){
+			$("bg_protect_tr").style.display = "none";
 	}
-	else{
-		document.form.rt_gmode_check.checked = true;
-		$("rt_gmode_check").disabled = false;
+	else{	
+			$("bg_protect_tr").style.display = "";
 	}
 		
 	automode_hint();
 		
 	insertExtChannelOption();		
-
-	if(document.form.rt_gmode_protection.value == "auto")
-		document.form.rt_gmode_check.checked = true;
-	else
-		document.form.rt_gmode_check.checked = false;
 }
 
 function applyRule(){
@@ -312,9 +306,20 @@ function disableAdvFn(){
 						<option value="4" <% nvram_match_x("WLANConfig11b","rt_gmode", "4","selected"); %>>g Only</option>
 						<option value="0" <% nvram_match_x("WLANConfig11b","rt_gmode", "0","selected"); %>>b Only</option>
 					</select>
-				  <input type="checkbox" style="margin-left:30" name="rt_gmode_check" id="rt_gmode_check" value="" onClick="return change_common(this, 'WLANConfig11b', 'rt_gmode_check', '1')"> b/g Protection</input>
-				<span id="rt_gmode_hint" style="display:none"><#WLANConfig11n_automode_limition_hint#></span>
+					<!--div id="bg_protect" style="margin-top:-20px; margin-left:100px;"><input type="checkbox" style="margin-left:30" name="rt_gmode_check" id="rt_gmode_check" value="" onClick="return change_common(this, 'WLANConfig11b', 'rt_gmode_check', '1')"> b/g Protection</input></div-->
+					<span id="rt_gmode_hint" style="display:none"><#WLANConfig11n_automode_limition_hint#></span>
 				</td>
+			  </tr>
+
+			  <tr id="bg_protect_tr" style="display:none;">
+			    <th><a class="hintstyle" href="javascript:void(0);" onClick="">b/g Protection</a></th>
+			    <td>
+				<select name="rt_gmode_protection" class="input" onChange="return change_common(this, 'WLANConfig11b', 'rt_gmode_protection')">
+					<option class="content_input_fd" value="auto" <% nvram_match_x("WLANConfig11b","rt_gmode_protection", "auto","selected"); %>>Auto</option>
+					<option class="content_input_fd" value="on" <% nvram_match_x("WLANConfig11b","rt_gmode_protection", "on","selected"); %>>Always On</option>
+					<option class="content_input_fd" value="off" <% nvram_match_x("WLANConfig11b","rt_gmode_protection", "off","selected"); %>>Always Off</option>
+				</select>				
+			    </td>
 			  </tr>
 			  
 			  <tr>

@@ -181,7 +181,7 @@ int FoeAddEntry(struct hwnat_tuple *opt)
 		entry->bfib1.snap=0;
 		entry->bfib1.v1=opt->vlan1_act; /* insert / remove */
 		entry->bfib1.v2=opt->vlan2_act;
-		entry->bfib1.time_stamp=RegRead(FOE_TS)&0xFFFF;
+		entry->bfib1.time_stamp=RegRead(FOE_TS_T)&0xFFFF;
 
 		entry->sip=opt->sip; 
 		entry->dip=opt->dip;
@@ -277,7 +277,7 @@ int FoeBindEntry(struct hwnat_args *opt)
     entry = &PpeFoeBase[opt->entry_num];
 
     //restore right information block1
-    entry->tmp_buf.time_stamp=RegRead(FOE_TS)&0xFFFF;
+    entry->tmp_buf.time_stamp=RegRead(FOE_TS_T)&0xFFFF;
     entry->tmp_buf.state = BIND;
     memcpy(&entry->bfib1, &entry->tmp_buf, sizeof(entry->tmp_buf));
 
@@ -294,7 +294,7 @@ int FoeUnBindEntry(struct hwnat_args *opt)
     entry = &PpeFoeBase[opt->entry_num];
 
     entry->udib1.state = UNBIND;
-    entry->udib1.time_stamp=RegRead(FOE_TS)&0xFF;
+    entry->udib1.time_stamp=RegRead(FOE_TS_T)&0xFF;
     
     return HWNAT_SUCCESS;
 }

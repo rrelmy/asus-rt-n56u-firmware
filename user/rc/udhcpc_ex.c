@@ -138,7 +138,7 @@ bound(void)
 		nvram_safe_get(strcat_r(prefix, "netmask_t", tmp)));
 
 	spinlock_lock(SPINLOCK_DHCPRenew);
-	nvram_set("dhcp_renew", "0");
+	nvram_set("dhcp_renew", "0");   // for detectWAN
 	spinlock_unlock(SPINLOCK_DHCPRenew);
 
 	lan_up_ex(lan_ifname);

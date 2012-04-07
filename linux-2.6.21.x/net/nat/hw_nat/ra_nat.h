@@ -67,8 +67,7 @@ enum DstPort {
     DP_MESH0=21,
 #endif // CONFIG_RT2860V2_AP_MESH //
     DP_RAI0=24,
-#if defined (CONFIG_RT3090_AP_MBSS) || defined (CONFIG_RT5392_AP_MBSS) || \
-    defined (CONFIG_RT3572_AP_MBSS) || defined (CONFIG_RT5572_AP_MBSS)
+#if defined (CONFIG_RT3090_AP_MBSS)
     DP_RAI1=25,
     DP_RAI2=26,
     DP_RAI3=27,
@@ -84,22 +83,19 @@ enum DstPort {
     DP_RAI13=37,
     DP_RAI14=38,
     DP_RAI15=39,
-#endif // CONFIG_RTDEV_AP_MBSS //
-#if defined (CONFIG_RT3090_AP_WDS) || defined (CONFIG_RT5392_AP_WDS) || \
-    defined (CONFIG_RT3572_AP_WDS) || defined (CONFIG_RT5572_AP_WDS)
+#endif // CONFIG_RT3090_AP_MBSS //
+#if defined (CONFIG_RT3090_AP_WDS)
     DP_WDSI0=40,
     DP_WDSI1=41,
     DP_WDSI2=42,
     DP_WDSI3=43,
-#endif // CONFIG_RTDEV_AP_WDS //
-#if defined (CONFIG_RT3090_AP_APCLI) || defined (CONFIG_RT5392_AP_APCLI) || \
-    defined (CONFIG_RT3572_AP_APCLI) || defined (CONFIG_RT5572_AP_APCLI)
+#endif // CONFIG_RT3090_AP_WDS //
+#if defined (CONFIG_RT3090_AP_APCLI)
     DP_APCLII0=44,
-#endif // CONFIG_RTDEV_AP_APCLI //
-#if defined (CONFIG_RT3090_AP_MESH) || defined (CONFIG_RT5392_AP_MESH) || \
-    defined (CONFIG_RT3572_AP_MESH) || defined (CONFIG_RT5572_AP_MESH)
+#endif // CONFIG_RT3090_AP_APCLI //
+#if defined (CONFIG_RT3090_AP_MESH)
     DP_MESHI0=45,
-#endif // CONFIG_RTDEV_AP_MESH //
+#endif // CONFIG_RT3090_AP_MESH //
     DP_GMAC=50,
     DP_GMAC2=51,
     DP_PCI=52,
@@ -174,7 +170,7 @@ typedef struct
 #define FOE_AIS(skb)		    ((PdmaRxDescInfo4 *)(&(skb)->cb[40]))->AIS
 #endif
 
-#define FOE_ALG_RXIF(skb)           FOE_ALG(skb)	// ASUS EXT
+#define	FOE_ALG_RXIF(skb)	    FOE_ALG(skb)	// ASUS EXT
 
 #define IS_MAGIC_TAG_VALID(skb)	    ((FOE_MAGIC_TAG(skb) == FOE_MAGIC_PCI) || \
 				    (FOE_MAGIC_TAG(skb) == FOE_MAGIC_GE)   || \
@@ -191,7 +187,7 @@ typedef struct
 /*
  * EXPORT FUNCTION
  */
-int32_t GetPppoeSid(struct sk_buff *skb, uint32_t vlan_gap, uint16_t *sid, uint16_t *ppp_tag, uint32_t is_in);
+int32_t GetPppoeSid(struct sk_buff *skb, uint32_t vlan_gap, uint16_t *sid, uint32_t is_in);
 void AclInsTestEntry(void);
 void AcInsTestEntry(void);
 void MtrInsTestEntry(void);

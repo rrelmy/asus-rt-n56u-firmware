@@ -68,7 +68,6 @@ uint32_t  AclBndryCheck(AclPlcyNode *NewNode)
 	{
 
 	case ACL_ADD_SDMAC_ANY:
-	case ACL_ADD_ETYPE_ANY:
 		RuleSize=1;
 		break;
 	case ACL_ADD_SMAC_DIP_ANY:
@@ -80,9 +79,6 @@ uint32_t  AclBndryCheck(AclPlcyNode *NewNode)
 	case ACL_ADD_SIP_DIP_TCP:
 	case ACL_ADD_SIP_DIP_UDP:
 		RuleSize=3;  /* SMAC/SIP + DIP +DP */
-		break;
-	case ACL_ADD_SMAC_DMAC_ETYPE_VID_SIP_DIP_TOS_PORT:
-		RuleSize=7;  /* SMAC|ETYPE + VID|SIP|SP| DIP|DP|TOS */
 		break;
 	}
 
@@ -125,38 +121,25 @@ int AclIoctl (struct inode *inode, struct file *filp,
 #endif
 {
     struct acl_args *opt=(struct acl_args *)arg;
-    struct acl_list_args *opt2=(struct acl_list_args *)arg;
     AclPlcyNode node;
 
     memcpy(node.Mac,opt->mac,ETH_ALEN);
-    memcpy(node.DMac,opt->dmac,ETH_ALEN);
     node.Method=opt->method;
     node.RuleType=cmd;
     node.SipS=opt->sip_s;
     node.SipE=opt->sip_e;
     node.DipS=opt->dip_s;
     node.DipE=opt->dip_e;
-    node.SpS=opt->sp_s;
-    node.SpE=opt->sp_e;
     node.DpS=opt->dp_s;
     node.DpE=opt->dp_e;
     node.up=opt->up;
-    node.pn=opt->pn;
-    node.TosS=opt->tos_s;
-    node.TosE=opt->tos_e;
-    node.Ethertype=opt->ethertype;
-    node.Vid=opt->vid;
-    node.Proto=opt->L4;
-    node.Protocol=opt->protocol;
-    node.SpecialTag=0; /* use for esw port > rt63365 */ 
+
     switch(cmd) 
     {
     case ACL_ADD_SDMAC_ANY:
-    case ACL_ADD_ETYPE_ANY:
 	    opt->result = RunIoctlAddHandler(&node, ACL_PROTO_ANY);
             break;
     case ACL_DEL_SDMAC_ANY:
-    case ACL_DEL_ETYPE_ANY:
 	    opt->result = RunIoctlDelHandler(&node, ACL_PROTO_ANY);
             break;
     case ACL_ADD_SMAC_DIP_ANY:
@@ -170,12 +153,6 @@ int AclIoctl (struct inode *inode, struct file *filp,
     case ACL_ADD_SMAC_DIP_TCP:
     case ACL_ADD_SIP_DIP_TCP:
 	    opt->result = RunIoctlAddHandler(&node, ACL_PROTO_TCP);
-	    break;
-    case ACL_ADD_SMAC_DMAC_ETYPE_VID_SIP_DIP_TOS_PORT:
-	    opt->result = RunIoctlAddHandler(&node, node.Proto);
-	    break;
-    case ACL_DEL_SMAC_DMAC_ETYPE_VID_SIP_DIP_TOS_PORT:
-	    opt->result = RunIoctlDelHandler(&node, node.Proto);
 	    break;
     case ACL_DEL_SMAC_DIP_TCP:
     case ACL_DEL_SIP_DIP_TCP:
@@ -191,9 +168,6 @@ int AclIoctl (struct inode *inode, struct file *filp,
 	    break;
     case ACL_CLEAN_TBL:
 	    AclCleanTbl();
-	    break;
-    case ACL_GET_ALL_ENTRIES:
-	    opt2->result = AclGetAllEntries(opt2);
 	    break;
     default:
 	    break;

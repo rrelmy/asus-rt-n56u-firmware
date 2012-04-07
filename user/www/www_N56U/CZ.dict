@@ -45,7 +45,7 @@ BasicConfig_EnableiTunesServer_itemname=Povolit iTunes Server?
 OP_switch_button_hint1=Přepínač operačního režimu se nachází na dolním panelu RT-N56U.
 OP_switch_button_hint2=Klepnutím zde zobrazíte
 OP_GW_item=Bezdrátový směrovač (Výchozí)
-OP_GW_desc1=V bezdrátový směrovač/ režimu sdílení adresy IP se zařízení RT-N56U připojuje k Internetu prostřednictvím PPPoE, automatické IP, PPTP, L2TP, nebo statické IP.
+OP_GW_desc1=V bezdrátový směrovač režimu, se zařízení RT-N56U připojuje k Internetu prostřednictvím PPPoE, automatické IP, PPTP, L2TP, nebo statické IP.
 OP_GW_desc2=Poskytuje vám bezdrátový rádiový signál. Služby NAT, brána firewall a sdílení služeb šířky pásma pro klienty místní sítě LAN jsou aktivovány. Rovněž podporuje UPnP a dynamický DNS pro SOHO nebo domácího uživatele.
 OP_RT_item=Router(Disable NAT)
 OP_RT_desc1=V režimu směrovače připojte RT-N56U k počítači ethernetovým kabelem a vytvořte bezdrátové síťové připojení, potom vyberte nastavení pro vaše bezdrátové síťové připojení. 
@@ -237,7 +237,7 @@ AP_survey=Průzkum AP
 statusTitle_AP=Stav přístupového bodu
 [USB Application - HSDPA]
 HSDPAConfig_connection=Nastavení připojení
-HSDPAConfig_pin_code_itemdesc=Zadejte kód PIN vaší karty SIM. Musí se jednat o číslo delší než 3 a menší než 8. Pokud kód PIN neznáte, kontaktujte vašeho poskytovatele internetových služeb.
+HSDPAConfig_pin_code_itemdesc=Zadejte kód PIN vaší karty SIM. Musí se jednat o číslo delší než 4 a menší než 8. Pokud kód PIN neznáte, kontaktujte vašeho poskytovatele internetových služeb.
 HSDPAConfig_private_apn_itemname=Služba APN (volitelně)
 HSDPAConfig_private_apn_itemdesc=Pokud neznáte název služby APN, kontaktujte vašeho poskytovatele internetových služeb.
 HSDPAConfig_hsdpa_mode_Backup=Backup
@@ -1447,7 +1447,7 @@ HSDPAConfig_username_itemdesc=Zadejte vaše uživatelské jméno.
 HSDPAConfig_password_itemdesc=Zadejte vaše heslo.
 HSDPAConfig_usbadaptor_itemdesc=Vyberte váš usb adaptér.
 confirm_disableftp_dm=Deaktivací položky sdílené okolními počítači bude deaktivován správce stahování.
-LANHostConfig_IPRouters_itemdesc=IP adresa LAN RT-N56U. Původní hodnota je 192.168.1.1. Rozsah adres IP místní sítě LAN: 192.168.0.1 - 192.168.255.254, 172.16.0.1 – 172.31.255.254, 10.0.0.1 – 10.255.255.254
+LANHostConfig_IPRouters_itemdesc=IP adresa LAN RT-N56U. Původní hodnota je 192.168.1.1.
 HSDPAConfig_hsdpa_mode_itemdesc=Choose the USB Modem mode according by your requirements and enviroments. We provide four mode below: Backup, Equal weight, Always high and Always low. Chcete-li bezpečně odebrat USB Modem adaptér, viz <a href='/index.asp' target=\'_blank\'>Rejstřík</a> a klepněte na tlačítko adaptéru.
 Not_authpage_login_again=Chcete-li se znovu přihlásit, nejdříve zavřete toto okno.
 GO_HSDPA_SETTING=Přejít na USB Modem nastavení

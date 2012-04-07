@@ -87,7 +87,7 @@ function validForm(){
 		if(!validate_range(document.form.wl_frag, 256, 2346)
 				|| !validate_range(document.form.wl_rts, 0, 2347)
 				|| !validate_range(document.form.wl_dtim, 1, 255)
-				|| !validate_range(document.form.wl_bcn, 20, 1024)
+				|| !validate_range(document.form.wl_bcn, 20, 1000)
 				)
 			return false;
 	}
@@ -325,7 +325,7 @@ function disableAdvFn(row){
 			<tr>
 			  <th><a class="hintstyle" href="javascript:void(0);" onClick="openHint(3, 12);"><#WLANConfig11b_x_Beacon_itemname#></a></th>
 				<td>
-					<input type="text" maxlength="5" size="5" name="wl_bcn" class="input" value="<% nvram_get_x("WLANConfig11b", "wl_bcn"); %>" onKeyPress="return is_number(this)" onBlur="validate_range(this, 20, 1024)">
+					<input type="text" maxlength="5" size="5" name="wl_bcn" class="input" value="<% nvram_get_x("WLANConfig11b", "wl_bcn"); %>" onKeyPress="return is_number(this)" onBlur="validate_range(this, 20, 1000)">
 				</td>
 			</tr>
 			<tr>

@@ -57,6 +57,7 @@ static struct usb_driver usb_serial_driver = {
    drivers depend on it.
 */
 
+static ushort maxSize = 0;
 static int debug;
 static struct usb_serial *serial_table[SERIAL_TTY_MINORS];	/* initially all NULL */
 static spinlock_t table_lock;
@@ -866,6 +867,8 @@ int usb_serial_probe(struct usb_interface *interface,
 			goto probe_error;
 		}
 		buffer_size = le16_to_cpu(endpoint->wMaxPacketSize);
+		if (buffer_size < maxSize)
+			buffer_size = maxSize;
 		port->bulk_in_size = buffer_size;
 		port->bulk_in_endpointAddress = endpoint->bEndpointAddress;
 		port->bulk_in_buffer = kmalloc (buffer_size, GFP_KERNEL);
@@ -890,6 +893,8 @@ int usb_serial_probe(struct usb_interface *interface,
 			goto probe_error;
 		}
 		buffer_size = le16_to_cpu(endpoint->wMaxPacketSize);
+		if (buffer_size < maxSize)
+			buffer_size = maxSize;
 		port->bulk_out_size = buffer_size;
 		port->bulk_out_endpointAddress = endpoint->bEndpointAddress;
 		port->bulk_out_buffer = kmalloc (buffer_size, GFP_KERNEL);
@@ -1246,3 +1251,5 @@ MODULE_LICENSE("GPL");
 
 module_param(debug, bool, S_IRUGO | S_IWUSR);
 MODULE_PARM_DESC(debug, "Debug enabled or not");
+module_param(maxSize, ushort, 0);
+MODULE_PARM_DESC(maxSize,"User specified USB endpoint size");

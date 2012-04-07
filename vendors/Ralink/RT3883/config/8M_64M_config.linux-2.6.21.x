@@ -1,7 +1,7 @@
 #
 # Automatically generated make config: don't edit
 # Linux kernel version: 2.6.21
-# Wed Oct 26 09:49:57 2011
+# Fri Nov 25 14:06:42 2011
 #
 CONFIG_MIPS=y
 
@@ -211,7 +211,7 @@ CONFIG_MODULE_UNLOAD=y
 # CONFIG_MODULE_FORCE_UNLOAD is not set
 # CONFIG_MODVERSIONS is not set
 # CONFIG_MODULE_SRCVERSION_ALL is not set
-# CONFIG_KMOD is not set
+CONFIG_KMOD=y
 
 #
 # Block layer

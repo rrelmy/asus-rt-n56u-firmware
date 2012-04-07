@@ -2231,20 +2231,15 @@ function change_common(o, s, v){
 		automode_hint();
 		insertExtChannelOption();
 	}
-	else if (s=="WLANConfig11b" && v=="rt_gmode_check"){
-		if (document.form.rt_gmode_check.checked == true)
-			document.form.rt_gmode_protection.value = "auto";
-		else
-			document.form.rt_gmode_protection.value = "off";
+	else if (s=="WLANConfig11b" && v=="rt_gmode_protection"){
+
 	}
 	else if(s=="WLANConfig11b" && v == "rt_gmode"){
-		if(o.value=='4' || o.value=='0' || o.value=='3'){
-			document.form.rt_gmode_check.checked = false;
-			$("rt_gmode_check").disabled = true;
-		}
-		else{
-			document.form.rt_gmode_check.checked = true;
-			$("rt_gmode_check").disabled = false;
+		//Viz modify 2011.11 if(o.value=='4' || o.value=='0' || o.value=='3'){
+		if(o.value=='0'){
+			$("bg_protect_tr").style.display = "none";
+		}else{			
+			$("bg_protect_tr").style.display = "";
 		}
 		
 		if(o.value == "2" || o.value == "3")
@@ -2417,14 +2412,6 @@ return false;
 }
 }
 }
-/*else if (s=="WLANConfig11b" && v=="rt_gmode") 
-{if (document.form.rt_gmode_check.checked == true)
-{document.form.rt_gmode_protection_x.value = "1";
-}
-else
-{document.form.rt_gmode_protection_x.value = "0";
-}
-}//*/
 else if (s=="PrinterStatus" && v=="usb_webhttpport_x")
 {if (document.form.usb_webhttpport_x_check.checked)
 {document.form.usb_webhttpcheck_x.value = "1";

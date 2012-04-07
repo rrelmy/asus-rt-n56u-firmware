@@ -176,6 +176,7 @@ void catch_sig_linkstatus(int sig)
 				spinlock_lock(SPINLOCK_DHCPRenew);
 				if (	nvram_match("wan0_proto", "dhcp") &&
 					pids("udhcpc") &&
+					!nvram_match("detectLink", "0") &&
 					nvram_match("dhcp_renew", "0")	)
 				{
 					nvram_set("dhcp_renew", "1");	// for detectWAN
@@ -301,7 +302,7 @@ linkstatus_monitor(int argc, char *argv[])
 		fclose(fp);
 	}
 
-	nvram_set("link_wan", "0");
+	nvram_set("link_wan", "1");
 	nvram_set("link_lan", "0");
 	nvram_set("link_spd_wan", "0");
 #ifdef HTTPD_CHECK

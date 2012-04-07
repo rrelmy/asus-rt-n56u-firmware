@@ -3,7 +3,7 @@
 echo ">"
 cat /proc/bus/usb/devices
 echo ">"
-cat /etc_ro/usb/g3.conf
+cat /etc_ro/g3.conf
 echo ">"
 cat /tmp/ppp/peers/3g
 echo ">"

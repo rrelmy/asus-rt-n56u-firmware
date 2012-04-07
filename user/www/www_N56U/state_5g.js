@@ -295,7 +295,7 @@ function set_changed_status(manually_stop_wan,
 	this.new_ifWANConnect = ifWANConnect;
 	this.new_wan_link_str = wan_link_str;
 	this.new_detect_dhcp_pppoe = detect_dhcp_pppoe;
-	this.new_new_wan_status_log = wan_status_log;
+	this.new_wan_status_log = wan_status_log;
 	this.new_printer_sn = printer_sn;
 	this.new_wireless_clients = wireless_clients;
 	this.new_detect_wan_conn = detect_wan_conn;
@@ -454,9 +454,11 @@ function showDrSurf(eventID, flag){
 		if(now_alert[1] != ""){
 			now_alert[2] = eval("alert_event"+temp_eventID+"[2]");
 			
-			$("eventLink").onclick = function(){
+			if ($("eventLink") != null){	//2012.01 Viz {}
+				$("eventLink").onclick = function(){
 					now_alert[2](temp_eventID);
 				};
+			}	
 			
 			showtext($("linkDescription"), now_alert[1]);
 		}

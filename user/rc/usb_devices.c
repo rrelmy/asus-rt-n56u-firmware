@@ -1506,8 +1506,10 @@ int init_3g_param(char *vid, char *pid)
 			write_3g_conf(fp, SN_Alcatel_X200, 0, vid, pid);
 		} else if (strcmp(nvram_safe_get("Dev3G"), "AnyDATA-ADU-500A") == 0){
 			write_3g_conf(fp, SN_AnyDATA_ADU_500A, 0, vid, pid);
-		} else if (strcmp(nvram_safe_get("Dev3G"), "BandLuxe-C120") == 0){			// on list
-			write_3g_conf(fp, SN_BandLuxe_C120, 0, vid, pid);
+		} else if (strncmp(nvram_safe_get("Dev3G"), "BandLuxe-", 9) == 0){			// on list
+			fclose(fp);
+			unlink(USB_MODESWITCH_CONF);
+			return 0;
 		} else if (strcmp(nvram_safe_get("Dev3G"), "Solomon-S3Gm-660") == 0){
 			write_3g_conf(fp, SN_Solomon_S3Gm660, 0, vid, pid);
 		} else if (strcmp(nvram_safe_get("Dev3G"), "C-motechD-50") == 0){
@@ -1564,7 +1566,10 @@ int init_3g_param(char *vid, char *pid)
 			write_3g_conf(fp, SN_Vodafone_MD950, 0, vid, pid);
 		} else if (strcmp(nvram_safe_get("Dev3G"), "Siptune-LM-75") == 0){
 			write_3g_conf(fp, SN_Siptune_LM75, 0, vid, pid);
+		} else if (strncmp(nvram_safe_get("Dev3G"), "Huawei-", 7) == 0){
+			write_3g_conf(fp, UNKNOWNDEV, 0, vid, pid);
 		} else{
+			nvram_set("d3g", "usb_3g_dongle"); // the plugged dongle was not the manual-setting one.
 			fclose(fp);
 			unlink(USB_MODESWITCH_CONF);
 			return 0;
@@ -2311,6 +2316,11 @@ int asus_lp(const char *device_name, const char *action){
 	// set USB common nvram.
 	set_usb_common_nvram(action, usb_port, "printer");
 
+	// check the current working node of modem.
+	memset(nvram_name, 0, 32);
+	sprintf(nvram_name, "usb_path%d_act", port_num);
+	nvram_set(nvram_name, device_name);
+
 	// Don't support the second printer device on a DUT.
 	// Only see the other usb port.
 	if((port_num == 1 && !strcmp(nvram_safe_get("usb_path2"), "printer"))
@@ -2322,11 +2332,6 @@ int asus_lp(const char *device_name, const char *action){
 		file_unlock(isLock);
 		return 0;
 	}
-
-	// check the current working node of modem.
-	memset(nvram_name, 0, 32);
-	sprintf(nvram_name, "usb_path%d_act", port_num);
-	nvram_set(nvram_name, device_name);
 
 	u2ec_fifo = open(U2EC_FIFO, O_WRONLY|O_NONBLOCK);
 	write(u2ec_fifo, "a", 1);
@@ -2830,10 +2835,12 @@ int asus_usb_interface(const char *device_name, const char *action){
 #endif // RTCONFIG_USB_MODEM_WIMAX
 		{
 			usb_dbg("(%s): Runing USB serial...\n", device_name);
+			sleep(1);
+			system("insmod usbserial");
 			memset(modem_cmd, 0, 64);
-			sprintf(modem_cmd, "insmod usbserial vendor=0x%s product=0x%s", vid, pid);
+			sprintf(modem_cmd, "insmod option vendor=0x%s product=0x%s", vid, pid);
 			system(modem_cmd);
-			system("insmod option");
+			sleep(1);
 		}
 	}
 	else{ // isACMInterface(device_name)

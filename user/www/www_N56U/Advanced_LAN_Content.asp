@@ -36,29 +36,6 @@ function initial(){
 	enable_auto_hint(4, 2);
 }
 
-function checkIP(){
-	var strIP = $('lan_ipaddr').value;
-	var re=/^(\d+)\.(\d+)\.(\d+)\.(\d+)$/g;
-	if(re.test(strIP)){
-		if( RegExp.$1 == 192 && RegExp.$2 == 168 && RegExp.$3 < 256 && RegExp.$4 < 256){
-			applyRule();
-			re.test(strIP);
-		}
-		else if( RegExp.$1 == 172 && RegExp.$2 > 15 && RegExp.$2 < 32 && RegExp.$3 < 256 && RegExp.$4 < 256){
-			applyRule();
-			re.test(strIP);
-		}
-		else if( RegExp.$1 == 10 && RegExp.$2 < 256 && RegExp.$3 < 256 && RegExp.$4 < 256){
-			applyRule();
-			re.test(strIP);
-		}
-		else{
-			alert('"'+strIP+'"'+" <#BM_alert_IP2#>");
-			re.test(strIP);
-		}
-	}
-	else alert('"'+strIP+'"'+" <#JS_validip#>");
-}
 
 function applyRule(){
 	if(validForm()){
@@ -72,38 +49,62 @@ function applyRule(){
 	}
 }
 
+// test if WAN IP & Gateway & DNS IP is a valid IP
+// DNS IP allows to input nothing
+function valid_IP(obj_name, obj_flag){
+		// A : 1.0.0.0~126.255.255.255
+		// B : 127.0.0.0~127.255.255.255 (forbidden)
+		// C : 128.0.0.0~255.255.255.254
+		var A_class_start = inet_network("1.0.0.0");
+		var A_class_end = inet_network("126.255.255.255");
+		var B_class_start = inet_network("127.0.0.0");
+		var B_class_end = inet_network("127.255.255.255");
+		var C_class_start = inet_network("128.0.0.0");
+		var C_class_end = inet_network("255.255.255.255");
+		
+		var ip_obj = obj_name;
+		var ip_num = inet_network(ip_obj.value);
+
+		if(obj_flag == "DNS" && ip_num == -1){ //DNS allows to input nothing
+			return true;
+		}
+		
+		if(obj_flag == "GW" && ip_num == -1){ //GW allows to input nothing
+			return true;
+		}
+		
+		if(ip_num > A_class_start && ip_num < A_class_end)
+			return true;
+		else if(ip_num > B_class_start && ip_num < B_class_end){
+			alert(ip_obj.value+" <#JS_validip#>");
+			ip_obj.focus();
+			ip_obj.select();
+			return false;
+		}
+		else if(ip_num > C_class_start && ip_num < C_class_end)
+			return true;
+		else{
+			alert(ip_obj.value+" <#JS_validip#>");
+			ip_obj.focus();
+			ip_obj.select();
+			return false;
+		}
+}
+
 function validForm(){
-	if(!validate_ipaddr_final(document.form.lan_ipaddr, 'lan_ipaddr') ||
-			!validate_ipaddr_final(document.form.lan_netmask, 'lan_netmask'))
-		return false;
-// Viz 2011.10 {
-	
-	// test if LAN IP is a private IP.
-	var A_class_start = inet_network("10.0.0.0");
-	var A_class_end = inet_network("10.255.255.255");
-	var B_class_start = inet_network("172.16.0.0");
-	var B_class_end = inet_network("172.31.255.255");
-	var C_class_start = inet_network("192.168.0.0");
-	var C_class_end = inet_network("192.168.255.255");
+	// Viz 2012.01 {	
+	if(matchSubnet(document.form.lan_ipaddr.value, document.form.wan_ipaddr.value, 3)){
+			alert("<#JS_validip#>");
+			document.form.lan_ipaddr.focus();
+			document.form.lan_ipaddr.select();
+			return false;
+	}		
 	
 	var ip_obj = document.form.lan_ipaddr;
 	var ip_num = inet_network(ip_obj.value);
-	var ip_class = "";
-	if(ip_num > A_class_start && ip_num < A_class_end)
-		ip_class = 'A';
-	else if(ip_num > B_class_start && ip_num < B_class_end)
-		ip_class = 'B';
-	else if(ip_num > C_class_start && ip_num < C_class_end)
-		ip_class = 'C';
-	else{
-		alert(ip_obj.value+" <#JS_validip#>");
-		ip_obj.value = "";
-		ip_obj.focus();
-		ip_obj.select();
-		return false;
-	}
-	
-	
+	var ip_class = "";		
+	if(!valid_IP(ip_obj, "")) return false;  //LAN IP 
+
 	// test if netmask is valid.
 	var netmask_obj = document.form.lan_netmask;
 	var netmask_num = inet_network(netmask_obj.value);
@@ -111,7 +112,7 @@ function validForm(){
 	var default_netmask = "";
 	var wrong_netmask = 0;
 
-	if(netmask_num < 0) wrong_netmask = 1;		
+	if(netmask_num < 0) wrong_netmask = 1;	
 
 	if(ip_class == 'A')
 		default_netmask = "255.0.0.0";
@@ -122,7 +123,7 @@ function validForm(){
 	
 	var test_num = netmask_reverse_num;
 	while(test_num != 0){
-		if((test_num+1)%2 == 0)	//odd
+		if((test_num+1)%2 == 0)
 			test_num = (test_num+1)/2-1;
 		else{
 			wrong_netmask = 1;
@@ -142,7 +143,6 @@ function validForm(){
 	
 	if(ip_num == subnet_head || ip_num == subnet_end){
 		alert(ip_obj.value+" <#JS_validip#>");
-		ip_obj.value = "";
 		ip_obj.focus();
 		ip_obj.select();
 		return false;
@@ -150,13 +150,16 @@ function validForm(){
 	
 	// check IP changed or not
   // No matter it changes or not, it will submit the form
-	if(sw_mode == "1")
-		var pool_change = changed_DHCP_IP_pool();
-		if(!pool_change) return false;
+  //Viz modify 2011.10 for DHCP pool issue {
+	if(sw_mode == "1"){
+				var pool_change = changed_DHCP_IP_pool();
+	if(!pool_change)
+				return false;
+	}				
+	//}Viz modify 2011.10 for DHCP pool issue 
 	
-// Viz 2011.10 }	
+// Viz 2012.01 }	
 
-	
 	changed_hint();
 	//checkSubnet();	//change client ipaddr pool
 	
@@ -283,9 +286,9 @@ function changed_hint(){
 <input type="hidden" name="preferred_lang" id="preferred_lang" value="<% nvram_get_x("LANGUAGE", "preferred_lang"); %>">
 <input type="hidden" name="wl_ssid2" value="<% nvram_get_x("WLANConfig11b",  "wl_ssid2"); %>">
 <input type="hidden" name="firmver" value="<% nvram_get_x("",  "firmver"); %>">
-<input type="hidden" name="wan_ipaddr" value="<% nvram_get_x("IPConnection", "wan_ipaddr"); %>">
+<input type="hidden" name="wan_ipaddr" value="<% nvram_get_x("IPConnection", "wan0_ipaddr"); %>">
 <input type="hidden" name="wan_netmask" value="<% nvram_get_x("IPConnection", "wan_netmask"); %>" >
-<input type="hidden" name="wan_gateway" value="<% nvram_get_x("IPConnection", "wan_gateway"); %>">
+<input type="hidden" name="wan_gateway" value="<% nvram_get_x("IPConnection", "wan0_gateway"); %>">
 <input type="hidden" name="wan_proto" value="<% nvram_get_x("IPConnection", "wan_proto"); %>">
 
 <table class="content" align="center" cellpadding="0" cellspacing="0">

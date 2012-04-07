@@ -137,6 +137,7 @@ setMAC(const char *mac)
 	if (ether_atoe(mac, ea))
 	{
 		FWrite(ea, OFFSET_MAC_ADDR, 6);
+		FWrite(ea, OFFSET_MAC_GMAC0, 6);
 		getMAC();
 	}
 	return 0;
@@ -149,6 +150,7 @@ setMAC_2G(const char *mac)
 	if (ether_atoe(mac, ea))
 	{
 		FWrite(ea, OFFSET_MAC_ADDR_2G, 6);
+		FWrite(ea, OFFSET_MAC_GMAC2, 6);
 		getMAC_2G();
 	}
 	return 0;
@@ -733,7 +735,7 @@ int gen_ralink_config()
 	str = nvram_safe_get("wl_bcn");
 	if (str)
 	{
-		if (atoi(str) > 1024 || atoi(str) < 20)
+		if (atoi(str) > 1000 || atoi(str) < 20)
 		{
 			nvram_set("wl_bcn", "100");
 			fprintf(fp, "BeaconPeriod=%d\n", 100);
@@ -1437,7 +1439,7 @@ int gen_ralink_config()
 	}
 
 	//HT_DisallowTKIP
-	fprintf(fp, "HT_DisallowTKIP=%d\n", 0);
+	fprintf(fp, "HT_DisallowTKIP=%d\n", 1);
 
 	// TxBF
 	str = nvram_safe_get("wl_txbf");
@@ -2246,7 +2248,7 @@ int gen_ralink_config_rt()
 	str = nvram_safe_get("rt_bcn");
 	if (str)
 	{
-		if (atoi(str) > 1024 || atoi(str) < 20)
+		if (atoi(str) > 1000 || atoi(str) < 20)
 		{
 			nvram_set("rt_bcn", "100");
 			fprintf(fp, "BeaconPeriod=%d\n", 100);
@@ -2289,8 +2291,10 @@ int gen_ralink_config_rt()
 	str = nvram_safe_get("rt_gmode_protection");
 	if (str)
 	{
-		if (!strcmp(str, "auto"))
+		if (!strcmp(str, "auto") && atoi(nvram_safe_get("rt_gmode")))
 			fprintf(fp, "BGProtection=%d\n", 0);
+		else if (!strcmp(str, "on"))
+			fprintf(fp, "BGProtection=%d\n", 1);
 		else
 			fprintf(fp, "BGProtection=%d\n", 2);
 	}
@@ -2950,7 +2954,7 @@ int gen_ralink_config_rt()
 	}
 
 	//HT_DisallowTKIP
-	fprintf(fp, "HT_DisallowTKIP=%d\n", 0);
+	fprintf(fp, "HT_DisallowTKIP=%d\n", 1);
 
 	//WscConfStatus
 	str = nvram_safe_get("rt_wsc_config_state");

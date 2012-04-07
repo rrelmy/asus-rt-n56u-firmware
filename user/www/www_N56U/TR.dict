@@ -45,7 +45,7 @@ BasicConfig_EnableiTunesServer_itemname=iTunes Server etkinleştirilsin mi?
 OP_switch_button_hint1=İşlem modu anahtarı RT-N56U'nun alt paneline yerleştirilmiştir.
 OP_switch_button_hint2=Görüntülemek için buraya tıklayın
 OP_GW_item=Kablosuz Yönlendirici (Varsayılan)
-OP_GW_desc1=Kablosuz Yönlendirici modunda/ IP paylaşım modunda, RT-N56U internete PPPoE, Otomatik IP, PPTP, L2TP veya Statik IP ile bağlanır.
+OP_GW_desc1=Kablosuz Yönlendirici modunda, RT-N56U internete PPPoE, Otomatik IP, PPTP, L2TP veya Statik IP ile bağlanır.
 OP_GW_desc2=Size kablosuz radyo sinyali sağlar. LAN istemcileri için NAT, güvenlik duvarı ve geniş bant paylaşım hizmetleri desteklenir. Ayrıca SOHO veya ev kullanı cıları için UPnP ve Dinamik DNS'yi desteklemektedir.
 OP_RT_item=Yönlendirici (NAT'ı Devre Dışı Bırak)
 OP_RT_desc1=Yönlendirici modunda, RT-N56U'yu bilgisayarınıza bağlamak için bir Ethernet kablosu kullanın ve kablosuz ağ bağlantısı yaratın, bunu yaptıktan sonra kablosuz ağ bağlantınız için ayarları seçin.
@@ -237,7 +237,7 @@ AP_survey=AP Araştırma
 statusTitle_AP=Erişim Noktası durumu
 [USB Application - HSDPA]
 HSDPAConfig_connection=Bağlantı ayarı
-HSDPAConfig_pin_code_itemdesc=Lütfen SIM kartınızın PIN kodunu girin. Uzunluğu 3 rakamdan fazla ve 8 rakamdan az olan bir sayı olmalıdır. PIN kodunuzu bilmiyorsanız, lütfen ISS'nız ile irtibata geçin.
+HSDPAConfig_pin_code_itemdesc=Lütfen SIM kartınızın PIN kodunu girin. Uzunluğu 4 rakamdan fazla ve 8 rakamdan az olan bir sayı olmalıdır. PIN kodunuzu bilmiyorsanız, lütfen ISS'nız ile irtibata geçin.
 HSDPAConfig_private_apn_itemname=APN hizmeti(isteğe bağlı)
 HSDPAConfig_private_apn_itemdesc=APN hizmeti adını bilmiyorsanız, lütfen ISS'nız ile irtibata geçin.
 HSDPAConfig_hsdpa_mode_Backup=Yedek
@@ -1447,7 +1447,7 @@ HSDPAConfig_username_itemdesc=Lütfen kullanıcı adınızı giriniz.
 HSDPAConfig_password_itemdesc=Lütfen şifrenizi giriniz.
 HSDPAConfig_usbadaptor_itemdesc=Lütfen usb adaptörünüzü seçiniz.
 confirm_disableftp_dm=Ağ Komşu Paylaşımının engellenmesi Download Master'ı engelleyecektir.
-LANHostConfig_IPRouters_itemdesc=RT-N56U Yerel Ağ IP'si. Varsayılan değer 192.168.1.1'dir. LAN IP adresi aralığı: 192.168.0.1 - 192.168.255.254, 172.16.0.1 – 172.31.255.254, 10.0.0.1 – 10.255.255.254
+LANHostConfig_IPRouters_itemdesc=RT-N56U Yerel Ağ IP'si. Varsayılan değer 192.168.1.1'dir.
 HSDPAConfig_hsdpa_mode_itemdesc=Gereksinim ve koşullarınıza uygun olarak USB Modem modunu seçin. Aşağıda size dört mod sunuyoruz: Backup (Yedekleme), Equal weight (Eşit ağırlık), Always high (Daima yüksek) ve Always low (Daima düşük). USB Modem adaptörünü güvenilir bir şekilde çıkarmak için lütfen <a href='/index.asp' target=\'_blank\'>Endeks</a>'e gidin ve adaptör düğmesine tıklayın.
 Not_authpage_login_again=Tekrar oturum açmak isterseniz, lütfen ilk önce bu pencereyi kapatın.  
 GO_HSDPA_SETTING=USB Modem Ayarlara Git

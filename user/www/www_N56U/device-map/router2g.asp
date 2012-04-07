@@ -787,13 +787,13 @@ window.onunload  = function(){
 </table>
 <table width="290" border="1" align="center" cellpadding="4" cellspacing="0" bordercolor="#6b8fa3" class="table1px">
   <tr>
-    <th width="95"><#Wireless_name#>(SSID)</th>
+    <th width="110"><#Wireless_name#>(SSID)</th>
     <td>
       <input id="sta_ssid" type="text" name="rt_ssid" onfocus="parent.showHelpofDrSurf(0, 1);" value="<% nvram_get_x("WLANConfig11b", "rt_ssid"); %>" maxlength="32" size="22" class="input"/>
     </td>
   </tr>
   <tr>
-    <th width="95"><#WLANConfig11b_AuthenticationMethod_itemname#></th>
+    <th width="110"><#WLANConfig11b_AuthenticationMethod_itemname#></th>
     <td>
     <select name="rt_auth_mode" class="input" onfocus="parent.showHelpofDrSurf(0, 5);" onchange="change_auth_mode(this);">
 		<option value="open" <% nvram_match_x("WLANConfig11b","rt_auth_mode", "open","selected"); %>>Open System</option>
@@ -810,7 +810,7 @@ window.onunload  = function(){
   </tr>
 
   <tr id='all_related_wep' style='display:none;'>
-	<th width="95"><#WLANConfig11b_WEPType_itemname#></th>
+	<th width="110"><#WLANConfig11b_WEPType_itemname#></th>
 	<td>
 	  <select name="rt_wep_x" id="rt_wep_x" class="input" onfocus="parent.showHelpofDrSurf(0, 9);" onchange="change_wlweptype(this);">
 		<option value="0" <% nvram_match_x("WLANConfig11b", "rt_wep_x", "0", "selected"); %>>None</option>
@@ -821,7 +821,7 @@ window.onunload  = function(){
   </tr>
 
   <tr id='all_wep_key' style='display:none;'>
-    <th width="95"><#WLANConfig11b_WEPDefaultKey_itemname#></th>
+    <th width="110"><#WLANConfig11b_WEPDefaultKey_itemname#></th>
     <td>
       <select name="rt_key" class="input" onfocus="parent.showHelpofDrSurf(0, 10);" onchange="show_key();">
         <option value="1" <% nvram_match_x("WLANConfig11b", "rt_key", "1", "selected"); %>>Key1</option>
@@ -832,14 +832,14 @@ window.onunload  = function(){
     </td>
   </tr>
   <tr id='asus_wep_key'>
-    <th width="95"><#WLANConfig11b_WEPKey_itemname#></th>
+    <th width="110"><#WLANConfig11b_WEPKey_itemname#></th>
     <td>
       <input type="text" id="sta_asuskey1" name="rt_asuskey1" onfocus="show_wepkey_help();" onKeyUp="return change_wlkey(this, 'WLANConfig11b');" value="" size="22" class="input"/>
     </td>
   </tr>
 
   <tr id='rt_crypto' style='display:none;'>
-	<th width="95"><#WLANConfig11b_WPAType_itemname#></th>
+	<th width="110"><#WLANConfig11b_WPAType_itemname#></th>
 	<td>
 	  <select name="rt_crypto" class="input" onfocus="parent.showHelpofDrSurf(0, 6);" onchange="rt_auth_mode_change(0);">
 		<!--option value="tkip" <% nvram_match_x("WLANConfig11b", "rt_crypto", "tkip", "selected"); %>>TKIP</option-->
@@ -850,14 +850,14 @@ window.onunload  = function(){
   </tr>
 
   <tr id='rt_wpa_psk' style='display:none'>
-    <th width="95"><#WPA-PSKKey#></th>
+    <th width="110"><#WPA-PSKKey#></th>
     <td>
       <input type="text" id="sta_wpa_psk" name="rt_wpa_psk" onfocus="parent.showHelpofDrSurf(0, 7);" value="" size="22" maxlength="63" class="input"/>
     </td>
   </tr>
 
   <tr id="rt_radio_tr">
-    <th width="95"><#Wireless_Radio#></th>
+    <th width="110"><#Wireless_Radio#></th>
 		<td>
 	  	<input type="radio" name="rt_radio_x" value="1" <% nvram_match_x("WLANConfig11b", "rt_radio_x", "1", "checked"); %>>on
 	  	<input type="radio" name="rt_radio_x" value="0" <% nvram_match_x("WLANConfig11b", "rt_radio_x", "0", "checked"); %>>off
@@ -869,19 +869,19 @@ window.onunload  = function(){
   <tr id="apply_tr">
     <td colspan="2"><input id="applySecurity" type="button" class="button" value="<#CTL_apply#>" onclick="submitForm();" style="margin-left:110px;"></td>
   <tr>
-    <th width="95"><#LAN_IP#></th>
+    <th width="110"><#LAN_IP#></th>
     <td id="LANIP"></td>
   </tr>
   <tr>
-    <th width="95"><#PIN_code#></th>
+    <th width="110"><#PIN_code#></th>
     <td id="PINCode"></td>
   </tr>
   <tr>
-    <th width="95"><#MAC_Address#></th>
+    <th width="110"><#MAC_Address#></th>
     <td id="MAC"></td>
   </tr>
   <tr id="wps_pbc_tr">
-    <th width="95">WPS</th>
+    <th width="110">WPS</th>
     <td>
 	<img src="/images/EZSetup_button.gif" style="cursor:pointer;" align="absmiddle" title="<#WPS_PBCbutton_hint#>" id="wpsPBC_button" onClick="wpsPBC(this);">
 	<span id="WPS_PBCbutton_hint_span"></span>

@@ -31,14 +31,16 @@
 	countrylist[28] = new Array("Spain", "ES");
 	countrylist[29] = new Array("Sweden", "SE");
 	countrylist[30] = new Array("Thiland", "TH");
-	countrylist[31] = new Array("Taiwan", "TW");
-	countrylist[32] = new Array("Ukraine", "UA");
-	countrylist[33] = new Array("UK", "UK");
-	countrylist[34] = new Array("USA", "US");
-	countrylist[35] = new Array("others", "");
+	countrylist[31] = new Array("Turkey", "TR");
+	countrylist[32] = new Array("Taiwan", "TW");
+	countrylist[33] = new Array("Ukraine", "UA");
+	countrylist[34] = new Array("UK", "UK");
+	countrylist[35] = new Array("USA", "US");
+	countrylist[36] = new Array("others", "");
 
 	var got_country = 0;
 	free_options($("isp_countrys"));
+	$("isp_countrys").options.length = countrylist.length;
 	for(var i = 0; i < countrylist.length; i++){
 		$("isp_countrys").options[i] = new Option(countrylist[i][0], countrylist[i][1]);
 		if(countrylist[i][1] == country){
@@ -48,7 +50,7 @@
 	}
 
 	if(!got_country)
-		$("isp_countrys").options[i-1].selected = "1";
+		$("isp_countrys").options[0].selected = "1";
 }
 
 function gen_wcdma_list(){
@@ -118,11 +120,11 @@ function gen_wcdma_list(){
 		passlist = new Array("nternet", "tm", "gprs", "", "Vistream", "", "", "", "", "", "", "tm", "tm", "tm", "tm", "tm", "tm", "tm", "tm", "internet", "internet", "internet", "gprs", "gprs", "gprs", "gprs", "gprs", "gprs", "gprs", "", "", "", "Vistream", "Vistream", "Vistream", "Vistream", "Vistream");
 	}
 	else if(country == "IN"){
-		isplist = new Array("IM2", "INDOSAT", "XL", "Telkomsel Flash", "3");
-		apnlist = new Array("indosatm2", "indosat3g", "www.xlgprs.net", "flash", "3gprs");
-		daillist = new Array("*99#", "*99#", "*99#", "*99#", "*99***1#");
-		userlist = new Array("", "indosat", "xlgprs", "", "3gprs");
-		passlist = new Array("", "indosat", "proxl", "", "3gprs");
+                isplist = new Array("IM2", "INDOSAT", "XL", "Telkomsel Flash", "3", "Smartfren", "Axis", "Esia", "StarOne", "Telkom Flexi", "AHA");
+                apnlist = new Array("indosatm2", "indosat3g", "www.xlgprs.net", "flash", "3gprs", "", "AXIS", "", "", "", "AHA");
+                daillist = new Array("*99#", "*99#", "*99#", "*99#", "*99***1#", "#777", "*99***1#", "#777", "#777", "#777", "#777");
+                userlist = new Array("", "indosat", "xlgprs", "", "3gprs", "smart", "axis", "esia", "starone", "telkomnet@flexi", "aha@aha.co.id");
+                passlist = new Array("", "indosat", "proxl", "", "3gprs", "smart", "123456", "esia", "indosat", "telkom", "aha");
 	}
 	else if(country == "MA"){
 		isplist = new Array("Celcom", "Maxis", "Digi");
@@ -202,11 +204,11 @@ function gen_wcdma_list(){
 		passlist = new Array("beeline", "", "", "");
 	}
   else if(country == "UA"){
-    isplist = new Array("BeeLine", "Kyivstar Contract", "Kyivstar Prepaid", "Kyivstar XL", "Kyivstart 3G", "Djuice", "MTS", "Utel", "PEOPLEnet", "Intertelecom", "Intertelecom.Rev.B", "Life");
-    apnlist = new Array("internet.beeline.ua", "www.kyivstar.net", "www.ab.kyivstar.net", "xl.kyivstar.net", "3g.kyivstar.net", "www.djuice.com.ua", "", "3g.utel.ua", "", "", "", "Internet");
-    daillist = new Array("*99#", "*99#", "*99#", "*99#", "*99#", "*99#", "#777", "*99#", "#777", "#777", "#777", "*99#");
-    userlist = new Array("", "", "", "", "", "", "mobile", "", "", "IT", "3G_TURBO", "");
-    passlist = new Array("", "", "", "", "", "", "internet", "", "", "IT", "3G_TURBO", "");
+    isplist = new Array("BeeLine", "Kyivstar Contract", "Kyivstar Prepaid", "Kyivstar XL", "Kyivstart 3G", "Djuice", "MTS", "Utel", "PEOPLEnet", "Intertelecom", "Intertelecom.Rev.B", "Life", "CDMA-UA");
+    apnlist = new Array("internet.beeline.ua", "www.kyivstar.net", "www.ab.kyivstar.net", "xl.kyivstar.net", "3g.kyivstar.net", "www.djuice.com.ua", "", "3g.utel.ua", "", "", "", "Internet", "");
+    daillist = new Array("*99#", "*99#", "*99#", "*99#", "*99#", "*99#", "#777", "*99#", "#777", "#777", "#777", "*99#", "#777");
+    userlist = new Array("mobile", "", "", "", "", "", "mobile", "", "", "IT", "3G_TURBO", "", "");
+    passlist = new Array("internet", "", "", "", "", "", "internet", "", "000000", "IT", "3G_TURBO", "", "");
   }
 	else if(country == "TH"){
 		isplist = new Array("TOT", "TH GSM");
@@ -299,6 +301,13 @@ function gen_wcdma_list(){
 		userlist = new Array("em", "bmobile@u300", "au@au-win.ne.jp");
 		passlist = new Array("em", "bmobile", "au");
 	}
+        else if(country == "TR"){
+                isplist = new Array("Turkcell Vinn", "Vodafone Vodem", "Avea Jet");
+                apnlist = new Array("mgb", "internet", "internet");
+                daillist = new Array("*99#", "*99#", "*99#");
+                userlist = new Array("", "", "");
+                passlist = new Array("", "", "");
+        }
 	else{
 		isplist = new Array("");
 		apnlist = new Array("");

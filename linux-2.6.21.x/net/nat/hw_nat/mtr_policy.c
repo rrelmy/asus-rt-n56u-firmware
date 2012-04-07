@@ -43,6 +43,8 @@
 
 MtrPlcyNode MtrPlcyList= { .List = LIST_HEAD_INIT(MtrPlcyList.List)};
 static char MtrFreeList[8];
+extern uint32_t ChipVer;
+extern uint32_t ChipId;
 
 extern uint16_t GLOBAL_PRE_MTR_STR; 
 extern uint16_t GLOBAL_PRE_MTR_END; 
@@ -153,7 +155,12 @@ uint32_t MtrAddNode(MtrPlcyNode *NewNode)
 	MtrPlcyNode *node = NULL;
 
 	if((node=MtrExistNode(NewNode))) {
-		node->mtr_info = NewNode->mtr_info;
+		if(ChipId==RT2880 && ChipVer < RT2880_MP2){ 
+			node->TokenRate=NewNode->TokenRate;
+			node->BkSize=NewNode->BkSize;
+		}else{ 
+			node->mtr_info = NewNode->mtr_info;
+		}
 
 	}else {
 		node = (MtrPlcyNode *)kmalloc(sizeof(MtrPlcyNode), GFP_ATOMIC);
@@ -382,14 +389,18 @@ void PpeInsMtrTbl(MtrPlcyNode *node)
 {
     uint32_t MtrEntry=0;
 
-    if((node->ByteBase.MtrMode & 0x01)==0) { // Byte Base
-	MtrEntry = (node->ByteBase.TokenRate<<3) | 
-	    (node->ByteBase.MaxBkSize<<1) | 
-	    node->ByteBase.MtrMode;
-    }else{ // Packet Base
-	MtrEntry = (node->PktBase.MtrIntval<<8) | 
-	    (node->PktBase.MaxBkSize<<1) | 
-	    node->PktBase.MtrMode;
+    if(ChipId==RT2880 && ChipVer < RT2880_MP2){ 
+	    MtrEntry = (node->TokenRate<<3) | node->BkSize;
+    }else{ 
+	    if((node->mtr_info & 0x01)==0) { // Byte Base
+		    MtrEntry = (node->ByteBase.TokenRate<<3) | 
+			    (node->ByteBase.MaxBkSize<<1) | 
+			    node->ByteBase.MtrMode;
+	    }else{ // Packet Base
+		    MtrEntry = (node->PktBase.MtrIntval<<8) | 
+			    (node->PktBase.MaxBkSize<<1) | 
+			    node->PktBase.MtrMode;
+	    }
     }
 
     RegWrite(METER_BASE + node->MgNum*4, MtrEntry); 
@@ -468,6 +479,8 @@ uint32_t MtrInsMac(MtrPlcyNode *node)
 		L2Rule.com.dir= DMAC;
 		PpeInsMtrEntry(&L2Rule, POST_MTR);
 	}
+
+
 	PpeInsMtrTbl(node);
 	return 1;
 }
@@ -610,39 +623,4 @@ uint32_t MtrCleanTbl(void)
 
     return 1;
 
-}
-
-/*print Mtr table*/
-uint8_t MtrGetAllEntries(struct mtr_list_args *opt)
-{
-        struct list_head *pos = NULL, *tmp;
-        MtrPlcyNode *node = NULL;
-        int count=0; /* valid entry count */
-        
-	list_for_each_safe(pos, tmp, &MtrPlcyList.List)
-        {
-                node = list_entry(pos, MtrPlcyNode, List);
-
-	memcpy(opt->entries[count].mac, node->Mac, ETH_ALEN);
-	MacReverse(opt->entries[count].mac);
-	opt->entries[count].ip_s=node->IpS; 
-	opt->entries[count].ip_e = node->IpE; 
-	opt->entries[count].mg_num = node->MgNum; 
-
-	if(node->PktBase.MtrMode == 1) { //pkt mode
-	    opt->entries[count].mtr_mode = node->PktBase.MtrMode;
-	    opt->entries[count].bk_size = node->PktBase.MaxBkSize;
-	    opt->entries[count].mtr_intval = node->PktBase.MtrIntval;
-	}else { //byte mode
-	    opt->entries[count].mtr_mode = node->ByteBase.MtrMode;
-	    opt->entries[count].bk_size = node->ByteBase.MaxBkSize;
-	    opt->entries[count].token_rate = node->ByteBase.TokenRate;
-	}
-
-	count++;
-
-	}
-
-	opt->num_of_entries = count;
-	return MTR_SUCCESS;
 }

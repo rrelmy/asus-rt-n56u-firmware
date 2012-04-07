@@ -38,6 +38,16 @@ int rtl8367m_ioctl(int val, int val2)
 
 	switch (val)
 	{
+	case 0:
+	case 3:
+		value = val2;
+		if(ioctl(fd, val, &value)<0) {
+			perror("rtl8367m ioctl");
+			close(fd);
+			return -1;
+		}
+		else printf("return: %x\n", value);
+		break;
 	case 2:
 		if(ioctl(fd, 2, 0) < 0){
 			perror("rtl8367m ioctl");
@@ -239,6 +249,15 @@ int rtl8367m_ioctl(int val, int val2)
                         return -1;
                 }		
 		break;
+
+        case 40:
+                value2 = (unsigned int) val2;
+                if(ioctl(fd, 40, &value2) < 0){
+                        perror("rtl8367m ioctl");
+                        close(fd);
+                        return -1;
+                }
+                break;
 
 	default:
 		printf("wrong ioctl cmd: %d\n", val);

@@ -841,8 +841,7 @@ int svc_timecheck(void)
 			{
 				dbg("[watchdog] url filter 0: %s\n", activeNow ? "Enabled": "Disabled");
 				svcStatus[URLACTIVE] = activeNow;
-				stop_dns();
-				start_dns();
+				restart_dns();
 			}
 		}	
 
@@ -854,8 +853,7 @@ int svc_timecheck(void)
 			{
 				dbg("[watchdog] url filter 1: %s\n", activeNow ? "Enabled": "Disabled");
 				svcStatus[URLACTIVE1] = activeNow;
-				stop_dns();
-				start_dns();
+				restart_dns();
 			}
 		}
 	}
@@ -1442,8 +1440,7 @@ void watchdog(void)
 		stop_wanduck();
 		stop_logger();
 		stop_upnp();	// it may cause upnp cannot run
-		stop_dhcpd();
-		stop_dns();
+		stop_dns_dhcpd();
 #if (!defined(W7_LOGO) && !defined(WIFI_LOGO))
 		stop_pspfix();
 #endif
@@ -1649,8 +1646,13 @@ void watchdog(void)
 
 		if (!ddns_timer)
 		{
-			stop_networkmap();
-			start_networkmap();
+                        if (pids("networkmap"))
+                                kill_pidfile_s("/var/run/networkmap.pid", SIGUSR1);
+                        else
+                        {
+				stop_networkmap();
+				start_networkmap();
+                        }
 		}
 	}
 	else

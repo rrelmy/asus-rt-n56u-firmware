@@ -393,17 +393,15 @@ ej_wan_iflist(int eid, webs_t wp, int argc, char_t **argv)
 #endif	// REMOVE
 
 /******************************************************************************************************************************************/
-
+#if 0
 void
 sys_refresh_lease(void)
 {
-	//fprintf(stderr, "run sys_refresh_lease\n");
-
 	/* Write out leases file */
 	if (pids("udhcpd"))
 	doSystem("killall -%d udhcpd", SIGUSR1);
 }
-
+#endif
 struct lease_t {
 	unsigned char chaddr[16];
 	u_int32_t yiaddr;
@@ -411,11 +409,58 @@ struct lease_t {
 	char hostname[64];
 };
 
-/* Dump leases in <tr><td>hostname</td><td>MAC</td><td>IP</td><td>expires</td></tr> format */
+/* use udhcpd: Dump leases in <tr><td>hostname</td><td>MAC</td><td>IP</td><td>expires</td></tr> format */
+
+#define MAXLEN  100
+
+enum {
+        L_LEASE=0,
+        L_MAC,
+        L_IP,
+        L_HOST,
+        L_CLID
+};
+
+/* dnsmasq ex: 43200 00:26:18:57:08:bc 192.168.1.105 mypc-3eaf6880a0 01:00:26:18:57:08:bc */
+
 int
 ej_lan_leases(int eid, webs_t wp, int argc, char_t **argv)
 {
 	fprintf(stderr, "run ej_lan_leases\n");
+#if 1
+	FILE *fp = NULL;
+	int ret = 0;
+	int i;
+        char buff[MAXLEN], *p, *tmp, *lease_log[5];
+
+        if (!(fp = fopen("/tmp/dnsmasq.leases", "r")))
+                return ret;
+
+        ret += websWrite(wp, "Host Name       Mac Address       IP Address      Lease\n");
+
+        memset(buff, 0, MAXLEN);
+        while (fgets(buff, MAXLEN, fp))
+        {
+		tmp = buff;
+                for(i=0; i<5; ++i)
+                {
+                        if( i==0 )
+                                lease_log[0] = tmp;
+                        else if( p = strchr(tmp, ' '))
+                        {
+                                *p++ = 0;
+                                lease_log[i] = tmp = p;
+                        }
+                }
+		ret += websWrite(wp, "%-16s", lease_log[L_HOST] ? (*lease_log[L_HOST]=='*' ? "<null>" : lease_log[L_HOST]) : " ");
+		ret += websWrite(wp, "%-18s", lease_log[L_MAC] ? lease_log[L_MAC] : " " );
+		ret += websWrite(wp, "%-16s", lease_log[L_IP] ? lease_log[L_IP] : " ");
+		ret += websWrite(wp, "%s\n",    lease_log[L_LEASE] ? lease_log[L_LEASE] : " ");
+
+                memset(buff, 0, MAXLEN);
+        }
+	fclose(fp);
+#else
 	FILE *fp = NULL;
 	struct lease_t lease;
 	int i;
@@ -464,7 +509,7 @@ ej_lan_leases(int eid, webs_t wp, int argc, char_t **argv)
 		}
 	}
 	fclose(fp);
-
+#endif
 	return ret;
 }
 

@@ -405,7 +405,7 @@ uint32_t AcInsIp(AcPlcyNode *node)
 	L3Rule.com.match=1;
 	L3Rule.com.pn = PN_DONT_CARE;
 	L3Rule.com.rt=L3_RULE;
-	L3Rule.ip.ip=node->IpS;
+	L3Rule.ip.ip=node->IpE;
 	L3Rule.ip.ip_rng_m=M;
 	L3Rule.ip.ip_rng_e=E;
 	L3Rule.ip.v4=1;

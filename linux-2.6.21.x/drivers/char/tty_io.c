@@ -155,8 +155,8 @@ int tty_ioctl(struct inode * inode, struct file * file,
 	      unsigned int cmd, unsigned long arg);
 static int tty_fasync(int fd, struct file * filp, int on);
 static void release_tty(struct tty_struct *tty, int idx);
-static struct pid *__proc_set_tty(struct task_struct *tsk,
-				struct tty_struct *tty);
+static void __proc_set_tty(struct task_struct *tsk, struct tty_struct *tty);
+static void proc_set_tty(struct task_struct *tsk, struct tty_struct *tty);
 
 /**
  *	alloc_tty_struct	-	allocate a tty object
@@ -1121,8 +1121,7 @@ int tty_check_change(struct tty_struct * tty)
 		return 0;
 	if (is_current_pgrp_orphaned())
 		return -EIO;
-	kill_pgrp(task_pgrp(current), SIGTTOU, 1);
-	set_thread_flag(TIF_SIGPENDING);
+	(void) kill_pgrp(task_pgrp(current), SIGTTOU, 1);
 	return -ERESTARTSYS;
 }
 
@@ -1535,10 +1534,9 @@ void disassociate_ctty(int on_exit)
 	}
 
 	spin_lock_irq(&current->sighand->siglock);
-	tty_pgrp = current->signal->tty_old_pgrp;
+	put_pid(current->signal->tty_old_pgrp);
 	current->signal->tty_old_pgrp = NULL;
 	spin_unlock_irq(&current->sighand->siglock);
-	put_pid(tty_pgrp);
 
 	mutex_lock(&tty_mutex);
 	/* It is possible that do_tty_hangup has free'd this tty */
@@ -1561,6 +1559,18 @@ void disassociate_ctty(int on_exit)
 	session_clear_tty(task_session(current));
 	read_unlock(&tasklist_lock);
 	unlock_kernel();
+}
+
+/**
+ *
+ *	no_tty	- Ensure the current process does not have a controlling tty
+ */
+void no_tty(void)
+{
+	struct task_struct *tsk = current;
+	if (tsk->signal->leader)
+		disassociate_ctty(0);
+	proc_clear_tty(tsk);
 }
 
 
@@ -2509,7 +2519,6 @@ static int tty_open(struct inode * inode, struct file * filp)
 	int index;
 	dev_t device = inode->i_rdev;
 	unsigned short saved_flags = filp->f_flags;
-	struct pid *old_pgrp;
 
 	nonseekable_open(inode, filp);
 	
@@ -2603,17 +2612,15 @@ got_driver:
 		goto retry_open;
 	}
 
-	old_pgrp = NULL;
 	mutex_lock(&tty_mutex);
 	spin_lock_irq(&current->sighand->siglock);
 	if (!noctty &&
 	    current->signal->leader &&
 	    !current->signal->tty &&
 	    tty->session == NULL)
-		old_pgrp = __proc_set_tty(current, tty);
+		__proc_set_tty(current, tty);
 	spin_unlock_irq(&current->sighand->siglock);
 	mutex_unlock(&tty_mutex);
-	put_pid(old_pgrp);
 	return 0;
 }
 
@@ -3288,9 +3295,7 @@ int tty_ioctl(struct inode * inode, struct file * file,
 		case TIOCNOTTY:
 			if (current->signal->tty != tty)
 				return -ENOTTY;
-			if (current->signal->leader)
-				disassociate_ctty(0);
-			proc_clear_tty(current);
+			no_tty();
 			return 0;
 		case TIOCSCTTY:
 			return tiocsctty(tty, arg);
@@ -3575,7 +3580,6 @@ static void initialize_tty_struct(struct tty_struct *tty)
 	tty->buf.head = tty->buf.tail = NULL;
 	tty_buffer_init(tty);
 	INIT_DELAYED_WORK(&tty->buf.work, flush_to_ldisc);
-	init_MUTEX(&tty->buf.pty_sem);
 	mutex_init(&tty->termios_mutex);
 	init_waitqueue_head(&tty->write_wait);
 	init_waitqueue_head(&tty->read_wait);
@@ -3840,9 +3844,8 @@ void proc_clear_tty(struct task_struct *p)
 }
 EXPORT_SYMBOL(proc_clear_tty);
 
-static struct pid *__proc_set_tty(struct task_struct *tsk, struct tty_struct *tty)
+static void __proc_set_tty(struct task_struct *tsk, struct tty_struct *tty)
 {
-	struct pid *old_pgrp;
 	if (tty) {
 		/* We should not have a session or pgrp to here but.... */
 		put_pid(tty->session);
@@ -3850,21 +3853,16 @@ static struct pid *__proc_set_tty(struct task_struct *tsk, struct tty_struct *tt
 		tty->session = get_pid(task_session(tsk));
 		tty->pgrp = get_pid(task_pgrp(tsk));
 	}
-	old_pgrp = tsk->signal->tty_old_pgrp;
+	put_pid(tsk->signal->tty_old_pgrp);
 	tsk->signal->tty = tty;
 	tsk->signal->tty_old_pgrp = NULL;
-	return old_pgrp;
 }
 
-void proc_set_tty(struct task_struct *tsk, struct tty_struct *tty)
+static void proc_set_tty(struct task_struct *tsk, struct tty_struct *tty)
 {
-	struct pid *old_pgrp;
-
 	spin_lock_irq(&tsk->sighand->siglock);
-	old_pgrp = __proc_set_tty(tsk, tty);
+	__proc_set_tty(tsk, tty);
 	spin_unlock_irq(&tsk->sighand->siglock);
-
-	put_pid(old_pgrp);
 }
 
 struct tty_struct *get_current_tty(void)

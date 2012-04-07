@@ -24,7 +24,7 @@
 #define NR_PTYS	CONFIG_LEGACY_PTY_COUNT   /* Number of legacy ptys */
 #define NR_UNIX98_PTY_DEFAULT	4096      /* Default maximum for Unix98 ptys */
 #define NR_UNIX98_PTY_MAX	(1 << MINORBITS) /* Absolute limit */
-#define NR_LDISCS		CONFIG_NR_LDISCS
+#define NR_LDISCS		18
 
 /* line disciplines */
 #define N_TTY		0
@@ -45,6 +45,7 @@
 #define N_SYNC_PPP	14	/* synchronous PPP */
 #define N_HCI		15	/* Bluetooth HCI UART */
 #define N_GIGASET_M101	16	/* Siemens Gigaset M101 serial DECT adapter */
+#define N_SLCAN		17	/* Serial / USB serial CAN Adaptors */
 
 /*
  * This character is the same as _POSIX_VDISABLE: it cannot be used as
@@ -74,7 +75,6 @@ struct tty_buffer {
 
 struct tty_bufhead {
 	struct delayed_work work;
-	struct semaphore pty_sem;
 	spinlock_t lock;
 	struct tty_buffer *head;	/* Queue head */
 	struct tty_buffer *tail;	/* Active buffer */
@@ -268,11 +268,14 @@ struct tty_struct {
 #define TTY_PUSH 		6	/* n_tty private */
 #define TTY_CLOSING 		7	/* ->close() in progress */
 #define TTY_LDISC 		9	/* Line discipline attached */
+#define TTY_LDISC_CHANGING 	10	/* Line discipline changing */
 #define TTY_HW_COOK_OUT 	14	/* Hardware can do output cooking */
 #define TTY_HW_COOK_IN 		15	/* Hardware can do input cooking */
 #define TTY_PTY_LOCK 		16	/* pty private */
 #define TTY_NO_WRITE_SPLIT 	17	/* Preserve write boundaries to driver */
 #define TTY_HUPPED 		18	/* Post driver->hangup() */
+#define TTY_FLUSHING		19	/* Flushing to ldisc in progress */
+#define TTY_FLUSHPENDING	20	/* Queued buffer flush pending */
 
 #define TTY_WRITE_FLUSH(tty) tty_write_flush((tty))
 
@@ -313,10 +316,15 @@ extern int tty_hung_up_p(struct file * filp);
 extern void do_SAK(struct tty_struct *tty);
 extern void __do_SAK(struct tty_struct *tty);
 extern void disassociate_ctty(int priv);
+extern void no_tty(void);
 extern void tty_flip_buffer_push(struct tty_struct *tty);
 extern speed_t tty_get_baud_rate(struct tty_struct *tty);
 extern speed_t tty_termios_baud_rate(struct ktermios *termios);
 extern speed_t tty_termios_input_baud_rate(struct ktermios *termios);
+extern void tty_termios_encode_baud_rate(struct ktermios *termios, speed_t ibaud, speed_t obaud);
+extern void tty_encode_baud_rate(struct tty_struct *tty, speed_t ibaud, speed_t obaud);
+extern void tty_termios_copy_hw(struct ktermios *new, struct ktermios *old);
+extern int tty_termios_hw_change(struct ktermios *a, struct ktermios *b);
 
 extern struct tty_ldisc *tty_ldisc_ref(struct tty_struct *);
 extern void tty_ldisc_deref(struct tty_ldisc *);
@@ -330,13 +338,20 @@ extern void tty_ldisc_flush(struct tty_struct *tty);
 
 extern int tty_ioctl(struct inode *inode, struct file *file, unsigned int cmd,
 		     unsigned long arg);
-
+extern int tty_mode_ioctl(struct tty_struct *tty, struct file *file,
+			unsigned int cmd, unsigned long arg);
+extern int tty_perform_flush(struct tty_struct *tty, unsigned long arg);
 extern dev_t tty_devnum(struct tty_struct *tty);
 extern void proc_clear_tty(struct task_struct *p);
-extern void proc_set_tty(struct task_struct *tsk, struct tty_struct *tty);
 extern struct tty_struct *get_current_tty(void);
 
 extern struct mutex tty_mutex;
+
+extern void tty_write_unlock(struct tty_struct *tty);
+extern int tty_write_lock(struct tty_struct *tty, int ndelay);
+#define tty_is_writelocked(tty)  (mutex_is_locked(&tty->atomic_write_lock))
+
+
 
 /* n_tty.c */
 extern struct tty_ldisc tty_ldisc_N_TTY;

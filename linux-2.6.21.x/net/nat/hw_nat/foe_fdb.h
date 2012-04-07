@@ -100,8 +100,7 @@ enum FoeEntryFmt {
 
 enum FoeTblTcpUdp {
     TCP=0,
-    UDP=1,
-    ANY=2
+    UDP=1
 };
 
 enum FoeTblEE {
@@ -170,12 +169,13 @@ struct _info_blk2 {
     uint16_t fp:1; /* force new user priority */
     uint16_t up:3; /* new user priority */
     uint16_t port_mg:6; /* port meter group */
-    uint16_t resv:1;
+    uint16_t resv:1; 
     uint16_t me:1;  /* meter enable */
     uint16_t port_ag:6; /* port account group */
-    uint16_t rmdscp:1; /* remark IPv4 DSCP */
+    uint16_t resv2:1; 
     uint16_t ae:1;  /* account enable */
-    uint16_t dscp:8; /* DSCP value */
+    uint16_t act_dp:6; /* actual destination port */
+    uint16_t resv3:1; 
 };
 
 /*
@@ -260,10 +260,10 @@ struct FoeEntry {
     uint8_t	smac_lo[4];
 
     uint8_t	snap_ctrl[3];
-    uint8_t	act_dp:6; /* actual destination port */
+    uint8_t	resv1; 
     uint16_t	vlan2;
-    uint16_t	resv1;
-    uint32_t	resv2;
+    uint16_t	resv2;
+    uint32_t	resv3;
     struct bf_info_blk1 tmp_buf; /* for semi-auto bind */
 };
 

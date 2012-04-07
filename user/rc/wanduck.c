@@ -35,7 +35,12 @@ static void safe_leave(int signo){
 		if(sw_mode == 2 )
 			system("iptables-restore /tmp/fake_nat_rules");
 		else
+		{
+			setup_misc_timeout(FALSE);
+			setup_misc_timeout(TRUE);
+			setup_udp_timeout(TRUE);
 			_eval(del_command, NULL, 0, NULL);
+		}
 		
 		change_redirect_rules(2, 0);
 	}
@@ -54,6 +59,7 @@ csprintf("\n# return(exit wanduck)\n");
 static void rebuild_rule(int signo){
 	if(rule_setup == 1){
 csprintf("\n# Rebuild rules by SIGUSR2\n");
+		setup_udp_timeout(FALSE);
 		_eval(add_command, NULL, 0, NULL);
 		
 		change_redirect_rules(1, 0);
@@ -134,8 +140,8 @@ check_task(char *cmd, int target)
 	}
 	else if(target == CHK_DHCPD)
 	{
-      		if(strstr(cmd, "udhcpd")){
-                	TASK_TYPE= "udhcpd";
+      		if(strstr(cmd, "dnsmasq")){
+                	TASK_TYPE= "dnsmasq";
                 	return 0;
       		}
 	}
@@ -319,9 +325,9 @@ void pre_rSetting()
 {
 	char *name = find_name_by_proc(CHK_DHCPD);
 
-	if(strlen(name)==0 || strcmp(name, "udhcpd") != 0)
+	if(strlen(name)==0 || strcmp(name, "dnsmasq") != 0)
 	{
-		printf("\nwanduck set r_Setting as 1 (udhcpd dead)\n");	// tmp test
+		printf("\nwanduck set r_Setting as 1 (dnsmasq dead)\n");	// tmp test
 		nvram_set("r_Setting", "1");
 	}	
 }
@@ -347,7 +353,7 @@ int first_enter_repeater()
 			}
 		}
 */
-		pre_rSetting();	// set r_Setting when udhcpd is dead
+		pre_rSetting();	// set r_Setting when dhcp server is dead
 
 		char *r_setting = nvram_safe_get("r_Setting");
 
@@ -427,8 +433,8 @@ void update_wan(int isup)
         }
 }
 
-void change_redirect_rules(int num, int force_link_down_up){
-	return;
+void change_redirect_rules(int num, int force_link_down_up) {
+	char tmp[100];
 #if 0
 	int i;
 	char *clean_ip_conntrack[] = {"cat", "/proc/net/nf_conntrack", NULL};
@@ -449,9 +455,9 @@ csprintf("**** clean ip_conntrack %d time. ****\n", i+1);
 	//nvram_set("wan_state_changed", "0");
 	track_set("100");
 #endif
-//	system("killall dproxy");
-	system("rm -f /tmp/dproxy.cache");
-//	system("dproxy -c /tmp/dproxy.conf &");
+	/* notify dns server */
+	snprintf(tmp, sizeof(tmp), "-%d", SIGHUP);
+	eval("killall", tmp, "dnsmasq");
 }
 
 void close_socket(int sockfd, char type){
@@ -574,7 +580,8 @@ int wanduck_main(int argc, char **argv){
 		if(nat_enable == 1 || (fer < HAD_SET)){
 csprintf("\n# Enable direct rule\n");
 			rule_setup = 1;
-			
+
+			setup_udp_timeout(FALSE);
 			_eval(add_command, NULL, 0, NULL);
 			
 			change_redirect_rules(2, 0);
@@ -584,7 +591,8 @@ csprintf("\n# Enable direct rule\n");
 		if((nat_enable == 1) || (fer < HAD_SET)){
 csprintf("\n#CONNED : Enable direct rule\n");
 			rule_setup = 1;
-			
+
+			setup_udp_timeout(FALSE);
 			_eval(add_command, NULL, 0, NULL);
 			
 			change_redirect_rules(2, 0);
@@ -610,6 +618,7 @@ csprintf("\n#CONNED : Enable direct rule\n");
 			if(isFirstUse == TRUE)	// 0608 add
 			{
 csprintf("\n# Rebuild rules\n");
+				setup_udp_timeout(FALSE);
 				_eval(add_command, NULL, 0, NULL);
 				change_redirect_rules(1, 0);
 			}
@@ -665,7 +674,8 @@ csprintf("# wanduck: wait time for switching: %d/%d.\n", modem_ready_count*SCAN_
 				if(rule_setup == 0){	// 2007.10 James
 csprintf("\n# Enable direct rule(C2D)\n");
 					rule_setup = 1;
-					
+
+					setup_udp_timeout(FALSE);
 					_eval(add_command, NULL, 0, NULL);
 					
 					change_redirect_rules(2, 1);
@@ -688,6 +698,9 @@ csprintf("\n#w Disable direct rule(D2C)\n");
                         			system("iptables-restore /tmp/fake_nat_rules");
                 			else
 					{
+						setup_misc_timeout(FALSE);
+						setup_misc_timeout(TRUE);
+						setup_udp_timeout(TRUE);
 						_eval(del_command, NULL, 0, NULL);
 					}
 					change_redirect_rules(2, 0);
@@ -721,6 +734,9 @@ csprintf("\n#AP Disable direct rule(D2C)\n");
                         		system("iptables-restore /tmp/fake_nat_rules");
                 		else
 				{
+					setup_misc_timeout(FALSE);
+					setup_misc_timeout(TRUE);
+					setup_udp_timeout(TRUE);
 					_eval(del_command, NULL, 0, NULL);
 				}
 

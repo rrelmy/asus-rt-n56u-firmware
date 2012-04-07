@@ -76,16 +76,29 @@ function initial(){
 	if(sw_mode == "1" || sw_mode == "4")
 		show_menu(5,1,3);
 	else
-		show_menu(5,1,2);
-
-	document.form.wl_channel.value = document.form.wl_channel_orig.value;
+		show_menu(5,1,2);	
 
 	show_footer();
 	enable_auto_hint(1, 3);
 	load_body();		
-	insertExtChannelOption();
+	//insertExtChannelOption();
+	wl_nband_select(1);
+	document.form.wl_channel.value = document.form.wl_channel_orig.value;	
 	showLANIPList();
 	setTimeout("wds_scan();", 1000);
+}
+
+function wl_nband_select(ch){
+	if(ch == "1"){
+		document.form.wl_nband.value = 1;
+		insertExtChannelOption();
+		return change_common_radio(this, 'WLANConfig11b', 'wl_nband', '1');
+	}
+	else{
+		document.form.wl_nband.value = 2;
+		insertExtChannelOption();
+		return change_common_radio(this, 'WLANConfig11b', 'wl_nband', '2');
+	}
 }
 
 function applyRule(){
@@ -215,7 +228,7 @@ function hideClients_Block(){
 
 <input type="hidden" name="wl_country_code" value="<% nvram_get_x("",  "wl_country_code"); %>">
 <input type="hidden" name="HT_BW" value="<% nvram_get_x("",  "HT_BW"); %>">
-<input type="hidden" name="wl_nband" value="5">
+<input type="hidden" name="wl_nband" value="1">
 
 <input type="hidden" maxlength="15" size="15" name="x_RegulatoryDomain" value="<% nvram_get_x("Regulatory","x_RegulatoryDomain"); %>" readonly="1">
 <input type="hidden" name="wl_wdsnum_x_0" value="<% nvram_get_x("WLANConfig11b", "wl_wdsnum_x"); %>" readonly="1">

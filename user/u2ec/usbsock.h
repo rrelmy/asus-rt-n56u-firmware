@@ -100,7 +100,7 @@
 
 #define U2EC_TIMEOUT	6
 #define U2EC_TIMEOUT_MONO	300
-#define MAX_BUFFER_SIZE	65536
+#define MAX_BUFFER_SIZE	262144
 #define MAX_BUF_LEN	MAX_BUFFER_SIZE	+104+72
 #define BACKLOG		15			// how many pending connections queue will hold
 

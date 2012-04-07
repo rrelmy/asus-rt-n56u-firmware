@@ -109,6 +109,5 @@ int PpeGetFreeMtrGrp(void);
 void PpeSetFreeMtrGrp(uint32_t MgNum);
 
 MtrPlcyNode *MtrExistNode(MtrPlcyNode *NewNode);
-uint8_t MtrGetAllEntries(struct mtr_list_args *opt);
 
 #endif

@@ -60,7 +60,7 @@ var leases = [<% dhcp_leases(); %>];	// [[hostname, MAC, ip, lefttime], ...]
 var arps = [<% get_arp_table(); %>];		// [[ip, x, x, MAC, x, type], ...]
 var arls = [<% get_arl_table(); %>];		// [[MAC, port, x, x], ...]
 var wireless = [<% wl_auth_list(); %>];	// [[MAC, associated, authorized], ...]
-var ipmonitor = [<% get_static_client(); %>];	// [[IP, MAC, DeviceName, Type, http, printer, iTune], ...]
+var ipmonitor = [<% get_client_detail_info(); %>];	// [[IP, MAC, DeviceName, Type, http, printer, iTune], ...]
 var networkmap_fullscan = '<% nvram_match_x("", "networkmap_fullscan", "0", "done"); %>'; //2008.07.24 Add.  1 stands for complete, 0 stands for scanning.;
 var usb_path1 = '<% nvram_get_x("", "usb_path1"); %>';
 var usb_path2 = '<% nvram_get_x("", "usb_path2"); %>';
@@ -756,7 +756,7 @@ function MapUnderAPmode(){// if under AP mode, disable the Internet icon and sho
 		<!--=====End of Main Content=====-->
 	
 	<!--==============Beginning of hint content=============-->
-	<td id="statusContainer" width="300" align="left" valign="top" >
+	<td id="statusContainer" width="300" height="540" align="left" valign="top" >
 		<div id="statusIcon"></div>
 	  <table width="95%" border="0" cellpadding="0" cellspacing="0">
 		<tr>
@@ -768,7 +768,7 @@ function MapUnderAPmode(){// if under AP mode, disable the Internet icon and sho
 		</tr>
 		<tr>
 		  <td>
-			<iframe id="statusframe" name="statusframe" src="/device-map/router2g.asp" frameborder="0" width="100%" height="430"></iframe>
+			<iframe id="statusframe" name="statusframe" src="/device-map/router2g.asp" frameborder="0" width="100%" height="500"></iframe>
 		  </td>
 		</tr>
 	  </table>

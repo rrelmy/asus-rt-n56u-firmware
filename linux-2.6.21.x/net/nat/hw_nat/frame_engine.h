@@ -60,7 +60,7 @@
 #define AC_BASE		    FE_BASE + 0x400
 #define METER_BASE	    FE_BASE + 0x600
 
-#define FOE_TS		    FE_GLO_BASE+0x1C
+#define FOE_TS_T	    FE_GLO_BASE+0x1C
 #define GDMA1_BASE          FE_GLO_BASE+0x20
 #define FE_GDMA1_SCH_CFG    GDMA1_BASE+0x04
 #define GDMA2_BASE          FE_GLO_BASE+0x60
@@ -142,12 +142,6 @@ enum FoeSma {
     FWD_CPU_BUILD_ENTRY = 3 /* Forward to CPU and build new FOE entry */
 };
 
-enum BindDir {
-    UPSTREAM_ONLY = 0, /* only speed up upstream flow */
-    DOWNSTREAM_ONLY = 1, /* only speed up downstream flow */
-    BIDIRECTION = 2 /* speed up bi-direction flow */
-};
-
 enum FoeCpuReason {
     TTL_0=0x80,				/* TTL=0 */
     FOE_EBL_NOT_IPV4_HLEN5=0x90,	/* FOE enable & not IPv4h5nf */
@@ -175,15 +169,12 @@ enum FoeCpuReason {
     EXCEED_MTU=0xA1			/* Exceed mtu */
 };	
 
-#if 0
+#if  0
 #define CONFIG_RA_NAT_HW
 
 #define CONFIG_RA_HW_NAT_AUTO_BIND
 //#define CONFIG_RA_HW_NAT_SEMIAUTO_BIND
 //#define CONFIG_RA_HW_NAT_MANUAL_BIND
-
-#define CONFIG_RA_HW_NAT_LAN_VLANID 2
-#define CONFIG_RA_HW_NAT_WAN_VLANID 1
 
 #define CONFIG_RA_HW_NAT_BINDING_THRESHOLD	30
 #define CONFIG_RA_HW_NAT_QURT_LMT		100
@@ -213,10 +204,9 @@ enum FoeCpuReason {
 #define CONFIG_RA_HW_NAT_TCP_DLTA		5
 #define CONFIG_RA_HW_NAT_FIN_DLTA		5
 
-//#define CONFIG_RA_HW_NAT_IPV6
-
 //#define CONFIG_RA_HW_NAT_ACL2UP_HELPER
-
+#define CONFIG_RA_HW_NAT_DSCP2UP_HELPER	
+//#define CONFIG_RA_HW_NAT_NONE2UP
 #endif
 
 /* PPE_GLO_CFG, Offset=0x200 */
@@ -227,6 +217,9 @@ enum FoeCpuReason {
 #if defined (CONFIG_RA_HW_NAT_ACL2UP_HELPER)
 #define DFL_REG_DSCP		(0) /* Re-gePnerate DSCP */
 #define DFL_REG_VPRI		(1) /* Re-generate VLAN priority tag */
+#elif defined (CONFIG_RA_HW_NAT_DSCP2UP_HELPER)
+#define DFL_REG_DSCP		(1) /* Re-gePnerate DSCP */
+#define DFL_REG_VPRI		(0) /* Re-generate VLAN priority tag */
 #else
 #define DFL_REG_DSCP		(0) /* Re-gePnerate DSCP */
 #define DFL_REG_VPRI		(0) /* Re-generate VLAN priority tag */
@@ -277,8 +270,8 @@ enum FoeCpuReason {
 #define FUP_WT_OFFSET		(16) /* weight of FOE priority */
 #define ATP_WT_OFFSET		(20) /* weight of Auto priority */
 
-#if defined (CONFIG_RA_HW_NAT_ACL2UP_HELPER)
-#define DFL_UP_RES		 (7<<FUP_WT_OFFSET) /* use user priority in foe entry */
+#if defined (CONFIG_RA_HW_NAT_ACL2UP_HELPER) || defined (CONFIG_RA_HW_NAT_DSCP2UP_HELPER)
+#define DFL_UP_RES		(7<<FUP_WT_OFFSET) /* use user priority in foe entry */
 #else
 #define DFL_UP_RES		((0<<ATP_WT_OFFSET) | (0<<VUP_WT_OFFSET) |\
 				 (7<<DUP_WT_OFFSET) | (0<<AUP_WT_OFFSET) | \
@@ -318,13 +311,12 @@ enum FoeCpuReason {
 #define DFL_UP7_ODSCP		(0x30) /* user pri 7 map to out-profile DSCP */
 
 /* UP_MAP_AC=0xA0 */
-/* GDMA Q3 for CPU(slow path), Q2-Q0 for HNAT(fast path) */
-#define DFL_UP0_AC		(0) /* user pri 0 map to access category */
-#define DFL_UP1_AC		(0) /* user pri 1 map to access category */
-#define DFL_UP2_AC		(0) /* user pri 2 map to access category */
-#define DFL_UP3_AC		(0) /* user pri 3 map to access category */
-#define DFL_UP4_AC		(1) /* user pri 4 map to access category */
-#define DFL_UP5_AC		(1) /* user pri 5 map to access category */
+#define DFL_UP0_AC		(2) /* user pri 0 map to access category */
+#define DFL_UP1_AC		(2) /* user pri 1 map to access category */
+#define DFL_UP2_AC		(2) /* user pri 2 map to access category */
+#define DFL_UP3_AC		(2) /* user pri 3 map to access category */
+#define DFL_UP4_AC		(2) /* user pri 4 map to access category */
+#define DFL_UP5_AC		(2) /* user pri 5 map to access category */
 #define DFL_UP6_AC		(2) /* user pri 6 map to access category */
 #define DFL_UP7_AC		(2) /* user pri 7 map to access category */
 

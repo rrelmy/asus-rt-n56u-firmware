@@ -27,6 +27,7 @@
 #define SPINLOCK_SiteSurvey	1
 #define SPINLOCK_NVRAMCommit	2
 #define SPINLOCK_DHCPRenew	3
+#define SPINLOCK_Networkmap	4
 
 typedef struct
 {

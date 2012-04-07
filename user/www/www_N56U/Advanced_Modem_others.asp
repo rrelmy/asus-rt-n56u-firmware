@@ -379,21 +379,6 @@ function done_validating(action){
         <tr>
                 <td bgcolor="#FFFFFF">
 	<table width="100%" border="1" align="center" cellpadding="4" cellspacing="0" bordercolor="#6b8fa3"  class="FormTable">
-
-                                <tr>
-                                <th><a class="hintstyle"  href="javascript:void(0);" onClick="openHint(21,9);"><#HSDPAConfig_Country_itemname#></a></th>
-                                <td>
-                                	<select name="modem_country" id="isp_countrys" class="input" onfocus="parent.showHelpofDrSurf(21,9);" onchange="gen_list(document.form.modem_enable.value);show_ISP_list();show_APN_list();"></select>
-                                </td>
-                                </tr>
-                                
-                                <tr>
-                                <th><a class="hintstyle"  href="javascript:void(0);" onClick="openHint(21,8);"><#HSDPAConfig_ISP_itemname#></a></th>
-                                <td>
-                                	<select name="modem_isp" id="modem_isp" class="input" onClick="openHint(21,8);" onchange="show_APN_list()"></select>
-                                </td>
-                                </tr>
-
 		<tr>
 			<th width="40%">
 				<a class="hintstyle" href="javascript:openHint(21,1);"><#HSDPAConfig_hsdpa_enable_itemname#></a>
@@ -417,6 +402,20 @@ function done_validating(action){
 			<select name="Dev3G" id="shown_modems" class="input" onClick="openHint(21,13);" disabled="disabled"></select>
 		</td>
 	</tr>
+
+                                <tr>
+                                <th><a class="hintstyle"  href="javascript:void(0);" onClick="openHint(21,9);"><#HSDPAConfig_Country_itemname#></a></th>
+                                <td>
+                                	<select name="modem_country" id="isp_countrys" class="input" onfocus="parent.showHelpofDrSurf(21,9);" onchange="gen_list(document.form.modem_enable.value);show_ISP_list();show_APN_list();"></select>
+                                </td>
+                                </tr>
+                                
+                                <tr>
+                                <th><a class="hintstyle"  href="javascript:void(0);" onClick="openHint(21,8);"><#HSDPAConfig_ISP_itemname#></a></th>
+                                <td>
+                                	<select name="modem_isp" id="modem_isp" class="input" onClick="openHint(21,8);" onchange="show_APN_list()"></select>
+                                </td>
+                                </tr>
                                 	
                                 <tr>
                                 <th><a class="hintstyle"  href="javascript:void(0);" onClick="openHint(21,3);"><#HSDPAConfig_private_apn_itemname#></a></th>

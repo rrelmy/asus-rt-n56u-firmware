@@ -45,7 +45,7 @@ BasicConfig_EnableiTunesServer_itemname=Activer le iTunes Server?
 OP_switch_button_hint1=l'interrupteur de mode de fonctionnement se trouve sur le dessous du RT-N56U.
 OP_switch_button_hint2=Cliquez ici pour visualiser
 OP_GW_item=Routeur sans fil (par défaut)
-OP_GW_desc1=En mode Routeur et Partage d'IP, le RT-N56U se connecte via les protocoles PPPoE, adresse IP automatique, PPTP, L2TP, ou adresse IP statique.
+OP_GW_desc1=En mode Routeur sans fil, le RT-N56U se connecte via les protocoles PPPoE, adresse IP automatique, PPTP, L2TP, ou adresse IP statique.
 OP_GW_desc2=Ceci vous offre le meilleur signal radio sans fil. Les fonctions NAT, pare-feu et de partage large bande pour les clients LAN sont activées. Ce mode supporte le UPnP et DNS dynamique pour les utilisateurs SOHO ou particuliers.
 OP_RT_item=Routeur(Disable NAT)
 OP_RT_desc1=En mode routeur, utilisez un câble Ethernet pour connecter le RT-N56U à votre ordinateur et créer une connexion réseau sans fil. Sélectionnez ensuite les paramètres de votre connexion réseau sans fil. 
@@ -237,7 +237,7 @@ AP_survey=Recherche de Point d'accès
 statusTitle_AP=Etat du Point d'accès
 [USB Application - HSDPA]
 HSDPAConfig_connection=Configurer la connexion
-HSDPAConfig_pin_code_itemdesc=Saisissez le code PIN de votre carte SIM constitué de 3 à 8 caractères. Si vous ne connaissez pas le code PIN, contactez votre opérateur téléphonique.
+HSDPAConfig_pin_code_itemdesc=Saisissez le code PIN de votre carte SIM constitué de 4 à 8 caractères. Si vous ne connaissez pas le code PIN, contactez votre opérateur téléphonique.
 HSDPAConfig_private_apn_itemname=Service d'accès Internet sans fil (APN)  (optionnel)
 HSDPAConfig_private_apn_itemdesc=Si vous ne connaissez pas le nom du service d'accès Internet sans fil (APN), contactez votre fournisseur d'accès à Internet.
 HSDPAConfig_hsdpa_mode_Backup=Backup
@@ -1447,7 +1447,7 @@ HSDPAConfig_username_itemdesc=Saisissez votre nom d'utilisateur.
 HSDPAConfig_password_itemdesc=Saisissez votre mot de passe.
 HSDPAConfig_usbadaptor_itemdesc=Sélectionnez votre adaptateur USB.
 confirm_disableftp_dm=Désactiver le partage réseau désactivera la fonction Download Master.
-LANHostConfig_IPRouters_itemdesc=L'adresse IP du réseau local du RT-N56U. La valeur par défaut est 192.168.1.1. La gamme d'adresse IP du résea local : 192.168.0.1 - 192.168.255.254, 172.16.0.1 – 172.31.255.254, 10.0.0.1 – 10.255.255.254
+LANHostConfig_IPRouters_itemdesc=L'adresse IP du réseau local du RT-N56U.
 HSDPAConfig_hsdpa_mode_itemdesc=Choose the USB Modem mode according by your requirements and enviroments. We provide four mode below: Backup, Equal weight, Always high and Always low. Pour retirer en toute sécurité l'adaptateur USB Modem, référez-vous à <a href='/index.asp' target=\'_blank\'>Index</a> et cliquez sur le bouton de l'adaptateur.
 Not_authpage_login_again=Si vous souhaitez vous connecter à nouveau, veuillez d'abord fermer cette fenêtre.
 GO_HSDPA_SETTING=Allez dans les USB Modem avancés

@@ -51,7 +51,6 @@ static	devfs_handle_t devfs_handle;
 #endif
 
 int	hw_nat_major =  HW_NAT_MAJOR;
-unsigned char bind_dir = BIDIRECTION;
 extern int DebugLevel;
 
 #if LINUX_VERSION_CODE > KERNEL_VERSION(2,6,35)
@@ -150,9 +149,7 @@ int HwNatIoctl (struct inode *inode, struct file *filp,
     case HW_NAT_BIND_LIFETIME: 
 	opt4->result = PpeSetBindLifetime(opt4->foe_tcp_dlta, opt4->foe_udp_dlta, opt4->foe_fin_dlta);
 	break;
-    case HW_NAT_BIND_DIRECTION:
-	bind_dir=opt->bind_dir;
-	break;
+
     default:
 	break;
     }

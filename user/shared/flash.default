@@ -364,3 +364,12 @@
 
 { "pppoe_dhcp_route", "0", 0},
 { "sw_mode", "1", 0},
+
+{ "usr_timeout", "0", 0},
+{ "usr_timeout_ctrl", "1000", 0},
+{ "usr_timeout_br", "5000", 0},
+{ "usr_timeout_bw", "5000", 0},
+{ "detectWan", "1", 0},
+{ "detectLink", "0", 0},
+{ "ct_udp_timeout", "65 180", 0},
+{ "ct_timeout", "600 30", 0},

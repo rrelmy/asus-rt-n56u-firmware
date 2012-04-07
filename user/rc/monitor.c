@@ -972,8 +972,7 @@ void catch_sig_apcli(int sig)
 		{
 			printf("[rc] first link down then up\n");	// tmp test
 			first_link_down_then_up = 0;
-			if (!kill_pidfile_s("/var/run/udhcpd.pid", SIGUSR1))
-				kill_pidfile_s("/var/run/udhcpd.pid", SIGTERM);
+			stop_dns_dhcp();
 		}
 		else
 		{

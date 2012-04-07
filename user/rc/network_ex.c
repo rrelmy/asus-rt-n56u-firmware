@@ -118,10 +118,14 @@ int start_pppd(char *prefix)
 		}
 
 		fprintf(fp, " nic-%s\n", nvram_safe_get(strcat_r(prefix, "ifname", tmp)));
-
+#if 0
 		fprintf(fp, "mru %s mtu %s\n",
 			nvram_safe_get(strcat_r(prefix, "pppoe_mru", tmp)),
 			nvram_safe_get(strcat_r(prefix, "pppoe_mtu", tmp)));
+#else
+		fprintf(fp, "mru %s\n",
+                        nvram_safe_get(strcat_r(prefix, "pppoe_mru", tmp)));
+#endif
 	}
 
 	if (	atoi(nvram_safe_get(strcat_r(prefix, "pppoe_idletime", tmp))) &&
@@ -203,6 +207,12 @@ int start_pppd(char *prefix)
 		fclose(fp);
 
 		/* launch l2tp */
+		if (pids("l2tpd"))
+		{
+			system("killall l2tpd");
+			sleep(3);
+		}
+
 		system("/usr/sbin/l2tpd");
 
 		sleep(1);

@@ -23,10 +23,9 @@
 #include <netconf.h>
 #include <shutils.h>
 
-//#define WCLIENT 1
-
 #define IFUP (IFF_UP|IFF_RUNNING|IFF_BROADCAST|IFF_MULTICAST)
 
+#ifdef WCLIENT
 int is_dhcpd_exist(void)
 {
 	time_t now;
@@ -121,4 +120,4 @@ stop_dhcpd(void)
 	dprintf("done\n");
 	return ret;
 }
-
+#endif

@@ -12,12 +12,14 @@ system "nvram set apnerr=1"
 system "nvram set g3err=1"
 print "ERROR entering APN\n"
 print \"The COMGTAPN env variable is not set\n"
+send "ATH^m"
 exit 1
 :apntimeerror
 system "nvram set apnerr=2"
 system "nvram set g3err=1"
 print \"ERROR entering APN\n"
 print "The device timeout.\n"
+send "ATH^m"
 exit 1
 :OK
 let $x=$rpipe("nvram get modem_dialnum")
@@ -38,10 +40,12 @@ exit 0
 system "nvram set connerr=1"
 system "nvram set g3err=1"
 print "CONNECT ERROR\n"
+send "ATH^m"
 exit 1
 :timeerror
 system "nvram set connerr=2"
 system "nvram set g3err=1"
 print "CONNECT TIMEOUT\n"
+send "ATH^m"
 exit 1
 

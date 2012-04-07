@@ -40,12 +40,7 @@ function initial(){
 	fixed_change_wan_type(document.form.wan_proto.value);
 	
 	if(document.form.wan_pppoe_txonly_x.value == "1")
-		document.form.wan_pppoe_idletime_check.checked = true;
-		
-	/*if(sw_mode != 1){
-		document.form.hwnat[1].checked = 1;
-		inputRCtrl1(document.form.hwnat, 0);
-	}*/
+		document.form.wan_pppoe_idletime_check.checked = true;		
 
 	$("wan_proto_menu").style.display = (wan_proto == "3g")?"none":"block";
 	$("wan_proto_hint").style.display = (wan_proto == "3g")?"block":"none";
@@ -533,8 +528,6 @@ function ISPSelection(isp){
 		$("wan_internet_x").style.display = "none";
 		$("wan_iptv_port4_x").style.display = "none";
 		$("wan_voip_port3_x").style.display = "none";	
-		/*$("hostname_x").style.display = "none";
-		$("clone_mac_x").style.display = "";*/
 		document.form.vlan_isp.value = "singtel_mio";
 	}
 	else if(isp == "singtel_others"){
@@ -544,8 +537,6 @@ function ISPSelection(isp){
 		$("wan_internet_x").style.display = "none";
 		$("wan_iptv_port4_x").style.display = "none";
 		$("wan_voip_port3_x").style.display = "none";
-		/*$("hostname_x").style.display = "none";
-		$("clone_mac_x").style.display = "";*/
 		document.form.vlan_isp.value = "singtel_others";
 	}
 	else if(isp == "manual"){
@@ -555,8 +546,6 @@ function ISPSelection(isp){
 		$("wan_internet_x").style.display = "";
 		$("wan_iptv_port4_x").style.display = "";
 		$("wan_voip_port3_x").style.display = "";
-		/*$("hostname_x").style.display = "";
-		$("clone_mac_x").style.display = "";*/
 		document.form.vlan_isp.value = "manual";
 	}
 
@@ -668,14 +657,6 @@ function ISPSelection(isp){
         	        <input type="radio" value="0" name="wan_pppoe_relay_x" class="input" onclick="return change_common_radio(this, 'PPPConnection', 'wan_pppoe_relay_x', '0')" <% nvram_match_x("PPPConnection","wan_pppoe_relay_x", "0", "checked"); %> /><#checkbox_No#>
           	    </td>
             	</tr>
-
-							<!--tr>
-								<th width="30%"><a class="hintstyle" href="javascript:void(0);" onClick="openHint(7,22);"><#BasicConfig_HWNAT_itemname#></th>                 
-								<td style="font-weight:normal;" align="left">
-									<input type="radio" name="hwnat" class="input" value="1" <% nvram_match_x("PrinterStatus","hwnat", "1", "checked"); %>><#checkbox_Yes#>
-									<input type="radio" name="hwnat" class="input" value="0" <% nvram_match_x("PrinterStatus","hwnat", "0", "checked"); %>><#checkbox_No#>
-								</td>
-							</tr-->
 							
 						</table>
 					</td>
@@ -836,8 +817,8 @@ function ISPSelection(isp){
 					<option value="2" <% nvram_match_x("Layer3Forwarding", "wan_stb_x", "2", "selected"); %>>LAN2</option>
 					<option value="3" <% nvram_match_x("Layer3Forwarding", "wan_stb_x", "3", "selected"); %>>LAN3</option>
 					<option value="4" <% nvram_match_x("Layer3Forwarding", "wan_stb_x", "4", "selected"); %>>LAN4</option>
-					<option value="6" <% nvram_match_x("Layer3Forwarding", "wan_stb_x", "6", "selected"); %>>LAN1 & LAN2</option>
-					<option value="5" <% nvram_match_x("Layer3Forwarding", "wan_stb_x", "5", "selected"); %>>LAN3 & LAN4</option>
+					<option value="5" <% nvram_match_x("Layer3Forwarding", "wan_stb_x", "5", "selected"); %>>LAN1 & LAN2</option>
+					<option value="6" <% nvram_match_x("Layer3Forwarding", "wan_stb_x", "6", "selected"); %>>LAN3 & LAN4</option>
 				</select>
 		</td>
 	</tr>		

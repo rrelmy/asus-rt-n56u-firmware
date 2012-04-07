@@ -16,6 +16,7 @@ system "nvram set simerr=1"
 system "nvram set g3err=1"
 print $s," ***SIM ERROR***\n"
 print "Check device port configuration.Check SIM is inserted\nTest SIM in a mobile phone?\n"
+send "ATH^m"
 exit 1
 :getpin
 system "nvram set g3state_pin=1"
@@ -48,17 +49,20 @@ if % = 3 goto pinerror
 system "nvram set pinerr=3"
 system "nvram set g3err=1"
 print "ERROR: The COMGTPIN env variable is not set\n"
+send "ATH^m"
 exit 1
 :pinerror
 system "nvram set pinerr=1"
 system "nvram set g3err=1"
 print "ERROR: PIN code must be 4 decimal digits only\n"
 print "Caution! - entering the wrong PIN code three times will lock the SIM\n"
+send "ATH^m"
 exit 1
 :pintimeerror
 system "nvram set pinerr=2"
 system "nvram set g3err=1"
 print "ERROR: timeout, device did not respond to PIN command entry.\n"
+send "ATH^m"
 exit 1
 :ready
 system "nvram set g3state_rd=1"
@@ -130,21 +134,25 @@ system "nvram set apnerr=1"
 system "nvram set g3err=1"
 print "ERROR entering APN\n"
 print \"The COMGTAPN env variable is not set\n"
+send "ATH^m"
 exit 1
 :apntimeerror
 system "nvram set apnerr=2"
 system "nvram set g3err=1"
 print \"ERROR entering APN\n"
 print "The device timeout.\n"
+send "ATH^m"
 exit 1
 :error
 system "nvram set connerr=1"
 system "nvram set g3err=1"
 print "CONNECT ERROR\n"
+send "ATH^m"
 exit 1
 :timeerror
 system "nvram set connerr=2"
 system "nvram set g3err=1"
 print "CONNECT TIMEOUT\n"
+send "ATH^m"
 exit 1
 

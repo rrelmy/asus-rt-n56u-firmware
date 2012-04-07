@@ -3662,21 +3662,37 @@ static int handle_fifo(int *fd, fd_set *pfds, int *pfdm, int conn_fd)
 		nvram_set("u2ec_busyip", "");
 		update_device();
 		bin_sem_post();
+
+		PDEBUG("\nReset connection for removing\n");
+		u2ec_list_for_each_safe(pos, tmp, &conn_info_list) {
+
+			PDEBUG("\nReset connection ip: %s, socket: %d\n", inet_ntoa(((PCONNECTION_INFO)pos)->ip), ((PCONNECTION_INFO)pos)->sockfd);
+
+			count_bulk_read = 0;
+			count_bulk_write = 0;
+			count_bulk_read_ret0_1 = 0;
+			count_bulk_read_ret0_2 = 0;
+			count_bulk_read_epson = 0;
+			flag_monitor_epson = 0;
+			flag_canon_state = 0;
+			flag_canon_ok = 0;
+			((PCONNECTION_INFO)pos)->count_class_int_in = 0;
+			((PCONNECTION_INFO)pos)->ip.s_addr = 0;
+			((PCONNECTION_INFO)pos)->irp = 0;
+			close(((PCONNECTION_INFO)pos)->sockfd);
+			fd_in_use[((PCONNECTION_INFO)pos)->sockfd] = 0;
+			((PCONNECTION_INFO)pos)->sockfd = 0;
+			((PCONNECTION_INFO)pos)->ip.s_addr = 0;
+			u2ec_list_del(pos);
+			free(pos);
+		}
+
 		if (!dev)
 		{
-			PDEBUG("\nReset connection for removing\n");
-			u2ec_list_for_each_safe(pos, tmp, &conn_info_list) {
-				close(((PCONNECTION_INFO)pos)->sockfd);
-				fd_in_use[((PCONNECTION_INFO)pos)->sockfd] = 0;
-				((PCONNECTION_INFO)pos)->sockfd = 0;
-				((PCONNECTION_INFO)pos)->ip.s_addr = 0;
-				u2ec_list_del(pos);
-				free(pos);
-			}
+			FD_ZERO(pfds);
+			*pfdm = 0;
+			rtvl = 1;
 		}
-		FD_ZERO(pfds);
-		*pfdm = 0;
-		rtvl = 1;
 	}
 	/* Handle multi client. */
 	else if (c == 'c') {	// connect reset.
