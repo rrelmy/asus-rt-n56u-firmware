@@ -2805,8 +2805,10 @@ int gen_ralink_config_rt()
 
 	if (Channel == 0)
 		EXTCHA_MAX = 1;
+#if 0
 	else if ((Channel >=1) && (Channel <= 4))
 		EXTCHA_MAX = 0;
+#endif
 	else if ((Channel >= 5) && (Channel <= 7))
 		EXTCHA_MAX = 1;
 	else if ((Channel >= 8) && (Channel <= 14))
@@ -2825,7 +2827,9 @@ int gen_ralink_config_rt()
 		str = nvram_safe_get("rt_HT_EXTCHA");
 		if (str)
 		{
-			if (atoi(str) <= EXTCHA_MAX)
+			if ((Channel >=1) && (Channel <= 4))
+                                fprintf(fp, "HT_EXTCHA=%d\n", 1);
+			else if (atoi(str) <= EXTCHA_MAX)
 				fprintf(fp, "HT_EXTCHA=%d\n", atoi(str));
 			else
 				fprintf(fp, "HT_EXTCHA=%d\n", 0);

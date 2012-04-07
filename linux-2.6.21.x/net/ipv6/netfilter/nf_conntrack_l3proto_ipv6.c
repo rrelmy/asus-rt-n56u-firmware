@@ -206,12 +206,12 @@ static unsigned int ipv6_confirm(unsigned int hooknum,
 	}
 
 #if defined(CONFIG_RA_HW_NAT) || defined(CONFIG_RA_HW_NAT_MODULE)
-	if( (skb_headroom(*pskb) >=4)  &&
-		((FOE_MAGIC_TAG(*pskb) == FOE_MAGIC_PCI) ||
-		 (FOE_MAGIC_TAG(*pskb) == FOE_MAGIC_WLAN) ||
-		 (FOE_MAGIC_TAG(*pskb) == FOE_MAGIC_GE))){
-	    FOE_ALG_RXIF(*pskb)=1;
-	}
+        if( IS_SPACE_AVAILABLED(*pskb)  &&
+                ((FOE_MAGIC_TAG(*pskb) == FOE_MAGIC_PCI) ||
+                 (FOE_MAGIC_TAG(*pskb) == FOE_MAGIC_WLAN) ||
+                 (FOE_MAGIC_TAG(*pskb) == FOE_MAGIC_GE))){
+            FOE_ALG(*pskb)=1;
+        }
 #endif
 
 	ret = help->helper->help(pskb, protoff, ct, ctinfo);

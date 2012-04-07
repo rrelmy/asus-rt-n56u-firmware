@@ -387,8 +387,12 @@ start_igmpproxy(char *wan_ifname)
 		"quickleave\n\n"
 		"phyint %s upstream  ratelimit 0  threshold 1\n"
 		"\taltnet %s\n\n"
-		"phyint %s downstream  ratelimit 0  threshold 1\n\n",
-//		"phyint ppp0 disabled\n\n",
+#if 0
+                "phyint %s downstream  ratelimit 0  threshold 1\n\n"
+                "phyint ppp0 disabled\n\n",
+#else
+                "phyint %s downstream  ratelimit 0  threshold 1\n\n",
+#endif
 		wan_ifname, 
 		altnet_mask, 
 		nvram_safe_get("lan_ifname") ? : "br0");
@@ -1619,7 +1623,7 @@ start_wan(void)
 				
 				/* setup static wan routes via physical device */
 				add_routes("wan_", "route", wan_ifname);
-				
+
 				/* start multicast router */
 				start_igmpproxy(wan_ifname);
 				
@@ -1686,6 +1690,7 @@ start_wan(void)
 				   	!nvram_match("wan_heartbeat_x", ""))
 						route_add(wan_ifname, 2, "0.0.0.0", 
 					nvram_safe_get(strcat_r(prefix, "pppoe_gateway", tmp)), "0.0.0.0");
+
 					/* start multicast router */
 					start_igmpproxy(wan_ifname);
 				}
@@ -2323,9 +2328,10 @@ wan_up(char *wan_ifname)	// oleg patch, replace
 #endif
 
 	/* start multicast router */
-	if (strcmp(wan_proto, "dhcp") == 0 ||
+	if (	strcmp(wan_proto, "dhcp") == 0 ||
 //		strcmp(wan_proto, "bigpond") == 0 ||
-		strcmp(wan_proto, "static") == 0)
+		strcmp(wan_proto, "static") == 0 ||
+		(strcmp(wan_proto, "pppoe") == 0 && nvram_match("pppoe_dhcp_route", "0")))
 	{
 		start_igmpproxy(wan_ifname);
 	}

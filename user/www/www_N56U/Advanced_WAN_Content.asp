@@ -42,11 +42,6 @@ function initial(){
 	if(document.form.wan_pppoe_txonly_x.value == "1")
 		document.form.wan_pppoe_idletime_check.checked = true;
 		
-	/*if(sw_mode != 1){
-		document.form.hwnat[1].checked = 1;
-		inputRCtrl1(document.form.hwnat, 0);
-	}*/
-
 	$("wan_proto_menu").style.display = (wan_proto == "3g")?"none":"block";
 	$("wan_proto_hint").style.display = (wan_proto == "3g")?"block":"none";
 	if(wan_proto == "3g"){
@@ -224,6 +219,7 @@ function change_wan_type(wan_type, flag){
 		inputCtrl(document.form.wan_pptp_options_x, 0);
 		// 2008.03 James. patch for Oleg's patch. }
 		inputRCtrl1(document.form.wan_pppoe_relay_x, 1);
+		$('pppoe_dhcp_x').style.display="";
 
 	}
 	else if(wan_type == "pptp"){		
@@ -245,8 +241,9 @@ function change_wan_type(wan_type, flag){
 		// 2008.03 James. patch for Oleg's patch. }
 
 		inputRCtrl1(document.form.wan_pppoe_relay_x, 1);
+		$('pppoe_dhcp_x').style.display="none";
 	}
-	else if(wan_type == "l2tp"){		
+	else if(wan_type == "l2tp"){
 		inputCtrl(document.form.wan_dnsenable_x[0], 1);
 		inputCtrl(document.form.wan_dnsenable_x[1], 1);
 		
@@ -265,6 +262,7 @@ function change_wan_type(wan_type, flag){
 		// 2008.03 James. patch for Oleg's patch. }
 
 		inputRCtrl1(document.form.wan_pppoe_relay_x, 1);
+		$('pppoe_dhcp_x').style.display="none";
 	}
 	else if(wan_type == "static"){
 		inputCtrl(document.form.wan_dnsenable_x[0], 0);
@@ -285,6 +283,7 @@ function change_wan_type(wan_type, flag){
 		// 2008.03 James. patch for Oleg's patch. }
 
 		inputRCtrl1(document.form.wan_pppoe_relay_x, 1);
+		$('pppoe_dhcp_x').style.display="none";
 	}
 	else{	// Automatic IP		
 		inputCtrl(document.form.wan_dnsenable_x[0], 1);
@@ -305,14 +304,9 @@ function change_wan_type(wan_type, flag){
 		// 2008.03 James. patch for Oleg's patch. }
 
 		inputRCtrl1(document.form.wan_pppoe_relay_x, 1);
+		$('pppoe_dhcp_x').style.display="none";
 	}
 
-	/* By Viz 2011.08 show out at each wan_type
-	if(wan_type == "pptp" || wan_type == "l2tp")
-		$("vpn_x").style.display = "";	
-	else
-		$("vpn_x").style.display = "none";	
-	*/	
 }
 
 function fixed_change_wan_type(wan_type){
@@ -332,6 +326,7 @@ function fixed_change_wan_type(wan_type){
 		flag = true;
 	
 	if(wan_type == "pppoe"){
+		$('pppoe_dhcp_x').style.display="";
 		if(wan_type == original_wan_type){
 			document.form.wan_dnsenable_x[0].checked = original_dnsenable;
 			document.form.wan_dnsenable_x[1].checked = !original_dnsenable;
@@ -878,13 +873,23 @@ function ISPSelection(isp){
 		PRIO&nbsp;<input type="text" name="voip_prio" class="input" size="5" maxlength="1" value="<% nvram_get_x("Layer3Forwarding","voip_prio"); %>">
 	  </td>
 	</tr>					
-	   <tr id="vpn_x">
+
+        	<tr id="pppoe_dhcp_x" style="display:none;">
+          	<th>Enable PPPoE+DHCP Connection?</th>
+          	<td>
+      	       	<input type="radio" value="1" name="pppoe_dhcp_route" class="input" onclick="return change_common_radio(this, 'PPPConnection', 'pppoe_dhcp_route', '1')" <% nvram_match_x("PPPConnection","pppoe_dhcp_route", "1", "checked"); %> /><#checkbox_Yes#>
+        	      <input type="radio" value="0" name="pppoe_dhcp_route" class="input" onclick="return change_common_radio(this, 'PPPConnection', 'pppoe_dhcp_route', '0')" <% nvram_match_x("PPPConnection","pppoe_dhcp_route", "0", "checked"); %> /><#checkbox_No#>
+			  		</td>				
+        	</tr>
+
+	   <tr>
           <th><a class="hintstyle" href="javascript:void(0);" onClick="openHint(7,19);"><#PPPConnection_x_HeartBeat_itemname#></a></th>
           <td>
           	<!-- 2008.03 James. patch for Oleg's patch. { -->
           	<input type="text" name="wan_heartbeat_x" class="input" maxlength="256" size="32" value="<% nvram_get_x("PPPConnection","wan_heartbeat_x"); %>" onKeyPress="return is_string(this)"></td>
           	<!-- 2008.03 James. patch for Oleg's patch. } -->
-        </tr>
+    </tr>
+        	
         <tr id="hostname_x">
           <th><a class="hintstyle" href="javascript:void(0);" onClick="openHint(7,15);"><#PPPConnection_x_HostNameForISP_itemname#></a></th>
           <td><input type="text" name="wan_hostname" class="input" maxlength="32" size="32" value="<% nvram_get_x("PPPConnection","wan_hostname"); %>" onkeypress="return is_string(this)"></td>

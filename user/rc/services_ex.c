@@ -4906,11 +4906,10 @@ start_dms()
 	else
 #endif
 	{
-#if 0
-		doSystem("minidlna -f /etc_ro/minidlna.conf -s %s -R", nvram_safe_get("br0hexaddr"));
-#else
-		doSystem("minidlna -f /etc_ro/minidlna.conf -s %s", nvram_safe_get("br0hexaddr"));
-#endif
+		if (nvram_match("dms_rescan", "1"))
+			doSystem("minidlna -f /etc_ro/minidlna.conf -s %s -R", nvram_safe_get("br0hexaddr"));
+		else
+			doSystem("minidlna -f /etc_ro/minidlna.conf -s %s", nvram_safe_get("br0hexaddr"));
 	}
 
 	nvram_set("apps_dms_ex", "1");

@@ -1006,7 +1006,7 @@ int rtl8367m_ioctl(struct inode *inode, struct file *file, unsigned int req,
 			put_user(pLinkStatus, (unsigned int __user *)arg);
 			break;
 		}
-		else if (wan_stb_g == 5)	// P0,P1,P4
+		else if (wan_stb_g == 6)	// P0,P1,P4
 		{
 			port = LAN_PORT_4;
 			rtk_port_linkStatus_get(port, &pLinkStatus);
@@ -1029,7 +1029,7 @@ int rtl8367m_ioctl(struct inode *inode, struct file *file, unsigned int req,
 			put_user(pLinkStatus, (unsigned int __user *)arg);
 			break;
 		}
-		else if (wan_stb_g == 6)	// P2,P3,P4
+		else if (wan_stb_g == 5)	// P2,P3,P4
 		{
 			port = LAN_PORT_2;
 			rtk_port_linkStatus_get(port, &pLinkStatus);
@@ -1181,7 +1181,7 @@ int rtl8367m_ioctl(struct inode *inode, struct file *file, unsigned int req,
 			put_user(pLinkStatus, (unsigned int __user *)arg);
 			break;
 		}
-		else if (wan_stb_g == 5)	// P2,P3
+		else if (wan_stb_g == 6)	// P2,P3
 		{
 			port = LAN_PORT_2;
 			rtk_port_linkStatus_get(port, &pLinkStatus);
@@ -1196,7 +1196,7 @@ int rtl8367m_ioctl(struct inode *inode, struct file *file, unsigned int req,
 			put_user(pLinkStatus, (unsigned int __user *)arg);
 			break;
 		}
-		else if (wan_stb_g == 6)	// P0,P1
+		else if (wan_stb_g == 5)	// P0,P1
 		{
 			port = LAN_PORT_4;
 			rtk_port_linkStatus_get(port, &pLinkStatus);
@@ -1433,34 +1433,34 @@ int rtl8367m_ioctl(struct inode *inode, struct file *file, unsigned int req,
 		}
 		else if (wan_stb_g == 1)	// P3,P4
 		{
-			rtk_stat_port_reset(LAN_PORT_4);
+			rtk_stat_port_reset(LAN_PORT_1);
 			rtk_stat_port_reset(4);
 		}
 		else if (wan_stb_g == 2)	// P2,P4
 		{
-			rtk_stat_port_reset(LAN_PORT_3);
+			rtk_stat_port_reset(LAN_PORT_2);
 			rtk_stat_port_reset(4);
 		}
 		else if (wan_stb_g == 3)	// P1,P4
 		{
-			rtk_stat_port_reset(LAN_PORT_2);
+			rtk_stat_port_reset(LAN_PORT_3);
 			rtk_stat_port_reset(4);
 		}
 		else if (wan_stb_g == 4)	// P0,P4
 		{
-			rtk_stat_port_reset(LAN_PORT_1);
+			rtk_stat_port_reset(LAN_PORT_4);
 			rtk_stat_port_reset(4);
 		}
-		else if (wan_stb_g == 5)	// P0,P1,P4
-		{
-			rtk_stat_port_reset(LAN_PORT_2);
-			rtk_stat_port_reset(LAN_PORT_1);
-			rtk_stat_port_reset(4);
-		}
-		else if (wan_stb_g == 6)	// P2,P3,P4
+		else if (wan_stb_g == 6)	// P0,P1,P4
 		{
 			rtk_stat_port_reset(LAN_PORT_4);
 			rtk_stat_port_reset(LAN_PORT_3);
+			rtk_stat_port_reset(4);
+		}
+		else if (wan_stb_g == 5)	// P2,P3,P4
+		{
+			rtk_stat_port_reset(LAN_PORT_2);
+			rtk_stat_port_reset(LAN_PORT_1);
 			rtk_stat_port_reset(4);
 		}
 		rtk_stat_port_reset(8);
@@ -1576,6 +1576,10 @@ int rtl8367m_ioctl(struct inode *inode, struct file *file, unsigned int req,
 		}
 		else if (wan_stb_g == 1)	// P0,P1,P2
 		{
+			rtk_port_phyReg_get(LAN_PORT_4, PHY_CONTROL_REG, &pData);
+			pData &= ~CONTROL_REG_PORT_POWER_BIT;
+			rtk_port_phyReg_set(LAN_PORT_4, PHY_CONTROL_REG, pData);
+
 			rtk_port_phyReg_get(LAN_PORT_3, PHY_CONTROL_REG, &pData);
 			pData &= ~CONTROL_REG_PORT_POWER_BIT;
 			rtk_port_phyReg_set(LAN_PORT_3, PHY_CONTROL_REG, pData);
@@ -1583,10 +1587,6 @@ int rtl8367m_ioctl(struct inode *inode, struct file *file, unsigned int req,
 			rtk_port_phyReg_get(LAN_PORT_2, PHY_CONTROL_REG, &pData);
 			pData &= ~CONTROL_REG_PORT_POWER_BIT;
 			rtk_port_phyReg_set(LAN_PORT_2, PHY_CONTROL_REG, pData);
-
-			rtk_port_phyReg_get(LAN_PORT_1, PHY_CONTROL_REG, &pData);
-			pData &= ~CONTROL_REG_PORT_POWER_BIT;
-			rtk_port_phyReg_set(LAN_PORT_1, PHY_CONTROL_REG, pData);
 		}
 		else if (wan_stb_g == 2)	// P0,P1,P3
 		{
@@ -1594,9 +1594,9 @@ int rtl8367m_ioctl(struct inode *inode, struct file *file, unsigned int req,
 			pData &= ~CONTROL_REG_PORT_POWER_BIT;
 			rtk_port_phyReg_set(LAN_PORT_4, PHY_CONTROL_REG, pData);
 
-			rtk_port_phyReg_get(LAN_PORT_2, PHY_CONTROL_REG, &pData);
+			rtk_port_phyReg_get(LAN_PORT_3, PHY_CONTROL_REG, &pData);
 			pData &= ~CONTROL_REG_PORT_POWER_BIT;
-			rtk_port_phyReg_set(LAN_PORT_2, PHY_CONTROL_REG, pData);
+			rtk_port_phyReg_set(LAN_PORT_3, PHY_CONTROL_REG, pData);
 
 			rtk_port_phyReg_get(LAN_PORT_1, PHY_CONTROL_REG, &pData);
 			pData &= ~CONTROL_REG_PORT_POWER_BIT;
@@ -1608,9 +1608,9 @@ int rtl8367m_ioctl(struct inode *inode, struct file *file, unsigned int req,
 			pData &= ~CONTROL_REG_PORT_POWER_BIT;
 			rtk_port_phyReg_set(LAN_PORT_4, PHY_CONTROL_REG, pData);
 
-			rtk_port_phyReg_get(LAN_PORT_3, PHY_CONTROL_REG, &pData);
+			rtk_port_phyReg_get(LAN_PORT_2, PHY_CONTROL_REG, &pData);
 			pData &= ~CONTROL_REG_PORT_POWER_BIT;
-			rtk_port_phyReg_set(LAN_PORT_3, PHY_CONTROL_REG, pData);
+			rtk_port_phyReg_set(LAN_PORT_2, PHY_CONTROL_REG, pData);
 
 			rtk_port_phyReg_get(LAN_PORT_1, PHY_CONTROL_REG, &pData);
 			pData &= ~CONTROL_REG_PORT_POWER_BIT;
@@ -1618,10 +1618,6 @@ int rtl8367m_ioctl(struct inode *inode, struct file *file, unsigned int req,
 		}
  		else if (wan_stb_g == 4)	// P1,P2,P3
  		{
-			rtk_port_phyReg_get(LAN_PORT_4, PHY_CONTROL_REG, &pData);
-			pData &= ~CONTROL_REG_PORT_POWER_BIT;
-			rtk_port_phyReg_set(LAN_PORT_4, PHY_CONTROL_REG, pData);
-
 			rtk_port_phyReg_get(LAN_PORT_3, PHY_CONTROL_REG, &pData);
 			pData &= ~CONTROL_REG_PORT_POWER_BIT;
 			rtk_port_phyReg_set(LAN_PORT_3, PHY_CONTROL_REG, pData);
@@ -1629,18 +1625,12 @@ int rtl8367m_ioctl(struct inode *inode, struct file *file, unsigned int req,
 			rtk_port_phyReg_get(LAN_PORT_2, PHY_CONTROL_REG, &pData);
 			pData &= ~CONTROL_REG_PORT_POWER_BIT;
 			rtk_port_phyReg_set(LAN_PORT_2, PHY_CONTROL_REG, pData);
-		}
-		else if (wan_stb_g == 5)	// P2,P3
-		{
-			rtk_port_phyReg_get(LAN_PORT_4, PHY_CONTROL_REG, &pData);
-			pData &= ~CONTROL_REG_PORT_POWER_BIT;
-			rtk_port_phyReg_set(LAN_PORT_4, PHY_CONTROL_REG, pData);
 
-			rtk_port_phyReg_get(LAN_PORT_3, PHY_CONTROL_REG, &pData);
+			rtk_port_phyReg_get(LAN_PORT_1, PHY_CONTROL_REG, &pData);
 			pData &= ~CONTROL_REG_PORT_POWER_BIT;
-			rtk_port_phyReg_set(LAN_PORT_3, PHY_CONTROL_REG, pData);
+			rtk_port_phyReg_set(LAN_PORT_1, PHY_CONTROL_REG, pData);
 		}
-		else if (wan_stb_g == 6)	// P0,P1
+		else if (wan_stb_g == 6)	// P2,P3
 		{
 			rtk_port_phyReg_get(LAN_PORT_2, PHY_CONTROL_REG, &pData);
 			pData &= ~CONTROL_REG_PORT_POWER_BIT;
@@ -1649,6 +1639,16 @@ int rtl8367m_ioctl(struct inode *inode, struct file *file, unsigned int req,
 			rtk_port_phyReg_get(LAN_PORT_1, PHY_CONTROL_REG, &pData);
 			pData &= ~CONTROL_REG_PORT_POWER_BIT;
 			rtk_port_phyReg_set(LAN_PORT_1, PHY_CONTROL_REG, pData);
+		}
+		else if (wan_stb_g == 5)	// P0,P1
+		{
+			rtk_port_phyReg_get(LAN_PORT_4, PHY_CONTROL_REG, &pData);
+			pData &= ~CONTROL_REG_PORT_POWER_BIT;
+			rtk_port_phyReg_set(LAN_PORT_4, PHY_CONTROL_REG, pData);
+
+			rtk_port_phyReg_get(LAN_PORT_3, PHY_CONTROL_REG, &pData);
+			pData &= ~CONTROL_REG_PORT_POWER_BIT;
+			rtk_port_phyReg_set(LAN_PORT_3, PHY_CONTROL_REG, pData);
 		}
 		
 		break;
@@ -1674,6 +1674,10 @@ int rtl8367m_ioctl(struct inode *inode, struct file *file, unsigned int req,
 		}
 		else if (wan_stb_g == 1)	// P0,P1,P2
 		{
+			rtk_port_phyReg_get(LAN_PORT_4, PHY_CONTROL_REG, &pData);
+			pData |= CONTROL_REG_PORT_POWER_BIT;
+			rtk_port_phyReg_set(LAN_PORT_4, PHY_CONTROL_REG, pData);
+
 			rtk_port_phyReg_get(LAN_PORT_3, PHY_CONTROL_REG, &pData);
 			pData |= CONTROL_REG_PORT_POWER_BIT;
 			rtk_port_phyReg_set(LAN_PORT_3, PHY_CONTROL_REG, pData);
@@ -1681,10 +1685,6 @@ int rtl8367m_ioctl(struct inode *inode, struct file *file, unsigned int req,
 			rtk_port_phyReg_get(LAN_PORT_2, PHY_CONTROL_REG, &pData);
 			pData |= CONTROL_REG_PORT_POWER_BIT;
 			rtk_port_phyReg_set(LAN_PORT_2, PHY_CONTROL_REG, pData);
-
-			rtk_port_phyReg_get(LAN_PORT_1, PHY_CONTROL_REG, &pData);
-			pData |= CONTROL_REG_PORT_POWER_BIT;
-			rtk_port_phyReg_set(LAN_PORT_1, PHY_CONTROL_REG, pData);
 		}
 		else if (wan_stb_g == 2)	// P0,P1,P3
 		{
@@ -1692,9 +1692,9 @@ int rtl8367m_ioctl(struct inode *inode, struct file *file, unsigned int req,
 			pData |= CONTROL_REG_PORT_POWER_BIT;
 			rtk_port_phyReg_set(LAN_PORT_4, PHY_CONTROL_REG, pData);
 
-			rtk_port_phyReg_get(LAN_PORT_2, PHY_CONTROL_REG, &pData);
+			rtk_port_phyReg_get(LAN_PORT_3, PHY_CONTROL_REG, &pData);
 			pData |= CONTROL_REG_PORT_POWER_BIT;
-			rtk_port_phyReg_set(LAN_PORT_2, PHY_CONTROL_REG, pData);
+			rtk_port_phyReg_set(LAN_PORT_3, PHY_CONTROL_REG, pData);
 
 			rtk_port_phyReg_get(LAN_PORT_1, PHY_CONTROL_REG, &pData);
 			pData |= CONTROL_REG_PORT_POWER_BIT;
@@ -1706,9 +1706,9 @@ int rtl8367m_ioctl(struct inode *inode, struct file *file, unsigned int req,
 			pData |= CONTROL_REG_PORT_POWER_BIT;
 			rtk_port_phyReg_set(LAN_PORT_4, PHY_CONTROL_REG, pData);
 
-			rtk_port_phyReg_get(LAN_PORT_3, PHY_CONTROL_REG, &pData);
+			rtk_port_phyReg_get(LAN_PORT_2, PHY_CONTROL_REG, &pData);
 			pData |= CONTROL_REG_PORT_POWER_BIT;
-			rtk_port_phyReg_set(LAN_PORT_3, PHY_CONTROL_REG, pData);
+			rtk_port_phyReg_set(LAN_PORT_2, PHY_CONTROL_REG, pData);
 
 			rtk_port_phyReg_get(LAN_PORT_1, PHY_CONTROL_REG, &pData);
 			pData |= CONTROL_REG_PORT_POWER_BIT;
@@ -1716,10 +1716,6 @@ int rtl8367m_ioctl(struct inode *inode, struct file *file, unsigned int req,
 		}
  		else if (wan_stb_g == 4)	// P1,P2,P3
  		{
-			rtk_port_phyReg_get(LAN_PORT_4, PHY_CONTROL_REG, &pData);
-			pData |= CONTROL_REG_PORT_POWER_BIT;
-			rtk_port_phyReg_set(LAN_PORT_4, PHY_CONTROL_REG, pData);
-
 			rtk_port_phyReg_get(LAN_PORT_3, PHY_CONTROL_REG, &pData);
 			pData |= CONTROL_REG_PORT_POWER_BIT;
 			rtk_port_phyReg_set(LAN_PORT_3, PHY_CONTROL_REG, pData);
@@ -1727,18 +1723,12 @@ int rtl8367m_ioctl(struct inode *inode, struct file *file, unsigned int req,
 			rtk_port_phyReg_get(LAN_PORT_2, PHY_CONTROL_REG, &pData);
 			pData |= CONTROL_REG_PORT_POWER_BIT;
 			rtk_port_phyReg_set(LAN_PORT_2, PHY_CONTROL_REG, pData);
-		}
-		else if (wan_stb_g == 5)	// P2,P3
-		{
-			rtk_port_phyReg_get(LAN_PORT_4, PHY_CONTROL_REG, &pData);
-			pData |= CONTROL_REG_PORT_POWER_BIT;
-			rtk_port_phyReg_set(LAN_PORT_4, PHY_CONTROL_REG, pData);
 
-			rtk_port_phyReg_get(LAN_PORT_3, PHY_CONTROL_REG, &pData);
+			rtk_port_phyReg_get(LAN_PORT_1, PHY_CONTROL_REG, &pData);
 			pData |= CONTROL_REG_PORT_POWER_BIT;
-			rtk_port_phyReg_set(LAN_PORT_3, PHY_CONTROL_REG, pData);
+			rtk_port_phyReg_set(LAN_PORT_1, PHY_CONTROL_REG, pData);
 		}
-		else if (wan_stb_g == 6)	// P0,P1
+		else if (wan_stb_g == 6)	// P2,P3
 		{
 			rtk_port_phyReg_get(LAN_PORT_2, PHY_CONTROL_REG, &pData);
 			pData |= CONTROL_REG_PORT_POWER_BIT;
@@ -1747,6 +1737,16 @@ int rtl8367m_ioctl(struct inode *inode, struct file *file, unsigned int req,
 			rtk_port_phyReg_get(LAN_PORT_1, PHY_CONTROL_REG, &pData);
 			pData |= CONTROL_REG_PORT_POWER_BIT;
 			rtk_port_phyReg_set(LAN_PORT_1, PHY_CONTROL_REG, pData);
+		}
+		else if (wan_stb_g == 5)	// P0,P1
+		{
+			rtk_port_phyReg_get(LAN_PORT_4, PHY_CONTROL_REG, &pData);
+			pData |= CONTROL_REG_PORT_POWER_BIT;
+			rtk_port_phyReg_set(LAN_PORT_4, PHY_CONTROL_REG, pData);
+
+			rtk_port_phyReg_get(LAN_PORT_3, PHY_CONTROL_REG, &pData);
+			pData |= CONTROL_REG_PORT_POWER_BIT;
+			rtk_port_phyReg_set(LAN_PORT_3, PHY_CONTROL_REG, pData);
 		}
 
 		break;

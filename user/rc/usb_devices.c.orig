@@ -2617,31 +2617,7 @@ int asus_tty(const char *device_name, const char *action){
 		return 0;
 	}
 
-	// check the current working node of modem.
-	memset(nvram_name, 0, 32);
-	sprintf(nvram_name, "usb_path%d_act", port_num);
-	memset(current_value, 0, 16);
-	strcpy(current_value, nvram_safe_get(nvram_name));
-
 	if(isSerialNode(device_name)){
-		// Set the default node. Because there is no Int endpoint in some dongles.
-		if(!strcmp(device_name, "ttyUSB0")){
-			if(!strcmp(current_value, "")){
-usb_dbg("(%s): current_value=%s, device_name=%s.\n", device_name, current_value, device_name);
-				nvram_set(nvram_name, device_name);
-			}
-
-			// Write dial config file.
-			if(!write_3g_ppp_conf(device_name)){
-				usb_dbg("(%s): Fail to write PPP's conf for 3G process!\n", device_name);
-				file_unlock(isLock);
-				return 0;
-			}
-
-			// Notify wanduck to switch the wan line to WAN port.
-			kill_pidfile_s("/var/run/wanduck.pid", SIGUSR1);
-		}
-
 		// Find the endpoint: 03(Int).
 		got_Int_endpoint = get_interface_Int_endpoint(interface_name);
 		if(!got_Int_endpoint){
@@ -2649,7 +2625,36 @@ usb_dbg("(%s): current_value=%s, device_name=%s.\n", device_name, current_value,
 			file_unlock(isLock);
 			return 0;
 		}
+	}
+	else{ // isACMNode(device_name).
+		// Find the control interface of cdc-acm.
+		if(!isACMInterface(interface_name)){
+			usb_dbg("(%s): Not control interface!\n", device_name);
+			file_unlock(isLock);
+			return 0;
+		}
+	}
 
+	// check the current working node of modem.
+	memset(nvram_name, 0, 32);
+	sprintf(nvram_name, "usb_path%d_act", port_num);
+	memset(current_value, 0, 16);
+	strcpy(current_value, nvram_safe_get(nvram_name));
+
+	if(isACMNode(device_name)){
+		if(!strcmp(device_name, "ttyACM0")){
+			nvram_set(nvram_name, device_name);
+
+			if(!write_3g_ppp_conf(device_name)){
+				usb_dbg("(%s): Fail to write PPP's conf for 3G process!\n", device_name);
+				file_unlock(isLock);
+				return 0;
+			}
+		}
+		else
+			usb_dbg("(%s): Skip to write PPP's conf.\n", device_name);
+	}
+	else{ // isSerialNode(device_name).
 		if(!strcmp(current_value, "")){
 usb_dbg("(%s): current_value=%s, device_name=%s.\n", device_name, current_value, device_name);
 			nvram_set(nvram_name, device_name);
@@ -2668,7 +2673,7 @@ usb_dbg("(%s): current_value=%s, device_name=%s.\n", device_name, current_value,
 				file_unlock(isLock);
 				return 0;
 			}
-			else if(cur_val != -1 && cur_val >= tmp_val){
+			else if(cur_val != -1 && cur_val <= tmp_val){
 				usb_dbg("(%s): Skip to write PPP's conf.\n", device_name);
 				file_unlock(isLock);
 				return 0;
@@ -2687,27 +2692,9 @@ usb_dbg("(%s): cur_val=%d, tmp_val=%d.\n", device_name, cur_val, tmp_val);
 			return 0;
 		}
 	}
-	else{ // isACMNode(device_name).
-		// Find the control interface of cdc-acm.
-		if(!strcmp(device_name, "ttyACM0")){
-			if(!strcmp(current_value, "")){
-usb_dbg("(%s): current_value=%s, device_name=%s.\n", device_name, current_value, device_name);
-				nvram_set(nvram_name, device_name);
-			}
 
-			// Write dial config file.
-			if(!write_3g_ppp_conf(device_name)){
-				usb_dbg("(%s): Fail to write PPP's conf for 3G process!\n", device_name);
-				file_unlock(isLock);
-				return 0;
-			}
-
-			// Notify wanduck to switch the wan line to WAN port.
-			kill_pidfile_s("/var/run/wanduck.pid", SIGUSR1);
-		}
-		else
-			usb_dbg("(%s): Skip to write PPP's conf.\n", device_name);//*/
-	}
+	// Notify wanduck to switch the wan line to WAN port.
+	kill_pidfile_s("/var/run/wanduck.pid", SIGUSR1);
 
 	usb_dbg("(%s): Success!\n", device_name);
 	file_unlock(isLock);

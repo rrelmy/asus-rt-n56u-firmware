@@ -228,12 +228,12 @@ discard:
 int ip6_input(struct sk_buff *skb)
 {
 #if defined(CONFIG_RA_HW_NAT) || defined(CONFIG_RA_HW_NAT_MODULE)
-            if( (skb_headroom(skb) >=4)  &&
-                    ((FOE_MAGIC_TAG(skb) == FOE_MAGIC_PCI) ||
-                     (FOE_MAGIC_TAG(skb) == FOE_MAGIC_WLAN) ||
-                     (FOE_MAGIC_TAG(skb) == FOE_MAGIC_GE))){
-                    FOE_ALG_RXIF(skb)=1;
-            }
+        if( IS_SPACE_AVAILABLED(skb)  &&
+                ((FOE_MAGIC_TAG(skb) == FOE_MAGIC_PCI) ||
+                 (FOE_MAGIC_TAG(skb) == FOE_MAGIC_WLAN) ||
+                 (FOE_MAGIC_TAG(skb) == FOE_MAGIC_GE))){
+            FOE_ALG(skb)=1;
+        }
 #endif
 
 	return NF_HOOK(PF_INET6,NF_IP6_LOCAL_IN, skb, skb->dev, NULL, ip6_input_finish);

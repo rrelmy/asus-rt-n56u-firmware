@@ -247,8 +247,8 @@ function done_validating(action){
                                                 <a class="hintstyle" href="javascript:openHint(17, 4);"><#BasicConfig_EnableDownloadMachine_itemname#></a>
                                         </th>
                                         <td>
-                                                <input type="radio" name="apps_dl" value="1" <% nvram_match_x("Storage", "apps_dl", "1", "checked"); %>>Yes
-                                                <input type="radio" name="apps_dl" value="0" <% nvram_match_x("Storage", "apps_dl", "0", "checked"); %>>No
+                                                <input type="radio" name="apps_dl" value="1" <% nvram_match_x("Storage", "apps_dl", "1", "checked"); %>><#checkbox_Yes#>
+                                                <input type="radio" name="apps_dl" value="0" <% nvram_match_x("Storage", "apps_dl", "0", "checked"); %>><#checkbox_No#>
                                         </td>
                                 </tr>
 
@@ -257,8 +257,8 @@ function done_validating(action){
                                                 <#iTunesMediaServer#>
                                         </th>
                                         <td>
-                                                <input type="radio" name="apps_itunes" value="1" <% nvram_match_x("Storage", "apps_itunes", "1", "checked"); %>>Yes
-                                                <input type="radio" name="apps_itunes" value="0" <% nvram_match_x("Storage", "apps_itunes", "0", "checked"); %>>No
+                                                <input type="radio" name="apps_itunes" value="1" <% nvram_match_x("Storage", "apps_itunes", "1", "checked"); %>><#checkbox_Yes#>
+                                                <input type="radio" name="apps_itunes" value="0" <% nvram_match_x("Storage", "apps_itunes", "0", "checked"); %>><#checkbox_No#>
                                         </td>
                                 </tr>
                                 
@@ -270,6 +270,13 @@ function done_validating(action){
                                                 <input type="text" name="usb_vid_allow" class="input" onClick="openHint(17, 9);" maxlength="4" size="4" value="<% nvram_get_x("Storage", "usb_vid_allow"); %>">
                                         </td>
                                 </tr-->
+                                <tr>
+                                        <th>DLNA media server forced rescan?</th>
+                                        <td>
+                                                <input type="radio" name="dms_rescan" value="1" <% nvram_match_x("Storage", "dms_rescan", "1", "checked"); %>><#checkbox_Yes#>
+                                                <input type="radio" name="dms_rescan" value="0" <% nvram_match_x("Storage", "dms_rescan", "0", "checked"); %>><#checkbox_No#>
+                                        </td>
+                                </tr>
 
                                 <tr align="right">
                                         <td colspan="2">

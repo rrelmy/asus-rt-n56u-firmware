@@ -139,6 +139,8 @@
 
 		{"apps_dms", "", validate_range, ARGV("0","1"), FALSE, RESTART_DMS},	// 2007.10 James
 
+		{"dms_rescan", "", validate_range, ARGV("0","1"), FALSE, RESTART_DMS},
+
 		{"apps_itunes", "", validate_range, ARGV("0","1"), FALSE, RESTART_ITUNES},
 
 //		{"dms_comp_mode", "", validate_range, ARGV("0","1"), FALSE, RESTART_DMS},
@@ -736,6 +738,8 @@
 	      0), FALSE, RESTART_REBOOT},	// 2007.10 James
 
 		{"wan_stb_x", "", validate_range, ARGV("0", "4"), FALSE, RESTART_REBOOT},	// 2008.03 James
+
+		{"pppoe_dhcp_route", "", validate_range, ARGV("0", "1"), FALSE, RESTART_REBOOT},
 
 		{"vlan_isp", "", validate_choice, ARGV( 
 						"none", 

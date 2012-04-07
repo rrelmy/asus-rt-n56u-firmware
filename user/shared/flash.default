@@ -373,3 +373,4 @@
 { "detectLink", "0", 0},
 { "ct_udp_timeout", "65 180", 0},
 { "ct_timeout", "600 30", 0},
+{ "dms_rescan", "1", 0},

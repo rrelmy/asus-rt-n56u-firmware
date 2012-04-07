@@ -1258,14 +1258,14 @@ nf_conntrack_in(int pf, unsigned int hooknum, struct sk_buff **pskb)
 	}
 
 #if defined(CONFIG_RA_HW_NAT) || defined(CONFIG_RA_HW_NAT_MODULE)
-	if (nfct_help(ct)->helper) {
-            if( (skb_headroom(*pskb) >=4)  &&
+        if (nfct_help(ct)->helper) {
+            if( IS_SPACE_AVAILABLED(*pskb) &&
                     ((FOE_MAGIC_TAG(*pskb) == FOE_MAGIC_PCI) ||
                      (FOE_MAGIC_TAG(*pskb) == FOE_MAGIC_WLAN) ||
                      (FOE_MAGIC_TAG(*pskb) == FOE_MAGIC_GE))){
-                    FOE_ALG_RXIF(*pskb)=1;
-	    }
-	}
+                    FOE_ALG(*pskb)=1;
+            }
+        }
 #endif
 
 	if (set_reply && !test_and_set_bit(IPS_SEEN_REPLY_BIT, &ct->status))

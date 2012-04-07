@@ -1944,6 +1944,7 @@ filter_setting(char *wan_if, char *wan_ip, char *lan_if, char *lan_ip, char *log
 			fprintf(fp, "-A %s %s -i %s -o %s -p icmp --icmp-type %s -j %s\n", chain, lanwan_timematch, lan_if, wan_if, ptr, ftype);
 #if 1
 		if (nvram_match("fw_lw_enable_x_1", "1"))
+		foreach(ptr, nvram_safe_get("filter_lw_icmp_x"), icmplist)
 			fprintf(fp, "-A %s %s -i %s -o %s -p icmp --icmp-type %s -j %s\n", chain, lanwan_timematch_1, lan_if, wan_if, ptr, ftype);
 #endif
 		// Default

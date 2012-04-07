@@ -210,6 +210,7 @@ sysinit(void)
 	mkdir("/tmp/rc_action_incomplete", 0777);	// 2008.10 magic
 
 	/* Make /etc symlinks for compatibility */
+	eval("touch", "/tmp/resolv.conf");
 	symlink("/tmp/resolv.conf", "/etc/resolv.conf");
 	symlink("/etc_ro/protocols", "/etc/protocols");
 
