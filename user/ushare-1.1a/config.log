@@ -1,0 +1,391 @@
+# ./configure --prefix=/root/SDK_3_4_1_0/source.RT3662/user/ushare-1.1a/install --enable-dlna --disable-nls --with-libdlna-dir=/root/SDK_3_4_1_0/source.RT3662/user/libdlna-0.2.3/src --with-libupnp-dir=/root/SDK_3_4_1_0/source.RT3662/user/libupnp-1.6.6/install/ --cross-prefix=mipsel-linux- --cross-compile
+BASH=/bin/sh
+BASH_ARGC=([0]="7")
+BASH_ARGV=([0]="--cross-compile" [1]="--cross-prefix=mipsel-linux-" [2]="--with-libupnp-dir=/root/SDK_3_4_1_0/source.RT3662/user/libupnp-1.6.6/install/" [3]="--with-libdlna-dir=/root/SDK_3_4_1_0/source.RT3662/user/libdlna-0.2.3/src" [4]="--disable-nls" [5]="--enable-dlna" [6]="--prefix=/root/SDK_3_4_1_0/source.RT3662/user/ushare-1.1a/install")
+BASH_LINENO=([0]="0")
+BASH_SOURCE=([0]="./configure")
+BASH_VERSINFO=([0]="3" [1]="2" [2]="33" [3]="1" [4]="release" [5]="i386-redhat-linux-gnu")
+BASH_VERSION='3.2.33(1)-release'
+CCACHE_DIR=/var/cache/ccache
+CCACHE_UMASK=002
+COLORTERM=gnome-terminal
+CONFIGFILE=config.mak
+CONFIG_H=config.h
+CVS_RSH=ssh
+DBUS_SESSION_BUS_ADDRESS=unix:abstract=/tmp/dbus-Du0ywRctdt,guid=a91d8966a456668b983a2f004bdd5a17
+DESKTOP_SESSION=default
+DESKTOP_STARTUP_ID=
+DIRSTACK=()
+DISPLAY=:0.0
+EUID=0
+GDMSESSION=default
+GDM_LANG=en_US.UTF-8
+GDM_XSERVER_LOCATION=local
+GNOME_DESKTOP_SESSION_ID=Default
+GNOME_KEYRING_PID=2748
+GNOME_KEYRING_SOCKET=/tmp/keyring-RhqlLk/socket
+GROUPS=()
+GTK_RC_FILES=/etc/gtk/gtkrc:/root/.gtkrc-1.2-gnome2
+G_BROKEN_FILENAMES=1
+HISTSIZE=1000
+HOME=/root
+HOSTNAME=localhost.localdomain
+HOSTTYPE=i386
+IFS=' 	
+'
+INPUTRC=/etc/inputrc
+INSTALL='/usr/bin/install -c'
+LANG=en_US.UTF-8
+LESSOPEN='|/usr/bin/lesspipe.sh %s'
+LOGNAME=root
+LS_COLORS='no=00:fi=00:di=00;34:ln=00;36:pi=40;33:so=00;35:bd=40;33;01:cd=40;33;01:or=01;05;37;41:mi=01;05;37;41:ex=00;32:*.cmd=00;32:*.exe=00;32:*.com=00;32:*.btm=00;32:*.bat=00;32:*.sh=00;32:*.csh=00;32:*.tar=00;31:*.tgz=00;31:*.svgz=00;31:*.arj=00;31:*.taz=00;31:*.lzh=00;31:*.lzma=00;31:*.zip=00;31:*.z=00;31:*.Z=00;31:*.dz=00;31:*.gz=00;31:*.bz2=00;31:*.tbz2=00;31:*.bz=00;31:*.tz=00;31:*.deb=00;31:*.rpm=00;31:*.jar=00;31:*.rar=00;31:*.ace=00;31:*.zoo=00;31:*.cpio=00;31:*.7z=00;31:*.rz=00;31:*.jpg=00;35:*.jpeg=00;35:*.gif=00;35:*.bmp=00;35:*.pbm=00;35:*.pgm=00;35:*.ppm=00;35:*.tga=00;35:*.xbm=00;35:*.xpm=00;35:*.tif=00;35:*.tiff=00;35:*.png=00;35:*.mng=00;35:*.pcx=00;35:*.mov=00;35:*.mpg=00;35:*.mpeg=00;35:*.m2v=00;35:*.mkv=00;35:*.ogm=00;35:*.mp4=00;35:*.m4v=00;35:*.mp4v=00;35:*.vob=00;35:*.qt=00;35:*.nuv=00;35:*.wmv=00;35:*.asf=00;35:*.rm=00;35:*.rmvb=00;35:*.flc=00;35:*.avi=00;35:*.fli=00;35:*.gl=00;35:*.dl=00;35:*.xcf=00;35:*.xwd=00;35:*.yuv=00;35:*.svg=00;35:'
+MACHTYPE=i386-redhat-linux-gnu
+MAIL=/var/spool/mail/root
+OPTERR=1
+OPTIND=1
+OSTYPE=linux-gnu
+PATH=/usr/kerberos/sbin:/usr/kerberos/bin:/usr/lib/ccache:/opt/buildroot-gdb/bin:/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin:/usr/X11R6/bin:/root/bin
+PIPESTATUS=([0]="0")
+POSIXLY_CORRECT=y
+PPID=7779
+PREFIX=/root/SDK_3_4_1_0/source.RT3662/user/ushare-1.1a/install
+PS4='+ '
+PWD=/root/SDK_3_4_1_0/source.RT3662/user/ushare-1.1a
+RANDOM=10598
+SESSION_MANAGER=local/unix:@/tmp/.ICE-unix/2750,unix/unix:/tmp/.ICE-unix/2750
+SHELL=/bin/bash
+SHELLOPTS=braceexpand:hashall:interactive-comments:posix
+SHLVL=3
+SSH_AGENT_PID=2849
+SSH_ASKPASS=/usr/libexec/openssh/gnome-ssh-askpass
+SSH_AUTH_SOCK=/tmp/ssh-eCaEBO2750/agent.2750
+TERM=xterm
+TMPC=/tmp/ushare-26634-23890-6870.c
+TMPDIR1=/tmp
+TMPE=/tmp/ushare-1509-23890-4805
+TMPO=/tmp/ushare-15718-23890-4348.o
+TMPS=/tmp/ushare-5265-23890-10598.S
+UID=0
+USER=root
+VERSION=1.1a
+WINDOWID=30539503
+WINDOWPATH=7
+XAUTHORITY=/tmp/.gdmROCXBV
+XDG_DATA_DIRS=/usr/local/share/:/usr/share/:/usr/share/gdm/
+XDG_SESSION_COOKIE=8a83c0bf1b80a08026afdd004b28c200-1272797718.348328-1872310946
+XMODIFIERS=@im=none
+_=--cross-compile
+bindir='${PREFIX}/bin'
+cc=mipsel-linux-gcc
+cpu=x86
+cross_compile=yes
+cross_prefix=mipsel-linux-
+debug=no
+dlna=yes
+dostrip=yes
+extralibs=
+force_prefix=yes
+installstrip=-s
+libdlnadir=/root/SDK_3_4_1_0/source.RT3662/user/libdlna-0.2.3/src
+libupnpdir=/root/SDK_3_4_1_0/source.RT3662/user/libupnp-1.6.6/install/
+localedir='${PREFIX}/share/locale'
+logfile=config.log
+logging=yes
+make=make
+nls=no
+opt=--cross-compile
+optimize=yes
+optval=--cross-compile
+strip=mipsel-linux-strip
+sysconfdir='${PREFIX}/etc'
+system_name=Linux
+Checking for compiler available...
+check_ld
+check_cc
+BEGIN /tmp/ushare-26634-23890-6870.c
+     1	int main(){
+     2	    return 0;
+     3	}
+END /tmp/ushare-26634-23890-6870.c
+mipsel-linux-gcc -c -o /tmp/ushare-15718-23890-4348.o /tmp/ushare-26634-23890-6870.c
+mipsel-linux-gcc -o /tmp/ushare-1509-23890-4805 /tmp/ushare-15718-23890-4348.o
+check_header altivec.h
+check_cpp
+BEGIN /tmp/ushare-26634-23890-6870.c
+     1	#include <altivec.h>
+     2	int x;
+END /tmp/ushare-26634-23890-6870.c
+mipsel-linux-gcc -E -o /tmp/ushare-15718-23890-4348.o /tmp/ushare-26634-23890-6870.c
+/tmp/ushare-26634-23890-6870.c:1:21: altivec.h: No such file or directory
+check_cc -msse
+BEGIN /tmp/ushare-26634-23890-6870.c
+     1	#include <xmmintrin.h>
+     2	int main(void) {
+     3	#if __GNUC__ > 3 || (__GNUC__ == 3 && __GNUC_MINOR__ >= 2)
+     4	return 0;
+     5	#else
+     6	#error no vector builtins
+     7	#endif
+     8	}
+END /tmp/ushare-26634-23890-6870.c
+mipsel-linux-gcc -msse -c -o /tmp/ushare-15718-23890-4348.o /tmp/ushare-26634-23890-6870.c
+cc1: error: invalid option `sse'
+check_cc -march=athlon
+BEGIN /tmp/ushare-26634-23890-6870.c
+     1	#include <mm3dnow.h>
+     2	int main(void) {
+     3	__m64 b1;
+     4	b1 = _m_pswapd(b1);
+     5	_m_femms();
+     6	return 0;
+     7	}
+END /tmp/ushare-26634-23890-6870.c
+mipsel-linux-gcc -march=athlon -c -o /tmp/ushare-15718-23890-4348.o /tmp/ushare-26634-23890-6870.c
+/tmp/ushare-26634-23890-6870.c:1: error: bad value (athlon) for -march
+check_cflags -W
+check_cc -W
+BEGIN /tmp/ushare-26634-23890-6870.c
+     1	int x;
+END /tmp/ushare-26634-23890-6870.c
+mipsel-linux-gcc -I.. -W -c -o /tmp/ushare-15718-23890-4348.o /tmp/ushare-26634-23890-6870.c
+check_cflags -Wall
+check_cc -Wall
+BEGIN /tmp/ushare-26634-23890-6870.c
+     1	int x;
+END /tmp/ushare-26634-23890-6870.c
+mipsel-linux-gcc -I.. -W -Wall -c -o /tmp/ushare-15718-23890-4348.o /tmp/ushare-26634-23890-6870.c
+check_cflags -D_LARGEFILE_SOURCE
+check_cc -D_LARGEFILE_SOURCE
+BEGIN /tmp/ushare-26634-23890-6870.c
+     1	int x;
+END /tmp/ushare-26634-23890-6870.c
+mipsel-linux-gcc -I.. -W -Wall -D_LARGEFILE_SOURCE -c -o /tmp/ushare-15718-23890-4348.o /tmp/ushare-26634-23890-6870.c
+check_cflags -D_FILE_OFFSET_BITS=64
+check_cc -D_FILE_OFFSET_BITS=64
+BEGIN /tmp/ushare-26634-23890-6870.c
+     1	int x;
+END /tmp/ushare-26634-23890-6870.c
+mipsel-linux-gcc -I.. -W -Wall -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 -c -o /tmp/ushare-15718-23890-4348.o /tmp/ushare-26634-23890-6870.c
+check_cflags -D_REENTRANT
+check_cc -D_REENTRANT
+BEGIN /tmp/ushare-26634-23890-6870.c
+     1	int x;
+END /tmp/ushare-26634-23890-6870.c
+mipsel-linux-gcc -I.. -W -Wall -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 -D_REENTRANT -c -o /tmp/ushare-15718-23890-4348.o /tmp/ushare-26634-23890-6870.c
+Checking for locales ...
+check_header locale.h
+check_cpp
+BEGIN /tmp/ushare-26634-23890-6870.c
+     1	#include <locale.h>
+     2	int x;
+END /tmp/ushare-26634-23890-6870.c
+mipsel-linux-gcc -I.. -W -Wall -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 -D_REENTRANT -D_GNU_SOURCE -O3 -E -o /tmp/ushare-15718-23890-4348.o /tmp/ushare-26634-23890-6870.c
+check_lib locale.h setlocale 
+check_header locale.h
+check_cpp
+BEGIN /tmp/ushare-26634-23890-6870.c
+     1	#include <locale.h>
+     2	int x;
+END /tmp/ushare-26634-23890-6870.c
+mipsel-linux-gcc -I.. -W -Wall -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 -D_REENTRANT -D_GNU_SOURCE -O3 -DHAVE_LOCALE_H -E -o /tmp/ushare-15718-23890-4348.o /tmp/ushare-26634-23890-6870.c
+check_func setlocale
+check_ld
+check_cc
+BEGIN /tmp/ushare-26634-23890-6870.c
+     1	extern int setlocale();
+     2	int main(){
+     3	    setlocale();
+     4	    return 0;
+     5	}
+END /tmp/ushare-26634-23890-6870.c
+mipsel-linux-gcc -I.. -W -Wall -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 -D_REENTRANT -D_GNU_SOURCE -O3 -DHAVE_LOCALE_H -c -o /tmp/ushare-15718-23890-4348.o /tmp/ushare-26634-23890-6870.c
+mipsel-linux-gcc -o /tmp/ushare-1509-23890-4805 /tmp/ushare-15718-23890-4348.o
+Checking for ifaddrs ...
+check_lib ifaddrs.h getifaddrs 
+check_header ifaddrs.h
+check_cpp
+BEGIN /tmp/ushare-26634-23890-6870.c
+     1	#include <ifaddrs.h>
+     2	int x;
+END /tmp/ushare-26634-23890-6870.c
+mipsel-linux-gcc -I.. -W -Wall -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 -D_REENTRANT -D_GNU_SOURCE -O3 -DHAVE_LOCALE_H -DHAVE_SETLOCALE -E -o /tmp/ushare-15718-23890-4348.o /tmp/ushare-26634-23890-6870.c
+/tmp/ushare-26634-23890-6870.c:1:21: ifaddrs.h: No such file or directory
+Checking for langinfo ...
+check_header langinfo.h
+check_cpp
+BEGIN /tmp/ushare-26634-23890-6870.c
+     1	#include <langinfo.h>
+     2	int x;
+END /tmp/ushare-26634-23890-6870.c
+mipsel-linux-gcc -I.. -W -Wall -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 -D_REENTRANT -D_GNU_SOURCE -O3 -DHAVE_LOCALE_H -DHAVE_SETLOCALE -E -o /tmp/ushare-15718-23890-4348.o /tmp/ushare-26634-23890-6870.c
+check_lib langinfo.h nl_langinfo 
+check_header langinfo.h
+check_cpp
+BEGIN /tmp/ushare-26634-23890-6870.c
+     1	#include <langinfo.h>
+     2	int x;
+END /tmp/ushare-26634-23890-6870.c
+mipsel-linux-gcc -I.. -W -Wall -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 -D_REENTRANT -D_GNU_SOURCE -O3 -DHAVE_LOCALE_H -DHAVE_SETLOCALE -DHAVE_LANGINFO_H -E -o /tmp/ushare-15718-23890-4348.o /tmp/ushare-26634-23890-6870.c
+check_func nl_langinfo
+check_ld
+check_cc
+BEGIN /tmp/ushare-26634-23890-6870.c
+     1	extern int nl_langinfo();
+     2	int main(){
+     3	    nl_langinfo();
+     4	    return 0;
+     5	}
+END /tmp/ushare-26634-23890-6870.c
+mipsel-linux-gcc -I.. -W -Wall -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 -D_REENTRANT -D_GNU_SOURCE -O3 -DHAVE_LOCALE_H -DHAVE_SETLOCALE -DHAVE_LANGINFO_H -c -o /tmp/ushare-15718-23890-4348.o /tmp/ushare-26634-23890-6870.c
+mipsel-linux-gcc -o /tmp/ushare-1509-23890-4805 /tmp/ushare-15718-23890-4348.o
+Checking for iconv ...
+check_lib iconv.h iconv 
+check_header iconv.h
+check_cpp
+BEGIN /tmp/ushare-26634-23890-6870.c
+     1	#include <iconv.h>
+     2	int x;
+END /tmp/ushare-26634-23890-6870.c
+mipsel-linux-gcc -I.. -W -Wall -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 -D_REENTRANT -D_GNU_SOURCE -O3 -DHAVE_LOCALE_H -DHAVE_SETLOCALE -DHAVE_LANGINFO_H -DHAVE_LANGINFO_CODESET -E -o /tmp/ushare-15718-23890-4348.o /tmp/ushare-26634-23890-6870.c
+/tmp/ushare-26634-23890-6870.c:1:19: iconv.h: No such file or directory
+check_cflags -I/root/SDK_3_4_1_0/source.RT3662/user/libupnp-1.6.6/install//include
+check_cc -I/root/SDK_3_4_1_0/source.RT3662/user/libupnp-1.6.6/install//include
+BEGIN /tmp/ushare-26634-23890-6870.c
+     1	int x;
+END /tmp/ushare-26634-23890-6870.c
+mipsel-linux-gcc -I.. -W -Wall -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 -D_REENTRANT -D_GNU_SOURCE -O3 -DHAVE_LOCALE_H -DHAVE_SETLOCALE -DHAVE_LANGINFO_H -DHAVE_LANGINFO_CODESET -I/root/SDK_3_4_1_0/source.RT3662/user/libupnp-1.6.6/install//include -c -o /tmp/ushare-15718-23890-4348.o /tmp/ushare-26634-23890-6870.c
+check_ldflags -L/root/SDK_3_4_1_0/source.RT3662/user/libupnp-1.6.6/install//lib
+check_ld -L/root/SDK_3_4_1_0/source.RT3662/user/libupnp-1.6.6/install//lib
+check_cc
+BEGIN /tmp/ushare-26634-23890-6870.c
+     1	int main(){
+     2	    return 0;
+     3	}
+END /tmp/ushare-26634-23890-6870.c
+mipsel-linux-gcc -I.. -W -Wall -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 -D_REENTRANT -D_GNU_SOURCE -O3 -DHAVE_LOCALE_H -DHAVE_SETLOCALE -DHAVE_LANGINFO_H -DHAVE_LANGINFO_CODESET -I/root/SDK_3_4_1_0/source.RT3662/user/libupnp-1.6.6/install//include -c -o /tmp/ushare-15718-23890-4348.o /tmp/ushare-26634-23890-6870.c
+mipsel-linux-gcc -L/root/SDK_3_4_1_0/source.RT3662/user/libupnp-1.6.6/install//lib -o /tmp/ushare-1509-23890-4805 /tmp/ushare-15718-23890-4348.o
+Checking for libixml ...
+check_lib upnp/ixml.h ixmlRelaxParser -lixml
+check_header upnp/ixml.h
+check_cpp
+BEGIN /tmp/ushare-26634-23890-6870.c
+     1	#include <upnp/ixml.h>
+     2	int x;
+END /tmp/ushare-26634-23890-6870.c
+mipsel-linux-gcc -I.. -W -Wall -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 -D_REENTRANT -D_GNU_SOURCE -O3 -DHAVE_LOCALE_H -DHAVE_SETLOCALE -DHAVE_LANGINFO_H -DHAVE_LANGINFO_CODESET -I/root/SDK_3_4_1_0/source.RT3662/user/libupnp-1.6.6/install//include -E -o /tmp/ushare-15718-23890-4348.o /tmp/ushare-26634-23890-6870.c
+check_func ixmlRelaxParser
+check_ld
+check_cc
+BEGIN /tmp/ushare-26634-23890-6870.c
+     1	extern int ixmlRelaxParser();
+     2	int main(){
+     3	    ixmlRelaxParser();
+     4	    return 0;
+     5	}
+END /tmp/ushare-26634-23890-6870.c
+mipsel-linux-gcc -I.. -W -Wall -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 -D_REENTRANT -D_GNU_SOURCE -O3 -DHAVE_LOCALE_H -DHAVE_SETLOCALE -DHAVE_LANGINFO_H -DHAVE_LANGINFO_CODESET -I/root/SDK_3_4_1_0/source.RT3662/user/libupnp-1.6.6/install//include -c -o /tmp/ushare-15718-23890-4348.o /tmp/ushare-26634-23890-6870.c
+mipsel-linux-gcc -L/root/SDK_3_4_1_0/source.RT3662/user/libupnp-1.6.6/install//lib -o /tmp/ushare-1509-23890-4805 /tmp/ushare-15718-23890-4348.o -lixml
+Checking for libthreadutil ...
+check_lib upnp/ThreadPool.h ThreadPoolAdd -lthreadutil -lpthread
+check_header upnp/ThreadPool.h
+check_cpp
+BEGIN /tmp/ushare-26634-23890-6870.c
+     1	#include <upnp/ThreadPool.h>
+     2	int x;
+END /tmp/ushare-26634-23890-6870.c
+mipsel-linux-gcc -I.. -W -Wall -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 -D_REENTRANT -D_GNU_SOURCE -O3 -DHAVE_LOCALE_H -DHAVE_SETLOCALE -DHAVE_LANGINFO_H -DHAVE_LANGINFO_CODESET -I/root/SDK_3_4_1_0/source.RT3662/user/libupnp-1.6.6/install//include -E -o /tmp/ushare-15718-23890-4348.o /tmp/ushare-26634-23890-6870.c
+check_func ThreadPoolAdd
+check_ld
+check_cc
+BEGIN /tmp/ushare-26634-23890-6870.c
+     1	extern int ThreadPoolAdd();
+     2	int main(){
+     3	    ThreadPoolAdd();
+     4	    return 0;
+     5	}
+END /tmp/ushare-26634-23890-6870.c
+mipsel-linux-gcc -I.. -W -Wall -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 -D_REENTRANT -D_GNU_SOURCE -O3 -DHAVE_LOCALE_H -DHAVE_SETLOCALE -DHAVE_LANGINFO_H -DHAVE_LANGINFO_CODESET -I/root/SDK_3_4_1_0/source.RT3662/user/libupnp-1.6.6/install//include -c -o /tmp/ushare-15718-23890-4348.o /tmp/ushare-26634-23890-6870.c
+mipsel-linux-gcc -L/root/SDK_3_4_1_0/source.RT3662/user/libupnp-1.6.6/install//lib -o /tmp/ushare-1509-23890-4805 /tmp/ushare-15718-23890-4348.o -lixml -lthreadutil -lpthread
+Checking for libupnp >= 1.4.2 ...
+check_lib upnp/upnp.h UpnpSetMaxContentLength -lupnp
+check_header upnp/upnp.h
+check_cpp
+BEGIN /tmp/ushare-26634-23890-6870.c
+     1	#include <upnp/upnp.h>
+     2	int x;
+END /tmp/ushare-26634-23890-6870.c
+mipsel-linux-gcc -I.. -W -Wall -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 -D_REENTRANT -D_GNU_SOURCE -O3 -DHAVE_LOCALE_H -DHAVE_SETLOCALE -DHAVE_LANGINFO_H -DHAVE_LANGINFO_CODESET -I/root/SDK_3_4_1_0/source.RT3662/user/libupnp-1.6.6/install//include -E -o /tmp/ushare-15718-23890-4348.o /tmp/ushare-26634-23890-6870.c
+check_func UpnpSetMaxContentLength
+check_ld
+check_cc
+BEGIN /tmp/ushare-26634-23890-6870.c
+     1	extern int UpnpSetMaxContentLength();
+     2	int main(){
+     3	    UpnpSetMaxContentLength();
+     4	    return 0;
+     5	}
+END /tmp/ushare-26634-23890-6870.c
+mipsel-linux-gcc -I.. -W -Wall -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 -D_REENTRANT -D_GNU_SOURCE -O3 -DHAVE_LOCALE_H -DHAVE_SETLOCALE -DHAVE_LANGINFO_H -DHAVE_LANGINFO_CODESET -I/root/SDK_3_4_1_0/source.RT3662/user/libupnp-1.6.6/install//include -c -o /tmp/ushare-15718-23890-4348.o /tmp/ushare-26634-23890-6870.c
+mipsel-linux-gcc -L/root/SDK_3_4_1_0/source.RT3662/user/libupnp-1.6.6/install//lib -o /tmp/ushare-1509-23890-4805 /tmp/ushare-15718-23890-4348.o -lixml -lthreadutil -lpthread -lupnp
+Checking for libdlna >= 0.2.1 ...
+check_cflags -I/root/SDK_3_4_1_0/source.RT3662/user/libdlna-0.2.3/src
+check_cc -I/root/SDK_3_4_1_0/source.RT3662/user/libdlna-0.2.3/src
+BEGIN /tmp/ushare-26634-23890-6870.c
+     1	int x;
+END /tmp/ushare-26634-23890-6870.c
+mipsel-linux-gcc -I.. -W -Wall -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 -D_REENTRANT -D_GNU_SOURCE -O3 -DHAVE_LOCALE_H -DHAVE_SETLOCALE -DHAVE_LANGINFO_H -DHAVE_LANGINFO_CODESET -I/root/SDK_3_4_1_0/source.RT3662/user/libupnp-1.6.6/install//include -I/root/SDK_3_4_1_0/source.RT3662/user/libdlna-0.2.3/src -c -o /tmp/ushare-15718-23890-4348.o /tmp/ushare-26634-23890-6870.c
+check_ldflags -L/root/SDK_3_4_1_0/source.RT3662/user/libdlna-0.2.3/src
+check_ld -L/root/SDK_3_4_1_0/source.RT3662/user/libdlna-0.2.3/src
+check_cc
+BEGIN /tmp/ushare-26634-23890-6870.c
+     1	int main(){
+     2	    return 0;
+     3	}
+END /tmp/ushare-26634-23890-6870.c
+mipsel-linux-gcc -I.. -W -Wall -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 -D_REENTRANT -D_GNU_SOURCE -O3 -DHAVE_LOCALE_H -DHAVE_SETLOCALE -DHAVE_LANGINFO_H -DHAVE_LANGINFO_CODESET -I/root/SDK_3_4_1_0/source.RT3662/user/libupnp-1.6.6/install//include -I/root/SDK_3_4_1_0/source.RT3662/user/libdlna-0.2.3/src -c -o /tmp/ushare-15718-23890-4348.o /tmp/ushare-26634-23890-6870.c
+mipsel-linux-gcc -L/root/SDK_3_4_1_0/source.RT3662/user/libupnp-1.6.6/install//lib -L/root/SDK_3_4_1_0/source.RT3662/user/libdlna-0.2.3/src -o /tmp/ushare-1509-23890-4805 /tmp/ushare-15718-23890-4348.o -lixml -lthreadutil -lpthread -lupnp
+check_lib dlna.h dlna_register_all_media_profiles -ldlna -L../libmplus -lmplus -lm -L../ffmpeg/install/lib -lavformat -lavutil -lavcodec
+check_header dlna.h
+check_cpp
+BEGIN /tmp/ushare-26634-23890-6870.c
+     1	#include <dlna.h>
+     2	int x;
+END /tmp/ushare-26634-23890-6870.c
+mipsel-linux-gcc -I.. -W -Wall -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 -D_REENTRANT -D_GNU_SOURCE -O3 -DHAVE_LOCALE_H -DHAVE_SETLOCALE -DHAVE_LANGINFO_H -DHAVE_LANGINFO_CODESET -I/root/SDK_3_4_1_0/source.RT3662/user/libupnp-1.6.6/install//include -I/root/SDK_3_4_1_0/source.RT3662/user/libdlna-0.2.3/src -E -o /tmp/ushare-15718-23890-4348.o /tmp/ushare-26634-23890-6870.c
+check_func dlna_register_all_media_profiles
+check_ld
+check_cc
+BEGIN /tmp/ushare-26634-23890-6870.c
+     1	extern int dlna_register_all_media_profiles();
+     2	int main(){
+     3	    dlna_register_all_media_profiles();
+     4	    return 0;
+     5	}
+END /tmp/ushare-26634-23890-6870.c
+mipsel-linux-gcc -I.. -W -Wall -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 -D_REENTRANT -D_GNU_SOURCE -O3 -DHAVE_LOCALE_H -DHAVE_SETLOCALE -DHAVE_LANGINFO_H -DHAVE_LANGINFO_CODESET -I/root/SDK_3_4_1_0/source.RT3662/user/libupnp-1.6.6/install//include -I/root/SDK_3_4_1_0/source.RT3662/user/libdlna-0.2.3/src -c -o /tmp/ushare-15718-23890-4348.o /tmp/ushare-26634-23890-6870.c
+mipsel-linux-gcc -L/root/SDK_3_4_1_0/source.RT3662/user/libupnp-1.6.6/install//lib -L/root/SDK_3_4_1_0/source.RT3662/user/libdlna-0.2.3/src -o /tmp/ushare-1509-23890-4805 /tmp/ushare-15718-23890-4348.o -lixml -lthreadutil -lpthread -lupnp -ldlna -L../libmplus -lmplus -L../ffmpeg/install/lib -lavformat -lavutil -lavcodec
+
+uShare: configure is OK
+  version            1.1a
+  using libupnp      
+  using libdlna      
+configuration:
+  install prefix     /root/SDK_3_4_1_0/source.RT3662/user/ushare-1.1a/install
+  configuration dir  ${PREFIX}/etc
+  locales dir        ${PREFIX}/share/locale
+  NLS support        no
+  DLNA support       yes
+  C compiler         mipsel-linux-gcc
+  STRIP              mipsel-linux-strip
+  make               make
+  CPU                x86 ()
+  debug symbols      no
+  strip symbols      yes
+  optimize           yes
+
+  CFLAGS              -I.. -W -Wall -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 -D_REENTRANT -D_GNU_SOURCE -O3 -DHAVE_LOCALE_H -DHAVE_SETLOCALE -DHAVE_LANGINFO_H -DHAVE_LANGINFO_CODESET -I/root/SDK_3_4_1_0/source.RT3662/user/libupnp-1.6.6/install//include -I/root/SDK_3_4_1_0/source.RT3662/user/libdlna-0.2.3/src -DHAVE_DLNA
+  LDFLAGS             -L/root/SDK_3_4_1_0/source.RT3662/user/libupnp-1.6.6/install//lib -L/root/SDK_3_4_1_0/source.RT3662/user/libdlna-0.2.3/src
+  extralibs           -lixml -lthreadutil -lpthread -lupnp -ldlna -L../libmplus -lmplus -L../ffmpeg/install/lib -lavformat -lavutil -lavcodec
+
+Creating config.mak ...
+Creating config.h ...

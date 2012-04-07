@@ -1,0 +1,1 @@
+ usbtest usb file1g(file name) 1000000000(size, /bytes) 3(period of read/write, seconds)

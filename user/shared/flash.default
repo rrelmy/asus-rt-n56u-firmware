@@ -1,0 +1,360 @@
+// LAN
+// ManualDHCPList
+{ "dhcp_staticmac_x", "", 0 },
+{ "dhcp_staticip_x", "", 0 },
+
+// GWStatic
+{ "sr_ipaddr_x", "", 0 },
+{ "sr_netmask_x", "", 0 },
+{ "sr_gateway_x", "", 0 },
+{ "sr_matric_x", "", 0 },
+{ "sr_if_x", "", 0 },
+
+// WAN
+// x_USRRuleList
+{ "qos_service_name_x", "", 0 },
+{ "qos_ip_x", "", 0 },
+{ "qos_port_x", "", 0 },
+{ "qos_prio_x", "", 0 },
+
+// TriggerList
+{ "autofw_outport_x", "", 0 },
+{ "autofw_outproto_x", "", 0 },
+{ "autofw_inport_x", "", 0 },
+{ "autofw_inproto_x", "", 0 },
+{ "autofw_desc_x", "", 0 },
+
+// VSList
+{ "vts_port_x", "", 0 },
+{ "vts_ipaddr_x", "", 0 },
+{ "vts_lport_x", "", 0 },
+{ "vts_proto_x", "", 0 },
+{ "vts_protono_x", "", 0 },
+{ "vts_desc_x", "", 0 },
+
+// USB Application
+// Storage_UserList
+{ "acc_username", "", 0 },
+{ "acc_password", "", 0 },
+
+// Firewall
+// UrlList
+{ "url_keyword_x", "", 0 },
+
+// MFList
+{ "macfilter_list_x", "", 0 },
+
+// LWFilterList
+{ "filter_lw_srcip_x", "", 0 },
+{ "filter_lw_srcport_x", "", 0 },
+{ "filter_lw_dstip_x", "", 0 },
+{ "filter_lw_dstport_x", "", 0 },
+{ "filter_lw_proto_x", "", 0 },
+{ "filter_lw_desc_x", "", 0 },
+
+{ "x_DHCPClient", "1", 0 },			// 2008.03 James.
+{ "wan_mode_x", "2", 0 },
+{ "wan_etherspeed_x", "auto", 0 },
+{ "wan_route_x", "IP_Routed", 0 },
+{ "wan_nat_x", "1", 0 },
+{ "wan_dnsenable_x", "1", 0 },
+{ "wan_dns1_x", "", 0 },
+{ "wan_dns2_x", "", 0 },
+{ "sp_battle_ips", "0", 0 },
+{ "vts_enable_x", "0", 0 },
+{ "vts_num_x", "0", 0 },
+{ "autofw_enable_x", "0", 0 },
+{ "autofw_num_x", "0", 0 },
+{ "wan_pppoe_txonly_x", "0", 0 },
+{ "wan_pppoe_relay_x", "0", 0 },
+{ "wan_hwaddr_x", "", 0 },
+{ "wan_heartbeat_x", "", 0 },
+{ "wan_proto_t", "", 0 },
+{ "wan_ipaddr_t", "", 0 },
+{ "wan_netmask_t", "", 0 },
+{ "wan_gateway_t", "", 0 },
+{ "wan_dns_t", "", 0 },
+{ "wan_status_t", "", 0 },
+{ "ddns_status_t", "", 0 },
+{ "fw_log_x", "none", 0 },
+{ "misc_natlog_x", "0", 0 },
+{ "misc_http_x", "0", 0 },
+{ "misc_httpport_x", "8080", 0 },
+{ "misc_lpr_x", "0", 0 },
+{ "misc_ping_x", "0", 0 },
+{ "misc_conntrack_x", "300000", 0},
+{ "fw_wl_enable_x", "0", 0 },
+{ "filter_wl_date_x", "1111111", 0 },
+{ "filter_wl_time_x", "00002359", 0 },
+{ "filter_wl_default_x", "ACCEPT", 0 },
+{ "filter_wl_icmp_x", "", 0 },
+{ "fw_lw_enable_x", "0", 0 },
+{ "filter_lw_date_x", "1111111", 0 },
+{ "filter_lw_time_x", "00002359", 0 },
+{ "filter_lw_default_x", "ACCEPT", 0 },
+{ "filter_lw_icmp_x", "", 0 },
+{ "url_enable_x", "0", 0 },
+{ "url_date_x", "1111111", 0 },
+{ "url_time_x", "00002359", 0 },
+{ "url_num_x", "0", 0 },
+{ "url_enable_x_1", "0", 0 },
+{ "url_time_x_1", "00002359", 0 },
+{ "filter_wl_num_x", "0", 0 },
+{ "filter_lw_num_x", "0", 0 },
+{ "macfilter_enable_x", "0", 0 },			// 2008.01 James.
+{ "macfilter_num_x", "0", 0 },
+{ "filter_wl_srcip_x", "", 0 },
+{ "filter_wl_srcport_x", "", 0 },
+{ "filter_wl_dstip_x", "", 0 },
+{ "filter_wl_dstport_x", "", 0 },
+{ "filter_wl_proto_x", "", 0 },
+{ "sr_enable_x", "0", 0 },
+{ "sr_rip_x", "0", 0 },
+{ "sr_num_x", "0", 0 },
+{ "dr_static_rip_x", "0", 0 },
+{ "dr_static_matric_x", "1", 0 },
+{ "dr_default_x", "1", 0 },
+{ "dr_staticnum_x", "0", 0 },
+{ "dr_staticipaddr_x", "", 0 },
+{ "dr_staticnetmask_x", "0", 0 },
+{ "dr_staticgateway_x", "", 0 },
+{ "lan_proto_x", "1", 0 },
+{ "lan_ipaddr_t", "", 0 },
+{ "lan_netmask_t", "", 0 },
+{ "lan_gateway_t", "", 0 },
+{ "lan_hostname", "", 0 },
+{ "dhcp_enable_x", "1", 0 },
+{ "dhcp_lease", "86400", 0 },
+{ "dhcp_gateway_x", "", 0 },
+{ "dhcp_dns1_x", "", 0 },
+{ "dhcp_wins_x", "", 0 },
+{ "dhcp_static_x", "0", 0 },
+{ "dhcp_staticnum_x", "0", 0 },
+{ "ntp_server1", "time.nist.gov", 0 },
+{ "ntp_server0", "pool.ntp.org", 0 },		// 2008.08 magic
+
+{ "ddns_enable_x", "0", 0 },
+{ "ddns_server_x", "", 0 },
+{ "ddns_username_x", "", 0 },
+{ "ddns_passwd_x", "", 0 },
+{ "ddns_hostname_x", "", 0 },
+{ "ddns_wildcard_x", "0", 0 },
+{ "asusddns_tos_agreement", "0", 0 },		// 2007.12 James
+{ "ddns_server_x_old", "", 0 },			// J++
+
+{ "wl_ssid2", "ASUS_5G", 0 },
+{ "wl_mode_x", "0", 0 },
+{ "wl_wdsapply_x", "0", 0 },
+{ "wl_wdsnum_x", "0", 0 },
+{ "wl_wep_x", "0", 0 },
+{ "wl_phrase_x", "", 0 },
+{ "wl_mode_ex", "ap", 0 },
+{ "wl_radio_date_x", "1111111", 0 },
+{ "wl_radio_time_x", "00002359", 0 },
+{ "wl_macapply_x", "Both", 0 },
+{ "wl_macnum_x", "0", 0 },
+{ "wl_wdslist_x", "", 0 },
+{ "wl_maclist_x", "", 0 },
+//{ "wl_gmode_protection_x", "1", 0 },		// 2008.08 magic
+{ "wl_wpa_mode", "0", 0 },
+
+#ifdef DLM
+/*
+{ "usb_webenable_x", "1", 0 },
+{ "usb_webmode_x", "1", 0 },
+{ "usb_webdriver_x", "0", 0 },
+{ "usb_webimage_x", "1", 0 },
+{ "usb_websense_x", "1", 0 },
+{ "usb_webrectime_x", "0", 0 },
+{ "usb_webfresh_x", "1", 0 },
+{ "usb_webcaption_x", "Web Camera Live Demo!!!", 0 },
+{ "usb_webhttpport_x", "7776", 0 },
+{ "usb_webhttpcheck_x", "0", 0 },
+{ "usb_webactivex_x", "7777", 0 },
+{ "usb_websecurity_x", "0", 0 },
+{ "usb_websecurity_date_x", "1111111", 0 },
+{ "usb_websecurity_time_x", "00002359", 0 },
+{ "usb_websendto_x", "", 0 },
+{ "usb_webmserver_x", "", 0 },
+{ "usb_websubject_x", "Motion detection alert!!!", 0 },
+{ "usb_webattach_x", "1", 0 },
+{ "usb_webremote_x", "LAN Only", 0 },
+{ "usb_webremote1_x", "", 0 },
+{ "usb_webremote2_x", "", 0 },
+{ "usb_webremote3_x", "", 0 },
+{ "usb_webremote4_x", "", 0 },
+{ "usb_webremote5_x", "", 0 },
+{ "usb_webremote6_x", "", 0 },
+*/
+{ "usb_ftpenable_x", "1", 0 },
+{ "usb_ftpanonymous_x", "1", 0 },
+{ "usb_ftpsuper_x", "0", 0 },
+{ "usb_ftpport_x", "21", 0 },
+{ "usb_ftpmax_x", "12", 0 },
+{ "usb_ftptimeout_x", "120", 0 },
+{ "usb_ftpstaytimeout_x", "240", 0 },
+{ "usb_ftpscript_x", "", 0 },
+{ "usb_ftpnum_x", "0", 0 },
+{ "usb_bannum_x", "0", 0 },
+#ifndef MR
+{ "qos_rulenum_x", "0", 0 },
+#endif
+{ "usb_ftpusername_x", "", 0 },
+{ "usb_ftppasswd_x", "", 0 },
+{ "usb_ftpmaxuser_x", "", 0 },
+{ "usb_ftprights_x", "", 0 },
+{ "usb_ftpbanip_x", "", 0 },
+#endif
+
+/*
+{ "wl_guest_enable", "0", 0 },
+{ "wl_guest_ssid_1", "guest", 0 },
+{ "wl_guest_auth_mode_1", "open", 0 },
+{ "wl_guest_crypto_1", "0", 0 },
+{ "wl_guest_wpa_psk_1", "", 0 },
+{ "wl_guest_wep_x_1", "0", 0 },
+{ "wl_guest_phrase_x_1", "", 0 },
+{ "wl_guest_key1_1", "", 0 },
+{ "wl_guest_key2_1", "", 0 },
+{ "wl_guest_key3_1", "", 0 },
+{ "wl_guest_key4_1", "", 0 },
+{ "wl_guest_key_1", "1", 0 },
+{ "wl_guest_wpa_gtk_rekey_1", "0", 0 },
+{ "lan1_ipaddr", "192.168.2.1", 0 },
+{ "lan1_netmask", "255.255.255.0", 0 },
+{ "dhcp1_enable_x", "1", 0 },
+{ "dhcp1_start", "192.168.2.2", 0 },
+{ "dhcp1_end", "192.168.2.254", 0 },
+{ "lan1_lease", "86400", 0 },
+*/
+
+#ifdef DLM
+{ "acc_num", "0", 0 },
+{ "st_samba_mode", "1", 0 },
+{ "st_ftp_mode", "1", 0 },
+{ "enable_ftp", "1", 0 },
+{ "enable_samba", "1", 0 },
+{ "st_max_user", "5", 0 },
+{ "computer_name", "RT-N56U", 0 },
+{ "computer_nameb", "RT-N56U", 0 },		// 2008.03 James.
+{ "st_samba_workgroup", "WORKGROUP", 0 },
+{ "st_samba_workgroupb", "WORKGROUP", 0 },	// 2008.03 James.
+
+{ "apps_dl", "1", 0 },
+{ "apps_dl_share", "0", 0 },
+{ "apps_dl_seed", "24", 0 },
+{ "apps_dms", "1", 0 },
+{ "apps_caps", "0", 0 },
+{ "apps_comp", "0", 0 },
+{ "apps_pool", "harddisk/part0", 0 },
+{ "apps_share", "share", 0 },
+{ "apps_ver", "", 0 },
+{ "apps_seed", "0", 0 },
+{ "apps_upload_max", "0", 0 },
+{ "machine_name", "RT-N13U.B1", 0 },
+
+{ "apps_dms_usb_port", "1", 0 },
+{ "apps_running", "0", 0 },
+{ "apps_dl_share_port_from", "6880", 0 },
+{ "apps_dl_share_port_to", "6999", 0 },
+
+{ "apps_installed", "0", 0 },
+{ "ushare_comp_mode", "1", 0},
+#if defined (W7_LOGO) || defined (WIFI_LOGO)
+{ "hwnat", "0", 0},
+#else
+{ "hwnat", "1", 0},
+#endif
+
+{ "sh_num", "0", 0 },
+//{ "sh_", "", 0 },				// 2007.12 James.
+//{ "acc_", "", 0 },				// 2007.12 James.
+#endif
+
+{ "temp_lang", "", 0 },
+{ "httpd_die_reboot", "", 0 },
+
+//{ "qos_", "", 0 },				// 2007.12 James.
+//{ "qos_enable","0", 0 },
+//{ "qos_global_enable","0", 0 },
+//{ "qos_userdef_enable","0", 0 },
+{ "qos_shortpkt_prio","0", 0 },			// Internet
+{ "qos_pshack_prio","0", 0 },			// Game
+{ "qos_tos_prio","0", 0 },
+//{ "qos_userspec_app","0", 0 },
+{ "qos_service_enable","0", 0 },
+{ "qos_service_ubw","0", 0 },
+{ "qos_manual_ubw","0", 0 },			// 2008.05 James.
+{ "qos_dfragment_enable","0", 0 },
+{ "qos_dfragment_size","0", 0 },
+{ "ftp_lang", "", 0 },
+
+ /* WSC parameters */
+#if defined (W7_LOGO) || defined (WIFI_LOGO)
+{ "wps_enable", "1", 0 },
+#else
+{ "wps_enable", "0", 0 },			// win7 logo
+#endif
+{ "wps_mode", "1", 0 },				/* AP WSC PIN method */
+{ "wsc_config_state", "0", 0 },			/* config state unconfiged */
+//{ "wsc_mode", "1", 0 },			/* STA WSC PIN method */
+//{ "wcn_enable", "1", 0 },
+{ "wps_band", "1", 0},				/* "0": 5G, "1": 2.4G */
+
+{ "x_Setting", "0", 0 },			// 2007.10 James
+{ "w_Setting", "0", 0 },
+
+{ "asus_mfg", "", 0 },				// 2008.03 James.
+//{ "asus_mfg_webcam", "", 0 },			// 2008.03 James.
+{ "asus_mfg_flash", "", 0 },			// 2008.03 James.
+{ "btn_rst", "", 0 },				// 2008.03 James.
+{ "btn_ez", "", 0 },				// 2008.03 James.
+
+ /* APCLI/STA parameters */
+#if 0
+{ "sta_ssid", "", 0 },
+{ "sta_bssid", "", 0 },
+{ "sta_auth_mode", "open", 0 },
+{ "sta_wep_x", "0", 0 },
+{ "sta_wpa_mode", "1", 0 },
+{ "sta_crypto", "tkip", 0 },
+{ "sta_wpa_psk", "12345678", 0 },
+{ "sta_key", "1", 0 },
+{ "sta_key_type", "0", 0 },
+{ "sta_key1", "", 0 },
+{ "sta_key2", "", 0 },
+{ "sta_key3", "", 0 },
+{ "sta_key4", "", 0 },
+{ "sta_check_ha", "0", 0 },
+{ "sta_authorized", "0", 0 },
+{ "sta_connected", "0", 0 },
+#endif
+
+{ "record_lanaddr", "", 0 },
+//{ "telnetd", "0", 0 },
+
+{ "Dev3G", "AUTO", 0 },
+{ "hsdpa_apn", "Internet", 0 },
+{ "hsdpa_country", "", 0 },
+{ "hsdpa_isp", "", 0 },
+{ "hsdpa_dialnum", "*99#", 0 },
+{ "hsdpa_user", "", 0 },
+{ "hsdpa_pass", "", 0 },
+
+{ "udpxy_enable_x", "0", 0},
+
+/* traffic monitor - added by jerry5 2009/07 */
+{"rstats_enable", "1", 0 },
+{"rstats_path", "*nvram", 0 },
+{"rstats_new", "0", 0 },
+{"rstats_stime", "1", 0 },
+{"rstats_offset", "1", 0 },
+{"rstats_data", "", 0},
+{"rstats_colors", "", 0 },
+{"rstats_exclude", "", 0 },
+{"rstats_sshut", "1", 0 },
+{"rstats_bak", "0", 0   },
+{"http_id", "TIDe855a6487043d70a", 0 },
+
+{"asus_debug", "0", 0 },
+{"di_debug", "0", 0 },

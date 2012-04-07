@@ -1,0 +1,249 @@
+close.c:		int tmp_fd, outfd;
+close.c:		ret = smbrun(fname,&tmp_fd);
+close.c:		if (ret != 0 || tmp_fd == -1) {
+close.c:			if (tmp_fd != -1)
+close.c:				close(tmp_fd);
+close.c:			close(tmp_fd);
+close.c:		if (sys_fstat(tmp_fd,&st) == -1) {
+close.c:			close(tmp_fd);
+close.c:		transfer_file(tmp_fd,outfd,(SMB_OFF_T)st.st_size);
+close.c:		close(tmp_fd);
+dosmode.c:	mode_t tmp;
+dosmode.c:	if ((tmp = st->st_mode & (S_IRUSR|S_IRGRP|S_IROTH))) {
+dosmode.c:		unixmode |= tmp;
+filename.c:	pstring tmpname;
+filename.c:	pstrcpy(tmpname, name2);
+filename.c:	mangle_map(tmpname, True, False, p);
+filename.c:	return strequal(name1, tmpname);
+lanman.c:	char* tmpdata=NULL;
+lanman.c:		desc.base = tmpdata = (char *) SMB_MALLOC (desc.buflen);
+lanman.c:	SAFE_FREE(tmpdata);
+lanman.c:				pstring tmp;
+lanman.c:				pstrcpy(tmp, "\\\\%L");
+lanman.c:				standard_sub_basic("", "", tmp, sizeof(tmp));
+lanman.c:				pstrcpy(p2, tmp);
+lanman.c:	char *tmpdata=NULL;
+lanman.c:		desc.base = tmpdata = (char *)SMB_MALLOC( desc.buflen );
+lanman.c:	SAFE_FREE(tmpdata);
+lanman.c:	char *tmpdata=NULL;
+lanman.c:			desc.base = tmpdata = (char *)SMB_MALLOC( desc.buflen );
+lanman.c:	SAFE_FREE(tmpdata);
+mangle_hash.c:		char *tmp = NULL; 
+mangle_hash.c:			tmp = SMB_STRDUP(OutName);
+mangle_hash.c:		if(tmp != NULL) {
+mangle_hash.c:			cache_mangled_name(OutName, tmp);
+mangle_hash.c:			SAFE_FREE(tmp);
+message.c:	slprintf(name,sizeof(name)-1, "%s/msg.XXXXXX",tmpdir());
+notify.c:		uint32 u32_tmp;	/* Temp arg to prs_uint32 to avoid
+notify.c:		u32_tmp = (i == num_changes-1) ? 0 : namelen + 12;
+notify.c:		if (!prs_uint32("offset", ps, 1, &u32_tmp)) goto fail;
+notify.c:		u32_tmp = c->action;
+notify.c:		if (!prs_uint32("action", ps, 1, &u32_tmp)) goto fail;
+notify.c:		u32_tmp = namelen;
+notify.c:		if (!prs_uint32("namelen", ps, 1, &u32_tmp)) goto fail;
+notify_internal.c:	TALLOC_CTX *tmp_ctx;
+notify_internal.c:	tmp_ctx = talloc_new(notify);
+notify_internal.c:	NT_STATUS_HAVE_NO_MEMORY(tmp_ctx);
+notify_internal.c:	status = ndr_push_struct_blob(&blob, tmp_ctx, notify->array, 
+notify_internal.c:		talloc_free(tmp_ctx);
+notify_internal.c:	talloc_free(tmp_ctx);
+notify_internal.c:	TALLOC_CTX *tmp_ctx = talloc_new(notify);
+notify_internal.c:	if (tmp_ctx == NULL) {
+notify_internal.c:	status = ndr_pull_struct_blob(data, tmp_ctx, &ev, 
+notify_internal.c:		talloc_free(tmp_ctx);
+notify_internal.c:	talloc_free(tmp_ctx);	
+notify_internal.c:	char *tmp_path = NULL;
+notify_internal.c:		tmp_path = talloc_strndup(notify, e.path, len-2);
+notify_internal.c:		if (tmp_path == NULL) {
+notify_internal.c:		e.path = tmp_path;
+notify_internal.c:	talloc_free(tmp_path);
+notify_internal.c:	TALLOC_CTX *tmp_ctx;
+notify_internal.c:	tmp_ctx = talloc_new(notify);
+notify_internal.c:	status = ndr_push_struct_blob(&data, tmp_ctx, &ev, 
+notify_internal.c:		talloc_free(tmp_ctx);
+notify_internal.c:	talloc_free(tmp_ctx);
+ntquotas.c:	SMB_NTQUOTA_LIST *tmp_list = NULL;
+ntquotas.c:	for (tmp_list=qt_list;tmp_list!=NULL;tmp_list=tmp_list->next) {
+ntquotas.c:		if (tmp_list->uid == uid) {
+ntquotas.c:		SMB_NTQUOTA_STRUCT tmp_qt;
+ntquotas.c:		SMB_NTQUOTA_LIST *tmp_list_ent;
+ntquotas.c:		ZERO_STRUCT(tmp_qt);
+ntquotas.c:		if (vfs_get_ntquota(fsp, SMB_USER_QUOTA_TYPE, &sid, &tmp_qt)!=0) {
+ntquotas.c:		if ((tmp_list_ent=TALLOC_ZERO_P(mem_ctx,SMB_NTQUOTA_LIST))==NULL) {
+ntquotas.c:		if ((tmp_list_ent->quotas=TALLOC_ZERO_P(mem_ctx,SMB_NTQUOTA_STRUCT))==NULL) {
+ntquotas.c:		tmp_list_ent->uid = usr->pw_uid;
+ntquotas.c:		memcpy(tmp_list_ent->quotas,&tmp_qt,sizeof(tmp_qt));
+ntquotas.c:		tmp_list_ent->mem_ctx = mem_ctx;
+ntquotas.c:		DLIST_ADD((*qt_list),tmp_list_ent);
+ntquotas.c:	qt_handle->tmp_list = NULL;
+nttrans.c:			pstring tmpname;
+nttrans.c:			srvstr_get_path(inbuf, tmpname, params+53, sizeof(tmpname), parameter_count-53, STR_TERMINATE, &status);
+nttrans.c:			pstrcat(fname, tmpname);
+nttrans.c:		ea_list = read_nttrans_ea_list(tmp_talloc_ctx(), pdata,
+nttrans.c:	SMB_NTQUOTA_LIST *tmp_list;
+nttrans.c:			    qt_handle->tmp_list==NULL) {
+nttrans.c:				qt_handle->tmp_list==NULL) {
+nttrans.c:				qt_handle->tmp_list = qt_handle->quota_list;
+nttrans.c:			tmp_list = qt_handle->tmp_list;
+nttrans.c:			for (;((tmp_list!=NULL)&&((qt_len +40+SID_MAX_SIZE)<max_data_count));
+nttrans.c:				tmp_list=tmp_list->next,entry+=entry_len,qt_len+=entry_len) {
+nttrans.c:				sid_len = sid_size(&tmp_list->quotas->sid);
+nttrans.c:				SBIG_UINT(entry,16,tmp_list->quotas->usedspace);
+nttrans.c:				SBIG_UINT(entry,24,tmp_list->quotas->softlim);
+nttrans.c:				SBIG_UINT(entry,32,tmp_list->quotas->hardlim);
+nttrans.c:				sid_linearize(entry+40, sid_len, &tmp_list->quotas->sid);
+nttrans.c:			qt_handle->tmp_list = tmp_list;
+open.c:	if (!parent_dirname_talloc(tmp_talloc_ctx(), fname, &parent_dir,
+open.c:	if (!parent_dirname_talloc(tmp_talloc_ctx(), name, &parent_dir,
+oplock_irix.c:	pstring tmpname;
+oplock_irix.c:	slprintf(tmpname,sizeof(tmpname)-1, "%s/koplock.%d", lp_lockdir(),
+oplock_irix.c:	if((fd = sys_open(tmpname, O_RDWR|O_CREAT|O_EXCL|O_TRUNC, 0600)) < 0) {
+oplock_irix.c:			 tmpname, strerror(errno) ));
+oplock_irix.c:		unlink( tmpname );
+oplock_irix.c:	unlink(tmpname);
+process.c:		slprintf(fname,sizeof(fname)-1, "/tmp/%s.%d.%s", name, i,
+reply.c:	pstring tmppath;
+reply.c:	char *tmppath_ptr = tmppath;
+reply.c:		ret = srvstr_pull_buf( inbuf, tmppath_ptr, src, dest_len, flags);
+reply.c:		ret = srvstr_pull( inbuf, tmppath_ptr, src, dest_len, src_len, flags);
+reply.c:		pstrcpy(dest, tmppath);
+reply.c:		*err = check_path_syntax_posix(dest, tmppath);
+reply.c:		*err = check_path_syntax_wcard(dest, tmppath, contains_wcard);
+reply.c:	pstring tmppath;
+reply.c:	char *tmppath_ptr = tmppath;
+reply.c:		ret = srvstr_pull_buf( inbuf, tmppath_ptr, src, dest_len, flags);
+reply.c:		ret = srvstr_pull( inbuf, tmppath_ptr, src, dest_len, src_len, flags);
+reply.c:		pstrcpy(dest, tmppath);
+reply.c:		*err = check_path_syntax_posix(dest, tmppath);
+reply.c:		*err = check_path_syntax(dest, tmppath);
+reply.c:	int tmpfd;
+reply.c:	tmpfd = smb_mkstemp(fname);
+reply.c:	if (tmpfd == -1) {
+reply.c:	close(tmpfd);
+reply.c:		pstring tmpstr;
+reply.c:		pstrcpy(tmpstr, "./");
+reply.c:		pstrcat(tmpstr, newname);
+reply.c:		pstrcpy(newname, tmpstr);
+reply.c:			pstring tmpstr;
+reply.c:			pstrcpy(tmpstr, "./");
+reply.c:			pstrcat(tmpstr, newname);
+reply.c:			pstrcpy(newname, tmpstr);
+server.c:			struct child_pid *tmp = child;
+server.c:			SAFE_FREE(tmp);
+session.c:   session handling for utmp and PAM
+session.c:   sessions are used to populate utmp and PAM session structures
+session.c:	int tdb_store_flag;  /* If using utmp, we do an inital 'lock hold' store,
+session.c:	if (lp_utmp()) {
+session.c:           needed because utmp and PAM both expect DNS names 
+session.c:	sessionid.id_num = i;  /* Only valid for utmp sessions */
+session.c:	if (lp_utmp()) {
+session.c:		sys_utmp_claim(sessionid.username, sessionid.hostname, 
+session.c:	if (lp_utmp()) {
+session.c:		sys_utmp_yield(sessionid.username, sessionid.hostname, 
+sesssetup.c:		DATA_BLOB tmp_blob;
+sesssetup.c:		tmp_blob = data_blob(NULL,
+sesssetup.c:		memcpy(tmp_blob.data,
+sesssetup.c:		memcpy(tmp_blob.data + pad->partial_data.length,
+sesssetup.c:		pad->partial_data = tmp_blob;
+sesssetup.c:		ZERO_STRUCT(tmp_blob);
+trans2.c:		ea_list = read_ea_list(tmp_talloc_ctx(), pdata + 4,
+trans2.c:		ea_list = read_ea_list(tmp_talloc_ctx(), pdata + 4,
+utmp.c:   utmp routines
+utmp.c:Reflect connection status in utmp/wtmp files.
+utmp.c:	o  The only currently supported programmatic interface to "wtmp{,x}"
+utmp.c:	   is through "updwtmp*()" routines.
+utmp.c:	o  The "x" (utmpx/wtmpx; HAVE_UTMPX_H) seems preferable.
+utmp.c:		Apparently has utmpx.h but doesn't implement.
+utmp.c:		Has utmpx.h, but (e.g.) no "getutmpx()".  (Is this like AIX ?)
+utmp.c:		utmpx.h seems not to set default filenames.  non-x better.
+utmp.c:		"updwtmp*()" routines seem absent, so no current wtmp* support.
+utmp.c:	We need to be distinct from other entries in utmp/wtmp.
+utmp.c:	Mostly a record uses the same 'ut_id' in both "utmp" and "wtmp",
+utmp.c:void sys_utmp_claim(const char *username, const char *hostname, 
+utmp.c:void sys_utmp_yield(const char *username, const char *hostname, 
+utmp.c:#include <utmp.h>
+utmp.c:#include <utmpx.h>
+utmp.c: Default paths to various {u,w}tmp{,x} files.
+utmp.c: * Get name of {u,w}tmp{,x} file.
+utmp.c: * utmp{,x}:  try "utmp dir", then default (a define)
+utmp.c: * wtmp{,x}:  try "wtmp dir", then "utmp dir", then default (a define)
+utmp.c:	/* For w-files, first look for explicit "wtmp dir" */
+utmp.c:		pstrcpy(dirname,lp_wtmpdir());
+utmp.c:	/* For u-files and non-explicit w-dir, look for "utmp dir" */
+utmp.c:		pstrcpy(dirname,lp_utmpdir());
+utmp.c: Update utmp file directly.  No subroutine interface: probably a BSD system.
+utmp.c:static void pututline_my(pstring uname, struct utmp *u, BOOL claim)
+utmp.c: Update wtmp file directly.  No subroutine interface: probably a BSD system.
+utmp.c:static void updwtmp_my(pstring wname, struct utmp *u, BOOL claim)
+utmp.c:	/* Stolen from logwtmp function in libutil.
+utmp.c:		if (write(fd, (char *)u, sizeof(struct utmp)) != sizeof(struct utmp))
+utmp.c: Update via utmp/wtmp (not utmpx/wtmpx).
+utmp.c:static void utmp_nox_update(struct utmp *u, BOOL claim)
+utmp.c:	struct utmp *urc;
+utmp.c:	uw_pathname(uname, "utmp", ut_pathname);
+utmp.c:	DEBUG(2,("utmp_nox_update: uname:%s\n", uname));
+utmp.c:		utmpname(uname);
+utmp.c:		DEBUG(2,("utmp_nox_update: pututline() failed\n"));
+utmp.c:	uw_pathname(wname, "wtmp", wt_pathname);
+utmp.c:	DEBUG(2,("utmp_nox_update: wname:%s\n", wname));
+utmp.c:		updwtmp(wname, u);
+utmp.c:		 * updwtmp() and the newer updwtmpx() may be unsymmetrical.
+utmp.c:		 * "utmpx" (latter) file and context.
+utmp.c:		 * updwtmp() perhaps?
+utmp.c:		updwtmp_my(wname, u, claim);
+utmp.c: Copy a string in the utmp structure.
+utmp.c:static void utmp_strcpy(char *dest, const char *src, size_t n)
+utmp.c: Update via utmpx/wtmpx (preferred) or via utmp/wtmp.
+utmp.c:static void sys_utmp_update(struct utmp *u, const char *hostname, BOOL claim)
+utmp.c:	/* No utmpx stuff.  Drop to non-x stuff */
+utmp.c:	utmp_nox_update(u, claim);
+utmp.c:	/* Odd.  Have utmpx.h but no "pututxline()".  Drop to non-x stuff */
+utmp.c:	DEBUG(1,("utmp_update: have utmpx.h but no pututxline() function\n"));
+utmp.c:	utmp_nox_update(u, claim);
+utmp.c:	/* Odd.  Have utmpx.h but no "getutmpx()".  Drop to non-x stuff */
+utmp.c:	DEBUG(1,("utmp_update: have utmpx.h but no getutmpx() function\n"));
+utmp.c:	utmp_nox_update(u, claim);
+utmp.c:	struct utmpx ux, *uxrc;
+utmp.c:	getutmpx(u, &ux);
+utmp.c:	utmp_strcpy(ux.ut_host, hostname, sizeof(ux.ut_host));
+utmp.c:	uw_pathname(uname, "utmpx", ux_pathname);
+utmp.c:	uw_pathname(wname, "wtmpx", wx_pathname);
+utmp.c:	DEBUG(2,("utmp_update: uname:%s wname:%s\n", uname, wname));
+utmp.c:	 * Some systems, such as Redhat 6, have a "utmpx.h" which doesn't
+utmp.c:	 * Drop to non-x method.  (E.g. RH6 has good defaults in "utmp.h".)
+utmp.c:		utmp_nox_update(u, claim);
+utmp.c:		utmpxname(uname);
+utmp.c:			DEBUG(2,("utmp_update: pututxline() failed\n"));
+utmp.c:		updwtmpx(wname, &ux);
+utmp.c:  fill a system utmp structure given all the info we can gather 
+utmp.c:static BOOL sys_utmp_fill(struct utmp *u,
+utmp.c:	utmp_strcpy(u->ut_user, username, sizeof(u->ut_user));
+utmp.c:	utmp_strcpy(u->ut_name, username, sizeof(u->ut_name));
+utmp.c:		DEBUG(1,("id_str [%s] is too long for %lu char utmp field\n",
+utmp.c:	utmp_strcpy(u->ut_line, id_str, sizeof(u->ut_line));
+utmp.c:#error "with-utmp must have UT_TIME or UT_TV"
+utmp.c:	utmp_strcpy(u->ut_host, hostname, sizeof(u->ut_host));
+utmp.c:		DEBUG(1,("utmp_fill: cannot encode id %d\n", id_num));
+utmp.c:void sys_utmp_yield(const char *username, const char *hostname, 
+utmp.c:	struct utmp u;
+utmp.c:	if (!sys_utmp_fill(&u, username, hostname, ipaddr, id_str, id_num)) return;
+utmp.c:	sys_utmp_update(&u, NULL, False);
+utmp.c: Claim a entry in whatever utmp system the OS uses.
+utmp.c:void sys_utmp_claim(const char *username, const char *hostname, 
+utmp.c:	struct utmp u;
+utmp.c:	if (!sys_utmp_fill(&u, username, hostname, ipaddr, id_str, id_num)) return;
+utmp.c:	sys_utmp_update(&u, hostname, True);
+vfs.c:				pstring tmp_fname;
+vfs.c:				pstrcpy(tmp_fname, fname);
+vfs.c:				p = strrchr_m(tmp_fname, '/');
+vfs.c:					fstrcpy(last_component, tmp_fname);
+vfs.c:					pstrcpy(tmp_fname, ".");
+vfs.c:				resolved_name = SMB_VFS_REALPATH(conn,tmp_fname,NULL);
+vfs.c:				resolved_name = SMB_VFS_REALPATH(conn,tmp_fname,resolved_name_buf);
+vfs.c:				pstrcpy(tmp_fname, resolved_name);
+vfs.c:				pstrcat(tmp_fname, "/");
+vfs.c:				pstrcat(tmp_fname, last_component);
+vfs.c:				resolved_name = SMB_STRDUP(tmp_fname);
+vfs.c:					DEBUG(0,("reduce_name: malloc fail for %s\n", tmp_fname));
+vfs.c:				safe_strcpy(resolved_name_buf, tmp_fname, PATH_MAX);
+vfs.c:				pstrcpy(resolved_name_buf, tmp_fname);

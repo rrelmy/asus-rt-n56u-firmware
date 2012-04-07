@@ -1,0 +1,111 @@
+/*
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation; either version 2 of
+ * the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston,
+ * MA 02111-1307 USA
+ */
+#ifndef __NVRAM_H__
+#define __NVRAM_H__
+
+
+/* 
+ * Get the value of an NVRAM variable
+ * @param	name	name of variable to get
+ * @return	value of variable or NUL if undefined
+ */
+#define nvram_safe_get(name) (nvram_get(name) ? : "")
+
+/*
+ * Match an NVRAM variable
+ * @param	name	name of variable to match
+ * @param	match	value to compare against value of variable
+ * @return	TRUE if variable is defined and its value is string equal to match or FALSE otherwise
+ */
+#define nvram_match(name, match) ({ \
+	const char *value = nvram_get(name); \
+	(value && !strcmp(value, match)); \
+})
+
+/*
+ * Match an NVRAM variable
+ * @param	name	name of variable to match
+ * @param	match	value to compare against value of variable
+ * @return	TRUE if variable is defined and its value is not string equal to invmatch or FALSE otherwise
+ */
+#define nvram_invmatch(name, invmatch) ({ \
+	const char *value = nvram_get(name); \
+	(value && strcmp(value, invmatch)); \
+})
+
+
+/*
+ * Set the value of an NVRAM variable
+ * @param	name	name of variable to get
+ * @return	value of variable or NULL if undefined
+ */
+char *
+nvram_get(const char *name);
+
+/*
+ * Get all NVRAM variables (format name=value\0 ... \0\0)
+ * @param	buf	buffer to store variables
+ * @param	count	size of buffer in bytes
+ * @return	0 on success and errno on failure
+ */
+int
+nvram_getall(char *buf, int count);
+
+
+/*
+ * Set the value of an NVRAM variable
+ * @param	name	name of variable to set
+ * @param	value	value of variable
+ * @return	0 on success and errno on failure
+ * NOTE: use nvram_commit to commit this change to flash.
+ */
+int
+nvram_set(const char *name, const char *value);
+
+
+/*
+ * Unset an NVRAM variable
+ * @param	name	name of variable to unset
+ * @return	0 on success and errno on failure
+ * NOTE: use nvram_commit to commit this change to flash.
+ */
+int
+nvram_unset(const char *name);
+
+
+/*
+ * Permanently commit NVRAM variables
+ * @return	0 on success and errno on failure
+ */
+int
+nvram_commit(void);
+
+int nvramInit(void);
+
+//extern char *
+//nvram_get(const char *name);
+
+
+//extern int
+//nvram_set(const char *name, const char *value);
+
+#ifdef ASUS_NVRAM
+extern int nvram_init(void *unused);
+#endif	// ASUS_NVRAM
+
+#endif
+

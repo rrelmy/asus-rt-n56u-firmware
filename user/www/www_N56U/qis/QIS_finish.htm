@@ -1,0 +1,164 @@
+﻿<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta HTTP-EQUIV="Pragma" CONTENT="no-cache">
+<meta HTTP-EQUIV="Expires" CONTENT="-1">
+<link rel="stylesheet" type="text/css" href="../form_style.css">
+<link rel="stylesheet" type="text/css" href="qis_style.css">
+<style>
+span{
+	border:0px solid #CCC;
+	color:#00f;
+	font-size:12px;
+	font-family:Arial, Helvetica, sans-serif;
+	/*width:27px;*/
+	text-align:right;
+	margin:0px auto;
+	ime-mode:disabled;
+}
+
+.black_line{
+	border: 1px solid #000000;
+	width:480px;
+	margin-left: 10px;
+}
+</style>
+
+<script type="text/JavaScript" src="/jquery.js"></script>
+<script>
+<% wanlink(); %>
+
+var auth_mode = '<% nvram_get_x("", "wl_auth_mode"); %>';
+var reIP = '<% nvram_get_x("", "lan_ipaddr_t"); %>';
+
+function QKfinish_load_body(){
+	parent.document.title = "ASUS Wireless Router <#Web_Title#> - <#QKSet_all_title#>";
+	
+	// Wireless Security
+	$("#ssid_2_item")[0].innerHTML = "2.4GHz - <#QIS_finish_wireless_item1#>";
+	$("#ssid_2")[0].innerHTML = decodeURIComponent(document.form.rt_ssid2.value);
+	$("#ssid_5_item")[0].innerHTML = "5GHz - <#QIS_finish_wireless_item1#>";
+	$("#ssid_5")[0].innerHTML = decodeURIComponent(document.form.wl_ssid2.value);
+	$("#security_item2")[0].innerHTML = "<#QIS_finish_wireless_item2#>";
+	$("#security_item5")[0].innerHTML = "<#QIS_finish_wireless_item2#>";
+	if(auth_mode == "open"){
+		$("#security2")[0].innerHTML = "Open System";
+		$("#security5")[0].innerHTML = "Open System";
+		$("#key2_block")[0].style.display = "none";
+		$("#key5_block")[0].style.display = "none";
+	}
+	else if(auth_mode == "psk"){
+		$("#security2")[0].innerHTML = "WPA-AES+TKIP";
+		$("#security5")[0].innerHTML = "WPA-AES+TKIP";
+		$("#key2_item")[0].innerHTML = "<#QIS_finish_wireless_item3#>";
+		$("#key5_item")[0].innerHTML = "<#QIS_finish_wireless_item3#>";
+		$("#key2")[0].innerHTML = decodeURIComponent(document.form.rt_wpa_psk.value);
+		$("#key5")[0].innerHTML = decodeURIComponent(document.form.wl_wpa_psk.value);
+	}
+	
+	// Connection Status
+	$("#mac_item")[0].innerHTML = "MAC";
+	$("#mac")[0].innerHTML = '<% nvram_get_x("", "et0macaddr"); %>';
+	$("#wantype_item")[0].innerHTML = "WAN type";
+	$("#wantype")[0].innerHTML = wanlink_type();
+	$("#wanip_item")[0].innerHTML = "WAN IP";
+	$("#wanip")[0].innerHTML = '<% nvram_get_x("", "wan_ipaddr_t"); %>';
+	$("#lanip_item")[0].innerHTML = "LAN IP";
+	$("#lanip")[0].innerHTML = reIP;
+	
+	// System account
+	$("#account_item")[0].innerHTML = "<#QIS_finish_admin_item1#>";
+	$("#account")[0].innerHTML = '<% nvram_get_x("", "http_username"); %>';
+	$("#password_item")[0].innerHTML = "<#QIS_finish_admin_item2#>";
+	$("#password")[0].innerHTML = '<% nvram_get_x("", "http_passwd"); %>';
+}
+
+function gotoASUS(){
+	parent.location.href = "http://support.asus.com";
+}
+
+function gotoAdvSetting(){
+	parent.location = "/Advanced_Wireless2g_Content.asp";
+}
+
+function addBookmarkForBrowser(sTitle) {
+	 sTitle = sTitle+" - "+reIP;
+	 
+   if(document.all)
+      window.external.addFavorite('http://'+reIP, sTitle);
+   else if(window.sidebar && window.sidebar.addPanel)
+      window.sidebar.addPanel(sTitle, 'http://'+reIP, "");
+   else{
+			addBookmarkForBrowser = function(){
+				alert("<#Browser_action_not_support_addfavorite#>");
+			}
+   }
+}
+</script>
+</head>
+
+<body onLoad="QKfinish_load_body();" >
+<div class="QISmain">
+<div class="description_down" id="title_item"><#WPS_state_configured_success#></div>
+<br/><br/>
+<table id="tblsetting_1" class="QISform2" width="400" border=0 cellpadding="5" cellspacing="0">
+	<tr>
+		<td>&nbsp&nbsp&nbsp<span id="ssid_2_item"></span>: <span id="ssid_2"></span></td>
+    <td><span id="mac_item"></span>: <span id="mac"></span></td>
+	</tr>
+	<tr>
+		<td><div id="key2_block">&nbsp&nbsp&nbsp<span id="key2_item"></span>: <span id="key2"></span></div></td>
+    <td><span id="wantype_item"></span>: <span id="wantype"></span></td>
+	</tr>
+	<tr>
+		<td>&nbsp&nbsp&nbsp<span id="security_item2"></span>: <span id="security2"></span></td>
+    <td><span id="wanip_item"></span>: <span id="wanip"></span></td>
+	</tr>
+	<tr>
+		<td>&nbsp&nbsp&nbsp<span id="ssid_5_item"></span>: <span id="ssid_5"></span></td>
+		<td><span id="lanip_item"></span>: <span id="lanip"></span></td>
+	</tr>
+	<tr>
+		<td><div id="key5_block">&nbsp&nbsp&nbsp<span id="key5_item"></span>: <span id="key5"></span></div></td>
+		<td><span id="account_item"></span>: <span id="account"></span></td>
+	</tr>
+	<tr>
+		<td>&nbsp&nbsp&nbsp<span id="security_item5"></span>: <span id="security5"></span></td>
+		<td><span id="password_item"></span>: <span id="password"></span></td>
+	</tr>
+</table>
+<table class="black_line" cellpadding="0" cellspacing="0">
+	<tr><td></td></tr>
+</table>
+
+<table class="QISform" width="400" border=0 cellpadding="5" cellspacing="0">
+	<tr>
+		<td>
+			<ol>
+				<li>
+					<a href="javascript:gotoASUS();"><#QKSet_finish_moveto1#></a>
+				</li>
+				<li>
+					<a href="javascript:gotoAdvSetting();"><#QKSet_finish_moveto7#></a>
+				</li>
+				<li>
+					<a href="javascript:addBookmarkForBrowser('ASUS <#Web_Title#>');"><#Browser_action_addfavorite#></a>
+				</li>
+			</ol>
+		</td>
+	</tr>
+</table>
+</div>
+
+<br>
+
+<div class="QISfoot"></div>
+
+<form name="form" style="display:none;">
+<input type="hidden" name="wl_ssid2" value="<% nvram_char_to_ascii("WLANConfig11b", "wl_ssid"); %>">
+<input type="hidden" name="rt_ssid2" value="<% nvram_char_to_ascii("WLANConfig11b", "rt_ssid"); %>">
+<input type="hidden" name="wl_wpa_psk" value="<% nvram_char_to_ascii("WLANConfig11b", "wl_wpa_psk"); %>">
+<input type="hidden" name="rt_wpa_psk" value="<% nvram_char_to_ascii("WLANConfig11b", "rt_wpa_psk"); %>">
+</form>
+</body>
+</html>

@@ -1,0 +1,116 @@
+src/FreeList.lo src/FreeList.o: src/FreeList.c ./inc/FreeList.h \
+  ./inc/ithread.h /root/temp/source/lib/include/pthread.h \
+  /root/temp/source/lib/include/features.h \
+  /root/temp/source/lib/include/bits/uClibc_config.h \
+  /root/temp/source/lib/include/sys/cdefs.h \
+  /root/temp/source/lib/include/sched.h \
+  /root/temp/source/lib/include/bits/types.h \
+  /opt/buildroot-gcc342/bin/../lib/gcc/mipsel-linux-uclibc/3.4.2/include/stddef.h \
+  /root/temp/source/lib/include/bits/kernel_types.h \
+  /root/temp/source/lib/include/bits/wordsize.h \
+  /root/temp/source/lib/include/bits/pthreadtypes.h \
+  /root/temp/source/lib/include/bits/sched.h \
+  /root/temp/source/lib/include/time.h \
+  /root/temp/source/lib/include/bits/time.h \
+  /root/temp/source/lib/include/bits/uClibc_clk_tck.h \
+  /root/temp/source/lib/include/signal.h \
+  /root/temp/source/lib/include/bits/sigset.h \
+  /root/temp/source/lib/include/bits/initspin.h \
+  /root/temp/source/lib/include/bits/sigthread.h \
+  /root/temp/source/lib/include/unistd.h \
+  /root/temp/source/lib/include/bits/posix_opt.h \
+  /root/temp/source/lib/include/bits/environments.h \
+  /root/temp/source/lib/include/bits/confname.h \
+  /root/temp/source/lib/include/bits/getopt.h \
+  /root/temp/source/lib/include/errno.h \
+  /root/temp/source/lib/include/bits/errno.h \
+  /root/temp/source/lib/include/bits/errno_values.h \
+  /root/temp/source/lib/include/assert.h \
+  /root/temp/source/lib/include/stdlib.h \
+  /root/temp/source/lib/include/bits/waitflags.h \
+  /root/temp/source/lib/include/bits/waitstatus.h \
+  /root/temp/source/lib/include/endian.h \
+  /root/temp/source/lib/include/bits/endian.h \
+  /root/temp/source/lib/include/sys/types.h \
+  /root/temp/source/lib/include/sys/select.h \
+  /root/temp/source/lib/include/bits/select.h \
+  /root/temp/source/lib/include/sys/sysmacros.h \
+  /root/temp/source/lib/include/alloca.h
+
+./inc/FreeList.h:
+
+./inc/ithread.h:
+
+/root/temp/source/lib/include/pthread.h:
+
+/root/temp/source/lib/include/features.h:
+
+/root/temp/source/lib/include/bits/uClibc_config.h:
+
+/root/temp/source/lib/include/sys/cdefs.h:
+
+/root/temp/source/lib/include/sched.h:
+
+/root/temp/source/lib/include/bits/types.h:
+
+/opt/buildroot-gcc342/bin/../lib/gcc/mipsel-linux-uclibc/3.4.2/include/stddef.h:
+
+/root/temp/source/lib/include/bits/kernel_types.h:
+
+/root/temp/source/lib/include/bits/wordsize.h:
+
+/root/temp/source/lib/include/bits/pthreadtypes.h:
+
+/root/temp/source/lib/include/bits/sched.h:
+
+/root/temp/source/lib/include/time.h:
+
+/root/temp/source/lib/include/bits/time.h:
+
+/root/temp/source/lib/include/bits/uClibc_clk_tck.h:
+
+/root/temp/source/lib/include/signal.h:
+
+/root/temp/source/lib/include/bits/sigset.h:
+
+/root/temp/source/lib/include/bits/initspin.h:
+
+/root/temp/source/lib/include/bits/sigthread.h:
+
+/root/temp/source/lib/include/unistd.h:
+
+/root/temp/source/lib/include/bits/posix_opt.h:
+
+/root/temp/source/lib/include/bits/environments.h:
+
+/root/temp/source/lib/include/bits/confname.h:
+
+/root/temp/source/lib/include/bits/getopt.h:
+
+/root/temp/source/lib/include/errno.h:
+
+/root/temp/source/lib/include/bits/errno.h:
+
+/root/temp/source/lib/include/bits/errno_values.h:
+
+/root/temp/source/lib/include/assert.h:
+
+/root/temp/source/lib/include/stdlib.h:
+
+/root/temp/source/lib/include/bits/waitflags.h:
+
+/root/temp/source/lib/include/bits/waitstatus.h:
+
+/root/temp/source/lib/include/endian.h:
+
+/root/temp/source/lib/include/bits/endian.h:
+
+/root/temp/source/lib/include/sys/types.h:
+
+/root/temp/source/lib/include/sys/select.h:
+
+/root/temp/source/lib/include/bits/select.h:
+
+/root/temp/source/lib/include/sys/sysmacros.h:
+
+/root/temp/source/lib/include/alloca.h:

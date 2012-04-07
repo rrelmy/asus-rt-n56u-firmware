@@ -1,0 +1,149 @@
+#: ../attr/attr.c:57
+#, c-format
+msgid ""
+"Usage: %s [-LRq] -s attrname [-V attrvalue] pathname  # set value\n"
+"       %s [-LRq] -g attrname pathname                 # get value\n"
+"       %s [-LRq] -r attrname pathname                 # remove attr\n"
+"      -s reads a value from stdin and -g writes a value to stdout\n"
+msgstr ""
+
+#: ../attr/attr.c:90 ../attr/attr.c:108 ../attr/attr.c:117
+msgid "Only one of -s, -g, or -r allowed\n"
+msgstr ""
+
+#: ../attr/attr.c:99
+msgid "-V only allowed with -s\n"
+msgstr ""
+
+#: ../attr/attr.c:134
+#, c-format
+msgid "Unrecognized option: %c\n"
+msgstr ""
+
+#: ../attr/attr.c:140
+msgid "A filename to operate on is required\n"
+msgstr ""
+
+#: ../attr/attr.c:167
+#, c-format
+msgid "Could not set \"%s\" for %s\n"
+msgstr ""
+
+#: ../attr/attr.c:172
+#, c-format
+msgid "Attribute \"%s\" set to a %d byte value for %s:\n"
+msgstr ""
+
+#: ../attr/attr.c:192
+#, c-format
+msgid "Could not get \"%s\" for %s\n"
+msgstr ""
+
+#: ../attr/attr.c:197
+#, c-format
+msgid "Attribute \"%s\" had a %d byte value for %s:\n"
+msgstr ""
+
+#: ../attr/attr.c:212
+#, c-format
+msgid "Could not remove \"%s\" for %s\n"
+msgstr ""
+
+#: ../attr/attr.c:220
+msgid "At least one of -s, -g, or -r is required\n"
+msgstr ""
+
+#: ../getfattr/getfattr.c:111 ../setfattr/setfattr.c:68
+msgid "No such attribute"
+msgstr ""
+
+#: ../getfattr/getfattr.c:263
+#, c-format
+msgid "%s: Removing leading '/' from absolute path names\n"
+msgstr ""
+
+#: ../getfattr/getfattr.c:387
+#, c-format
+msgid "%s %s -- get extended attributes\n"
+msgstr ""
+
+#: ../getfattr/getfattr.c:389 ../setfattr/setfattr.c:155
+#, c-format
+msgid "Usage: %s %s\n"
+msgstr ""
+
+#: ../getfattr/getfattr.c:392
+msgid ""
+"  -n, --name=name         get the named extended attribute value\n"
+"  -d, --dump              get all extended attribute values\n"
+"  -e, --encoding=...      encode values (as 'text', 'hex' or 'base64')\n"
+"      --match=pattern     only get attributes with names matching pattern\n"
+"      --only-values       print the bare values only\n"
+"  -h, --no-dereference    do not dereference symbolic links\n"
+"      --absolute-names    don't strip leading '/' in pathnames\n"
+"  -R, --recursive         recurse into subdirectories\n"
+"  -L, --logical           logical walk, follow symbolic links\n"
+"  -P  --physical          physical walk, do not follow symbolic links\n"
+"      --version           print version and exit\n"
+"      --help              this help text\n"
+msgstr ""
+
+#: ../getfattr/getfattr.c:489
+#, c-format
+msgid "%s: invalid regular expression \"%s\"\n"
+msgstr ""
+
+#: ../getfattr/getfattr.c:507 ../setfattr/setfattr.c:247
+#, c-format
+msgid ""
+"Usage: %s %s\n"
+"Try `%s --help' for more information.\n"
+msgstr ""
+
+#: ../setfattr/setfattr.c:109
+#, c-format
+msgid "%s: %s: No filename found in line %d, aborting\n"
+msgstr ""
+
+#: ../setfattr/setfattr.c:113
+#, c-format
+msgid "%s: No filename found inline %d of standard input, aborting\n"
+msgstr ""
+
+#: ../setfattr/setfattr.c:154
+#, c-format
+msgid "%s %s -- set extended attributes\n"
+msgstr ""
+
+#: ../setfattr/setfattr.c:157
+msgid ""
+"  -n, --name=name         set the value of the named extended attribute\n"
+"  -x, --remove=name       remove the named extended attribute\n"
+"  -v, --value=value       use value as the attribute value\n"
+"  -h, --no-dereference    do not dereference symbolic links\n"
+"      --restore=file      restore extended attributes\n"
+"      --version           print version and exit\n"
+"      --help              this help text\n"
+msgstr ""
+
+#: ../libattr/attr_copy_fd.c:82 ../libattr/attr_copy_fd.c:96
+#: ../libattr/attr_copy_file.c:79 ../libattr/attr_copy_file.c:93
+#, c-format
+msgid "listing attributes of %s"
+msgstr ""
+
+#: ../libattr/attr_copy_fd.c:115 ../libattr/attr_copy_fd.c:128
+#: ../libattr/attr_copy_file.c:112 ../libattr/attr_copy_file.c:125
+#, c-format
+msgid "getting attribute %s of %s"
+msgstr ""
+
+#: ../libattr/attr_copy_fd.c:136 ../libattr/attr_copy_file.c:133
+#, c-format
+msgid "setting attributes for %s"
+msgstr ""
+
+#: ../libattr/attr_copy_fd.c:142 ../libattr/attr_copy_file.c:139
+#, c-format
+msgid "setting attribute %s for %s"
+msgstr ""

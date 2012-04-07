@@ -1,0 +1,44 @@
+mainmenu_name 'Ralink Embedded Linux Configuration'
+mainmenu_option next_comment
+comment 'Select the Product you wish to target'
+choice 'Ralink Products' "RT2880 CONFIG_DEFAULTS_RALINK_RT2880\
+                           RT3052 CONFIG_DEFAULTS_RALINK_RT3052\
+                           RT3883 CONFIG_DEFAULTS_RALINK_RT3883
+                         "
+if [ $CONFIG_DEFAULTS_RALINK_RT2880 = "y" ]; then
+choice   'Flash/SDRAM Size'\
+         "2M/16M   CONFIG_DEFSETTING_2M16M\
+           4M/16M   CONFIG_DEFSETTING_4M16M
+	  "
+elif [ $CONFIG_DEFAULTS_RALINK_RT3883 = "y" ]; then
+choice   'Flash/SDRAM Size'\
+         "4M/16M(AP)       CONFIG_DEFSETTING_4M16M\
+           4M/32M(AP+NAS)	  CONFIG_DEFSETTING_4M32M
+           8M/64M(AP+STA)	  CONFIG_DEFSETTING_8M64M
+	  "
+else
+choice   'Flash/SDRAM Size'\
+         "2M/8M(AP)        CONFIG_DEFSETTING_2M8M\
+           2M/16M(AP)	  CONFIG_DEFSETTING_2M16M\
+           4M/16M(AP+STA)   CONFIG_DEFSETTING_4M16M\
+           4M/32M(AP+NAS)   CONFIG_DEFSETTING_4M32M
+	  "
+fi
+endmenu
+mainmenu_option next_comment
+comment 'Kernel/Library/Defaults Selection'
+if [ $CONFIG_DEFAULTS_RALINK_RT2880 = "y" ]; then
+define_bool CONFIG_DEFAULTS_KERNEL_2_4 y
+else
+define_bool CONFIG_DEFAULTS_KERNEL_2_6_21 y
+fi
+string 'Cross Compiler Path' 			CONFIG_CROSS_COMPILER_PATH /opt/buildroot-gcc342/bin
+comment ' '
+bool 'Default all settings (lose changes)'	CONFIG_DEFAULTS_OVERRIDE
+bool 'Customize Kernel Settings'		CONFIG_DEFAULTS_KERNEL
+bool 'Customize Vendor/User Settings'		CONFIG_DEFAULTS_VENDOR
+bool 'Customize Busybox Settings'               CONFIG_DEFAULTS_BUSYBOX
+bool 'Customize uClibc Settings'                CONFIG_DEFAULTS_UCLIBC
+bool 'Customize uClibc++ Settings'              CONFIG_DEFAULTS_UCLIBC_PLUS_PLUS
+bool 'Update Default Vendor Settings'		CONFIG_DEFAULTS_VENDOR_UPDATE
+endmenu

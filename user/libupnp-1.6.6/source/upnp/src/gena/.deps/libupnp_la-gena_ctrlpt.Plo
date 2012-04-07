@@ -1,0 +1,320 @@
+src/gena/libupnp_la-gena_ctrlpt.lo src/gena/libupnp_la-gena_ctrlpt.o:  \
+ src/gena/gena_ctrlpt.c ./src/inc/config.h ../autoconfig.h \
+  ./src/inc/gena.h ./src/inc/config.h ./src/inc/service_table.h \
+  ./src/inc/uri.h /root/temp/source/lib/include/fcntl.h \
+  /root/temp/source/lib/include/features.h \
+  /root/temp/source/lib/include/bits/uClibc_config.h \
+  /root/temp/source/lib/include/sys/cdefs.h \
+  /root/temp/source/lib/include/bits/fcntl.h \
+  /root/temp/source/lib/include/sys/types.h \
+  /root/temp/source/lib/include/bits/types.h \
+  /opt/buildroot-gcc342/bin/../lib/gcc/mipsel-linux-uclibc/3.4.2/include/stddef.h \
+  /root/temp/source/lib/include/bits/kernel_types.h \
+  /root/temp/source/lib/include/bits/wordsize.h \
+  /root/temp/source/lib/include/bits/pthreadtypes.h \
+  /root/temp/source/lib/include/bits/sched.h \
+  /root/temp/source/lib/include/time.h \
+  /root/temp/source/lib/include/endian.h \
+  /root/temp/source/lib/include/bits/endian.h \
+  /root/temp/source/lib/include/sys/select.h \
+  /root/temp/source/lib/include/bits/select.h \
+  /root/temp/source/lib/include/bits/sigset.h \
+  /root/temp/source/lib/include/bits/time.h \
+  /root/temp/source/lib/include/sys/sysmacros.h \
+  /root/temp/source/lib/include/sys/stat.h \
+  /root/temp/source/lib/include/bits/stat.h \
+  /root/temp/source/lib/include/string.h \
+  /root/temp/source/lib/include/bits/uClibc_clk_tck.h \
+  /root/temp/source/lib/include/errno.h \
+  /root/temp/source/lib/include/bits/errno.h \
+  /root/temp/source/lib/include/bits/errno_values.h \
+  /root/temp/source/lib/include/ctype.h \
+  /root/temp/source/lib/include/bits/uClibc_touplow.h \
+  /root/temp/source/lib/include/stdlib.h \
+  /root/temp/source/lib/include/bits/waitflags.h \
+  /root/temp/source/lib/include/bits/waitstatus.h \
+  /root/temp/source/lib/include/alloca.h \
+  /root/temp/source/lib/include/arpa/inet.h \
+  /root/temp/source/lib/include/netinet/in.h \
+  /root/temp/source/lib/include/stdint.h \
+  /root/temp/source/lib/include/bits/wchar.h \
+  /root/temp/source/lib/include/bits/socket.h \
+  /root/temp/source/lib/include/limits.h \
+  /opt/buildroot-gcc342/bin/../lib/gcc/mipsel-linux-uclibc/3.4.2/include/limits.h \
+  /root/temp/source/lib/include/bits/posix1_lim.h \
+  /root/temp/source/lib/include/bits/local_lim.h \
+  /root/temp/source/lib/include/linux/limits.h \
+  /root/temp/source/lib/include/bits/posix2_lim.h \
+  /root/temp/source/lib/include/bits/xopen_lim.h \
+  /root/temp/source/lib/include/bits/stdio_lim.h \
+  /root/temp/source/lib/include/bits/sockaddr.h \
+  /root/temp/source/lib/include/asm/socket.h \
+  /root/temp/source/lib/include/asm/sockios.h \
+  /root/temp/source/lib/include/asm/ioctl.h \
+  /root/temp/source/lib/include/bits/in.h \
+  /root/temp/source/lib/include/bits/byteswap.h \
+  /root/temp/source/lib/include/sys/socket.h \
+  /root/temp/source/lib/include/sys/uio.h \
+  /root/temp/source/lib/include/bits/uio.h \
+  /root/temp/source/lib/include/unistd.h \
+  /root/temp/source/lib/include/bits/posix_opt.h \
+  /root/temp/source/lib/include/bits/environments.h \
+  /root/temp/source/lib/include/bits/confname.h \
+  /root/temp/source/lib/include/bits/getopt.h \
+  /root/temp/source/lib/include/netdb.h \
+  /root/temp/source/lib/include/rpc/netdb.h \
+  /root/temp/source/lib/include/bits/siginfo.h \
+  /root/temp/source/lib/include/bits/netdb.h \
+  /root/temp/source/lib/include/sys/time.h ../upnp/inc/upnp.h \
+  /root/temp/source/lib/include/stdio.h \
+  /root/temp/source/lib/include/bits/uClibc_stdio.h \
+  /root/temp/source/lib/include/wchar.h \
+  /opt/buildroot-gcc342/bin/../lib/gcc/mipsel-linux-uclibc/3.4.2/include/stdarg.h \
+  /root/temp/source/lib/include/sys/param.h \
+  /root/temp/source/lib/include/linux/param.h \
+  /root/temp/source/lib/include/asm/param.h ../ixml/inc/ixml.h \
+  /root/temp/source/lib/include/assert.h ../upnp/inc/upnpconfig.h \
+  ../upnp/inc/upnpdebug.h ../upnp/inc/upnp.h ../ixml/inc/ixml.h \
+  ./src/inc/miniserver.h ./src/inc/sock.h ./src/inc/util.h \
+  ./src/inc/httpparser.h ./src/inc/membuffer.h \
+  ../threadutil/inc/LinkedList.h ../threadutil/inc/FreeList.h \
+  ../threadutil/inc/ithread.h /root/temp/source/lib/include/pthread.h \
+  /root/temp/source/lib/include/sched.h \
+  /root/temp/source/lib/include/signal.h \
+  /root/temp/source/lib/include/bits/initspin.h \
+  /root/temp/source/lib/include/bits/sigthread.h \
+  ../threadutil/inc/ThreadPool.h ../threadutil/inc/LinkedList.h \
+  ./src/inc/client_table.h ../threadutil/inc/TimerThread.h \
+  ../threadutil/inc/ThreadPool.h ./src/inc/upnp_timeout.h \
+  ./src/inc/sysdep.h ../threadutil/inc/ithread.h ./src/inc/global.h \
+  ./src/inc/md5.h ./src/inc/uuid.h ./src/inc/upnpapi.h \
+  ./src/inc/parsetools.h ./src/inc/statcodes.h ./src/inc/httpparser.h \
+  ./src/inc/httpreadwrite.h
+
+./src/inc/config.h:
+
+../autoconfig.h:
+
+./src/inc/gena.h:
+
+./src/inc/config.h:
+
+./src/inc/service_table.h:
+
+./src/inc/uri.h:
+
+/root/temp/source/lib/include/fcntl.h:
+
+/root/temp/source/lib/include/features.h:
+
+/root/temp/source/lib/include/bits/uClibc_config.h:
+
+/root/temp/source/lib/include/sys/cdefs.h:
+
+/root/temp/source/lib/include/bits/fcntl.h:
+
+/root/temp/source/lib/include/sys/types.h:
+
+/root/temp/source/lib/include/bits/types.h:
+
+/opt/buildroot-gcc342/bin/../lib/gcc/mipsel-linux-uclibc/3.4.2/include/stddef.h:
+
+/root/temp/source/lib/include/bits/kernel_types.h:
+
+/root/temp/source/lib/include/bits/wordsize.h:
+
+/root/temp/source/lib/include/bits/pthreadtypes.h:
+
+/root/temp/source/lib/include/bits/sched.h:
+
+/root/temp/source/lib/include/time.h:
+
+/root/temp/source/lib/include/endian.h:
+
+/root/temp/source/lib/include/bits/endian.h:
+
+/root/temp/source/lib/include/sys/select.h:
+
+/root/temp/source/lib/include/bits/select.h:
+
+/root/temp/source/lib/include/bits/sigset.h:
+
+/root/temp/source/lib/include/bits/time.h:
+
+/root/temp/source/lib/include/sys/sysmacros.h:
+
+/root/temp/source/lib/include/sys/stat.h:
+
+/root/temp/source/lib/include/bits/stat.h:
+
+/root/temp/source/lib/include/string.h:
+
+/root/temp/source/lib/include/bits/uClibc_clk_tck.h:
+
+/root/temp/source/lib/include/errno.h:
+
+/root/temp/source/lib/include/bits/errno.h:
+
+/root/temp/source/lib/include/bits/errno_values.h:
+
+/root/temp/source/lib/include/ctype.h:
+
+/root/temp/source/lib/include/bits/uClibc_touplow.h:
+
+/root/temp/source/lib/include/stdlib.h:
+
+/root/temp/source/lib/include/bits/waitflags.h:
+
+/root/temp/source/lib/include/bits/waitstatus.h:
+
+/root/temp/source/lib/include/alloca.h:
+
+/root/temp/source/lib/include/arpa/inet.h:
+
+/root/temp/source/lib/include/netinet/in.h:
+
+/root/temp/source/lib/include/stdint.h:
+
+/root/temp/source/lib/include/bits/wchar.h:
+
+/root/temp/source/lib/include/bits/socket.h:
+
+/root/temp/source/lib/include/limits.h:
+
+/opt/buildroot-gcc342/bin/../lib/gcc/mipsel-linux-uclibc/3.4.2/include/limits.h:
+
+/root/temp/source/lib/include/bits/posix1_lim.h:
+
+/root/temp/source/lib/include/bits/local_lim.h:
+
+/root/temp/source/lib/include/linux/limits.h:
+
+/root/temp/source/lib/include/bits/posix2_lim.h:
+
+/root/temp/source/lib/include/bits/xopen_lim.h:
+
+/root/temp/source/lib/include/bits/stdio_lim.h:
+
+/root/temp/source/lib/include/bits/sockaddr.h:
+
+/root/temp/source/lib/include/asm/socket.h:
+
+/root/temp/source/lib/include/asm/sockios.h:
+
+/root/temp/source/lib/include/asm/ioctl.h:
+
+/root/temp/source/lib/include/bits/in.h:
+
+/root/temp/source/lib/include/bits/byteswap.h:
+
+/root/temp/source/lib/include/sys/socket.h:
+
+/root/temp/source/lib/include/sys/uio.h:
+
+/root/temp/source/lib/include/bits/uio.h:
+
+/root/temp/source/lib/include/unistd.h:
+
+/root/temp/source/lib/include/bits/posix_opt.h:
+
+/root/temp/source/lib/include/bits/environments.h:
+
+/root/temp/source/lib/include/bits/confname.h:
+
+/root/temp/source/lib/include/bits/getopt.h:
+
+/root/temp/source/lib/include/netdb.h:
+
+/root/temp/source/lib/include/rpc/netdb.h:
+
+/root/temp/source/lib/include/bits/siginfo.h:
+
+/root/temp/source/lib/include/bits/netdb.h:
+
+/root/temp/source/lib/include/sys/time.h:
+
+../upnp/inc/upnp.h:
+
+/root/temp/source/lib/include/stdio.h:
+
+/root/temp/source/lib/include/bits/uClibc_stdio.h:
+
+/root/temp/source/lib/include/wchar.h:
+
+/opt/buildroot-gcc342/bin/../lib/gcc/mipsel-linux-uclibc/3.4.2/include/stdarg.h:
+
+/root/temp/source/lib/include/sys/param.h:
+
+/root/temp/source/lib/include/linux/param.h:
+
+/root/temp/source/lib/include/asm/param.h:
+
+../ixml/inc/ixml.h:
+
+/root/temp/source/lib/include/assert.h:
+
+../upnp/inc/upnpconfig.h:
+
+../upnp/inc/upnpdebug.h:
+
+../upnp/inc/upnp.h:
+
+../ixml/inc/ixml.h:
+
+./src/inc/miniserver.h:
+
+./src/inc/sock.h:
+
+./src/inc/util.h:
+
+./src/inc/httpparser.h:
+
+./src/inc/membuffer.h:
+
+../threadutil/inc/LinkedList.h:
+
+../threadutil/inc/FreeList.h:
+
+../threadutil/inc/ithread.h:
+
+/root/temp/source/lib/include/pthread.h:
+
+/root/temp/source/lib/include/sched.h:
+
+/root/temp/source/lib/include/signal.h:
+
+/root/temp/source/lib/include/bits/initspin.h:
+
+/root/temp/source/lib/include/bits/sigthread.h:
+
+../threadutil/inc/ThreadPool.h:
+
+../threadutil/inc/LinkedList.h:
+
+./src/inc/client_table.h:
+
+../threadutil/inc/TimerThread.h:
+
+../threadutil/inc/ThreadPool.h:
+
+./src/inc/upnp_timeout.h:
+
+./src/inc/sysdep.h:
+
+../threadutil/inc/ithread.h:
+
+./src/inc/global.h:
+
+./src/inc/md5.h:
+
+./src/inc/uuid.h:
+
+./src/inc/upnpapi.h:
+
+./src/inc/parsetools.h:
+
+./src/inc/statcodes.h:
+
+./src/inc/httpparser.h:
+
+./src/inc/httpreadwrite.h:

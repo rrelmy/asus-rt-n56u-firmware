@@ -1,0 +1,23 @@
+OBJS = xfrtest.o
+BIN = xfrtest
+TOP = $(ROOTDIR)/user
+
+CFLAGS  += -I. -I$(SRCBASE)/include -I$(TOP)/shared -I$(TOP)/shared/include -I$(ROOTDIR)/linux-2.6.21.x/include -I$(ROOTDIR)/linux-2.6.21.x/drivers/net/raeth
+CFLAGS  += -Wall -s -O2 -DASUS_NVRAM
+
+LDFLAGS += -L$(TOP)/shared -lshared -s
+
+all: ${BIN}
+	${STRIP} ${BIN}
+
+#install: all
+#	install -D ${BIN} ${INSTALLDIR}/usr/sbin/${BIN}
+romfs:
+	$(ROMFSINST) /usr/sbin/$(BIN)
+
+
+${BIN}: ${OBJS}
+	$(CC) $(LDFLAGS) -o $@ $^
+
+clean:
+	rm -f *.o ${BIN}

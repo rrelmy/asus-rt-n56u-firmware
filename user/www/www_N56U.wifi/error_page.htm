@@ -1,0 +1,237 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta HTTP-EQUIV="Pragma" CONTENT="no-cache">
+<meta HTTP-EQUIV="Expires" CONTENT="-1">
+<link rel="shortcut icon" href="images/favicon.png">
+<link rel="icon" href="images/favicon.png">
+<title>ASUS Wireless Router <#Web_Title#> - <#errormessage_title#></title>                          
+<link rel="stylesheet" type="text/css" href="index_style.css">
+<link rel="stylesheet" type="text/css" href="form_style.css">
+<link rel="stylesheet" type="text/css" href="other.css">
+
+<script type="text/javascript">
+var manually_stop_wan = '<% nvram_get_x("", "manually_disconnect_wan"); %>';
+var ifEthernetConnect = <%detect_if_wan();%>;
+var detect_dhcp_pppoe = "<% detect_dhcp_pppoe(); %>";
+var wan_status_log = "<% get_wan_status_log(); %>";
+
+var casenum = '<% get_parameter("flag"); %>';
+
+function initial(){
+	hideLinkTag();
+	
+	if(casenum == 1){
+		showtext($("failReason1"), "<#web_redirect_reason1#>");
+		
+		$("case1").style.display = "";
+	}
+	else if(casenum == 2){
+		if(wan_status_log.indexOf("Failed to authenticate ourselves to peer") >= 0){
+			showtext($("failReason1"), "<#web_redirect_reason2_1#>");
+			
+			$("ppp_input_error").style.display = "";
+		}
+		else{
+			showtext($("failReason1"), "<#web_redirect_reason2_2#>");
+			
+			$("ppp_no_response").style.display = "";
+		}
+		
+		$("case2").style.display = "";
+	}
+	else if(casenum == 3){
+		if(detect_dhcp_pppoe=="dhcp"){
+			showtext($("failReason1"), "<#web_redirect_reason3_1#>");
+			
+			$("case3").style.display = "";
+		}
+		else{
+			showtext($("failReason1"), "<#web_redirect_reason3_2#>");
+		}
+	}
+	else if(casenum == 4){
+		showtext($("failReason1"), "<#web_redirect_reason4#>");
+		
+		$("case4").style.display = "";
+	}
+	else if(casenum == 6){
+		showtext($("failReason1"), "<#web_redirect_reason6#>");
+		showtext($("suggestion_final"), "<#web_redirect_suggestion_final1#>");
+		
+		$("case6").style.display = "";
+		
+		$("selfsetting_link").href = "javascript:lanLink();";
+	}
+	else if(casenum == 5){
+		var html_code = '';
+		
+		if(manually_stop_wan == "1")
+			showtext($("failReason1"), "<#web_redirect_reason5_1#>");
+		else
+			showtext($("failReason1"), "<#web_redirect_reason5_2#>");
+		
+		html_code += '<ul>\n';
+		if(manually_stop_wan == "1")
+			html_code += '<li><#web_redirect_suggestion5_1#></li>\n';
+		else
+			html_code += '<li><#web_redirect_suggestion5_2#></li>\n';
+		html_code += '</ul>\n';
+		
+		if(manually_stop_wan == "1"){
+			html_code += '<ul>\n';
+			html_code += '<li><a href="javascript:manually_start_wan_Link();"><#web_redirect_suggestion_manually_start_wan#></a></li>\n';
+			html_code += '</ul>\n';
+		}
+		
+		$("case5").innerHTML = html_code;
+		$("case5").style.display = "";
+	}
+	else{
+		parent.location = "/index.asp";
+	}
+}
+
+function $(){
+	var elements = new Array();
+	
+	for(var i = 0; i < arguments.length; ++i){
+		var element = arguments[i];
+	if(typeof element == 'string')
+		element = document.getElementById(element);
+		
+		if(arguments.length == 1)
+			return element;
+		
+		elements.push(element);
+	}
+	
+	return elements;
+}
+
+function showtext(obj, str){
+	if(obj)
+		obj.innerHTML = str;
+}
+
+function hideLinkTag(){
+	if(document.all){
+		var tagObjs = document.all.tags("a");
+		
+		for(var i = 0; i < tagObjs.length; ++i)
+			tagObjs(i).outerHTML = tagObjs(i).outerHTML.replace(">"," hidefocus=true>");
+	}
+}
+
+function lanLink(){
+	location.href = "/Advanced_LAN_Content.asp";
+}
+
+function wanLink(){
+	location.href = "/Advanced_WAN_Content.asp";
+}
+
+function pppoeLink(){
+	location.href = "/QIS_wizard.htm?flag=pppoe";
+}
+
+function detectLink(){
+	location.href = "/QIS_wizard.htm?flag=detect";
+}
+
+function manually_start_wan_Link(){
+	location.href = "/index.asp?flag=Internet";
+}
+</script>  
+</head>
+
+<body onload="initial();">
+<br><br>
+<table width="500" border="0" align="center" cellspacing="0" class="erTable">
+<thead>
+  <tr>
+    <td height="52" align="left" valign="top"><span class="modelName" style="margin:25px 0px 0px 160px;"><#Web_Title#></span></td>
+  </tr>
+</thead> 
+  <tr>
+    <th  valign="top" height="30" background="images/er_bg.gif"><div class="er_title"><#web_redirect_message#></div></th>
+  </tr>
+  
+
+  <tr>
+    <td  valign="top" background="images/er_bg.gif">
+  	  <div class="alertImg"><img src="images/survey/warning.gif"></div>
+					<span class="Epagetitle"><#web_redirect_fail_reason0#> :</span>
+	  <div id="failReason" class="Epagecontent" style="color:#CC0000">
+	    <ul>
+		  <li>
+		    <span id="failReason1"></span>
+		  </li>
+	    </ul>
+	  </div>
+
+	  		<div class="Epagetitle">
+					<span><#web_redirect_suggestion0#>: (<#web_redirect_suggestion0_1#>)</span>
+	  		</div>
+
+	<div class="Epagecontent">
+		<div id="case1" style="display:none;">
+		  <ul>
+			 <li><#web_redirect_suggestion1#></li>
+		  </ul>
+		</div>
+		
+		<div id="case2" style="display:none;">
+		  <ul>
+			 <li>
+			 	<div id="ppp_input_error" style="display:none;">
+			 	  <a href="javascript:pppoeLink();"><#web_redirect_suggestion2_1#></a>
+			 	  <span><#web_redirect_suggestion2_1_desc#></span>
+			 	</div>
+			 	
+			 	<div id="ppp_no_response" style="display:none;">
+			 	  <a href="javascript:detectLink();"><#web_redirect_suggestion2_2#></a>
+			 	  <span><#web_redirect_suggestion2_2_desc#></span>
+			 	</div>
+			 </li>
+		  </ul>
+		</div>
+		
+		<div id="case3" style="display:none;">
+		  <ul>
+			 <li><#web_redirect_suggestion3#></li>
+		  </ul>
+		</div>
+		
+		<div id="case4" style="display:none;">
+		  <ul>	  	
+			 <li><#web_redirect_suggestion4#></li>
+		  </ul>
+		</div>
+		
+		<div id="case5" style="display:none;"></div>
+		
+		<div id="case6" style="display:none;">
+			<ul>
+				<li><#web_redirect_suggestion6#></li>
+			</ul>
+		</div>
+		
+		<ul>
+		  <li>
+		  	<span id="suggestion_final"><#web_redirect_suggestion_final#></span>
+		  	<a id="selfsetting_link" href="javascript:wanLink();"><#web_redirect_suggestion_etc#></a>
+		   	<span><#web_redirect_suggestion_etc_desc#></span>
+		  </li>
+		</ul>
+	  </div>	
+	</td>	  	
+  </tr>
+  
+  <tr>
+    <td height="22" background="images/er_bottom.gif"><span></span></td>
+  </tr>			
+</table>
+</body>
+</html>

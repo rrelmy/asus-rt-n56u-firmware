@@ -1,0 +1,73 @@
+#!/usr/bin/make -f
+
+package = attr
+develop = lib$(package)1-dev
+library = lib$(package)1
+
+dirtmp = debian/tmp
+dirdev = debian/$(develop)
+dirlib = debian/$(library)
+pkgtmp = DIST_ROOT=`pwd`/$(dirtmp); export DIST_ROOT;
+pkgdev = DIST_ROOT=`pwd`/$(dirdev); export DIST_ROOT;
+pkglib = DIST_ROOT=`pwd`/$(dirlib); export DIST_ROOT;
+stdenv = @GZIP=-q; export GZIP;
+
+options = DEBUG="-DNDEBUG"; OPTIMIZER="-O1 -g"; DISTRIBUTION="debian"; \
+	export DEBUG OPTIMIZER DISTRIBUTION;
+checkdir = test -f debian/rules
+
+build: built
+built: config
+	@echo "== dpkg-buildpackage: build" 1>&2
+	$(MAKE) default
+	touch built
+
+config: .census
+.census:
+	@echo "== dpkg-buildpackage: configure" 1>&2
+	$(checkdir)
+	$(options) $(MAKE) configure
+	touch .census
+
+clean:
+	@echo "== dpkg-buildpackage: clean" 1>&2
+	$(checkdir)
+	-rm -f built .census
+	$(MAKE) distclean
+	-rm -rf $(dirtmp) $(dirdev) $(dirlib) debian/*substvars debian/files*
+
+binary-indep:
+
+# Note1: dev pkg with .so symlinks to base pkg confuses debstd;
+#        so the .so 'Dangling symlink' message is benign, as is
+#        the message about not having executables/libraries.
+# Note2: absolute symlinks (required by policy) confuse debstd;
+#        so we'll filter out symlink messages entirely now.
+fixup_messages = egrep -v 'Dangling symlink|No executables or libraries'
+
+binary-arch: checkroot built
+	@echo "== dpkg-buildpackage: binary-arch" 1>&2
+	$(checkdir)
+	-rm -rf $(dirtmp) $(dirdev) $(dirlib)
+	$(pkgtmp) $(MAKE) -C . install
+	$(pkgdev) $(MAKE) -C . install-dev
+	$(pkglib) $(MAKE) -C . install-lib
+	$(pkgtmp) $(MAKE) -C build src-manifest
+	@echo "== dpkg-buildpackage: debstd" 1>&2
+	$(stdenv) debstd -m | $(fixup_messages)
+	dpkg-gencontrol -isp -p$(package) -P$(dirtmp) -Tdebian/substvars
+	dpkg-gencontrol -isp -p$(develop) -P$(dirdev)
+	dpkg-gencontrol -isp -p$(library) -P$(dirlib) -Tdebian/$(library).substvars
+	cp debian/shlibs.$(library) $(dirlib)/DEBIAN/shlibs
+	chown -R root.root $(dirtmp) $(dirdev) $(dirlib)
+	chmod -R go=rX $(dirtmp) $(dirdev) $(dirlib)
+	dpkg --build $(dirtmp) .. 
+	dpkg --build $(dirdev) ..
+	dpkg --build $(dirlib) ..
+
+binary: binary-indep binary-arch
+
+checkroot:
+	test 0 -eq `id -u`
+
+.PHONY: binary binary-arch binary-indep clean checkroot

@@ -1,0 +1,173 @@
+/*
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation; either version 2 of
+ * the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston,
+ * MA 02111-1307 USA
+ */
+#include <stdio.h>
+#include <stdlib.h>
+#include <limits.h>
+#include <time.h>
+#include <unistd.h>
+#include <errno.h>
+#include <syslog.h>
+#include <signal.h>
+#include <string.h>
+#include <sys/klog.h>
+#include <sys/types.h>
+#include <sys/mount.h>
+#include <sys/reboot.h>
+#include <sys/stat.h>
+#include <sys/sysmacros.h>
+#include <sys/time.h>
+#include <sys/utsname.h>
+#include <sys/wait.h>
+#include <sys/socket.h>
+
+#include<fcntl.h>
+
+
+char *usb_dev_file = "/proc/bus/usb/devices";
+
+#define USB_CLS_PER_INTERFACE         0       /* for DeviceClass */
+#define USB_CLS_AUDIO                 1
+#define USB_CLS_COMM                  2
+#define USB_CLS_HID                   3
+#define USB_CLS_PHYSICAL              5
+#define USB_CLS_STILL_IMAGE           6
+#define USB_CLS_PRINTER               7
+#define USB_CLS_MASS_STORAGE          8
+#define USB_CLS_HUB                   9
+#define USB_CLS_CDC_DATA              0x0a
+#define USB_CLS_CSCID                 0x0b    /* chip+ smart card */
+#define USB_CLS_CONTENT_SEC           0x0d    /* content security */
+#define USB_CLS_VIDEO                 0x0e
+#define USB_CLS_WIRELESS_CONTROLLER   0xe0
+#define USB_CLS_MISC                  0xef
+#define USB_CLS_APP_SPEC              0xfe
+#define USB_CLS_VENDOR_SPEC           0xff
+
+void
+set_dev_class(char *dev, int *num)
+{
+	if((dev[0] == '0') && (dev[1] =='0'))
+		*num = USB_CLS_PER_INTERFACE;
+	else if((dev[0] == '0') && (dev[1] =='1'))
+		*num = USB_CLS_AUDIO;
+	else if((dev[0] == '0') && (dev[1] =='2'))
+		*num = USB_CLS_COMM;
+	else if((dev[0] == '0') && (dev[1] =='3'))
+		*num = USB_CLS_HID;
+	else if((dev[0] == '0') && (dev[1] =='5'))
+		*num = USB_CLS_PHYSICAL;
+	else if((dev[0] == '0') && (dev[1] =='6'))
+		*num = USB_CLS_STILL_IMAGE;
+	else if((dev[0] == '0') && (dev[1] =='7'))
+		*num = USB_CLS_PRINTER;
+	else if((dev[0] == '0') && (dev[1] =='8'))
+		*num = USB_CLS_MASS_STORAGE;
+	else if((dev[0] == '0') && (dev[1] =='9'))
+		*num = USB_CLS_HUB;
+	else if((dev[0] == '0') && (dev[1] =='a'))
+		*num = USB_CLS_CDC_DATA;
+	else if((dev[0] == '0') && (dev[1] =='b'))
+		*num = USB_CLS_CSCID;
+	else if((dev[0] == '0') && (dev[1] =='d'))
+		*num = USB_CLS_CONTENT_SEC;
+	else if((dev[0] == '0') && (dev[1] =='e'))
+		*num = USB_CLS_VIDEO;
+	else if((dev[0] == 'e') && (dev[1] =='0'))
+		*num = USB_CLS_WIRELESS_CONTROLLER;
+	else if((dev[0] == 'e') && (dev[1] =='f'))
+		*num = USB_CLS_MISC;
+	else if((dev[0] == 'f') && (dev[1] =='e'))
+		*num = USB_CLS_APP_SPEC;
+	else if((dev[0] == 'f') && (dev[1] =='f'))
+		*num = USB_CLS_VENDOR_SPEC;
+}
+
+int 
+get_dev_info(int *dev_class, char *product_id)	
+{
+	int fd, bus_num = 0;
+	char *skey_1 = "I:*", *skey_2 = "Cls=", *skey_3 = "P:", *skey_4 = "Vendor=", *skey_5 = "ProdID=", *skey_6 = "Rev=", *bp, *tmp_p;
+	char buf[2048], b_class[3], vendor[5], prodid[5], rev[6];
+
+	if((fd=open(usb_dev_file, O_RDONLY)) <= 0)
+	{
+		printf("open usb devices fail\n");
+		return 0;
+	}
+
+	memset(buf, 0, sizeof(buf));
+	if(read(fd, buf, sizeof(buf)) <= 0)
+	{
+		printf("read usb devices fail\n");
+		return 0;
+	}
+
+	bp = buf;
+	while((tmp_p = strstr(bp, skey_3)) != NULL)
+	{
+		bp = tmp_p + 1;
+		++bus_num;
+
+		memset(vendor, 0, sizeof(vendor));
+		memset(prodid, 0, sizeof(prodid));
+		memset(rev, 0, sizeof(rev));
+
+                tmp_p = strstr(bp, skey_4);
+                vendor[0] = *(tmp_p + 7);
+                vendor[1] = *(tmp_p + 8);
+                vendor[2] = *(tmp_p + 9);
+                vendor[3] = *(tmp_p + 10);
+
+                tmp_p = strstr(bp, skey_5);
+                prodid[0] = *(tmp_p + 7);
+                prodid[1] = *(tmp_p + 8);
+                prodid[2] = *(tmp_p + 9);
+                prodid[3] = *(tmp_p + 10);
+
+                tmp_p = strstr(bp, skey_6);
+                rev[0] = *(tmp_p + 4);
+                rev[1] = *(tmp_p + 5);
+                rev[2] = *(tmp_p + 6);
+                rev[3] = *(tmp_p + 7);
+                rev[4] = *(tmp_p + 8);
+
+                sprintf(product_id, "%s/%s/%s", vendor, prodid, rev);
+
+		tmp_p = strstr(bp, skey_2);
+		memset(b_class, 0, sizeof(b_class));
+		b_class[0] = *(tmp_p + 4);
+		b_class[1] = *(tmp_p + 5);
+		set_dev_class(b_class, dev_class);
+	}
+
+	close(fd);
+
+	return 1;
+}
+
+int 
+main(int argc, char *argv[])
+{
+	unsigned int usb_dev_class_num, bus_plugged = 0;
+	char productID[20];
+
+	memset(productID, 0, sizeof(productID));
+	bus_plugged = get_dev_info(&usb_dev_class_num, productID);
+
+	printf("try usb: %x, productID = %s\n", usb_dev_class_num, productID);
+	return 0;
+}

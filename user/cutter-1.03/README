@@ -1,0 +1,67 @@
+CUTTER 1.03 - April 2004
+By Chris Lowth <chris@lowth.com>
+
+"Cutter" is an open source program that allows Linux firewall
+administrators to abort TCP/IP connections routed over the firewall or
+router on which it is run.
+
+Documentation and downloads are available at:
+
+	http://www.lowth.com/cutter
+
+------------------------------------------------------------------------
+IMPORTANT WARNING
+
+Cutter has been designed for use as a administrators tool for Linux
+firewalls. It's use (as is, or modified) for any other purpose is not
+sanctioned by the author. So - do not use this tool as a parachute, or
+to dry your cat, chill meat, answer your phone, drive you car, teach
+your kids to read or attack other people's computer systems or networks.
+
+This software has been designed for "legal" and "appropriate" use
+by network security administrators and the like. It has been written as
+part of a larger Linux firewall project, targetting at controlling traffic
+from peer-to-peer software such as Kazaa, iMesh and others into and out of
+a private network. It is not designed as a tool for malicious use and the
+author in no way sanctions such use.
+
+Users of the software should be aware that it's actions are easily detectable
+using a number of readily available network monitoring tools, and it makes no
+attempt to disguise it's actions. Malicious use of "cutter" could result in a
+jail sentance in a number of countries around the world.
+
+The author is not responsible for the results of using this software. It
+is provided "as is" in the hope that it will be useful, but no garantees
+are made about it's use (see "LICENSE", below).
+
+-------------------------------------------------------------------------
+LICENSE
+
+Cutter 1.03 is released under the terms of GNU GENERAL PUBLIC LICENSE
+Version 2 (June 1991) and comes with all the usual freedom, openness and
+disclaimers associated with that license. Please see the "COPYING" file
+for details.
+
+-------------------------------------------------------------------------
+STATUS
+
+Cutter 1.03 should be considered EXPERIMENTAL. The author is releasing a
+tool that works on the systems he has access to (namely: IPCop and
+RedHat Linux), and he is seeking input on it's use on other systems,
+ideas for improvement, offers of sponsorship - etc.
+
+-------------------------------------------------------------------------
+SUPPORTING THE DEVELOPMENT OF CUTTER AND OTHER TOOLS
+
+The utility is issued free of charge. If you find it useful, please
+consider helping me by using the www.lowth.com website as your gateway
+to Amazon.com and Amazon.co.uk when you buy books, music, computers etc
+from them. This costs you nothing extra - but Amazon pay me a small
+commission on any purchases you make via this route.
+
+Please use the following links to get to the right Amazon site
+
+    * http://www.lowth.com/cutter/us-shop (USA and Canadian purchases)
+    * http://www.lowth.com/cutter/uk-shop (UK and European)
+
+If you are from another location - just choose the one nearest to you.

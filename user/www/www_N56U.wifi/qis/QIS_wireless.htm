@@ -1,0 +1,529 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>     
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta HTTP-EQUIV="Pragma" CONTENT="no-cache">
+<meta HTTP-EQUIV="Expires" CONTENT="-1">
+<link type="text/css" rel="stylesheet" href="/form_style.css">
+<link type="text/css" rel="stylesheet" href="qis_style.css">
+
+<script type="text/javascript" src="/state_5g.js"></script>
+<script type="text/javascript" src="/general.js"></script>
+<script type="text/javascript" src="/alttxt.js"></script>
+<script type="text/javascript">
+function QKWireless_load_body(){
+	load_alttxt_enviroment();
+	parent.document.title = "ASUS Wireless Router <#Web_Title#> - <#QKSet_wireless_webtitle#>";
+	hideLinkTag();
+	flash_button();
+	
+	document.form.wl_ssid.value = decodeURIComponent(document.form.wl_ssid2.value);
+	
+	if(isModel() == "SnapAP" || isCard() == 'ralink')
+		wl_auth_mode_reconf();
+	
+	wl_auth_mode_change(1);
+	
+	//show_prev_button();
+}
+
+function wl_auth_mode_change(isload){
+	var mode = document.form.wl_auth_mode.value;
+	var opts = document.form.wl_auth_mode.options;
+	var new_array;
+	var cur_crypto;
+	var cur_key_index, cur_key_obj;
+	
+	//if(mode == "open" || mode == "shared" || mode == "radius"){ //2009.03 magic
+	if(mode == "open" || mode == "shared"){ //2009.03 magic
+		blocking("all_related_wep", 1);
+		
+		change_wep_type(mode);
+	}
+	else{
+		blocking("all_related_wep", 0);
+	}
+	
+	/* enable/disable crypto algorithm */
+	if(mode == "wpa" || mode == "wpa2" || mode == "psk")
+		$("wl_crypto").style.display = "";
+	else
+		blocking("wl_crypto", 0);
+	
+	/* enable/disable psk passphrase */
+	if(mode == "psk")
+		blocking("wl_wpa_psk", 1);
+	else
+		blocking("wl_wpa_psk", 0);
+	
+	/* update wl_crypto */
+	for(var i = 0; i < document.form.wl_crypto.length; ++i)
+		if(document.form.wl_crypto[i].selected){
+			cur_crypto = document.form.wl_crypto[i].value;
+			break;
+		}
+	
+	/* Reconstruct algorithm array from new crypto algorithms */
+	if(mode == "psk"){
+		/* Save current crypto algorithm */
+		if(isModel() == "SnapAP" || isBand() == 'b')
+			new_array = new Array("TKIP");
+		else{
+			if(opts[opts.selectedIndex].text == "WPA-Personal")
+				new_array = new Array("TKIP");
+			else if(opts[opts.selectedIndex].text == "WPA2-Personal")
+				new_array = new Array("AES");
+			else
+				new_array = new Array("AES", "TKIP+AES");
+		}
+		
+		free_options(document.form.wl_crypto);
+		for(var i in new_array){
+			document.form.wl_crypto[i] = new Option(new_array[i], new_array[i].toLowerCase());
+			document.form.wl_crypto[i].value = new_array[i].toLowerCase();
+			if(new_array[i].toLowerCase() == cur_crypto)
+				document.form.wl_crypto[i].selected = true;
+		}
+	}
+	else if(mode == "wpa"){
+		if(opts[opts.selectedIndex].text == "WPA-Enterprise")
+			new_array = new Array("TKIP");
+		else
+			new_array = new Array("AES", "TKIP+AES");
+		
+		free_options(document.form.wl_crypto);
+		for(var i in new_array){
+			document.form.wl_crypto[i] = new Option(new_array[i], new_array[i].toLowerCase());
+			document.form.wl_crypto[i].value = new_array[i].toLowerCase();
+			if(new_array[i].toLowerCase() == cur_crypto)
+				document.form.wl_crypto[i].selected = true;
+		}
+	}
+	else if(mode == "wpa2"){
+		new_array = new Array("AES");
+		
+		free_options(document.form.wl_crypto);
+		for(var i in new_array){
+			document.form.wl_crypto[i] = new Option(new_array[i], new_array[i].toLowerCase());
+			document.form.wl_crypto[i].value = new_array[i].toLowerCase();
+			if(new_array[i].toLowerCase() == cur_crypto)
+				document.form.wl_crypto[i].selected = true;
+		}
+	}
+	
+	/* Save current network key index */
+	for(var i = 0; i < document.form.wl_key.length; ++i)
+		if(document.form.wl_key[i].selected){
+			cur_key_index = document.form.wl_key[i].value;
+			break;
+		}
+	
+	/* Define new network key indices */
+	if(mode == "psk" || mode == "wpa" || mode == "wpa2" || mode == "radius")
+		new_array = new Array("2", "3");
+	else{
+		new_array = new Array("1", "2", "3", "4");
+		
+		if(!isload)
+			cur_key_index = "1";
+	}
+	
+	/* Reconstruct network key indices array from new network key indices */
+	free_options(document.form.wl_key);
+	for(var i in new_array){
+		document.form.wl_key[i] = new Option(new_array[i], new_array[i]);
+		document.form.wl_key[i].value = new_array[i];
+		if(new_array[i] == cur_key_index)
+			document.form.wl_key[i].selected = true;
+	}
+	
+	wl_wep_change();
+}
+
+function change_wep_type(mode){
+	var cur_wep = document.form.wl_wep_x.value;
+	var wep_type_array;
+	var value_array;
+	
+	free_options(document.form.wl_wep_x);
+	
+	//if(mode == "shared" || mode == "radius"){ //2009.03 magic
+	if(mode == "shared"){ //2009.03 magic
+		wep_type_array = new Array("WEP-64bits", "WEP-128bits");
+		value_array = new Array("1", "2");
+	}
+	else{
+		wep_type_array = new Array("None", "WEP-64bits", "WEP-128bits");
+		value_array = new Array("0", "1", "2");
+	}
+	
+	add_options_x2(document.form.wl_wep_x, wep_type_array, value_array, cur_wep);
+
+	if(mode == "open"){ //Lock modified 20091230;
+		if(document.form.wl_wep_x.value == 0){
+			document.form.wl_wep_x.selectedIndex = 0;
+		}
+	}
+
+	if(mode == "psk" || mode == "wpa" || mode == "wpa2") //2009.03 magic
+	//if(mode == "psk" || mode == "wpa" || mode == "wpa2" || mode == "radius")  //2009.03 magic
+		document.form.wl_wep_x.value = "0";
+	
+	change_wlweptype(document.form.wl_wep_x);
+}
+
+function change_wlweptype(wep_type_obj){
+	var mode = document.form.wl_auth_mode.value; //2009.03 magic
+	if(document.form.wl_gmode.value == 1 && document.form.wl_wep_x.value != 0){
+		nmode_limitation();
+	}
+	
+	wl_wep_change();
+}
+
+function wl_wep_change(){
+	var mode = document.form.wl_auth_mode.value;
+	var wep = document.form.wl_wep_x.value;
+	
+	if(mode == "psk" || mode == "wpa" || mode == "wpa2"){
+		if(mode == "psk"){
+			blocking("wl_crypto", 1);
+			blocking("wl_wpa_psk", 1);
+		}
+		
+		blocking("all_related_wep", 0);
+	}
+	else if(mode == "radius"){//2009.03 magic
+		blocking("wl_crypto", 0); //2009.03 magic
+		blocking("wl_wpa_psk", 0); //2009.03 magic
+		
+	  blocking("all_related_wep", 0); //2009.03 magic	
+	}
+	else{
+		blocking("wl_crypto", 0);
+		blocking("wl_wpa_psk", 0);
+		
+		blocking("all_related_wep", 1);
+		
+		if(wep == "0") //2009.03 magic
+			blocking("all_wep_key", 0);
+		else{
+			blocking("all_wep_key", 1);
+			
+			show_key();
+		}
+	}
+	
+	change_key_des();
+}
+
+function change_key_des(){
+	var objs = getElementsByName_iefix("span", "key_des");
+	var wep_type = document.form.wl_wep_x.value;
+	var str = "";
+	
+	if(wep_type == "1")
+		str = " (<#WLANConfig11b_WEPKey_itemtype1#>)";
+	else if(wep_type == "2")
+		str = " (<#WLANConfig11b_WEPKey_itemtype2#>)";
+	
+	for(var i = 0; i < objs.length; ++i)
+		showtext(objs[i], str);
+}
+
+function change_auth_mode(auth_mode_obj){
+	wl_auth_mode_change(0);
+	
+	if(auth_mode_obj.value == "psk" || auth_mode_obj.value == "wpa"){
+		var opts = document.form.wl_auth_mode.options;
+		
+		if(opts[opts.selectedIndex].text == "WPA-Personal")
+			document.form.wl_wpa_mode.value = "1";
+		else if(opts[opts.selectedIndex].text == "WPA2-Personal")
+			document.form.wl_wpa_mode.value="2";
+		else if(opts[opts.selectedIndex].text == "WPA-Auto-Personal")
+			document.form.wl_wpa_mode.value="0";
+		else if(opts[opts.selectedIndex].text == "WPA-Enterprise")
+			document.form.wl_wpa_mode.value="3";
+		else if(opts[opts.selectedIndex].text == "WPA-Auto-Enterprise")
+			document.form.wl_wpa_mode.value = "4";
+		
+		if(auth_mode_obj.value == "psk"){
+			if(document.form.wl_auth_mode.value != "shared" && document.form.wl_auth_mode.value != "open"){
+				document.form.wl_wpa_psk.focus();
+				document.form.wl_wpa_psk.select();
+			}
+		}
+	}
+	//else if(auth_mode_obj.value == "shared" || auth_mode_obj.value == "radius") //2009.01 magic
+	else if(auth_mode_obj.value == "shared")
+		show_key();
+	else{
+		document.form.wl_wep_x.selectedIndex = 0;
+		show_key();
+		wl_wep_change();
+	}
+	nmode_limitation();			
+	
+}
+
+function show_key(){
+	var wep_type = document.form.wl_wep_x.value;
+	var keyindex = document.form.wl_key.value;
+	var cur_key_obj = eval("document.form.wl_key"+keyindex);
+	var cur_key_length = cur_key_obj.value.length;
+	
+	if(wep_type == 1){
+		if(cur_key_length == 5 || cur_key_length == 10)
+			document.form.wl_asuskey1.value = cur_key_obj.value;
+		else
+			document.form.wl_asuskey1.value = "0000000000";
+	}
+	else if(wep_type == 2){
+		if(cur_key_length == 13 || cur_key_length == 26)
+			document.form.wl_asuskey1.value = cur_key_obj.value;
+		else
+			document.form.wl_asuskey1.value = "00000000000000000000000000";
+	}
+	else
+		document.form.wl_asuskey1.value = "";
+	
+	if(document.form.wl_auth_mode.value != "shared" && document.form.wl_auth_mode.value != "open"){
+		document.form.wl_asuskey1.focus();
+		document.form.wl_asuskey1.select();
+	}
+}
+
+function submitForm(){
+	
+	var auth_mode = document.form.wl_auth_mode.value;
+
+	if(document.form.wl_wpa_psk.value == "Please type Password")
+		document.form.wl_wpa_psk.value = "";
+	
+	if(!validate_string_ssid(document.form.wl_ssid))
+		return false;
+	document.form.wl_ssid2.value = encodeURIComponent(document.form.wl_ssid.value);
+	
+	if(auth_mode == "psk"){
+		if(!validate_psk(document.form.wl_wpa_psk))
+			return false;
+	}
+	else if(auth_mode == "open" || auth_mode == "shared"){ //2009.01 magic
+		if(!validate_wlkey(document.form.wl_asuskey1))
+			return false;
+	}
+	
+	var wep11 = eval('document.form.wl_key'+document.form.wl_key.value);
+	wep11.value = document.form.wl_asuskey1.value;
+	
+	if((auth_mode == "shared" || auth_mode == "wpa" || auth_mode == "wpa2" || auth_mode == "radius")
+			&& document.form.wsc_mode.value == "enabled")
+		document.form.wsc_mode.value = "disabled";
+
+	document.form.wan_nat_x.value = parent.document.QKform.wan_nat_x.value;
+	document.form.wan_route_x.value = parent.document.QKform.wan_route_x.value;
+	
+	parent.showLoading();
+	
+	document.form.target = "";
+	document.form.action_mode.value = " Apply ";
+	document.form.sid_list.value = "WLANConfig11b;LANHostConfig;IPConnection;PPPConnection;Layer3Forwarding;General;";
+	
+	document.form.next_page.value = "/QIS_wizard.htm";
+	document.form.flag.value = "finish";
+	
+	document.form.x_Setting.value = '<% nvram_get_x("General", "x_Setting"); %>';
+	document.form.wsc_config_state.value = "1";
+
+	// cp wl_ssid to rt_ssid
+	document.form.rt_ssid.value = document.form.wl_ssid.value;
+	document.form.rt_wpa_mode.value = document.form.wl_wpa_mode.value;
+	document.form.rt_key1.value = document.form.wl_key1.value;
+	document.form.rt_key2.value = document.form.wl_key2.value;
+	document.form.rt_key3.value = document.form.wl_key3.value;
+	document.form.rt_key4.value = document.form.wl_key4.value;
+	document.form.rt_ssid2.value = document.form.wl_ssid2.value;
+	document.form.rt_key_type.value = document.form.wl_key_type.value;
+	document.form.rt_auth_mode.value = document.form.wl_auth_mode.value;
+	document.form.rt_wep_x.value = document.form.wl_wep_x.value;
+	document.form.rt_key.value = document.form.wl_key.value;
+	document.form.rt_asuskey1.value = document.form.wl_asuskey1.value;
+	document.form.rt_crypto.value = document.form.wl_crypto.value;
+	document.form.rt_wpa_psk.value = document.form.wl_wpa_psk.value;
+
+	if(document.form.wl_auth_mode.value == "wpa"
+			|| document.form.wl_auth_mode.value == "wpa2"
+			|| document.form.wl_auth_mode.value == "radius")
+		document.form.next_page.value = "/Advanced_WSecurity2g_Content.asp";
+	else
+		document.form.next_page.value = "/";
+
+	document.form.sw_mode.value = parent.document.QKform.sw_mode.value;
+	document.form.submit();	
+}
+
+function wireless_go_to(){
+	if(parent.$("flag").value == "wireless")
+		parent.location.href = "/Advanced_Wireless_Content.asp";
+	else if(parent.$("flag").value == "ap_mode")
+		location.href = "QIS_op_mode.htm"
+	else
+		parent.location.href = "/Advanced_OperationMode_Content.asp";
+}
+</script>
+</head>
+
+<body onLoad="QKWireless_load_body();" onunload="no_flash_button();">
+<iframe name="hidden_frame" id="hidden_frame" width="0" height="0" frameborder="0"></iframe>
+<div id="navtxt" class="navtext" style="position:absolute; top:50px; left:-100px; visibility:hidden; font-family:Arial, Verdana"></div>
+
+<form method="post" name="titleForm" id="titleForm" action="/start_apply.htm" target="hidden_frame">
+<input type="hidden" name="current_page" value="">
+<input type="hidden" name="sid_list" value="LANGUAGE;">
+<input type="hidden" name="action_mode" value=" Apply ">
+<input type="hidden" name="preferred_lang" value="">
+<input type="hidden" name="flag" id="flag" value="">
+</form>	
+
+<form method="post" name="form" action="/start_apply2.htm" target="">
+<input type="hidden" name="current_page" value="">
+<input type="hidden" name="next_page" value="/>
+<input type="hidden" name="prev_page" value="/Advanced_OperationMode_Content.asp">
+<input type="hidden" name="flag" value="">
+<input type="hidden" name="x_Setting" value="">
+<input type="hidden" name="wsc_config_state" value="">
+<input type="hidden" name="wan_nat_x" value="">
+<input type="hidden" name="wan_route_x" value="">
+<input type="hidden" name="sid_list" value="WLANConfig11b;">
+<input type="hidden" name="group_id" value="">
+<input type="hidden" name="action_mode" value="">
+<input type="hidden" name="productid" value="<% nvram_get_x("",  "productid"); %>">
+<input type="hidden" name="wsc_mode" value="<% nvram_get_x("WLANConfig11b", "wsc_mode"); %>">
+<input type="hidden" name="sw_mode" value="">
+
+<input type="hidden" name="wl_wpa_mode" value="<% nvram_get_x("WLANConfig11b",  "wl_wpa_mode"); %>">
+<input type="hidden" name="wl_key1" value="<% nvram_get_x("WLANConfig11b", "wl_key1"); %>">
+<input type="hidden" name="wl_key2" value="<% nvram_get_x("WLANConfig11b", "wl_key2"); %>">
+<input type="hidden" name="wl_key3" value="<% nvram_get_x("WLANConfig11b", "wl_key3"); %>">
+<input type="hidden" name="wl_key4" value="<% nvram_get_x("WLANConfig11b", "wl_key4"); %>">
+<input type="hidden" name="wl_gmode" value="<% nvram_get_x("WLANConfig11b","wl_gmode"); %>">
+<input type="hidden" name="wl_ssid2" value="<% nvram_get_x("WLANConfig11b", "wl_ssid2"); %>">
+<input type="hidden" name="wl_key_type" value="<% nvram_get_x("WLANConfig11b","wl_key_type"); %>">
+
+<input type="hidden" name="rt_ssid" value="">
+<input type="hidden" name="rt_wpa_mode" value="">
+<input type="hidden" name="rt_key1" value="">
+<input type="hidden" name="rt_key2" value="">
+<input type="hidden" name="rt_key3" value="">
+<input type="hidden" name="rt_key4" value="">
+<input type="hidden" name="rt_ssid2" value="">
+<input type="hidden" name="rt_key_type" value="">
+<input type="hidden" name="rt_auth_mode" value="">
+<input type="hidden" name="rt_wep_x" value="">
+<input type="hidden" name="rt_key" value="">
+<input type="hidden" name="rt_asuskey1" value="">
+<input type="hidden" name="rt_crypto" value="">
+<input type="hidden" name="rt_wpa_psk" value="">
+<div class="QISmain">
+<div class="description_down"><#QKSet_wireless_webtitle#> - <#QKSet_Wireless_ssid_warning#></div>
+<br/><br/>
+<table class="QISform" width="400" border=0 align="center" cellpadding="5" cellspacing="0">
+   <tr>
+	<th width="180" onmouseout="writetxt(0);" onmouseover="writetxt('<#WLANConfig11b_SSID_itemdesc#>');"><#WLANConfig11b_SSID_itemname#></th>
+	<td class="QISformtd">
+	  <input type="text" name="wl_ssid" onkeypress="return is_string(this);" class="input" maxlength="32" size="34" value="default"/>
+	</td>
+  </tr>
+  
+	<tr>
+		<th width="180"><#WLANConfig11b_AuthenticationMethod_itemname#></th>
+		<td class="QISformtd">
+			<select name="wl_auth_mode" onchange="change_auth_mode(this);" class="input">
+				<option value="open" <% nvram_match_x("WLANConfig11b","wl_auth_mode", "open","selected"); %>>Open System</option>
+				<option value="shared" <% nvram_match_x("WLANConfig11b","wl_auth_mode", "shared","selected"); %>>Shared Key</option>
+				<option value="psk" <% nvram_double_match_x("WLANConfig11b", "wl_auth_mode", "psk", "WLANConfig11b", "wl_wpa_mode", "1", "selected"); %>>WPA-Personal</option>
+				<option value="psk" <% nvram_double_match_x("WLANConfig11b", "wl_auth_mode", "psk", "WLANConfig11b", "wl_wpa_mode", "2", "selected"); %>>WPA2-Personal</option>
+				<option value="psk" <% nvram_double_match_x("WLANConfig11b", "wl_auth_mode", "psk", "WLANConfig11b", "wl_wpa_mode", "0", "selected"); %>>WPA-Auto-Personal</option>
+				<option value="wpa" <% nvram_double_match_x("WLANConfig11b", "wl_auth_mode", "wpa", "WLANConfig11b", "wl_wpa_mode", "3", "selected"); %>>WPA-Enterprise</option>
+				<option value="wpa2" <% nvram_match_x("WLANConfig11b", "wl_auth_mode", "wpa2", "selected"); %>>WPA2-Enterprise</option>
+				<!--option value="wpa" <% nvram_double_match_x("WLANConfig11b", "wl_auth_mode", "wpa", "WLANConfig11b", "wl_wpa_mode", "4", "selected"); %>>WPA-Auto-Enterprise</option-->
+				<option value="radius" <% nvram_match_x("WLANConfig11b","wl_auth_mode", "radius","selected"); %>>Radius with 802.1x</option>
+			</select>
+		</td>
+	</tr>
+</table>
+
+<div id='all_related_wep' style='display:none'>
+<table class="QISform" width="400" border=0 align="center" cellpadding="5" cellspacing="0">
+  <tr>
+	<th width="180"><#WLANConfig11b_WEPType_itemname#></th>
+	<td class="QISformtd">
+	  <select name="wl_wep_x" onchange="change_wlweptype(this);" class="input">
+			<option value="0" <% nvram_match_x("WLANConfig11b", "wl_wep_x", "0", "selected"); %>>None</option>
+			<option value="1" <% nvram_match_x("WLANConfig11b", "wl_wep_x", "1", "selected"); %>>WEP-64bits</option>
+			<option value="2" <% nvram_match_x("WLANConfig11b", "wl_wep_x", "2", "selected"); %>>WEP-128bits</option>
+	  </select>
+	</td>
+  </tr>
+</table>
+
+<div id='all_wep_key' style='display:none;'>
+<table class="QISform" width="400" border=0 align="center" cellpadding="5" cellspacing="0">
+  <tr>
+	<th width="180" onmouseout="writetxt(0);" onmouseover="writetxt('<#WLANConfig11b_WEPDefaultKey_itemdesc#>');"><#WLANConfig11b_WEPDefaultKey_itemname#></th>
+	<td class="QISformtd">
+	  <select name="wl_key" onchange="show_key();" class="input">
+			<option value="1" <% nvram_match_x("WLANConfig11b", "wl_key", "1", "selected"); %>>Key1</option>
+			<option value="2" <% nvram_match_x("WLANConfig11b", "wl_key", "2", "selected"); %>>Key2</option>
+			<option value="3" <% nvram_match_x("WLANConfig11b", "wl_key", "3", "selected"); %>>Key3</option>
+			<option value="4" <% nvram_match_x("WLANConfig11b", "wl_key", "4", "selected"); %>>Key4</option>
+	  </select>
+	</td>
+  </tr>
+  <tr>
+	<th width="180"><#WLANConfig11b_WEPKey_itemname#></th>
+	<td class="QISformtd">
+	  <input type="text" name="wl_asuskey1" value="" onKeyUp="return change_wlkey(this, 'WLANConfig11b');" maxlength="" size="34" class="input">
+	  <br/><span name="key_des" style="color:#FF3300; font-size:9px;"></span>
+	</td>
+  </tr>
+</table>
+</div>
+</div>
+
+<div id='wl_crypto' style='display:none;'>
+<table class="QISform" width="400" border=0 align="center" cellpadding="5" cellspacing="0">
+  <tr>
+	<th width="180"><#WLANConfig11b_WPAType_itemname#></th>
+	<td>
+	  <select name="wl_crypto" onchange="wl_auth_mode_change(0);" class="input">
+			<!--option value="tkip" <% nvram_match_x("WLANConfig11b", "wl_crypto", "tkip", "selected"); %>>TKIP</option-->
+			<option value="aes" <% nvram_match_x("WLANConfig11b", "wl_crypto", "aes", "selected"); %>>AES</option>
+			<option value="tkip+aes" <% nvram_match_x("WLANConfig11b", "wl_crypto", "tkip+aes", "selected"); %>>TKIP+AES</option>
+	  </select>
+	</td>
+  </tr>
+</table>
+</div>
+
+<div id='wl_wpa_psk' style='display:none'>
+<table class="QISform" width="400" border=0 align="center" cellpadding="5" cellspacing="0">
+  <tr>
+	<th width="180" onmouseout="writetxt(0);" onmouseover="writetxt('<#WLANConfig11b_x_PSKKey_itemdesc#>');"><#WLANConfig11b_x_PSKKey_itemname#></th>
+	<td class="QISformtd">
+	  <input type="text" name="wl_wpa_psk" value="<% nvram_get_x("WLANConfig11b", "wl_wpa_psk", ""); %><% nvram_match_x("WLANConfig11b", "wl_wpa_psk", "", "Please type Password"); %>" class="input" maxlength="63" size="34">
+	</td>
+  </tr>
+</table>
+</div>  
+
+</div>
+
+<div class='QISfoot'>
+  <input type='button' id="prevButton" value="<#CTL_prev#>" onclick="wireless_go_to();" class="sbtn">
+<td>&nbsp;</td>
+  <input type='button' value="<#QKSet_finishpre_rebootnow#>" onclick="submitForm();" class="sbtn">
+</div>
+
+</form>
+</body>

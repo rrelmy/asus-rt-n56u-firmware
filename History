@@ -1,0 +1,78 @@
+Ralink AP SDK - History
+
+Version 3.4.1.0
+===============
+
+New Feature:
+
+- [WebUI/NVRAM] add RT3092AP DLS GUI
+- [WebUI] RVT GUI
+
+App update:
+
+- [Reset] adjust Default settings
+- [Script] support GPL wifi driver insert/remove module
+
+Fixed bug:
+
+- [GPIO] Fix bug for GPIO=24~51
+- [GPIOTOOL] add RALINK_GPIO_HAS_5124 for gpio24~gpio51
+- [WebUI] STA site_survey error
+- [WebUI] AP/STA display/Setting bugs
+- [WebUI] WAPI/WPA_Supplicant Certificate upload
+- [BusyBox] Sysklogd - avoid the read-only filesystem
+- [Raether] MTU bug
+- [Raether] Reorder the sequence of ei_close
+- [Script] greenap.sh supports for MBSSID
+- [Compile] sdk will compile goahead before mattrix, so we should modify goahead's Makefile to compile mattrix first
+- [VPN] Multiple PPTP VPN pass through sessions are able to connect successfully for RT2880
+- [NVRAM] rt3052 + i2s enabled => load default button's gpio=43
+
+Version 3.4.0.0
+===============
+
+New Chip Support:
+
+- [SDK] RT3883 support
+- [SDK] RT3662 support
+- [SDK] RT3350 support
+
+New Feature:
+
+- [Linux] Ralink Flow Classifier
+- [Linux] Linux-based Watchdog driver (/dev/watchdog)
+- [WebUI] WPS supplicant support
+- [SDK] More 3G data card support
+- [App] Video Flow Classification Command
+- [App] Firewall-- Portscan, Syn flood  prevention. Snort Support.
+- [App] iTune Server support
+- [App] User space watchdog daemon
+- [App] cURL
+- [App] Expat- C library for parsing XML
+- [App] mpstat
+- [App] user space daemon supported 802.11f protocol
+- [App] net-snmp 5.5
+- [Web] Add WPS GUI for 2nd wireless interface
+- [Web] Add WAPI GUI for 1st wireless interface
+- [Web] Add WPA Supplicant GUI
+- [Web] Add Wizard
+- [Lib] Perl Compatible Regular Expressions
+- [Lib] zlib-1.2.3
+- [Lib] libpcap-1.0
+- [Lib] libncurse-5.7
+
+Peripheral Components:
+
+- [I2S] audio codec WM8750 support for I2S TX/RX
+- [PCM] Multi-SPI for PCM SLIC supported
+
+Fixed bug:
+
+- [PCM] assign next unmask channel every DMA done.
+- [I2S] Change audio codec sampling rate to the nearest frequency settings.
+- [WebUI] 3G PIN, APN, Password, Username, and Dial number support
+- [WebUI] 3G auto-connect mode support
+- [USB] OTG USB driver bug fix
+- [NVRAM] fix commit length threshold
+- [NVRAM] fix memory leak bug
+- [App] IGMP Proxy issues fixed. (see History in user/igmpproxy/src/rt3052.c)

@@ -1,0 +1,54 @@
+=== include ===
+rm -f attr
+ln -s . attr
+=== libmisc ===
+/usr/bin/libtool --mode=compile mipsel-linux-gcc -g -DDEBUG -funsigned-char -Wall -I../include -DVERSION=\"2.4.8\" -DLOCALEDIR=\"/usr/share/locale\" -DPACKAGE=\"attr\" -D_GNU_SOURCE -D_FILE_OFFSET_BITS=64   -D_REENTRANT -fno-strict-aliasing -c quote.c
+mkdir .libs
+mipsel-linux-gcc -g -DDEBUG -funsigned-char -Wall -I../include -DVERSION=\"2.4.8\" -DLOCALEDIR=\"/usr/share/locale\" -DPACKAGE=\"attr\" -D_GNU_SOURCE -D_FILE_OFFSET_BITS=64 -D_REENTRANT -fno-strict-aliasing -c quote.c     -fPIC -DPIC -o .libs/quote.lo
+mipsel-linux-gcc -g -DDEBUG -funsigned-char -Wall -I../include -DVERSION=\"2.4.8\" -DLOCALEDIR=\"/usr/share/locale\" -DPACKAGE=\"attr\" -D_GNU_SOURCE -D_FILE_OFFSET_BITS=64 -D_REENTRANT -fno-strict-aliasing -c quote.c -o quote.o >/dev/null 2>&1
+mv -f .libs/quote.lo quote.lo
+/usr/bin/libtool --mode=compile mipsel-linux-gcc -g -DDEBUG -funsigned-char -Wall -I../include -DVERSION=\"2.4.8\" -DLOCALEDIR=\"/usr/share/locale\" -DPACKAGE=\"attr\" -D_GNU_SOURCE -D_FILE_OFFSET_BITS=64   -D_REENTRANT -fno-strict-aliasing -c unquote.c
+rm -f .libs/unquote.lo
+mipsel-linux-gcc -g -DDEBUG -funsigned-char -Wall -I../include -DVERSION=\"2.4.8\" -DLOCALEDIR=\"/usr/share/locale\" -DPACKAGE=\"attr\" -D_GNU_SOURCE -D_FILE_OFFSET_BITS=64 -D_REENTRANT -fno-strict-aliasing -c unquote.c     -fPIC -DPIC -o .libs/unquote.lo
+mipsel-linux-gcc -g -DDEBUG -funsigned-char -Wall -I../include -DVERSION=\"2.4.8\" -DLOCALEDIR=\"/usr/share/locale\" -DPACKAGE=\"attr\" -D_GNU_SOURCE -D_FILE_OFFSET_BITS=64 -D_REENTRANT -fno-strict-aliasing -c unquote.c -o unquote.o >/dev/null 2>&1
+mv -f .libs/unquote.lo unquote.lo
+/usr/bin/libtool --mode=compile mipsel-linux-gcc -g -DDEBUG -funsigned-char -Wall -I../include -DVERSION=\"2.4.8\" -DLOCALEDIR=\"/usr/share/locale\" -DPACKAGE=\"attr\" -D_GNU_SOURCE -D_FILE_OFFSET_BITS=64   -D_REENTRANT -fno-strict-aliasing -c high_water_alloc.c
+rm -f .libs/high_water_alloc.lo
+mipsel-linux-gcc -g -DDEBUG -funsigned-char -Wall -I../include -DVERSION=\"2.4.8\" -DLOCALEDIR=\"/usr/share/locale\" -DPACKAGE=\"attr\" -D_GNU_SOURCE -D_FILE_OFFSET_BITS=64 -D_REENTRANT -fno-strict-aliasing -c high_water_alloc.c     -fPIC -DPIC -o .libs/high_water_alloc.lo
+mipsel-linux-gcc -g -DDEBUG -funsigned-char -Wall -I../include -DVERSION=\"2.4.8\" -DLOCALEDIR=\"/usr/share/locale\" -DPACKAGE=\"attr\" -D_GNU_SOURCE -D_FILE_OFFSET_BITS=64 -D_REENTRANT -fno-strict-aliasing -c high_water_alloc.c -o high_water_alloc.o >/dev/null 2>&1
+mv -f .libs/high_water_alloc.lo high_water_alloc.lo
+/usr/bin/libtool --mode=link mipsel-linux-gcc  -o libmisc.la  quote.lo unquote.lo high_water_alloc.lo   
+rm -fr .libs/libmisc.la .libs/libmisc.* .libs/libmisc.*
+ar cru .libs/libmisc.al quote.lo unquote.lo high_water_alloc.lo
+ranlib .libs/libmisc.al
+creating libmisc.la
+(cd .libs && rm -f libmisc.la && ln -s ../libmisc.la libmisc.la)
+=== libattr ===
+/usr/bin/libtool --mode=compile mipsel-linux-gcc -g -DDEBUG -funsigned-char -Wall -I../include -DVERSION=\"2.4.8\" -DLOCALEDIR=\"/usr/share/locale\" -DPACKAGE=\"attr\" -D_GNU_SOURCE -D_FILE_OFFSET_BITS=64 -include libattr.h  -D_REENTRANT -fno-strict-aliasing -c libattr.c
+mkdir .libs
+mipsel-linux-gcc -g -DDEBUG -funsigned-char -Wall -I../include -DVERSION=\"2.4.8\" -DLOCALEDIR=\"/usr/share/locale\" -DPACKAGE=\"attr\" -D_GNU_SOURCE -D_FILE_OFFSET_BITS=64 -include libattr.h -D_REENTRANT -fno-strict-aliasing -c libattr.c     -fPIC -DPIC -o .libs/libattr.lo
+mipsel-linux-gcc -g -DDEBUG -funsigned-char -Wall -I../include -DVERSION=\"2.4.8\" -DLOCALEDIR=\"/usr/share/locale\" -DPACKAGE=\"attr\" -D_GNU_SOURCE -D_FILE_OFFSET_BITS=64 -include libattr.h -D_REENTRANT -fno-strict-aliasing -c libattr.c -o libattr.o >/dev/null 2>&1
+mv -f .libs/libattr.lo libattr.lo
+/usr/bin/libtool --mode=compile mipsel-linux-gcc -g -DDEBUG -funsigned-char -Wall -I../include -DVERSION=\"2.4.8\" -DLOCALEDIR=\"/usr/share/locale\" -DPACKAGE=\"attr\" -D_GNU_SOURCE -D_FILE_OFFSET_BITS=64 -include libattr.h  -D_REENTRANT -fno-strict-aliasing -c syscalls.c
+rm -f .libs/syscalls.lo
+mipsel-linux-gcc -g -DDEBUG -funsigned-char -Wall -I../include -DVERSION=\"2.4.8\" -DLOCALEDIR=\"/usr/share/locale\" -DPACKAGE=\"attr\" -D_GNU_SOURCE -D_FILE_OFFSET_BITS=64 -include libattr.h -D_REENTRANT -fno-strict-aliasing -c syscalls.c     -fPIC -DPIC -o .libs/syscalls.lo
+mipsel-linux-gcc -g -DDEBUG -funsigned-char -Wall -I../include -DVERSION=\"2.4.8\" -DLOCALEDIR=\"/usr/share/locale\" -DPACKAGE=\"attr\" -D_GNU_SOURCE -D_FILE_OFFSET_BITS=64 -include libattr.h -D_REENTRANT -fno-strict-aliasing -c syscalls.c -o syscalls.o >/dev/null 2>&1
+mv -f .libs/syscalls.lo syscalls.lo
+/usr/bin/libtool --mode=compile mipsel-linux-gcc -g -DDEBUG -funsigned-char -Wall -I../include -DVERSION=\"2.4.8\" -DLOCALEDIR=\"/usr/share/locale\" -DPACKAGE=\"attr\" -D_GNU_SOURCE -D_FILE_OFFSET_BITS=64 -include libattr.h  -D_REENTRANT -fno-strict-aliasing -c attr_copy_fd.c
+rm -f .libs/attr_copy_fd.lo
+mipsel-linux-gcc -g -DDEBUG -funsigned-char -Wall -I../include -DVERSION=\"2.4.8\" -DLOCALEDIR=\"/usr/share/locale\" -DPACKAGE=\"attr\" -D_GNU_SOURCE -D_FILE_OFFSET_BITS=64 -include libattr.h -D_REENTRANT -fno-strict-aliasing -c attr_copy_fd.c     -fPIC -DPIC -o .libs/attr_copy_fd.lo
+mipsel-linux-gcc -g -DDEBUG -funsigned-char -Wall -I../include -DVERSION=\"2.4.8\" -DLOCALEDIR=\"/usr/share/locale\" -DPACKAGE=\"attr\" -D_GNU_SOURCE -D_FILE_OFFSET_BITS=64 -include libattr.h -D_REENTRANT -fno-strict-aliasing -c attr_copy_fd.c -o attr_copy_fd.o >/dev/null 2>&1
+mv -f .libs/attr_copy_fd.lo attr_copy_fd.lo
+/usr/bin/libtool --mode=compile mipsel-linux-gcc -g -DDEBUG -funsigned-char -Wall -I../include -DVERSION=\"2.4.8\" -DLOCALEDIR=\"/usr/share/locale\" -DPACKAGE=\"attr\" -D_GNU_SOURCE -D_FILE_OFFSET_BITS=64 -include libattr.h  -D_REENTRANT -fno-strict-aliasing -c attr_copy_file.c
+rm -f .libs/attr_copy_file.lo
+mipsel-linux-gcc -g -DDEBUG -funsigned-char -Wall -I../include -DVERSION=\"2.4.8\" -DLOCALEDIR=\"/usr/share/locale\" -DPACKAGE=\"attr\" -D_GNU_SOURCE -D_FILE_OFFSET_BITS=64 -include libattr.h -D_REENTRANT -fno-strict-aliasing -c attr_copy_file.c     -fPIC -DPIC -o .libs/attr_copy_file.lo
+mipsel-linux-gcc -g -DDEBUG -funsigned-char -Wall -I../include -DVERSION=\"2.4.8\" -DLOCALEDIR=\"/usr/share/locale\" -DPACKAGE=\"attr\" -D_GNU_SOURCE -D_FILE_OFFSET_BITS=64 -include libattr.h -D_REENTRANT -fno-strict-aliasing -c attr_copy_file.c -o attr_copy_file.o >/dev/null 2>&1
+mv -f .libs/attr_copy_file.lo attr_copy_file.lo
+/usr/bin/libtool --mode=compile mipsel-linux-gcc -g -DDEBUG -funsigned-char -Wall -I../include -DVERSION=\"2.4.8\" -DLOCALEDIR=\"/usr/share/locale\" -DPACKAGE=\"attr\" -D_GNU_SOURCE -D_FILE_OFFSET_BITS=64 -include libattr.h  -D_REENTRANT -fno-strict-aliasing -c attr_copy_check.c
+rm -f .libs/attr_copy_check.lo
+mipsel-linux-gcc -g -DDEBUG -funsigned-char -Wall -I../include -DVERSION=\"2.4.8\" -DLOCALEDIR=\"/usr/share/locale\" -DPACKAGE=\"attr\" -D_GNU_SOURCE -D_FILE_OFFSET_BITS=64 -include libattr.h -D_REENTRANT -fno-strict-aliasing -c attr_copy_check.c     -fPIC -DPIC -o .libs/attr_copy_check.lo
+mipsel-linux-gcc -g -DDEBUG -funsigned-char -Wall -I../include -DVERSION=\"2.4.8\" -DLOCALEDIR=\"/usr/share/locale\" -DPACKAGE=\"attr\" -D_GNU_SOURCE -D_FILE_OFFSET_BITS=64 -include libattr.h -D_REENTRANT -fno-strict-aliasing -c attr_copy_check.c -o attr_copy_check.o >/dev/null 2>&1
+mv -f .libs/attr_copy_check.lo attr_copy_check.lo
+/usr/bin/libtool --mode=link mipsel-linux-gcc -Wl,--version-script,../exports -rpath /usr/lib -version-info 2:0:1 -o libattr.la  libattr.lo syscalls.lo attr_copy_fd.lo attr_copy_file.lo attr_copy_check.lo   
+rm -fr .libs/libattr.la .libs/libattr.* .libs/libattr.*
+gcc -shared  libattr.lo syscalls.lo attr_copy_fd.lo attr_copy_file.lo attr_copy_check.lo   -Wl,--version-script -Wl,../exports -Wl,-soname -Wl,libattr.so.1 -o .libs/libattr.so.1.1.0
