@@ -1,0 +1,137 @@
+1.0.1.8e - 2012.03.16
+1. improve usb modem support interoperability
+2. add GUI PPPoE+DHCP Connection setting
+3. add GUI DLNA media server forced rescan setting
+4. fix switch control bugs introduced in recent specific ISP support patches
+5. fix effectness of firewall LAN to WAN filter second time range
+
+
+1.0.1.8d - 2012.02.07
+1. fix effectiveness of Hardware NAT
+2. add ISP M1-Fiber support
+3. fix GUI WMM related component setting logic
+
+
+1.0.1.8b - 2012.01.11
+1. replace udhcpd and dproxy with dnsmasq
+2. improve usb modem support interoperability
+3. improve printer support interoperability
+4. speedup udp session timeout process while wan connection disconnected
+5. disable media server forced full rescan feature
+
+
+1.0.1.7f - 2011.11.21
+1. add GUI site survey feature on WDS page
+2. add GUI usb modem pin code code setting
+3. add GUI VPN passthrough page
+4. add GUI automatic LAN DHCP pool range adjustment ot match current netmask
+5. restore GUI wireless authentication WPA-Auto-Enterprise option
+6. support 2TB usb storage 
+7. fix LAN to WAN filter cross midnight issue
+8. fix AiDisk permission and dos attributes issues
+
+
+1.0.1.7c - 2011.09.10
+Support language: English / Traditional Chinese / French / German / Czech / Polish / Russian / Turkish / Thai / Malaysian / Simplified Chinese / Brazil / Dansk / Finsk / Norsk / Svensk
+Fixed bug:
+1. add 3G/4G dongle support
+2. add more ISP IPTV support
+3. add EPSON AcuLaser series printer support
+4. improve media server robustness and interoperability
+5. dns server update
+- seperate sockets for incoming and outgoing requests
+- remove the use of 53 port for outgoing requests
+- handle hostnames with – symbol
+- improve cache lookup speed
+- improve DNS request handling speed
+6. fix WPS radio band switching issue
+7. lots of Web GUI bug fix
+
+
+1.0.1.4o ( for non U.S. and Canada countries ) - 2011.07.25
+Support language: English / Traditional Chinese / French / German / Czech / Polish / Russian / Turkish / Thai / Malaysian / Simplified Chinese / Brazil / Dansk / Finsk / Norsk / Svensk
+Fixed bug:
+01. fix duplicate usb storage share directory
+02. fix ntfs issues
+- fix default nls setting
+- fix wrong file size information
+- fix reboot due to I/O load
+03. improve media server robustness and interoperability
+04. improve vpn passthrough support
+05. fix firewall packet logging function
+06. fix to restart telnet server service without reboot
+07. remove GUI QIS username/password max input length limit
+08. add GUI hostname check
+09. fix GUI ASUS DDNS hostname check
+10. fix WPS logic
+- fix HW PBC to be 2.4G single band
+- SW PIN/PBC still dual band switchable
+- default WPS ssid is randomly generated as RT-N56U_**** format
+- fix GUI uptime display
+11. remove username/password prompt on GUI QIS pages
+12. fix DHCP server issuess
+- add ISP DNS server list to DCHP options to fix ISP interoperability issue
+- restart no reboot now
+13. fix some GUI wording
+14. fix http server security vulnerability due to no authentication for URLs in white list
+
+
+1.0.1.4 - 2011.05.04
+Support language: English / Traditional Chinese / French / German / Czech / Polish / Russian / Turkish / Thai / Malaysian / Simplified Chinese / Brazil / Dansk / Finsk / Norsk / Svensk
+Fixed bug:
+01. Imporve media server robustness.
+02. Update hw nat driver to version 0.9.
+03. Update NTFS kernel module & filesystem check tool.
+04. Add Web GUI languages Brazil, Dansk, Finsk, Norsk and Svensk.
+05. Add Web GUI iTunes server setting option.
+06. Fix Web GUI virtual server default setting for FTP to avoid possible conflict with built-in FTP server.
+07. Fix Web GUI non-ASCII characters handling on QIS pages.
+08. Fix igmpproxy to consider WAN port is PPPoE/PPTP/L2TP.
+09. Fix dproxy to clean cache after successful ddns update.
+10. Imporve usb hotplug handling for storage devices.
+11. Improve WAN link detection and handling.
+12. Fix internal QoS logic.
+
+
+1.0.1.3 - 2011.03.23
+Support language: English / Traditional Chinese / French / German / Czech / Polish / Russian / Turkish / Thai / Malaysian / Simplified Chinese
+
+Fixed bug:
+01. Udpated pppd to version 2.4.5
+02. Imporved media server DLNA support
+03. Fixed iTunes server robustness
+04. Imporved dhcp server support for non-RFC compliant client 
+05. Added UI feature to commit wireless setting without reboot
+06. Fixed UI 5G channel/bandwidth setting logic
+07. Fixed invalid wireless security setting after WPS OOB
+08. Update UI German translation
+09. Fixed UI radius server port validation
+10. Fixed UI WPS page browser IOT issue
+11. Fixed ddns update failure after ddns hostname change
+12. Added virtual server ftp server port setting
+13. Fixed incorrect UI USB application infomation
+
+
+1.0.1.2 - 2011.02.01
+Please use utilities v4.1.4.2 together.
+Support language: English / Traditional Chinese / French / German / Czech / Polish / Russian / Turkish / Thai / Malaysian / Simplified Chinese
+
+Fixed bug:
+- Improved UI Quick Internet Setup 
+- Improved auto channel selection algorithm
+- Modified LLD2 icon
+- Fixed usb led blinking behavior
+- Added switch storm rate control
+- Added UI detailed wireless client info
+- Improved wireless 2.4G stability
+- Improved EZQoS
+- Added STB port option "LAN1 & LAN2"
+- Added hotplug workaround for some usb storage devices
+- Improved media server interoperability
+- Restore UI WDS page under AP mode
+- Disable telnet server by default
+
+
+1.0.0.9 - 2010.12.08
+1. Update 2.4G driver to version 2.4.0.5
+2. Add WDS WPA2-Personal/AES support
