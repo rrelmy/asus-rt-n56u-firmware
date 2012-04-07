@@ -162,14 +162,20 @@ Old markGroup in general.js, change to single page at 2008/04/10
 function markGroup2(o, s, c, b) {	
 	document.form.group_id.value = s;	
 	if(b == " Add "){
-		if (document.form.vts_num_x_0.value >= c)  //vts_num_x_0: number of virtual server
+		if (document.form.vts_num_x_0.value >= c){  //vts_num_x_0: number of virtual server
 			alert("<#JS_itemlimit1#> " + c + " <#JS_itemlimit2#>");
-		else if (document.form.vts_ipaddr_x_0.value==""){
-			alert("\"<#IPConnection_VServerIP_itemname#>\" <#JS_fieldblank#>");					
-			document.form.vts_ipaddr_x_0.focus();
 			return false;
-		}
-		else if (document.form.vts_proto_x_0.value == "OTHER"){
+		}else if (document.form.vts_ipaddr_x_0.value==""){
+			alert("<#JS_fieldblank#>");					
+			document.form.vts_ipaddr_x_0.focus();
+			document.form.vts_ipaddr_x_0.select();
+			return false;
+		}else	if(document.form.vts_port_x_0.value==""){
+			alert("<#JS_fieldblank#>");
+			document.form.vts_port_x_0.focus();
+			document.form.vts_port_x_0.select();		
+			return false;
+		}else if (document.form.vts_proto_x_0.value == "OTHER"){
 			if (!validate_ipaddr(document.form.vts_ipaddr_x_0, "") ||
 					!validate_portrange(document.form.vts_port_x_0, "") ||
 					!validate_range(document.form.vts_protono_x_0, 0, 255)) return false;
@@ -178,63 +184,46 @@ function markGroup2(o, s, c, b) {
 				document.form.vts_protono_x_0.focus();
 				return false;
 			}	
+			
 			document.form.vts_port_x_0.value = "";
-		}
-		else{				
-			if (!validate_ipaddr(document.form.vts_ipaddr_x_0, "") ||
-					!validate_portrange(document.form.vts_port_x_0, "") ||
-					!validate_range_sp(document.form.vts_lport_x_0, 1, 65535)) return false;							
-			else if (document.form.vts_port_x_0.value==""){ 
-				alert("\"<#IPConnection_VServerPort_itemname#>\" <#JS_fieldblank#>");	
-				document.form.vts_port_x_0.focus();
-				return false;
-			}
-			else{
-				for(i=0; i< VSList.length; i++){
-				if(entry_cmp(VSList[i][3].toLowerCase(), document.form.vts_proto_x_0.value.toLowerCase(), 5)==0){
-					if(!(portrange_min(document.form.vts_port_x_0.value, 11) > portrange_max(VSList[i][0], 11) ||
-						portrange_max(document.form.vts_port_x_0.value, 11) < portrange_min(VSList[i][0], 11))){
-						alert('<#JS_duplicate#>');
+		
+		}else{				
+				if (!validate_ipaddr(document.form.vts_ipaddr_x_0, "") ||
+						!validate_portrange(document.form.vts_port_x_0, "") ||
+						!validate_range_sp(document.form.vts_lport_x_0, 1, 65535)) return false;							
+				else if (document.form.vts_port_x_0.value==""){ 
+						alert("<#JS_fieldblank#>");	
+						document.form.vts_port_x_0.focus();
 						return false;
+				}else{
+					for(i=0; i< VSList.length; i++){//Viz modify 2011.10 match(out_port+out_proto) is rejected------Start
+						
+							if(entry_cmp(VSList[i][3].toLowerCase(), document.form.vts_proto_x_0.value.toLowerCase(), 3)==0 
+								|| document.form.vts_proto_x_0.value == 'BOTH'
+								|| VSList[i][3] == 'BOTH'){
+						
+											if(document.form.vts_port_x_0.value == VSList[i][0]){
+													alert('<#JS_duplicate#>');
+													document.form.vts_port_x_0.value =="";
+													document.form.vts_port_x_0.focus();
+													document.form.vts_port_x_0.select();
+													return false;
+											}											
+											if(!(portrange_min(document.form.vts_port_x_0.value, 11) > portrange_max(VSList[i][0], 11) ||	//若proto相同 && 若不是兩種全錯開的CASE
+													portrange_max(document.form.vts_port_x_0.value, 11) < portrange_min(VSList[i][0], 11))){
+													alert('<#JS_duplicate#>');
+													document.form.vts_port_x_0.value =="";
+													document.form.vts_port_x_0.focus();
+													document.form.vts_port_x_0.select();													
+													return false;
+											}																
+							}							
+							//Viz modify 2011.10 match(out_port+out_proto) is rejected------END					
 					}
-					
-					if(entry_cmp(VSList[i][1], document.form.vts_ipaddr_x_0.value.toLowerCase(), 15)==0){
-						if(document.form.vts_lport_x_0.value.length!=0){
-							if(entry_cmp(VSList[i][2], "", 5)==0){
-								if(!(portrange_min(document.form.vts_lport_x_0.value, 5) > portrange_max(VSList[i][0], 11) ||portrange_max(document.form.vts_lport_x_0.value, 5) < portrange_min(VSList[i][0], 11))){
-									alert('<#JS_duplicate#>');
-									return false;
-								}
-							}
-							else{
-								if(portrange_min(document.form.vts_lport_x_0.value,5) == portrange_min(VSList[i][2], 5)){
-									alert('<#JS_duplicate#>');
-									return false;
-								}
-							}
-						}
-						else{
-							if(entry_cmp(VSList[i][2], "", 5)==0){
-								if(!(portrange_min(document.form.vts_port_x_0.value, 11) > portrange_max(VSList[i][0], 11) ||
-									 portrange_max(document.form.vts_port_x_0.value, 11) < portrange_min(VSList[i][0], 11))){
-										alert('<#JS_duplicate#>');
-										return false;
-								}
-							}
-							else{
-								if(!(portrange_min(document.form.vts_port_x_0.value, 11) > portrange_min(VSList[i][2], 5) ||
-									portrange_max(document.form.vts_port_x_0.value, 11) < portrange_min(VSList[i][2], 5))){
-										alert('<#JS_duplicate#>');
-										return false;
-									}
-								}
-							}
-						}
-					}
-				}
-			}				
-			var vts_port_array = new Array();				
-			document.form.vts_protono_x_0.value = "";
+				}				
+				
+				var vts_port_array = new Array();				
+				document.form.vts_protono_x_0.value = "";
 		}
 	}
 	pageChanged = 0;
@@ -374,7 +363,7 @@ function showVSList(){
 	else{
 		for(var i = 0; i < VSList.length; i++){
 		code +='<tr id="row'+i+'">';
-		code +='<td width="">'+ VSList[i][5] +'</td>';			//desp		
+		code +='<td width="130">'+ VSList[i][5] +'</td>';			//desp		
 		code +='<td width="115">'+ VSList[i][0] +'</td>';		//Port  range
 		code +='<td width="125">'+ VSList[i][1] +'</td>';		//local IP
 		code +='<td width="55">'+ VSList[i][2] +'&nbsp;</td>';	//local port
@@ -382,7 +371,7 @@ function showVSList(){
 		code +='<td width="33">'+ VSList[i][4] +'&nbsp;</td>';	//proto no
 		code +='<td width=\"27\"><input type=\"checkbox\" name=\"VSList_s\" value='+ i +' onClick="changeBgColor(this,'+i+');" id=\"check'+ i +'\"></td>';
 		if(i == 0)
-			code +="<td width='80' style='background:#C0DAE4;' rowspan=" + VSList.length + "><input style=\"padding:2px 2px 0px 2px\" class=\"button\" type=\"submit\" onclick=\"markGroup2(this, 'VSList', 16, ' Del ');\" name=\"VSList\" value=\"<#CTL_del#>\"/></td>";
+			code +="<td width='50' style='background:#C0DAE4;' rowspan=" + VSList.length + "><input style=\"padding:2px 2px 0px 2px\" class=\"button\" type=\"submit\" onclick=\"markGroup2(this, 'VSList', 32, ' Del ');\" name=\"VSList\" value=\"<#CTL_del#>\"/></td>";
 		
 	    code +='</tr>';
 		}
@@ -516,7 +505,7 @@ function changeBgColor(obj, num){
 				</select>			</td>
 			<td align="left"><input type="text" class="input" maxlength="3"  size="1" name="vts_protono_x_0" onkeypress="return is_number(this)" /></td>
 			<td align="center" valign="bottom" width="50">			
-				<input class="button" type="submit" onclick="return markGroup2(this, 'VSList', 16, ' Add ');" name="VSList2" value="<#CTL_add#>"/>
+				<input class="button" type="submit" onclick="return markGroup2(this, 'VSList', 32, ' Add ');" name="VSList2" value="<#CTL_add#>"/>
 		  </td></tr>
         </table>
 		<div id="ClientList_Block" class="ClientList_Block"></div>

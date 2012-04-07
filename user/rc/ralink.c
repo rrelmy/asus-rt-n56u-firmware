@@ -352,7 +352,6 @@ FWRITE(char *da, char* str_hex)
 	unsigned char ee[MAX_FRW];
 	unsigned int addr_da;
 	int len;
-	int i;
 
 	addr_da = strtoul(da, NULL, 16);
 	if (addr_da && (len = atoh(str_hex, ee)))
@@ -368,7 +367,6 @@ pincheck(const char *a)
 {
 	unsigned char *c = (char *) a;
 	int i = 0;
-	int v;
 
 	for (;;) {
 		if (*c>0x39 || *c<0x30)
@@ -2560,11 +2558,13 @@ int gen_ralink_config_rt()
 //			if (nvram_match("rt_wpa_mode", "0")) //2008.11 magic
 			if (nvram_match("rt_wpa_mode", "4"))
 			{
+/*
 				if (nvram_match("rt_crypto", "tkip"))
 					fprintf(fp, "AuthMode=%s\n", "WPA");
 				else if (nvram_match("rt_crypto", "aes"))
 					fprintf(fp, "AuthMode=%s\n", "WPA2");
 				else
+*/
 					fprintf(fp, "AuthMode=%s\n", "WPA1WPA2");
 			}
 		//2008.11 magic for new UI{
@@ -3830,8 +3830,6 @@ getSiteSurvey()
 	char data[8192];
 	char ssid_str[256];
 	char header[128];
-	char tmp_wmode[8];
-	char tmp_bsstype[4];
 	struct iwreq wrq;
 	SSA *ssap;
 
@@ -3875,7 +3873,7 @@ getSiteSurvey()
 
 	memset(header, 0, sizeof(header));
 	//sprintf(header, "%-3s%-33s%-18s%-8s%-15s%-9s%-8s%-2s\n", "Ch", "SSID", "BSSID", "Enc", "Auth", "Siganl(%)", "W-Mode", "NT");
-	sprintf(header, "%-3s%-33s%-18s%-9s%-16s%-9s%-8s%-2s%-3s\n", "Ch", "SSID", "BSSID", "Enc", "Auth", "Siganl(%)", "W-Mode", "NT", " CC");
+	sprintf(header, "%-4s%-33s%-18s%-9s%-16s%-9s%-8s\n", "Ch", "SSID", "BSSID", "Enc", "Auth", "Siganl(%)", "W-Mode");
 	dbg("\n%s", header);
 
 	if (wrq.u.data.length > 0)
@@ -3887,32 +3885,128 @@ getSiteSurvey()
 
 		while (*sp && ((len - (sp-op)) >= 0))
 		{
-			ssap->SiteSurvey[i].channel[2] = '\0';
+			ssap->SiteSurvey[i].channel[3] = '\0';
 			ssap->SiteSurvey[i].ssid[32] = '\0';
 			ssap->SiteSurvey[i].bssid[17] = '\0';
 			ssap->SiteSurvey[i].encryption[8] = '\0';
 			ssap->SiteSurvey[i].authmode[15] = '\0';
 			ssap->SiteSurvey[i].signal[8] = '\0';
 			ssap->SiteSurvey[i].wmode[7] = '\0';
-			ssap->SiteSurvey[i].bsstype[2] = '\0';
-			ssap->SiteSurvey[i].centralchannel[2] = '\0';
+//			ssap->SiteSurvey[i].bsstype[2] = '\0';
+//			ssap->SiteSurvey[i].centralchannel[2] = '\0';
 
 			sp+=strlen(header);
 			apCount=++i;
 		}
 
-		for (i=0;i<apCount;i++)
+		for (i = 0; i < apCount; i++)
 		{
-			dbg("%-3s%-33s%-18s%-9s%-16s%-9s%-8s%-2s %-2s\n",
+			dbg("%-4s%-33s%-18s%-9s%-16s%-9s%-8s\n",
 				ssap->SiteSurvey[i].channel,
 				(char*)ssap->SiteSurvey[i].ssid,
 				ssap->SiteSurvey[i].bssid,
 				ssap->SiteSurvey[i].encryption,
 				ssap->SiteSurvey[i].authmode,
 				ssap->SiteSurvey[i].signal,
-				ssap->SiteSurvey[i].wmode,
-				ssap->SiteSurvey[i].bsstype,
-				ssap->SiteSurvey[i].centralchannel
+				ssap->SiteSurvey[i].wmode
+//				ssap->SiteSurvey[i].bsstype,
+//				ssap->SiteSurvey[i].centralchannel
+			);
+		}
+		dbg("\n");
+	}
+
+	return 0;
+}
+
+int
+getSiteSurvey_2G()
+{
+	int retval = 0, i = 0, apCount = 0;
+	char data[8192];
+	char ssid_str[256];
+	char header[128];
+	struct iwreq wrq;
+	SSA *ssap;
+
+	memset(data, 0x00, 255);
+	strcpy(data, "SiteSurvey=1"); 
+	wrq.u.data.length = strlen(data)+1; 
+	wrq.u.data.pointer = data; 
+	wrq.u.data.flags = 0; 
+
+	spinlock_lock(SPINLOCK_SiteSurvey);
+	if (wl_ioctl(WIF2G, RTPRIV_IOCTL_SET, &wrq) < 0)
+	{
+		spinlock_unlock(0);
+
+		dbg("Site Survey fails\n");
+		return 0;
+	}
+	spinlock_unlock(SPINLOCK_SiteSurvey);
+
+	dbg("Please wait");
+	sleep(1);
+	dbg(".");
+	sleep(1);
+	dbg(".");
+	sleep(1);
+	dbg(".");
+	sleep(1);
+	dbg(".\n\n");
+
+	memset(data, 0, 8192);
+	strcpy(data, "");
+	wrq.u.data.length = 8192;
+	wrq.u.data.pointer = data;
+	wrq.u.data.flags = 0;
+
+	if (wl_ioctl(WIF2G, RTPRIV_IOCTL_GSITESURVEY, &wrq) < 0)
+	{
+		dbg("errors in getting site survey result\n");
+		return 0;
+	}
+
+	memset(header, 0, sizeof(header));
+	//sprintf(header, "%-3s%-33s%-18s%-8s%-15s%-9s%-8s%-2s\n", "Ch", "SSID", "BSSID", "Enc", "Auth", "Siganl(%)", "W-Mode", "NT");
+	sprintf(header, "%-4s%-33s%-18s%-9s%-16s%-9s%-8s\n", "Ch", "SSID", "BSSID", "Enc", "Auth", "Siganl(%)", "W-Mode");
+	dbg("\n%s", header);
+
+	if (wrq.u.data.length > 0)
+	{
+		ssap=(SSA *)(wrq.u.data.pointer+strlen(header)+1);
+		int len = strlen(wrq.u.data.pointer+strlen(header))-1;
+		char *sp, *op;
+ 		op = sp = wrq.u.data.pointer+strlen(header)+1;
+
+		while (*sp && ((len - (sp-op)) >= 0))
+		{
+			ssap->SiteSurvey[i].channel[3] = '\0';
+			ssap->SiteSurvey[i].ssid[32] = '\0';
+			ssap->SiteSurvey[i].bssid[17] = '\0';
+			ssap->SiteSurvey[i].encryption[8] = '\0';
+			ssap->SiteSurvey[i].authmode[15] = '\0';
+			ssap->SiteSurvey[i].signal[8] = '\0';
+			ssap->SiteSurvey[i].wmode[7] = '\0';
+//			ssap->SiteSurvey[i].bsstype[2] = '\0';
+//			ssap->SiteSurvey[i].centralchannel[2] = '\0';
+
+			sp+=strlen(header);
+			apCount=++i;
+		}
+
+		for (i = 0; i < apCount; i++)
+		{
+			dbg("%-4s%-33s%-18s%-9s%-16s%-9s%-8s\n",
+				ssap->SiteSurvey[i].channel,
+				(char*)ssap->SiteSurvey[i].ssid,
+				ssap->SiteSurvey[i].bssid,
+				ssap->SiteSurvey[i].encryption,
+				ssap->SiteSurvey[i].authmode,
+				ssap->SiteSurvey[i].signal,
+				ssap->SiteSurvey[i].wmode
+//				ssap->SiteSurvey[i].bsstype,
+//				ssap->SiteSurvey[i].centralchannel
 			);
 		}
 		dbg("\n");

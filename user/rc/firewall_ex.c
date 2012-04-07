@@ -471,14 +471,15 @@ void timematch_conv(char *mstr, char *nv_date, char *nv_time)
 	char *time, *date;
 	int i, head;
 
-	date = nvram_safe_get(nv_date);
-	time = nvram_safe_get(nv_time);
+	date = nvram_get(nv_date);
+	time = nvram_get(nv_time);
 
-	if (strlen(date)!=7||strlen(time)!=8) goto no_match;
+	if ((!date) || strlen(date) != 7 || !strcmp(date, "0000000") || !time || strlen(time) != 8)
+		goto no_match;
 
-	if (strncmp(date, "1111111", 7)==0 &&
-	    strncmp(time, "00002359", 8)==0) goto no_match;
-	
+	if (strncmp(date, "1111111", 7) == 0 &&
+	    strncmp(time, "00002359", 8) == 0) goto no_match;
+
 	i=0;
 	strncpy(timestart, time, 2);
 	i+=2;
@@ -1430,6 +1431,68 @@ err:
 #endif
 
 int
+valid_l2w_filter_time()
+{
+	char *url_time1 = nvram_get("filter_lw_time_x");
+	char *url_time2 = nvram_get("filter_lw_time_x_1");
+	char starttime1[5], endtime1[5];
+	char starttime2[5], endtime2[5];
+
+	memset(starttime1, 0, 5);
+	memset(endtime1, 0, 5);
+	memset(starttime2, 0, 5);
+	memset(endtime2, 0, 5);
+
+	if (!nvram_match("fw_lw_enable_x", "1") && !nvram_match("fw_lw_enable_x_1", "1"))
+		return 0;
+
+	if (nvram_match("fw_lw_enable_x", "1"))
+	{
+		if ((!url_time1) || strlen(url_time1) != 8)
+			goto err;
+
+		strncpy(starttime1, url_time1, 4);
+		strncpy(endtime1, url_time1 + 4, 4);
+		printf("LAN to WAN filter starttime1: %s\n", starttime1);
+		printf("LAN to WAN filter endtime1: %s\n", endtime1);
+
+		if (atoi(starttime1) >= atoi(endtime1))
+			goto err;
+	}
+
+	if (nvram_match("fw_lw_enable_x_1", "1"))
+	{
+		if ((!url_time2) || strlen(url_time2) != 8)
+			goto err;
+
+		strncpy(starttime2, url_time2, 4);
+		strncpy(endtime2, url_time2 + 4, 4);
+		printf("LAN to WAN filter starttime2: %s\n", starttime2);
+		printf("LAN to WAN filter endtime2: %s\n", endtime2);
+
+		if (atoi(starttime2) >= atoi(endtime2))
+			goto err;
+	}
+
+	if (nvram_match("fw_lw_enable_x", "1") && nvram_match("fw_lw_enable_x_1", "1"))
+	{
+		if ((atoi(starttime1) > atoi(starttime2)) && 
+			((atoi(starttime2) > atoi(endtime1)) || (atoi(endtime2) > atoi(endtime1))))
+			goto err;
+
+		if ((atoi(starttime2) > atoi(starttime1)) && 
+			((atoi(starttime1) > atoi(endtime2)) || (atoi(endtime1) > atoi(endtime2))))
+			goto err;
+	}
+
+	return 1;
+
+err:
+	printf("invalid LAN to WAN filter time setting!\n");
+	return 0;
+}
+
+int
 filter_setting(char *wan_if, char *wan_ip, char *lan_if, char *lan_ip, char *logaccept, char *logdrop)
 {
 	FILE *fp;	// oleg patch
@@ -1657,7 +1720,7 @@ filter_setting(char *wan_if, char *wan_ip, char *lan_if, char *lan_ip, char *log
 */
 		}
 #endif
-		if (!nvram_match("usb_ftpenable_x", "0"))
+		if (!nvram_match("enable_ftp", "0"))
 		{	
 			//fprintf(fp, "-A INPUT -p tcp -m tcp -d %s --dport %s -j %s\n", wan_ip, nvram_safe_get("usb_ftpport_x"), logaccept);
 			fprintf(fp, "-A INPUT -p tcp -m tcp --dport %s -j %s\n", nvram_safe_get("usb_ftpport_x"), logaccept);	// oleg patch
@@ -1802,20 +1865,25 @@ filter_setting(char *wan_if, char *wan_ip, char *lan_if, char *lan_ip, char *log
 	if (nvram_match("macfilter_enable_x", "1"))
 		strcpy(chain, "MACS");
 	else strcpy(chain, "FORWARD");
-		
+
+#if 1
+	if (valid_l2w_filter_time())
+#else
 	if (nvram_match("fw_lw_enable_x", "1"))
+#endif
 	{		
-		char lanwan_timematch[128];
+		char lanwan_timematch[128], lanwan_timematch_1[128];
 		char ptr[32], *icmplist;
 		char *ftype, *dtype;
 
 		timematch_conv(lanwan_timematch, "filter_lw_date_x", "filter_lw_time_x");
- 
+#if 1
+		timematch_conv(lanwan_timematch_1, "filter_lw_date_x", "filter_lw_time_x_1");
+#endif
 		if (nvram_match("filter_lw_default_x", "DROP"))
 		{
 			dtype = logdrop;
 			ftype = logaccept;
-
 		}
 		else
 		{
@@ -1840,13 +1908,28 @@ filter_setting(char *wan_if, char *wan_ip, char *lan_if, char *lan_ip, char *log
 			//if (strcmp(wan_if, "eth3") != 0)	// 0808 ham, it will cause pptp fail
 	 		//fprintf(fp, "-A %s %s -i %s -o eth3 %s -j %s\n", chain, lanwan_timematch, lan_if, setting, ftype);
 		}
-
+#if 1
+		if (nvram_match("fw_lw_enable_x_1", "1"))
+		foreach_x("filter_lw_num_x")
+		{
+			proto = protoflag_conv("filter_lw_proto_x", i, 0);
+			flag = protoflag_conv("filter_lw_proto_x", i, 1);
+			srcip = iprange_ex_conv("filter_lw_srcip_x", i);
+			printf("\ncheck srcip = %s\n", srcip);	// tmp test
+			srcport = portrange_conv("filter_lw_srcport_x", i);
+			dstip = iprange_ex_conv("filter_lw_dstip_x", i);
+			dstport = portrange_conv("filter_lw_dstport_x", i);	
+			setting=filter_conv(proto, flag, srcip, srcport, dstip, dstport); 
+			fprintf(fp, "-A %s %s -i %s -o %s %s -j %s\n", chain, lanwan_timematch_1, lan_if, wan_if, setting, ftype);
+		}
+#endif
 		// ICMP	
 		foreach(ptr, nvram_safe_get("filter_lw_icmp_x"), icmplist)
-		{
 			fprintf(fp, "-A %s %s -i %s -o %s -p icmp --icmp-type %s -j %s\n", chain, lanwan_timematch, lan_if, wan_if, ptr, ftype);
-		}	
-
+#if 1
+		if (nvram_match("fw_lw_enable_x_1", "1"))
+			fprintf(fp, "-A %s %s -i %s -o %s -p icmp --icmp-type %s -j %s\n", chain, lanwan_timematch_1, lan_if, wan_if, ptr, ftype);
+#endif
 		// Default
 		fprintf(fp, "-A %s -i %s -o %s -j %s\n", chain, lan_if, wan_if, dtype);
 	} 
@@ -1918,7 +2001,6 @@ filter_setting(char *wan_if, char *wan_ip, char *lan_if, char *lan_ip, char *log
 		// Default
 		// fprintf(fp, "-A FORWARD -i %s -o %s -j %s\n", wan_if, lan_if, dtype);
 	}
-
 
 	/* Write forward chain rules of NAT */
 	//if ((fp1 = fopen("/tmp/nat_forward_rules", "r"))!=NULL)

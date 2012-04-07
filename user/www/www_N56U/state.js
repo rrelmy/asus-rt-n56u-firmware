@@ -606,7 +606,7 @@ function show_banner(L3){// L3 = The third Level of Menu
 var tabtitle = new Array(7);
 tabtitle[0] = new Array("", "<#menu5_1_1#>", "<#menu5_1_2#>", "<#menu5_1_3#>", "<#menu5_1_4#>", "<#menu5_1_5#>", "<#menu5_1_6#>");
 tabtitle[1] = new Array("", "<#menu5_2_1#>", "<#menu5_2_2#>", "<#menu5_2_3#>");
-tabtitle[2] = new Array("", "<#menu5_3_1#>", "<#menu5_3_2#>", "<#menu5_3_3#>", "<#menu5_3_4#>", "<#menu5_3_5#>", "<#menu5_3_6#>");
+tabtitle[2] = new Array("", "<#menu5_3_1#>", "<#menu5_3_2#>", "<#menu5_3_3#>", "<#menu5_3_4#>", "<#menu5_3_5#>", "<#menu5_3_6#>", "<#NAT_passthrough_itemname#>");
 tabtitle[3] = new Array("", "<#menu5_4_1#>", "<#menu5_4_2#>", "<#menu5_4_3#>", "<#OP_Modem#>");
 tabtitle[4] = new Array("", "<#menu5_5_1#>", "<#menu5_5_2#>", "<#menu5_5_5#>", "<#menu5_5_3#>", "<#menu5_5_4#>");
 tabtitle[5] = new Array("", "<#menu5_6_1#>", "<#menu5_6_2#>", "<#menu5_6_3#>", "<#menu5_6_4#>");
@@ -617,7 +617,7 @@ tabtitle[7] = new Array("", "EZQoS", "Traffic Monitor");
 var tablink = new Array(7);
 tablink[0] = new Array("", "Advanced_Wireless2g_Content.asp", "Advanced_WWPS2g_Content.asp", "Advanced_WMode2g_Content.asp", "Advanced_ACL2g_Content.asp", "Advanced_WSecurity2g_Content.asp", "Advanced_WAdvanced2g_Content.asp");
 tablink[1] = new Array("", "Advanced_LAN_Content.asp", "Advanced_DHCP_Content.asp", "Advanced_GWStaticRoute_Content.asp");
-tablink[2] = new Array("", "Advanced_WAN_Content.asp", "Advanced_QOSUserSpec_Content.asp", "Advanced_PortTrigger_Content.asp", "Advanced_VirtualServer_Content.asp", "Advanced_Exposed_Content.asp", "Advanced_ASUSDDNS_Content.asp");
+tablink[2] = new Array("", "Advanced_WAN_Content.asp", "Advanced_QOSUserSpec_Content.asp", "Advanced_PortTrigger_Content.asp", "Advanced_VirtualServer_Content.asp", "Advanced_Exposed_Content.asp", "Advanced_ASUSDDNS_Content.asp", "Advanced_NATPassThrough_Content.asp");
 tablink[3] = new Array("", "Advanced_AiDisk_samba.asp", "Advanced_AiDisk_ftp.asp", "Advanced_AiDisk_others.asp", "Advanced_Modem_others.asp");
 tablink[4] = new Array("", "Advanced_BasicFirewall_Content.asp", "Advanced_URLFilter_Content.asp", "Advanced_KeywordFilter_Content.asp", "Advanced_MACFilter_Content.asp", "Advanced_Firewall_Content.asp");
 tablink[5] = new Array("", "Advanced_OperationMode_Content.asp", "Advanced_System_Content.asp", "Advanced_FirmwareUpgrade_Content.asp", "Advanced_SettingBackup_Content.asp");
@@ -640,8 +640,10 @@ function show_menu(L1, L2, L3){
 	//tablink[3].splice(4,1);//HSDPA
 	
 	if(sw_mode == '4'){
+		tablink[2].splice(7,1);
+		tabtitle[2].splice(7,1);			
 		tablink[2].splice(3,3);
-		tabtitle[2].splice(3,3);
+		tabtitle[2].splice(3,3);	
 	}
 	if(sw_mode == '2' || sw_mode == '3'){
 
@@ -662,8 +664,8 @@ function show_menu(L1, L2, L3){
 		}
 
 		tabtitle[1].splice(2,2);//LAN
-		tabtitle[2].splice(1,6);//WAN
-		tabtitle[3].splice(4,1);//WAN
+		tabtitle[2].splice(1,7);//WAN
+		tabtitle[3].splice(4,1);//USB
 		tabtitle[4].splice(1,5);//firewall
 		tabtitle[6].splice(2,1);//log
 		tabtitle[6].splice(3,2);//log
@@ -821,8 +823,8 @@ function show_top_status(){
 	//Viz modify for "1.0.1.4j" showtext($("firmver"), document.form.firmver.value);
 	showtext($("firmver"), '<% nvram_get_x("",  "firmver_sub"); %>');
 		
-	if(sw_mode == "1")  // Show operation mode in banner, Lock add at 2009/02/19
-		$("sw_mode_span").innerHTML = "IP Sharing";
+	if(sw_mode == "1")  // Show operation mode in banner, Viz 2011.11
+		$("sw_mode_span").innerHTML = "Router";
 	else if(sw_mode == "3")
 		$("sw_mode_span").innerHTML = "AP";	
 	else

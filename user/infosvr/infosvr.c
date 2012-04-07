@@ -66,7 +66,7 @@ void load_sysparam(void)
 //	char macdigit[3];
 
 	strncpy(ssid_g, nvram_safe_get("rt_ssid"), sizeof(ssid_g));
-	strncpy(netmask_g, nvram_safe_get("lan_netmask"), sizeof(netmask_g));
+	strncpy(netmask_g, nvram_safe_get("lan_netmask_t"), sizeof(netmask_g));
 	strncpy(productid_g, nvram_safe_get("productid"), sizeof(productid_g));
 	strncpy(firmver_g, nvram_safe_get("firmver"), sizeof(firmver_g));
 

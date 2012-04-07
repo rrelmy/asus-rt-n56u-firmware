@@ -104,7 +104,7 @@ typedef struct _RT_802_11_MAC_TABLE_2G {
 
 typedef struct _SITE_SURVEY 
 { 
-	char channel[3];
+	char channel[4];
 //	unsigned char channel;
 //	unsigned char centralchannel;
 //	unsigned char unused;
@@ -114,8 +114,8 @@ typedef struct _SITE_SURVEY
 	char authmode[16];
 	char signal[9];
 	char wmode[8];
-	char bsstype[3];
-	char centralchannel[3];
+//	char bsstype[3];
+//	char centralchannel[3];
 } SITE_SURVEY;
 
 typedef struct _SITE_SURVEY_ARRAY

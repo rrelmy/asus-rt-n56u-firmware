@@ -102,7 +102,7 @@ else
 		if [ $mounted == "0" ]; then			# try ext2/ext3
 			echo "mount try 2 fail"
 			echo "mount try 2 fail" >> /tmp/auto01
-			mount "/dev/$1" "/media/$2"
+			mount -o user_xattr "/dev/$1" "/media/$2"
 
 			# failed to mount, clean up mountpoint
 			mounted=`mount | grep $1 | wc -l`

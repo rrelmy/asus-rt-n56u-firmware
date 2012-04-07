@@ -119,6 +119,7 @@ romfs:
 	cd $(INSTALLDIR)/sbin && ln -sf rc wps_stop
 	cd $(INSTALLDIR)/sbin && ln -sf rc pspfix
 	cd $(INSTALLDIR)/sbin && ln -sf rc getSiteSurvey
+	cd $(INSTALLDIR)/sbin && ln -sf rc getSiteSurvey_2g
 	cd $(INSTALLDIR)/sbin && ln -sf rc getBSSID
 	cd $(INSTALLDIR)/sbin && ln -sf rc restart_dns
 	cd $(INSTALLDIR)/sbin && ln -sf rc restart_dhcpd

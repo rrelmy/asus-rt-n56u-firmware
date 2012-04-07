@@ -30,7 +30,8 @@ function initial(){
 	show_footer();
 	
 	enable_auto_hint(10, 5);
-
+	enable_lw();
+	enable_lw_1();
 	load_body();
 }
 
@@ -51,18 +52,9 @@ function applyRule(){
 var LWFilterList = [<% get_nvram_list("FirewallConfig", "LWFilterList"); %>];
 
 function validForm(){
-	if(!validate_timerange(document.form.filter_lw_time_x_starthour, 0)
-			|| !validate_timerange(document.form.filter_lw_time_x_startmin, 1)
-			|| !validate_timerange(document.form.filter_lw_time_x_endhour, 2)
-			|| !validate_timerange(document.form.filter_lw_time_x_endmin, 3)
-			)
-		return false;
 	
-	if(!validate_portlist(document.form.filter_lw_icmp_x, 'filter_lw_icmp_x'))
-		return false;
-
-	//alert(document.form.fw_lw_enable_x[0].checked+","+document.form.fw_lw_enable_x[1].checked+","+document.form.filter_lw_date_x_Sun.checked+","+document.form.filter_lw_date_x_Mon.checked+","+document.form.filter_lw_date_x_Tue.checked+","+document.form.filter_lw_date_x_Wed.checked+","+document.form.filter_lw_date_x_Thu.checked+","+document.form.filter_lw_date_x_Fri.checked+","+document.form.filter_lw_date_x_Sat.checked);
-	if((document.form.fw_lw_enable_x[0].checked ==true) 
+	
+	if((document.form.fw_lw_enable_x[0].checked ==true || document.form.fw_lw_enable_x_1[0].checked ==true ) 
 		&& (document.form.filter_lw_date_x_Sun.checked ==false)
 		&& (document.form.filter_lw_date_x_Mon.checked ==false)
 		&& (document.form.filter_lw_date_x_Tue.checked ==false)
@@ -74,28 +66,78 @@ function validForm(){
 			document.form.fw_lw_enable_x[0].checked=false;
 			document.form.fw_lw_enable_x[1].checked=true;
 			return false;			
+	}	
+	
+if(document.form.fw_lw_enable_x[0].checked == 1){	
+	if(!validate_timerange(document.form.filter_lw_time_x_starthour, 0)
+			|| !validate_timerange(document.form.filter_lw_time_x_startmin, 1)
+			|| !validate_timerange(document.form.filter_lw_time_x_endhour, 2)
+			|| !validate_timerange(document.form.filter_lw_time_x_endmin, 3)
+			){	return false; }
+
+	var starttime = eval(document.form.filter_lw_time_x_starthour.value + document.form.filter_lw_time_x_startmin.value);
+	var endtime = eval(document.form.filter_lw_time_x_endhour.value + document.form.filter_lw_time_x_endmin.value);
+	
+	if(starttime > endtime){
+		alert("<#FirewallConfig_URLActiveTime_itemhint#>");
+		document.form.filter_lw_time_x_startmin.value="00";
+		document.form.filter_lw_time_x_starthour.value="00";
+		return false;  
+	}else if(starttime == endtime){
+		alert("<#FirewallConfig_URLActiveTime_itemhint2#>");
+		document.form.filter_lw_time_x_startmin.value="00";
+		document.form.filter_lw_time_x_starthour.value="00";		
+		return false;  
+	}	
+			
+}
+
+if(document.form.fw_lw_enable_x_1[0].checked == 1){	
+	if(!validate_timerange(document.form.filter_lw_time_x_1_starthour, 0)
+			|| !validate_timerange(document.form.filter_lw_time_x_1_startmin, 1)
+			|| !validate_timerange(document.form.filter_lw_time_x_1_endhour, 2)
+			|| !validate_timerange(document.form.filter_lw_time_x_1_endmin, 3)
+			){	return false; }
+
+	var starttime_1 = eval(document.form.filter_lw_time_x_1_starthour.value + document.form.filter_lw_time_x_1_startmin.value);
+	var endtime_1 = eval(document.form.filter_lw_time_x_1_endhour.value + document.form.filter_lw_time_x_1_endmin.value);
+	
+	if(starttime_1 > endtime_1){
+		alert("<#FirewallConfig_URLActiveTime_itemhint#>");
+		document.form.filter_lw_time_x_1_startmin.value="00";
+		document.form.filter_lw_time_x_1_starthour.value="00";
+		return false;  
+	}else	if(starttime_1 == endtime_1){
+		alert("<#FirewallConfig_URLActiveTime_itemhint2#>");
+		document.form.filter_lw_time_x_1_startmin.value="00";
+		document.form.filter_lw_time_x_1_starthour.value="00";		
+		return false;  
+	}	
+			
+}
+
+if(document.form.fw_lw_enable_x[0].checked == 1 && document.form.fw_lw_enable_x_1[0].checked == 1){
+	if(starttime < starttime_1){
+		if(!(endtime < starttime_1)){
+			alert("<#FirewallConfig_URLActiveTime_itemhint4#>");
+			return false; 
+		}
+	}else if(starttime_1 < starttime){
+		if(!(endtime_1 < starttime)){
+			alert("<#FirewallConfig_URLActiveTime_itemhint4#>");
+			return false; 
+		}
+	}else if(starttime == starttime_1){
+		alert("<#FirewallConfig_URLActiveTime_itemhint4#>");
+		return false; 		
 	}
 
+}
 
-		
-	if(document.form.filter_lw_time_x_starthour.value > document.form.filter_lw_time_x_endhour.value){	
-		if(!confirm("<#FirewallConfig_URLActiveTime_itemhint#>")){
-			return false;
-		}
-	}
-	else if(document.form.filter_lw_time_x_starthour.value == document.form.filter_lw_time_x_endhour.value){		
-		if(document.form.filter_lw_time_x_startmin.value > document.form.filter_lw_time_x_endmin.value){
-			if(!confirm("<#FirewallConfig_URLActiveTime_itemhint#>")){
-				return false;
-			}
-		}
-		else if(document.form.filter_lw_time_x_startmin.value == document.form.filter_lw_time_x_endmin.value){
-			alert("<#FirewallConfig_URLActiveTime_itemhint2#>");
-			document.form.filter_lw_time_x_startmin.focus();
-			document.form.filter_lw_time_x_startmin.select;
-			return false;
-		}
-	}		
+	
+	if(!validate_portlist(document.form.filter_lw_icmp_x, 'filter_lw_icmp_x'))
+		return false;
+
 	
 	return true;
 }
@@ -128,6 +170,22 @@ function change_wizard(o, id){
 		}
 	}
 }
+
+function enable_lw(){
+	if(document.form.fw_lw_enable_x[1].checked == 1)
+		$("lw_time").style.display = "none";
+	else 
+		$("lw_time").style.display = "";	
+	return change_common_radio(this, 'FirewallConfig', 'lw_enable_x', '1')
+}
+
+function enable_lw_1(){
+	if(document.form.fw_lw_enable_x_1[1].checked == 1)
+		$("lw_time_1").style.display = "none";
+	else 
+		$("lw_time_1").style.display = "";	
+	return change_common_radio(this, 'FirewallConfig', 'lw_enable_x_1', '1')
+}
 </script>
 </head>
 
@@ -155,6 +213,7 @@ function change_wizard(o, id){
 
 <input type="hidden" name="filter_lw_date_x" value="<% nvram_get_x("FirewallConfig","filter_lw_date_x"); %>">
 <input type="hidden" name="filter_lw_time_x" value="<% nvram_get_x("FirewallConfig","filter_lw_time_x"); %>">
+<input type="hidden" name="filter_lw_time_x_1" value="<% nvram_get_x("FirewallConfig","filter_lw_time_x_1"); %>">
 <input type="hidden" name="filter_lw_num_x_0" value="<% nvram_get_x("FirewallConfig", "filter_lw_num_x"); %>" readonly="1">
 
 <table class="content" align="center" cellpadding="0" cellspacing="0">
@@ -194,13 +253,7 @@ function change_wizard(o, id){
             <td colspan="6" id="LWFilterList"><#menu5_5_4#></td>
           </tr>
         </thead>
-        <tr>
-          <th width="50%"><a class="hintstyle" href="javascript:void(0);" onClick="openHint(10,5);"><#FirewallConfig_LanWanFirewallEnable_itemname#></a></th>
-          <td>
-						<input type="radio" value="1" name="fw_lw_enable_x" onClick="return change_common_radio(this, 'FirewallConfig', 'fw_lw_enable_x', '1')" <% nvram_match_x("FirewallConfig","fw_lw_enable_x", "1", "checked"); %>><#checkbox_Yes#>
-						<input type="radio" value="0" name="fw_lw_enable_x" onClick="return change_common_radio(this, 'FirewallConfig', 'fw_lw_enable_x', '0')" <% nvram_match_x("FirewallConfig","fw_lw_enable_x", "0", "checked"); %>><#checkbox_No#>
-	  </td>
-        </tr>
+        
         <tr>
           <th><a class="hintstyle" href="javascript:void(0);" onClick="openHint(10,3);"><#FirewallConfig_LanWanDefaultAct_itemname#></a></th>
           <td>
@@ -208,8 +261,62 @@ function change_wizard(o, id){
           		<option value="DROP" <% nvram_match_x("FirewallConfig","filter_lw_default_x", "DROP","selected"); %>><#WhiteList#></option>
           		<option value="ACCEPT" <% nvram_match_x("FirewallConfig","filter_lw_default_x", "ACCEPT","selected"); %>><#BlackList#></option>
           	</select>
-	  </td>
+	  			</td>
+        </tr>                
+        <tr>
+          <th width="30%"><a class="hintstyle" href="javascript:void(0);" onClick="openHint(10,5);"><#FirewallConfig_LanWanFirewallEnable_itemname#> 1:</a></th>
+          <td>
+						<input type="radio" value="1" name="fw_lw_enable_x" onClick="enable_lw();" <% nvram_match_x("FirewallConfig","fw_lw_enable_x", "1", "checked"); %>><#checkbox_Yes#>
+						<input type="radio" value="0" name="fw_lw_enable_x" onClick="enable_lw();" <% nvram_match_x("FirewallConfig","fw_lw_enable_x", "0", "checked"); %>><#checkbox_No#>
+	  			</td>
         </tr>
+        	<tr id="lw_time">
+          	<th><a class="hintstyle" href="javascript:void(0);" onClick="openHint(10,2);"><#FirewallConfig_LanWanActiveTime_itemname#> 1:</a></th>
+          	<td>
+							<input type="text" maxlength="2" class="input" size="2" name="filter_lw_time_x_starthour" onKeyPress="return is_number(this)">:
+							<input type="text" maxlength="2" class="input" size="2" name="filter_lw_time_x_startmin" onKeyPress="return is_number(this)">-
+							<input type="text" maxlength="2" class="input" size="2" name="filter_lw_time_x_endhour" onKeyPress="return is_number(this)">:
+							<input type="text" maxlength="2" class="input" size="2" name="filter_lw_time_x_endmin" onKeyPress="return is_number(this)">		  
+		  			</td>
+        	</tr>        
+        <tr>
+          <th><a class="hintstyle" href="javascript:void(0);" onClick="openHint(10,5);"><#FirewallConfig_LanWanFirewallEnable_itemname#> 2:</a></th>
+          <td>
+						<input type="radio" value="1" name="fw_lw_enable_x_1" onClick="enable_lw_1();" <% nvram_match_x("FirewallConfig","fw_lw_enable_x_1", "1", "checked"); %>><#checkbox_Yes#>
+						<input type="radio" value="0" name="fw_lw_enable_x_1" onClick="enable_lw_1();" <% nvram_match_x("FirewallConfig","fw_lw_enable_x_1", "0", "checked"); %>><#checkbox_No#>
+	  			</td>
+        </tr>        
+        	<tr id="lw_time_1">
+          	<th><a class="hintstyle" href="javascript:void(0);" onClick="openHint(10,2);"><#FirewallConfig_LanWanActiveTime_itemname#> 2:</a></th>
+          	<td>
+							<input type="text" maxlength="2" class="input" size="2" name="filter_lw_time_x_1_starthour" onKeyPress="return is_number(this)">:
+							<input type="text" maxlength="2" class="input" size="2" name="filter_lw_time_x_1_startmin" onKeyPress="return is_number(this)">-
+							<input type="text" maxlength="2" class="input" size="2" name="filter_lw_time_x_1_endhour" onKeyPress="return is_number(this)">:
+							<input type="text" maxlength="2" class="input" size="2" name="filter_lw_time_x_1_endmin" onKeyPress="return is_number(this)">		  
+		  			</td>
+        	</tr>        
+
+					<!--      //   Viz modify 2 time period 2011.11  {{       -->                
+           <tr>
+          	<th><a class="hintstyle" href="javascript:void(0);" onClick="openHint(10,1);"><#FirewallConfig_LanWanActiveDate_itemname#></a></th>
+          	<td>
+							<input type="checkbox" name="filter_lw_date_x_Sun" class="input" onChange="return changeDate();">Sun
+							<input type="checkbox" name="filter_lw_date_x_Mon" class="input" onChange="return changeDate();">Mon
+							<input type="checkbox" name="filter_lw_date_x_Tue" class="input" onChange="return changeDate();">Tue
+							<input type="checkbox" name="filter_lw_date_x_Wed" class="input" onChange="return changeDate();">Wed
+							<input type="checkbox" name="filter_lw_date_x_Thu" class="input" onChange="return changeDate();">Thu
+							<input type="checkbox" name="filter_lw_date_x_Fri" class="input" onChange="return changeDate();">Fri
+							<input type="checkbox" name="filter_lw_date_x_Sat" class="input" onChange="return changeDate();">Sat		  
+		  			</td>
+        	</tr>
+
+        	<tr>
+          	<th ><a class="hintstyle" href="javascript:void(0);" onClick="openHint(10,4);"><#FirewallConfig_LanWanICMP_itemname#></a></th>
+          	<td>
+          		<input type="text" maxlength="32" class="input" size="32" name="filter_lw_icmp_x" value="<% nvram_get_x("FirewallConfig","filter_lw_icmp_x"); %>" onKeyPress="return is_portlist(this)">
+          	</td>
+        	</tr>
+        <!--      //  }} Viz modify 2 time period 2011.11         -->        
 	</table>
 	
 	</td>
@@ -258,33 +365,6 @@ function change_wizard(o, id){
           </tr>
           
           <table width="100%" border="1" align="center" cellpadding="2" cellspacing="0" bordercolor="#6b8fa3"  class="FormTable">
-           <tr>
-          <th><a class="hintstyle" href="javascript:void(0);" onClick="openHint(10,1);"><#FirewallConfig_LanWanActiveDate_itemname#></a></th>
-          <td>
-<input type="checkbox" name="filter_lw_date_x_Sun" class="input" onChange="return changeDate();">Sun
-<input type="checkbox" name="filter_lw_date_x_Mon" class="input" onChange="return changeDate();">Mon
-<input type="checkbox" name="filter_lw_date_x_Tue" class="input" onChange="return changeDate();">Tue
-<input type="checkbox" name="filter_lw_date_x_Wed" class="input" onChange="return changeDate();">Wed
-<input type="checkbox" name="filter_lw_date_x_Thu" class="input" onChange="return changeDate();">Thu
-<input type="checkbox" name="filter_lw_date_x_Fri" class="input" onChange="return changeDate();">Fri
-<input type="checkbox" name="filter_lw_date_x_Sat" class="input" onChange="return changeDate();">Sat		  
-		  </td>
-        </tr>
-        <tr>
-          <th><a class="hintstyle" href="javascript:void(0);" onClick="openHint(10,2);"><#FirewallConfig_LanWanActiveTime_itemname#></a></th>
-          <td>
-	<input type="text" maxlength="2" class="input" size="2" name="filter_lw_time_x_starthour" onKeyPress="return is_number(this)">:
-	<input type="text" maxlength="2" class="input" size="2" name="filter_lw_time_x_startmin" onKeyPress="return is_number(this)">-
-	<input type="text" maxlength="2" class="input" size="2" name="filter_lw_time_x_endhour" onKeyPress="return is_number(this)">:
-	<input type="text" maxlength="2" class="input" size="2" name="filter_lw_time_x_endmin" onKeyPress="return is_number(this)">		  
-		  </td>
-        </tr>
-        <tr>
-          <th ><a class="hintstyle" href="javascript:void(0);" onClick="openHint(10,4);"><#FirewallConfig_LanWanICMP_itemname#></a></th>
-          <td>
-          	<input type="text" maxlength="32" class="input" size="32" name="filter_lw_icmp_x" value="<% nvram_get_x("FirewallConfig","filter_lw_icmp_x"); %>" onKeyPress="return is_portlist(this)">
-          </td>
-        </tr>
           
           <tr align="right">
             <td colspan="6">

@@ -185,6 +185,7 @@ int main(int argc, char *argv[]) {
 	fprintf(fp, "writeable = yes\n");
 	fprintf(fp, "directory mode = 0777\n");
 	fprintf(fp, "create mask = 0777\n");
+	fprintf(fp, "force directory mode = 0777\n");
 	
 	/* max users */
 	if (strcmp(nvram_safe_get("st_max_user"), "") != 0)
@@ -194,7 +195,7 @@ int main(int argc, char *argv[]) {
 	fprintf(fp, "pam password change = no\n");
 	fprintf(fp, "socket options = TCP_NODELAY SO_KEEPALIVE SO_RCVBUF=32768 SO_SNDBUF=32768\n");
 	fprintf(fp, "obey pam restrictions = no\n");
-	fprintf(fp, "use spne go = no\n");		// ASUS add
+	fprintf(fp, "use spnego = no\n");		// ASUS add
 	fprintf(fp, "client use spnego = no\n");	// ASUS add
 	fprintf(fp, "disable spoolss = yes\n");		// ASUS add
 	fprintf(fp, "host msdfs = no\n");		// ASUS add
@@ -216,6 +217,10 @@ int main(int argc, char *argv[]) {
 //	fprintf(fp, "force security mode = 0\n");			// J++
 //	fprintf(fp, "directory security mask = 0777\n");		// J++
 //	fprintf(fp, "force directory security mode = 0\n");		// J++
+
+	fprintf(fp, "dos filemode = yes\n");
+	fprintf(fp, "dos filetimes = yes\n");
+	fprintf(fp, "dos filetime resolution = yes\n");
 
 	disks_info = read_disk_data();
 	if (disks_info == NULL) {
@@ -250,6 +255,12 @@ int main(int argc, char *argv[]) {
 //				fprintf(fp, "hide dot files = no\n");	// J++
 				fprintf(fp, "directory mode = 0777\n");
 				fprintf(fp, "create mask = 0777\n");
+
+			        fprintf(fp, "map archive = no\n");
+			        fprintf(fp, "map hidden = no\n");
+			        fprintf(fp, "map read only = no\n");
+			        fprintf(fp, "map system = no\n");
+			        fprintf(fp, "store dos attributes = yes\n");
 			}
 		}
 	}

@@ -859,6 +859,7 @@ usb_dbg("service_handle: End to restart_wan_line.\n");
 			stop_ddns();
 
 			if (nvram_match("ddns_enable_x", "1")) {
+				logmessage("RT-N56U", "[start ddns] rc handle notify");
 				start_ddns();
 				
 				if (nvram_match("ddns_server_x", "WWW.ASUS.COM")
@@ -1857,6 +1858,7 @@ main(int argc, char **argv)
 	/* ddns update ok */
 	else if (!strcmp(base, "start_ddns")) 
 	{
+		logmessage("RT-N56U", "[start ddns] rc ddns update ok");
 		return start_ddns();
 	}
 	/* run ntp client */
@@ -2024,6 +2026,9 @@ main(int argc, char **argv)
 	}
 	else if (!strcmp(base, "getSiteSurvey")) {
 		return getSiteSurvey();
+	}
+	else if (!strcmp(base, "getSiteSurvey_2g")) {
+		return getSiteSurvey_2G();
 	}
 	else if (!strcmp(base, "getBSSID")) {
 		return getBSSID();

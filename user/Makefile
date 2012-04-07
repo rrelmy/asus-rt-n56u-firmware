@@ -52,7 +52,7 @@ dir_$(CONFIG_USER_GDBSERVER_GDBREPLAY)      += gdbserver
 dir_$(CONFIG_USER_GDBSERVER_GDBSERVER)      += gdbserver
 dir_$(CONFIG_USER_MATRIXSSL)                += matrixssl-1.8.3
 dir_$(CONFIG_USER_MTDAAPD)		    += mt-daapd-0.2.4.2
-#dir_$(CONFIG_USER_MTDAAPD)		    += mt-daapd-0.2.4.2.iconv
+#dir_$(CONFIG_USER_MTDAAPD)		    += mt-daapd-svn-1696
 dir_$(CONFIG_USER_DNS_RESPONDER)            += mDNSResponder-214.3.2
 dir_$(CONFIG_USER_GOAHEAD_HTTPD)            += goahead
 #ifeq ($(CONFIG_LINUXDIR), linux-2.6.21.x)

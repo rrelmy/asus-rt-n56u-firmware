@@ -1831,6 +1831,10 @@ document.form.filter_lw_time_x_starthour.value = getTimeRange(document.form.filt
 document.form.filter_lw_time_x_startmin.value = getTimeRange(document.form.filter_lw_time_x.value, 1);
 document.form.filter_lw_time_x_endhour.value = getTimeRange(document.form.filter_lw_time_x.value, 2);
 document.form.filter_lw_time_x_endmin.value = getTimeRange(document.form.filter_lw_time_x.value, 3);
+document.form.filter_lw_time_x_1_starthour.value = getTimeRange(document.form.filter_lw_time_x_1.value, 0);	//Viz add 2011.11
+document.form.filter_lw_time_x_1_startmin.value = getTimeRange(document.form.filter_lw_time_x_1.value, 1);
+document.form.filter_lw_time_x_1_endhour.value = getTimeRange(document.form.filter_lw_time_x_1.value, 2);
+document.form.filter_lw_time_x_1_endmin.value = getTimeRange(document.form.filter_lw_time_x_1.value, 3);
 }
 else if (document.form.current_page.value == "Advanced_LFirewall_Content.asp")
 {document.form.FirewallConfig_WanLocalActiveDate_Sun.checked = getDateCheck(document.form.FirewallConfig_WanLocalActiveDate.value, 0);
@@ -2572,6 +2576,13 @@ inputCtrl(document.form.lan_netmask, 1);
 inputCtrl(document.form.lan_gateway, 1);
 }
 }
+else if(v=="sw_mode"){
+	if (r == '1'){
+			document.form.sw_mode.value = "1";
+	}else{
+			document.form.sw_mode.value = "4";
+	}
+}
 else if (s=='FirewallConfig' && v=='DmzEnable')
 {change_wireless_firewall();
 }
@@ -2779,47 +2790,62 @@ function validate_timerange(o, p)
 	return true;
 }
 
-function matchSubnet(ip1, ip2, count)
-{var c = 0;
-var v1 = 0;
-var v2 = 0;
-for(i=0;i<ip1.length;i++)
-{if (ip1.charAt(i) == '.')
-{if (ip2.charAt(i) != '.')
-return false;
-c++;
-if (v1!=v2) return false;
-v1 = 0;
-v2 = 0;
+function matchSubnet(ip1, ip2, count){
+	var c = 0;
+	var v1 = 0;
+	var v2 = 0;
+	for(i=0;i<ip1.length;i++){
+			if (ip1.charAt(i) == '.'){
+					if (ip2.charAt(i) != '.')	return false;			
+					c++;
+					if (v1!=v2) return false;
+					v1 = 0;
+					v2 = 0;
+			}else{
+					if (ip2.charAt(i)=='.') return false;
+					v1 = v1*10 + (ip1.charAt(i) - '0');
+					v2 = v2*10 + (ip2.charAt(i) - '0');
+			}
+			
+			if (c==count) return true;
+	}
+	return false;
 }
-else
-{if (ip2.charAt(i)=='.') return false;
-v1 = v1*10 + (ip1.charAt(i) - '0');
-v2 = v2*10 + (ip2.charAt(i) - '0');
+
+function subnetPrefix(ip, orig, count){		//Change subnet prefix xxx.xxx.xxx.
+	r='';
+	c=0;
+	for(i=0;i<ip.length;i++){
+			if (ip.charAt(i) == '.')	c++;
+			if (c==count) break;
+			r = r + ip.charAt(i);
+	}
+	c=0;
+	for(i=0;i<orig.length;i++){
+			if (orig.charAt(i) == '.')	c++;
+			if (c>=count)	r = r + orig.charAt(i);
+	}
+	return (r);
 }
-if (c==count) return true;
+
+//Viz add 2011.10 For DHCP pool changed
+function subnetPostfix(ip, num, count){		//Change subnet postfix .xxx
+	r='';
+	orig="";
+	c=0;
+	for(i=0;i<ip.length;i++){
+			if (ip.charAt(i) == '.')	c++;
+			r = r + ip.charAt(i);
+			if (c==count) break;			
+	}
+	c=0;
+	orig = String(num);
+	for(i=0;i<orig.length;i++){
+			r = r + orig.charAt(i);
+	}
+	return (r);
 }
-return false;
-}
-function subnetPrefix(ip, orig, count)
-{r='';
-c=0;
-for(i=0;i<ip.length;i++)
-{if (ip.charAt(i) == '.')
-c++;
-if (c==count) break;
-r = r + ip.charAt(i);
-}
-c=0;
-for(i=0;i<orig.length;i++)
-{if (orig.charAt(i) == '.')
-{c++;
-}
-if (c>=count)
-r = r + orig.charAt(i);
-}
-return (r);
-}
+
 
 function checkSubnet(){
 	/* Rule : If addresses in pool are match to subnet, don't change */
@@ -2904,6 +2930,11 @@ function updateDateTime(s)
 		document.form.filter_lw_time_x_startmin,
 		document.form.filter_lw_time_x_endhour,
 		document.form.filter_lw_time_x_endmin);
+		document.form.filter_lw_time_x_1.value = setTimeRange(
+		document.form.filter_lw_time_x_1_starthour,
+		document.form.filter_lw_time_x_1_startmin,
+		document.form.filter_lw_time_x_1_endhour,
+		document.form.filter_lw_time_x_1_endmin);		//Viz add 2011.11
 	}
 	else if (s == "Advanced_WAdvanced_Content.asp")
 	{

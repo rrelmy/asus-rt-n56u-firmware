@@ -1,0 +1,17 @@
+"60's Music" {
+    Year >= 1960 && Year < 1970
+}
+
+"Recently Added" {
+    Date after 2 weeks ago
+}
+
+"Non-DRMed Music" {
+    path not includes ".m4p"
+}
+
+"AAC Files" {
+    path includes ".m4p" ||
+    path includes ".m4a" ||
+    path includes ".aac"
+}

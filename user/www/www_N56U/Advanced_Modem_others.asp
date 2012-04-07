@@ -84,14 +84,17 @@ function show_3G_modem_list(){
 			, "Huawei-E172"
 			, "Huawei-E372"
 			, "Huawei-E122"
+			, "Huawei-EC306"
 			, "Huawei-E160E"
 			, "Huawei-E1552"
 			, "Huawei-E173"
 			, "Huawei-E1823"
 			, "Huawei-E1762"
+			, "Huawei-E4505"
 			, "Huawei-E1750C"
 			, "Huawei-E1752Cu"
 			//, "MU-Q101"
+			, "Sierra-U598"
 			, "Alcatel-X200"
 			, "Alcatel-Oune-touch-X220S"
 			, "AnyData-ADU-510A"
@@ -146,7 +149,7 @@ function switch_modem_mode(mode){
 		document.form.modem_country.disabled = false;
 		document.form.modem_isp.disabled = false;
 		document.form.modem_apn.disabled = false;
-		//document.form.wan_3g_pin.disabled = false;
+		document.form.wan_3g_pin.disabled = false;
 		document.form.modem_dialnum.disabled = false;
 		document.form.modem_user.disabled = false;
 		document.form.modem_pass.disabled = false;
@@ -158,7 +161,7 @@ function switch_modem_mode(mode){
 		document.form.modem_country.disabled = false;
 		document.form.modem_isp.disabled = false;
 		document.form.modem_apn.disabled = false;
-		//document.form.wan_3g_pin.disabled = false;
+		document.form.wan_3g_pin.disabled = false;
 		document.form.modem_dialnum.disabled = false;
 		document.form.modem_user.disabled = false;
 		document.form.modem_pass.disabled = false;
@@ -170,7 +173,7 @@ function switch_modem_mode(mode){
 		document.form.modem_country.disabled = false;
 		document.form.modem_isp.disabled = false;
 		document.form.modem_apn.disabled = false;
-		//document.form.wan_3g_pin.disabled = false;
+		document.form.wan_3g_pin.disabled = false;
 		document.form.modem_dialnum.disabled = false;
 		document.form.modem_user.disabled = false;
 		document.form.modem_pass.disabled = false;
@@ -182,7 +185,7 @@ function switch_modem_mode(mode){
 		document.form.modem_country.disabled = false;
 		document.form.modem_isp.disabled = false;
 		document.form.modem_apn.disabled = true;
-		//document.form.wan_3g_pin.disabled = true;
+		document.form.wan_3g_pin.disabled = true;
 		document.form.modem_dialnum.disabled = true;
 		document.form.modem_user.disabled = false;
 		document.form.modem_pass.disabled = false;
@@ -194,7 +197,7 @@ function switch_modem_mode(mode){
 		document.form.modem_country.disabled = true;
 		document.form.modem_isp.disabled = true;
 		document.form.modem_apn.disabled = true;
-		//document.form.wan_3g_pin.disabled = true;
+		document.form.wan_3g_pin.disabled = true;
 		document.form.modem_dialnum.disabled = true;
 		document.form.modem_user.disabled = true;
 		document.form.modem_pass.disabled = true;
@@ -237,6 +240,8 @@ function gen_list(mode){
 
 function show_ISP_list(){
 	free_options($("modem_isp"));
+	$("modem_isp").options.length = isplist.length;
+
 	for(var i = 0; i < isplist.length; i++){
 		$("modem_isp").options[i] = new Option(isplist[i], isplist[i]);
 		if(isplist[i] == isp)
@@ -374,6 +379,21 @@ function done_validating(action){
         <tr>
                 <td bgcolor="#FFFFFF">
 	<table width="100%" border="1" align="center" cellpadding="4" cellspacing="0" bordercolor="#6b8fa3"  class="FormTable">
+
+                                <tr>
+                                <th><a class="hintstyle"  href="javascript:void(0);" onClick="openHint(21,9);"><#HSDPAConfig_Country_itemname#></a></th>
+                                <td>
+                                	<select name="modem_country" id="isp_countrys" class="input" onfocus="parent.showHelpofDrSurf(21,9);" onchange="gen_list(document.form.modem_enable.value);show_ISP_list();show_APN_list();"></select>
+                                </td>
+                                </tr>
+                                
+                                <tr>
+                                <th><a class="hintstyle"  href="javascript:void(0);" onClick="openHint(21,8);"><#HSDPAConfig_ISP_itemname#></a></th>
+                                <td>
+                                	<select name="modem_isp" id="modem_isp" class="input" onClick="openHint(21,8);" onchange="show_APN_list()"></select>
+                                </td>
+                                </tr>
+
 		<tr>
 			<th width="40%">
 				<a class="hintstyle" href="javascript:openHint(21,1);"><#HSDPAConfig_hsdpa_enable_itemname#></a>
@@ -399,32 +419,18 @@ function done_validating(action){
 	</tr>
                                 	
                                 <tr>
-                                <th><a class="hintstyle"  href="javascript:void(0);" onClick="openHint(21,9);"><#HSDPAConfig_Country_itemname#></a></th>
-                                <td>
-                                	<select name="modem_country" id="isp_countrys" class="input" onfocus="parent.showHelpofDrSurf(21,9);" onchange="gen_list(document.form.modem_enable.value);show_ISP_list();show_APN_list();"></select>
-                                </td>
-                                </tr>
-                                
-                                <tr>
-                                <th><a class="hintstyle"  href="javascript:void(0);" onClick="openHint(21,8);"><#HSDPAConfig_ISP_itemname#></a></th>
-                                <td>
-                                	<select name="modem_isp" id="modem_isp" class="input" onClick="openHint(21,8);" onchange="show_APN_list()"></select>
-                                </td>
-                                </tr>
-
-                                <tr>
                                 <th><a class="hintstyle"  href="javascript:void(0);" onClick="openHint(21,3);"><#HSDPAConfig_private_apn_itemname#></a></th>
                                 <td>
                                 	<input id="modem_apn" name="modem_apn" class="input" onClick="openHint(21,3);" type="text" value=""/>
                                 </td>
                                 </tr>
 
-                                <!--tr>
+                                <tr>
                                 <th><a class="hintstyle"  href="javascript:void(0);" onClick="openHint(21,2);"><#HSDPAConfig_PIN_itemname#></a></th>
                                 <td>
                                 	<input id="wan_3g_pin" name="wan_3g_pin" class="input" onClick="openHint(21,2);" type="password" maxLength="8" value="<% nvram_get_x("", "wan_3g_pin"); %>"/>
                                 </td>
-                                </tr-->
+                                </tr>
                                 
                                 <tr>
                                 <th><a class="hintstyle"  href="javascript:void(0);" onClick="openHint(21,10);"><#HSDPAConfig_DialNum_itemname#></a></th>

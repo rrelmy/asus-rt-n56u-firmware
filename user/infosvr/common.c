@@ -56,6 +56,8 @@
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <sys/vfs.h>	/* get disk type */
+#include <sys/ioctl.h>
+#include <netinet/in.h>
 #include <net/if.h>
 #include <nvram/bcmnvram.h>
 #include <shutils.h>
@@ -704,6 +706,22 @@ get_ftype(char *type)	/* get disk type */
 	return free_size;
 }
 
+char *get_lan_netmask()
+{
+	int fd;
+	struct ifreq ifr;
+	fd = socket(AF_INET, SOCK_DGRAM, 0);
+
+	/* IPv4 netmask */
+	ifr.ifr_addr.sa_family = AF_INET;
+
+	strncpy(ifr.ifr_name, "br0", IFNAMSIZ-1);
+	ioctl(fd, SIOCGIFNETMASK, &ifr);
+	close(fd);
+
+	return inet_ntoa(((struct sockaddr_in *)&ifr.ifr_addr)->sin_addr);
+}
+
 char *processPacket(int sockfd, char *pdubuf)
 {
     IBOX_COMM_PKT_HDR	*phdr;
@@ -798,7 +816,8 @@ char *processPacket(int sockfd, char *pdubuf)
 		     strcpy(productid_g, nvram_safe_get("productid"));
 		     strcpy(ginfo->SSID, ssid_g);
 		     strcpy(ginfo->SSID, ssid_g);
-		     strcpy(ginfo->NetMask, netmask_g);
+//		     strcpy(ginfo->NetMask, netmask_g);
+		     strcpy(ginfo->NetMask, get_lan_netmask());
 		     strcpy(ginfo->ProductID, productid_g);	// disable for tmp
 		     //strcpy(ginfo->ProductID, "WL-500gp V2");	// tmp test
 		     strcpy(ginfo->FirmwareVersion, firmver_g);	// disable for tmp

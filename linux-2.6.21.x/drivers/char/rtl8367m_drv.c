@@ -489,6 +489,57 @@ ralink_initGpioPin(unsigned int idx, int dir)
 	return 0;
 }
 
+void vlan_accept_none()
+{
+	rtk_vlan_init();
+	rtk_vlan_portAcceptFrameType_set(0, ACCEPT_FRAME_TYPE_UNTAG_ONLY);
+	rtk_vlan_portAcceptFrameType_set(1, ACCEPT_FRAME_TYPE_UNTAG_ONLY);
+	rtk_vlan_portAcceptFrameType_set(2, ACCEPT_FRAME_TYPE_UNTAG_ONLY);
+	rtk_vlan_portAcceptFrameType_set(3, ACCEPT_FRAME_TYPE_UNTAG_ONLY);
+	rtk_vlan_portAcceptFrameType_set(4, ACCEPT_FRAME_TYPE_UNTAG_ONLY);
+}
+
+void vlan_accept_adv(int wan_stb_x)
+{
+	/* WAN */
+	if (wan_stb_x == 0)		// P4
+	{				// default mode
+		rtk_vlan_portAcceptFrameType_set(4, ACCEPT_FRAME_TYPE_ALL);
+	}
+	else if (wan_stb_x == 1)	// P3,P4
+	{
+		rtk_vlan_portAcceptFrameType_set(LAN_PORT_1, ACCEPT_FRAME_TYPE_ALL);
+		rtk_vlan_portAcceptFrameType_set(4, ACCEPT_FRAME_TYPE_ALL);
+	}
+	else if (wan_stb_x == 2)	// P2,P4
+	{
+		rtk_vlan_portAcceptFrameType_set(LAN_PORT_2, ACCEPT_FRAME_TYPE_ALL);
+		rtk_vlan_portAcceptFrameType_set(4, ACCEPT_FRAME_TYPE_ALL);
+	}
+	else if (wan_stb_x == 3)	// P1,P4
+	{
+		rtk_vlan_portAcceptFrameType_set(LAN_PORT_3, ACCEPT_FRAME_TYPE_ALL);
+		rtk_vlan_portAcceptFrameType_set(4, ACCEPT_FRAME_TYPE_ALL);
+	}
+	else if (wan_stb_x == 4)	// P0,P4
+	{
+		rtk_vlan_portAcceptFrameType_set(LAN_PORT_4, ACCEPT_FRAME_TYPE_ALL);
+		rtk_vlan_portAcceptFrameType_set(4, ACCEPT_FRAME_TYPE_ALL);
+	}
+	else if (wan_stb_x == 5)	// P0,P1,P4
+	{
+		rtk_vlan_portAcceptFrameType_set(LAN_PORT_3, ACCEPT_FRAME_TYPE_ALL);
+		rtk_vlan_portAcceptFrameType_set(LAN_PORT_4, ACCEPT_FRAME_TYPE_ALL);
+		rtk_vlan_portAcceptFrameType_set(4, ACCEPT_FRAME_TYPE_ALL);
+	}
+	else if (wan_stb_x == 6)	// P2,P3,P4
+	{
+		rtk_vlan_portAcceptFrameType_set(LAN_PORT_1, ACCEPT_FRAME_TYPE_ALL);
+		rtk_vlan_portAcceptFrameType_set(LAN_PORT_2, ACCEPT_FRAME_TYPE_ALL);
+		rtk_vlan_portAcceptFrameType_set(4, ACCEPT_FRAME_TYPE_ALL);
+	}
+}
+
 void LANWANPartition()
 {
 	rtk_portmask_t fwd_mask;
@@ -576,8 +627,8 @@ void LANWANPartition_adv(int wan_stb_x)
  	else if (wan_stb_x == 6)	// P0,P1
 	{
 		fwd_mask.bits[0] = 0x103;
-		rtk_port_isolation_set(LAN_PORT_4, fwd_mask);
 		rtk_port_isolation_set(LAN_PORT_3, fwd_mask);
+		rtk_port_isolation_set(LAN_PORT_4, fwd_mask);
 		rtk_port_isolation_set(8, fwd_mask);
 	}
  
@@ -772,7 +823,7 @@ void initialVlan(u32 portinfo)/*Initalize VLAN. Cherry Cho added in 2011/7/15. *
 		rtk_port_efid_set(9, 1);
 	}
 
-	rtk_vlan_init();
+//	rtk_vlan_init();	// moved to vlan_accept_none()
 
         /* set VLAN filtering for each LAN port */
 	rtk_vlan_portIgrFilterEnable_set(0, ENABLED);
@@ -1976,6 +2027,7 @@ int rtl8367m_ioctl(struct inode *inode, struct file *file, unsigned int req,
 		printk("rtk_switch_greenEthernet_set(): return %d\n", retVal);
 	
 		LANWANPartition();
+		vlan_accept_none();
 
 		break;
 
@@ -1994,6 +2046,7 @@ int rtl8367m_ioctl(struct inode *inode, struct file *file, unsigned int req,
 	case 38:/* Initialize VLAN */
 		copy_from_user(&portInfo, (int __user *)arg, sizeof(int));
 		initialVlan((u32) portInfo);
+		vlan_accept_adv(wan_stb_x);
 		break;
 
 	case 39:/* Create VLAN. Cherry Cho added in 2011/7/15. */
@@ -2223,6 +2276,7 @@ int __init rtl8367m_init(void)
 	rtk_storm_controlRate_set(4, STORM_GROUP_BROADCAST, 16384, 1, 0);
 #endif
 	LANWANPartition();
+	vlan_accept_none();
 
 	printk("RTL8367M driver initialized\n");
 

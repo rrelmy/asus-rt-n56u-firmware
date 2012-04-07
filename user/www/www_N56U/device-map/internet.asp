@@ -146,7 +146,7 @@ function sbtnOut(o){
   <option value="../Advanced_VirtualServer_Content.asp"><#menu5_3_4#></option>
   <option value="../Advanced_Exposed_Content.asp"><#menu5_3_5#></option>  
   <option value="../Advanced_ASUSDDNS_Content.asp"><#menu5_3_6#></option>
-  <option value="../Main_IPTStatus_Content.asp"><#menu5_7_5#></option>
+  <!--option value="../Main_IPTStatus_Content.asp"><#menu5_7_5#></option-->
 </select>
 </body>
 </html>

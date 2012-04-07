@@ -11,12 +11,56 @@
 <title>ASUS Wireless Router <#Web_Title#> - <#menu5_1_3#></title>
 <link rel="stylesheet" type="text/css" href="index_style.css"> 
 <link rel="stylesheet" type="text/css" href="form_style.css">
+<style>
+#pull_arrow{
+	margin-left: -2px;
+	margin-top: 2px;
+ 	float:left;
+ 	cursor:pointer;
+ 	border:2px outset #EFEFEF;
+ 	background-color:#CCC;
+ 	padding:3px 2px 4px 0px;
+}
+#WDSAPList{
+	margin-left: 2px;
+	margin-left: -117px \9;
+	margin-top: 22px;
+	border:2px outset #999;
+	background-color:#EFEFEF;
+	position:absolute;
+	width:auto;
+	text-align:left;
+	height:auto;
+	overflow-y:auto;
+	padding: 1px;
+	display:none;
+}
+#WDSAPList div{
+	height:20px;
+	line-height:20px;
+	text-decoration:none;
+	padding-left:2px;
+}
 
+#WDSAPList a{
+	background-color:#EFEFEF;
+	color:#000;
+	font-size:12px;
+	font-family:Arial, Helvetica, sans-serif;
+	text-decoration:none;	
+}
+#WDSAPList div:hover, #ClientList_Block a:hover{
+	background-color:#3366FF;
+	color:#FFFFFF;
+	cursor:default;
+}
+</style>
 <script language="JavaScript" type="text/javascript" src="/state.js"></script>
 <script type="text/javascript" language="JavaScript" src="/help_2g.js"></script>
 <script language="JavaScript" type="text/javascript" src="/general_2g.js"></script>
 <script language="JavaScript" type="text/javascript" src="/popup.js"></script>
 <script language="JavaScript" type="text/javascript" src="/detect.js"></script>
+<script language="JavaScript" type="text/JavaScript" src="/jquery.js"></script>
 <script>
 wan_route_x = '<% nvram_get_x("IPConnection", "wan_route_x"); %>';
 wan_nat_x = '<% nvram_get_x("IPConnection", "wan_nat_x"); %>';
@@ -24,6 +68,8 @@ wan_proto = '<% nvram_get_x("Layer3Forwarding",  "wan_proto"); %>';
 
 <% login_state_hook(); %>
 var wireless = [<% wl_auth_list(); %>];	// [[MAC, associated, authorized], ...]
+var wds_aplist = "";
+var $j = jQuery.noConflict();
 
 function initial(){
 	show_banner(1);
@@ -38,6 +84,8 @@ function initial(){
 	enable_auto_hint(1, 3);
 	load_body();
 	insertExtChannelOption_wmode();
+	showLANIPList();
+	setTimeout("wds_scan();", 1000);
 }
 
 function applyRule(){
@@ -117,9 +165,86 @@ else
 x.options[0].value = "1";
 }
 }
-/*else
-inputCtrl(document.form.rt_HT_EXTCHA, 0);*/
 }
+
+function wds_scan(){
+	$j.ajax({
+		url: '/wds_aplist_2g.asp',
+		dataType: 'script',
+		
+		error: function(xhr){
+			setTimeout("wds_scan();", 1000);
+		},
+		success: function(response){
+			showLANIPList();
+		}
+	});
+}
+
+/*------------ Mouse event of fake LAN IP select menu {-----------------*/
+function setClientIP(num){
+	var smac = wds_aplist[num][1].split(":");
+	var simply_client_mac = smac[0] + smac[1] + smac[2] + smac[3] + smac[4] + smac[5];
+	document.form.rt_wdslist_x_0.value = simply_client_mac;
+	hideClients_Block();
+	over_var = 0;
+}
+
+function rescan(){
+	wds_aplist = "";
+	showLANIPList()
+	wds_scan();
+}
+
+function showLANIPList(){
+	var code = "";
+	var show_name = "";
+
+	if(wds_aplist != ""){
+		for(var i = 0; i < wds_aplist.length ; i++){
+			wds_aplist[i][0] = decodeURIComponent(wds_aplist[i][0]);
+			if(wds_aplist[i][0] && wds_aplist[i][0].length > 12)
+				show_name = wds_aplist[i][0].substring(0, 10) + "..";
+			else
+				show_name = wds_aplist[i][0];
+			
+			if(wds_aplist[i][1]){
+				code += '<a href="#"><div onmouseover="over_var=1;" onmouseout="over_var=0;" onclick="setClientIP('+i+');"><strong>'+show_name+'</strong>';
+				if(show_name && show_name.length > 0)
+					code += '( '+wds_aplist[i][1]+')';
+				code += ' </div></a>';
+			}
+		}
+		code += '<div style="text-decoration:underline;font-weight:bolder;cursor:pointer;" onclick="rescan();"><#AP_survey#></div>';
+	}
+	else{
+		code += '<div style="width:98px"><img style="margin-left:40px;margin-top:2px;" src="/images/load.gif"></div>';
+	}
+
+	code +='<!--[if lte IE 6.5]><iframe class="hackiframe_wdssurvey"></iframe><![endif]-->';	
+	document.getElementById("WDSAPList").innerHTML = code;
+}
+
+function pullLANIPList(obj){
+	
+	if(isMenuopen == 0){		
+		obj.src = "/images/arrow-top.gif"
+		document.getElementById("WDSAPList").style.display = 'block';		
+		document.form.rt_wdslist_x_0.focus();		
+		isMenuopen = 1;
+	}
+	else
+		hideClients_Block();
+}
+var over_var = 0;
+var isMenuopen = 0;
+
+function hideClients_Block(){
+	document.getElementById("pull_arrow").src = "/images/arrow-down.gif";
+	document.getElementById('WDSAPList').style.display='none';
+	isMenuopen = 0;
+}
+/*----------} Mouse event of fake LAN IP select menu-----------------*/
 </script>
 </head>
 
@@ -234,9 +359,12 @@ inputCtrl(document.form.rt_HT_EXTCHA, 0);*/
           <tr>
             <th align="right" id="rt_RBRList"> <#WLANConfig11b_RBRList_groupitemdesc#>
             <td width="60%">
-              <input type="text" maxlength="12" class="input" size="14" name="rt_wdslist_x_0" onKeyPress="return is_hwaddr()">
-              <input class="button" type="submit" onClick="return markGroup(this, 'rt_RBRList', 2, ' Add ');" name="rt_RBRList" value="<#CTL_add#>" size="12">
-              <br/><span>*<#JS_validmac#></span></td>
+              <input type="text" maxlength="12" class="input" size="14" name="rt_wdslist_x_0" onKeyPress="return is_hwaddr()" style="float:left;">
+							<div id="WDSAPList" class="WDSAPList"></div>
+							<img id="pull_arrow" src="/images/arrow-down.gif" onclick="pullLANIPList(this);" title="Select the Access Point" onmouseover="over_var=1;" onmouseout="over_var=0;">
+              <input class="button" style="margin-top:3px;" type="submit" onClick="return markGroup(this, 'rt_RBRList', 2, ' Add ');" name="rt_RBRList" value="<#CTL_add#>" size="12">
+              <br/><span style="float:left;">* <#JS_validmac#></span>
+						</td>
           </tr>
           <tr>
             <td align="right">&nbsp;</td>
@@ -295,6 +423,4 @@ inputCtrl(document.form.rt_HT_EXTCHA, 0);*/
 	</tr>
 </table>
 
-<div id="footer"></div>
-</body>
-</html>
+<div id="footer"></搀椀瘀㸀਀㰀⼀戀漀搀礀㸀਀㰀⼀栀琀洀氀㸀਀ 

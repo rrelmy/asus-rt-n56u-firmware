@@ -133,34 +133,6 @@ function done_validating(action){
           </tr>
 
           <tr>
-          <th width="30%"  align="right"><a class="hintstyle" href="javascript:void(0);" onClick="openHint(7,23);"><#VPN_PPTP_Passthrough#></a></th>
-          	<td>
-			<select name="fw_pt_pptp" class="input" onChange="return change_common(this, 'IPConnection','fw_pt_pptp')">
-				<option value="1" <% nvram_match_x("IPConnection","fw_pt_pptp", "1","selected"); %>><#CTL_Enabled#></option>
-				<option value="0" <% nvram_match_x("IPConnection","fw_pt_pptp", "0","selected"); %>><#CTL_Disabled#></option>	
-			</select>
-          	</td>
-          </tr>
-          <tr>
-          <th width="30%"  align="right"><a class="hintstyle" href="javascript:void(0);" onClick="openHint(7,24);"><#VPN_L2TP_Passthrough#></a></th>
-          	<td>
-			<select name="fw_pt_l2tp" class="input" onChange="return change_common(this, 'IPConnection','fw_pt_l2tp')">
-				<option value="1" <% nvram_match_x("IPConnection","fw_pt_l2tp", "1","selected"); %>><#CTL_Enabled#></option>
-				<option value="0" <% nvram_match_x("IPConnection","fw_pt_l2tp", "0","selected"); %>><#CTL_Disabled#></option>	
-			</select>
-          	</td>
-          </tr>
-          <tr>
-          <th width="30%"  align="right"><a class="hintstyle" href="javascript:void(0);" onClick="openHint(7,25);"><#VPN_IPSec_Passthrough#></a></th>
-          	<td>
-			<select name="fw_pt_ipsec" class="input" onChange="return change_common(this, 'IPConnection','fw_pt_ipsec')">
-				<option value="1" <% nvram_match_x("IPConnection","fw_pt_ipsec", "1","selected"); %>><#CTL_Enabled#></option>
-				<option value="0" <% nvram_match_x("IPConnection","fw_pt_ipsec", "0","selected"); %>><#CTL_Disabled#></option>	
-			</select>
-          	</td>
-          </tr>
-
-          <tr>
             <td colspan="2"  align="right"><input name="button" type="button" class="button" onclick="applyRule()" value="<#CTL_apply#>"/></td>
           </tr>
         </table>		</td>

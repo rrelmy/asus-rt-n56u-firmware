@@ -1575,6 +1575,23 @@ int init_3g_param(char *vid, char *pid)
 	return 1;
 }
 
+int
+stop_3g()
+{
+        char disconn_scr[100];
+        char *modem_f = (*nvram_safe_get("modf") ? nvram_safe_get("modf") : "/ttyUSB0");
+	int modem_mode = atoi(nvram_safe_get("modem_enable"));
+
+        system("killall pppd");
+        sleep(1);
+
+        memset(disconn_scr, 0, sizeof(disconn_scr));
+        sprintf(disconn_scr, "/bin/comgt -d /dev/%s -s /etc_ro/ppp/3g/%s", modem_f, modem_mode==2?"EVDO_disconn.scr":"Generic_disconn.scr");
+        system(disconn_scr);
+
+        return 0;
+}
+
 int write_3g_ppp_conf(const char *modem_node){
 	FILE *fp;
 	char cmd[128];
@@ -1612,6 +1629,7 @@ int write_3g_ppp_conf(const char *modem_node){
 	char *baud = nvram_safe_get("modem_baud");
 
 	fprintf(fp, "/dev/%s\n", modem_node);
+	nvram_set("modf", modem_node);
 	if(strlen(baud) > 0)
 		fprintf(fp, "%s\n", baud);
 	if(strlen(user) > 0)

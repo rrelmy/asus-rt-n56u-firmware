@@ -400,6 +400,7 @@ sys_refresh_lease(void)
 	//fprintf(stderr, "run sys_refresh_lease\n");
 
 	/* Write out leases file */
+	if (pids("udhcpd"))
 	doSystem("killall -%d udhcpd", SIGUSR1);
 }
 

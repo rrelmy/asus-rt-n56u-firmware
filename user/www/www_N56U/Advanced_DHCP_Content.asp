@@ -25,10 +25,16 @@ wan_proto = '<% nvram_get_x("Layer3Forwarding",  "wan_proto"); %>';
 <% login_state_hook(); %>
 var wireless = [<% wl_auth_list(); %>];	// [[MAC, associated, authorized], ...]
 
+
 function initial(){
 	show_banner(1);
 	show_menu(5,2,2);
 	show_footer();
+	showtext($("LANIP"), '<% nvram_get_x("LANHostConfig", "lan_ipaddr"); %>');
+	
+	if((inet_network(document.form.lan_ipaddr.value)>=inet_network(document.form.dhcp_start.value))&&(inet_network(document.form.lan_ipaddr.value)<=inet_network(document.form.dhcp_end.value))){
+			$('router_in_pool').style.display="";
+	}
 	
 	enable_auto_hint(5, 7);
 
@@ -69,10 +75,19 @@ function validForm(){
 	if(!validate_range(document.form.dhcp_lease, 1, 604800))
 		return false;
 	
-	if(intoa(document.form.dhcp_start.value) > intoa(document.form.dhcp_end.value)){
+	if(intoa(document.form.dhcp_start.value) > intoa(document.form.dhcp_end.value)){	//exchange start < end
 		tmp = document.form.dhcp_start.value;
 		document.form.dhcp_start.value = document.form.dhcp_end.value;
 		document.form.dhcp_end.value = tmp;
+	}
+	
+	var default_pool = new Array();
+	default_pool =get_default_pool(document.form.lan_ipaddr.value, document.form.lan_netmask.value);
+	if((inet_network(document.form.dhcp_start.value) < inet_network(default_pool[0])) || (inet_network(document.form.dhcp_end.value) > inet_network(default_pool[1]))){
+			if(confirm("<#JS_DHCP3#>")){ //Acceptable DHCP ip pool : "+default_pool[0]+"~"+default_pool[1]+"\n
+				document.form.dhcp_start.value=default_pool[0];
+				document.form.dhcp_end.value=default_pool[1];
+			}else{return false;}
 	}
 	
 	if(!validate_ipaddr(document.form.dhcp_wins_x, 'dhcp_wins_x'))
@@ -84,6 +99,50 @@ function validForm(){
 function done_validating(action){
 	refreshpage();
 }
+
+// Viz add 2011.10 default DHCP pool range{
+function get_default_pool(ip, netmask){
+	// --- get lan_ipaddr post set .xxx  By Viz 2011.10
+	z=0;
+	tmp_ip=0;
+	for(i=0;i<document.form.lan_ipaddr.value.length;i++){
+			if (document.form.lan_ipaddr.value.charAt(i) == '.')	z++;
+			if (z==3){ tmp_ip=i+1; break;}
+	}		
+	post_lan_ipaddr = document.form.lan_ipaddr.value.substr(tmp_ip,3);
+	// --- get lan_netmask post set .xxx	By Viz 2011.10
+	c=0;
+	tmp_nm=0;
+	for(i=0;i<document.form.lan_netmask.value.length;i++){
+			if (document.form.lan_netmask.value.charAt(i) == '.')	c++;
+			if (c==3){ tmp_nm=i+1; break;}
+	}		
+	var post_lan_netmask = document.form.lan_netmask.value.substr(tmp_nm,3);
+	
+var nm = new Array("0", "128", "192", "224", "240", "248", "252");
+	for(i=0;i<nm.length;i++){
+				 if(post_lan_netmask==nm[i]){
+							gap=256-Number(nm[i]);							
+							subnet_set = 256/gap;
+							for(j=1;j<=subnet_set;j++){
+									if(post_lan_ipaddr < j*gap){
+												pool_start=(j-1)*gap+1;
+												pool_end=j*gap-2;
+												break;						
+									}
+							}					
+																	
+							var default_pool_start = subnetPostfix(document.form.dhcp_start.value, pool_start, 3);
+							var default_pool_end = subnetPostfix(document.form.dhcp_end.value, pool_end, 3);							
+							var default_pool = new Array(default_pool_start, default_pool_end);
+							return default_pool;
+							break;
+				 }
+	}	
+	//alert(document.form.dhcp_start.value+" , "+document.form.dhcp_end.value);//Viz
+}
+// } Viz add 2011.10 default DHCP pool range	
+
 </script>
 </head>
 
@@ -138,7 +197,10 @@ function done_validating(action){
 		</thead>
 		
 		<tr>
-		  <td bgcolor="#FFFFFF"><#LANHostConfig_DHCPServerConfigurable_sectiondesc#></td>
+		  <td bgcolor="#FFFFFF">
+		  	<#LANHostConfig_DHCPServerConfigurable_sectiondesc#><br>
+		  	<div id="router_in_pool" style="color:#FF3300;display:none;"><b><#LANHostConfig_DHCPServerConfigurable_sectiondesc2#> <span id="LANIP"></span></b></div>
+		  </td>
 		</tr>
 		
 		<tbody>

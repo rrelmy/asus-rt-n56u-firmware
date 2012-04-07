@@ -80,8 +80,7 @@ function applyRule(){
 		}
 		
 		document.form.next_page.value = "";
-		document.form.action_mode.value = " Apply ";
-		
+		document.form.action_mode.value = " Apply ";		
 		document.form.submit();
 	}
 }
@@ -586,7 +585,7 @@ function ISPSelection(isp){
 <input type="hidden" name="current_page" value="Advanced_WAN_Content.asp">
 <input type="hidden" name="next_page" value="">
 <input type="hidden" name="next_host" value="">
-<input type="hidden" name="sid_list" value="Layer3Forwarding;LANHostConfig;IPConnection;PPPConnection;PrinterStatus;">
+<input type="hidden" name="sid_list" value="Layer3Forwarding;LANHostConfig;IPConnection;PPPConnection;PrinterStatus;WLANConfig11b">
 <input type="hidden" name="group_id" value="">
 <input type="hidden" name="modified" value="0">
 <input type="hidden" name="action_mode" value="">
@@ -655,6 +654,13 @@ function ISPSelection(isp){
 									<input type="radio" name="upnp_enable"  class="input" value="0" onclick="return change_common_radio(this, 'LANHostConfig', 'upnp_enable', '0')" <% nvram_match_x("LANHostConfig","upnp_enable", "0", "checked"); %>><#checkbox_No#>
 								</td>
 							</tr>
+							<tr>
+								<th><#Enable_NAT#></th>
+								<td style="font-weight:normal;" align="left">
+									<input type="radio" name="sw_mode" class="input" value="1" onclick="return change_common_radio(this, '', 'sw_mode', '1')" <% nvram_match_x("","sw_mode", "1", "checked"); %>><#checkbox_Yes#>
+									<input type="radio" name="sw_mode" class="input" value="4" onclick="return change_common_radio(this, '', 'sw_mode', '4')" <% nvram_match_x("","sw_mode", "4", "checked"); %>><#checkbox_No#>
+								</td>
+							</tr>											
 							<tr>
   	            <th><a class="hintstyle" href="javascript:void(0);" onClick="openHint(7,11);"><#PPPConnection_x_PPPoERelay_itemname#></a></th>
     	          <td style="font-weight:normal;" align="left">

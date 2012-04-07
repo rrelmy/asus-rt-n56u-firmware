@@ -55,7 +55,7 @@ function checkIP(){
 				applyRule();
 				re.test(strIP);
 			}
-			else if( RegExp.$1 == 10 && RegExp.$2 < 2 && RegExp.$3 < 256 && RegExp.$4 < 256){
+			else if( RegExp.$1 == 10 && RegExp.$2 < 256 && RegExp.$3 < 256 && RegExp.$4 < 256){
 				applyRule();
 				re.test(strIP);
 			}

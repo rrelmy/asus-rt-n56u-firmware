@@ -407,29 +407,68 @@
 
 		{"Dev3G", "", validate_choice, ARGV(
 
-		   "AUTO:AUTO",
+                   "AUTO:AUTO",
 
-		   "ASUS-T500:ASUS-T500",
+                   "ASUS-T500:ASUS-T500",
 
-		   "BandLuxe-C120:BandLuxe-C120",
+                   "BandLuxe-C120:BandLuxe-C120",
 
-		   "BandLuxe-C270:BandLuxe-C270",
+                   "BandLuxe-C270:BandLuxe-C270",
 
-		   "HUAWEI-E160G:HUAWEI-E160G",
+                   "HUAWEI-E160G:HUAWEI-E160G",
 
-		   "HUAWEI-E169:HUAWEI-E169",
+                   "HUAWEI-E169:HUAWEI-E169",
 
-		   "HUAWEI-E176:HUAWEI-E176",
+                   "HUAWEI-E176:HUAWEI-E176",
 
-		   "HUAWEI-E180:HUAWEI-E180",
+                   "HUAWEI-E180:HUAWEI-E180",
 
-		   "HUAWEI-E220:HUAWEI-E220",
+                   "HUAWEI-E220:HUAWEI-E220",
 
-		   "MU-Q101:MU-Q101",
+                   "MU-Q101:MU-Q101",
 
-		   "OPTION-ICON225:OPTION-ICON225",
+                   "OPTION-ICON225:OPTION-ICON225",
 
-		   "Sony-Ericsson-W910i:Sony-Ericsson-W910i",
+                   "Sony-Ericsson-W910i:Sony-Ericsson-W910i",
+
+                   "Alcatel-X200:Alcatel-X200",
+                   "Huawei-K3520:Huawei-K3520",
+                   "Huawei-E161:Huawei-E161",
+                   "Huawei-E1550:Huawei-E1550",
+                   "Huawei-EC122:Huawei-EC122",
+                   "Huawei-EC306_AEAUTO:Huawei-EC306_AEAUTO",
+                   "Sierra-U598:Sierra-U598",
+                   "AnyData-ADU-510A_AEAUTO:AnyData-ADU-510A_AEAUTO",
+                   "AnyData-ADU-500A_AEAUTO:AnyData-ADU-500A_AEAUTO",
+                   "Alcatel-Oune-touch-X220S_AEAUTO:Alcatel-Oune-touch-X220S_AEAUTO",
+                   "Onda-MT833UP_AEAUTO:Onda-MT833UP_AEAUTO",
+                   "Onda-MW833UP_AEAUTO:Onda-MW833UP_AEAUTO",
+                   "Huawei-E1800_AEAUTO:Huawei-E1800_AEAUTO",
+                   "Huawei-K4505_AEAUTO:Huawei-K4505_AEAUTO",
+                   "Huawei-E172_AEAUTO:Huawei-E172_AEAUTO",
+                   "Huawei-E372_AEAUTO:Huawei-E372_AEAUTO",
+                   "Huawei-E122_AEAUTO:Huawei-E122_AEAUTO",
+                   "Huawei-E160E_AEAUTO:Huawei-E160E_AEAUTO",
+                   "Huawei-E1552_AEAUTO:Huawei-E1552_AEAUTO",
+                   "Huawei-E173_AEAUTO:Huawei-E173_AEAUTO",
+                   "Huawei-E1823_AEAUTO:Huawei-E1823_AEAUTO",
+                   "Huawei-E1762_AEAUTO:Huawei-E1762_AEAUTO",
+                   "Huawei-K4505_AEAUTO:Huawei-K4505_AEAUTO",
+                   "Huawei-E1750C_AEAUTO:Huawei-E1750C_AEAUTO",
+                   "Huawei-E1752Cu_AEAUTO:Huawei-E1752Cu_AEAUTO",
+                   "Huawei-E172_AEAUTO:Huawei-E172_AEAUTO",
+                   "ZTE-AC5710_AEAUTO:ZTE-AC5710_AEAUTO",
+                   "ZTE-MF100_AEAUTO:ZTE-MF100_AEAUTO",
+                   "ZTE-MF636_AEAUTO:ZTE-MF636_AEAUTO",
+                   "ZTE-MF622_AEAUTO:ZTE-MF622_AEAUTO",
+                   "ZTE-MF626_AEAUTO:ZTE-MF626_AEAUTO",
+                   "ZTE-MF632_AEAUTO:ZTE-MF632_AEAUTO",
+                   "ZTE-MF112_AEAUTO:ZTE-MF112_AEAUTO",
+                   "ZTE-MFK3570-Z_AEAUTO:ZTE-MFK3570-Z_AEAUTO",
+                   "BandLuxe-C339_AEAUTO:BandLuxe-C339_AEAUTO",
+                   "CS15_AEAUTO:CS15_AEAUTO",
+                   "CS17_AEAUTO:CS17_AEAUTO",
+                   "ICON401_AEAUTO:ICON401_AEAUTO",
 
 		0), FALSE, RESTART_REBOOT},       // 3g device
 
@@ -918,11 +957,15 @@
 	    
 		{"", "", validate_portrange, NULL, FALSE, FALSE},
 			     
-		 {"fw_lw_enable_x", "", validate_range, ARGV("0","1"), FALSE, RESTART_FIREWALL},// 2007.10 James
+		{"fw_lw_enable_x", "", validate_range, ARGV("0","1"), FALSE, RESTART_FIREWALL},// 2007.10 James
+
+		{"fw_lw_enable_x_1", "", validate_range, ARGV("0","1"), FALSE, RESTART_FIREWALL},
 	      
 		{"filter_lw_date_x", "", validate_portrange, NULL, FALSE, RESTART_FIREWALL},	// 2007.10 James
 	    
 		{"filter_lw_time_x", "", validate_portrange, NULL, FALSE, RESTART_FIREWALL},	// 2007.10 James
+
+		{"filter_lw_time_x_1", "", validate_portrange, NULL, FALSE, RESTART_FIREWALL},
 	    	
 	      {"filter_lw_default_x", "", validate_choice, ARGV(	      
 	      

@@ -135,15 +135,16 @@ function submitForm(){
 function setScenerion(mode){
 
 	if(mode == '1'){
-		$("#Senario").css("background","url(/images/gw.gif) no-repeat");
+		//$("#Senario").css("background","url(/images/gw.gif) no-repeat");
+		$("#Senario").css("background","url(/images/gw.jpg) no-repeat");
 		$("#radio2").hide();
-		$("#Internet_span").hide();
-		//$("#ap-line").show();
+		$("#Internet_span").css("display", "");
+		$("#ap-line").css("display", "none");
 		//$("#ap-line").animate({width:"133px"}, 2000);
-		$("#AP").html("<#Internet#>");
+		$("#AP").hide();
 		$("#mode_desc").html("<#OP_GW_desc1#><#OP_GW_desc2#>");
 		$("#nextButton").attr("value","<#CTL_next#>");
-	}	
+	}	/*
 	else if(mode == '4'){
 		$("#Senario").css("background","url(/images/rt.gif) no-repeat");
 		$("#radio2").hide();
@@ -153,12 +154,14 @@ function setScenerion(mode){
 		$("#AP").html("<#Internet#>");
 		$("#mode_desc").html("<#OP_RT_desc1#><#OP_RT_desc2#>");
 		$("#nextButton").attr("value","<#CTL_next#>");
-	}
+	}*/
 	else if(mode == '3'){
-		$("#Senario").css("background", "url(/images/ap.gif) no-repeat");
+		//$("#Senario").css("background", "url(/images/ap.gif) no-repeat");
+		$("#Senario").css("background", "url(/images/ap.jpg) no-repeat");
 		$("#radio2").css("display", "none");
-		$("#Internet_span").css("display", "block");
-		//$("#ap-line").css("display", "block");
+		$("#Internet_span").css("display", "");
+		$("#ap-line").css("display", "none");
+		$("#AP").css("display", "");
 		$("#AP").html("<#Device_type_02_RT#>");
 		$("#mode_desc").html("<#OP_AP_desc1#><#OP_AP_desc2#>");
 		$("#nextButton").attr("value","<#CTL_next#>");
@@ -200,11 +203,11 @@ function backprev(){
 	</div>
 	</fieldset>
 	<div id="Senario" style="z-index:-1; top:90px; left:0px; position:absolute;">
-		<span style="margin:140px 0px 0px 140px;"><#Web_Title#></span>
-		<span id="AP" style="margin:120px 0px 0px 355px;"><#Device_type_03_AP#></span>
-		<span id="Internet_span" style="margin:70px 0px 0px 405px;"><#Internet#></span>
-		<span style="margin:220px 0px 0px 40px;"><#Wireless_Clients#></span>
-		<span style="margin:220px 0px 0px 320px;"><#Wired_Clients#></span>
+		<span style="margin:165px 0px 0px 190px;"><#Web_Title#></span>
+		<span id="AP" style="margin:165px 0px 0px 280px;"><#Device_type_03_AP#></span>
+		<span id="Internet_span" style="margin:165px 0px 0px 380px;"><#Internet#></span>
+		<span style="margin:165px 0px 0px 40px;"><#Wireless_Clients#></span>
+		<span style="margin:185px 0px 0px 40px;"><#Wired_Clients#></span>
 		<!--EMBED id="radio1" style="position:absolute; margin:150px 0px 0px 100px;" src="/images/radio1.gif" width=85 height=85 type=application/x-shockwave-flash allowscriptaccess="never" wmode="transparent"></EMBED>
 			<object id="radio1" style="position:absolute; margin:130px 0px 0px 100px;" classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,29,0" width="85" height="85">
 			<param name="movie" value="/images/radio1.gif" />

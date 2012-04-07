@@ -398,6 +398,20 @@ textarea{
 	width:205px;/*must have for any big value*/
 	height:125px;/*must have for any big value*/
 }
+.hackiframe_wdssurvey   /* iframe for Hack IE 6.0 to avoid select menu over DIV layer. */
+{
+	display:none;/*sorry for IE5*/
+	display/**/:block;/*sorry for IE5*/
+	position:absolute;/*must have*/
+	top:0px;
+	left:0px;
+	margin-top:0px;
+	margin-left:0px;	
+	z-index: -1;
+	filter:mask();
+	width:150px;/*must have for any big value*/
+	height:225px;/*must have for any big value*/
+}
 
 #pull_arrow{
  	float:left;

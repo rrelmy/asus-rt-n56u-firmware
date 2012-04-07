@@ -245,12 +245,70 @@ start_8021x_rt()
 }
 
 int
+chk_same_subnet(char *ip1, char *ip2, char *sub)
+{
+        unsigned int addr1, addr2, submask;
+
+        addr1 = ntohl(inet_addr(ip1));
+        addr2 = ntohl(inet_addr(ip2));
+        submask = ntohl(inet_addr(sub));
+
+        return (addr1 & submask) == (addr2 & submask);
+}
+
+void
+simple_dhcp_range(char *ip, char *dip1, char *dip2, char *mask)
+{
+        struct in_addr ina;
+        unsigned int new_start, new_end, lmask;
+
+        new_start = (ntohl(inet_addr(ip)) & (lmask = ntohl(inet_addr(mask)))) + 1;
+        new_end = ntohl(inet_addr(ip)) & (lmask = ntohl(inet_addr(mask))) | ~(lmask) - 1;
+
+/*
+        if(tmp < 150)
+        {
+                new_start = local + 1;
+                new_end = (local & 0xffffff00) + 254;
+        }
+        else
+        {
+                new_start = (local & 0xffffff00) + 1 ;
+                new_end = local - 1;
+        }
+*/
+
+        ina.s_addr = htonl(new_start);
+        strcpy(dip1, inet_ntoa(ina));
+        ina.s_addr = htonl(new_end);
+        strcpy(dip2, inet_ntoa(ina));
+}
+
+int
+chk_valid_startend(char *ip, char *ip1, char *ip2, char *sub)
+{
+        int result1, result2;
+
+        result1 = chk_same_subnet(ip, ip1, sub);
+        result2 = chk_same_subnet(ip, ip2, sub);
+
+        if(!result1 || !result2)
+        {
+                simple_dhcp_range(ip, ip1, ip2, sub);
+                return 0;
+        }
+        return 1;
+}
+
+int
 start_dhcpd(void)
 {
 	FILE *fp;
 	char *slease = "/tmp/udhcpd-br0.sleases";
 	char word[256], *next;
 //	int auto_dns = 0;
+        char dhcp_start[16], dhcp_end[16], lan_ipaddr[16], lan_netmask[16];
+        char *start, *end, *ipaddr, *mask;
 
 	if (!nvram_match("dhcp_enable_x", "1"))	return 0;
 
@@ -262,6 +320,29 @@ start_dhcpd(void)
 	}
 	else
 		dbg("starting udhcpd...\n");
+
+	/* chk dhcp range */
+        memset(dhcp_start, 0, 16);
+        memset(dhcp_end, 0, 16);
+        memset(lan_ipaddr, 0, 16);
+        memset(lan_netmask, 0, 16);
+
+        start = nvram_safe_get("dhcp_start");
+        end = nvram_safe_get("dhcp_end");
+        mask = nvram_safe_get("lan_netmask");
+        ipaddr = nvram_safe_get("lan_ipaddr");
+
+        strcpy(lan_ipaddr, *ipaddr?ipaddr:"192.168.1.1");
+        strcpy(dhcp_start, *start&&*end?start:"192.168.1.2");
+        strcpy(dhcp_end,   *start&&*end?end:"192.168.1.254");
+        strcpy(lan_netmask,*start&&*end&&*mask?mask:"255.255.255.0");
+
+        if(!chk_valid_startend(lan_ipaddr, dhcp_start, dhcp_end, lan_netmask))
+        {
+        	printf("reset dhcp range: start(%s) end(%s)\n", dhcp_start, dhcp_end);
+                nvram_set("dhcp_start", dhcp_start);
+                nvram_set("dhcp_end", dhcp_end);
+        }
 
 	dprintf("%s %s %s %s\n",
 		nvram_safe_get("lan_ifname"),
@@ -564,6 +645,8 @@ start_ddns(void)
 	char wan_ifname[16];
 	int  wild=nvram_match("ddns_wildcard_x", "1");
 
+	logmessage("RT-N56U", "start ddns");	// tmp test
+
 	if (nvram_match("router_disable", "1")) return -1;
 	
 	if (!nvram_match("ddns_enable_x", "1")) return -1;
@@ -680,6 +763,8 @@ start_ddns(void)
 	{
 		dprintf("ddns update %s %s\n", server, service);
 
+		logmessage("do ez-ipupdate", "pid:%d", pids("ez-ipupdate"));	// tmp test
+
 		if (pids("ez-ipupdate"))
 		{
 			system("killall -SIGINT ez-ipupdate");
@@ -700,6 +785,8 @@ start_ddns(void)
 		nvram_unset("ddns_ipaddr");
 		nvram_unset("ddns_status");
 //		nvram_set("ddns_updated", "1");
+
+		logmessage("do ez-ipupdate", "ddns update, pid:%d", pids("ez-ipupdate"));	// tmp test
 
 		if (pids("ez-ipupdate"))
 		{
@@ -1206,17 +1293,9 @@ remove_usb_3g()
 	system("rmmod usbserial");
 	system("rmmod hso");
 	nvram_set("wan0_ipaddr", "");
+	stop_3g();
 	return 0;
 }
-
-#if 0
-int
-remove_storage_main(void)
-{
-	remove_usb_mass(NULL);
-	return 0;
-}
-#endif
 
 #define MOUNT_VAL_FAIL 	0
 #define MOUNT_VAL_RONLY	1
@@ -4132,6 +4211,8 @@ int service_handle(void)
 			strcpy(wan_ifname, nvram_safe_get("wan0_ifname"));
 		}
 
+		logmessage("do ez-ipupdate", "hostname chk, pid:%d", pids("ez-ipupdate"));	// tmp test
+
 		//Execute ez-ipupdate then die.
 		if (pids("ez-ipupdate"))
 		{
@@ -5090,7 +5171,7 @@ write_mt_daapd_conf()
 
 	if (fp == NULL)
 		return;
-
+#if 1
 	fprintf(fp, "web_root /etc_ro/web/admin-root\n");
 	fprintf(fp, "port 3689\n");
 	fprintf(fp, "admin_pw %s\n", nvram_safe_get("http_passwd"));
@@ -5106,7 +5187,28 @@ write_mt_daapd_conf()
 	fprintf(fp, "rescan_interval 300\n");
 	fprintf(fp, "always_scan 1\n");
 	fprintf(fp, "compress 1\n");
-
+#else
+	fprintf(fp, "[general]\n");
+	fprintf(fp, "web_root = /rom/mt-daapd/admin-root\n");
+	fprintf(fp, "port = 3689\n");
+	fprintf(fp, "admin_pw = %s\n", nvram_safe_get("http_passwd"));
+	fprintf(fp, "db_type = sqlite3\n");
+	fprintf(fp, "db_parms = /tmp/harddisk/part0/.itunes\n");
+	fprintf(fp, "mp3_dir = %s\n", "/media");
+	if (!nvram_match("computer_name", "") && is_valid_hostname(nvram_safe_get("computer_name")))
+		fprintf(fp, "servername = %s\n", nvram_safe_get("computer_name"));
+	else
+		fprintf(fp, "servername = %s\n", nvram_safe_get("productid"));
+	fprintf(fp, "runas = %s\n", nvram_safe_get("http_username"));
+	fprintf(fp, "extensions = .mp3,.m4a,.m4p\n");
+	fprintf(fp, "scan_type = 2\n");
+	fprintf(fp, "[plugins]\n");
+	fprintf(fp, "plugin_dir = /rom/mt-daapd/plugins\n");
+	fprintf(fp, "[scanning]\n");
+	fprintf(fp, "process_playlists = 1\n");
+	fprintf(fp, "process_itunes = 1\n");
+	fprintf(fp, "process_m3u = 1\n");
+#endif
 	fclose(fp);
 }
 

@@ -950,8 +950,8 @@ void handle_dns_req(int sfd, char *line, int maxlen, struct sockaddr *pcliaddr, 
 	
 	// header
 	memcpy(&d_reply.header, &d_req.header, sizeof(dns_header));
-	//d_reply.header.flag_set.flag_num = htons(0x8580);
-	d_reply.header.flag_set.flag_num = htons(0x8180);
+	d_reply.header.flag_set.flag_num = htons(0x8580);
+	//d_reply.header.flag_set.flag_num = htons(0x8180);
 	d_reply.header.answer_rrs = htons(0x0001);
 	memcpy(reply_content, &d_reply.header, sizeof(d_reply.header));
 	reply_size += sizeof(d_reply.header);

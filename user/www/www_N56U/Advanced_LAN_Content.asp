@@ -76,11 +76,159 @@ function validForm(){
 	if(!validate_ipaddr_final(document.form.lan_ipaddr, 'lan_ipaddr') ||
 			!validate_ipaddr_final(document.form.lan_netmask, 'lan_netmask'))
 		return false;
+// Viz 2011.10 {
+	
+	// test if LAN IP is a private IP.
+	var A_class_start = inet_network("10.0.0.0");
+	var A_class_end = inet_network("10.255.255.255");
+	var B_class_start = inet_network("172.16.0.0");
+	var B_class_end = inet_network("172.31.255.255");
+	var C_class_start = inet_network("192.168.0.0");
+	var C_class_end = inet_network("192.168.255.255");
+	
+	var ip_obj = document.form.lan_ipaddr;
+	var ip_num = inet_network(ip_obj.value);
+	var ip_class = "";
+	if(ip_num > A_class_start && ip_num < A_class_end)
+		ip_class = 'A';
+	else if(ip_num > B_class_start && ip_num < B_class_end)
+		ip_class = 'B';
+	else if(ip_num > C_class_start && ip_num < C_class_end)
+		ip_class = 'C';
+	else{
+		alert(ip_obj.value+" <#JS_validip#>");
+		ip_obj.value = "";
+		ip_obj.focus();
+		ip_obj.select();
+		return false;
+	}
+	
+	
+	// test if netmask is valid.
+	var netmask_obj = document.form.lan_netmask;
+	var netmask_num = inet_network(netmask_obj.value);
+	var netmask_reverse_num = ~netmask_num;
+	var default_netmask = "";
+	var wrong_netmask = 0;
+
+	if(netmask_num < 0) wrong_netmask = 1;		
+
+	if(ip_class == 'A')
+		default_netmask = "255.0.0.0";
+	else if(ip_class == 'B')
+		default_netmask = "255.255.0.0";
+	else
+		default_netmask = "255.255.255.0";
+	
+	var test_num = netmask_reverse_num;
+	while(test_num != 0){
+		if((test_num+1)%2 == 0)	//odd
+			test_num = (test_num+1)/2-1;
+		else{
+			wrong_netmask = 1;
+			break;
+		}
+	}
+	if(wrong_netmask == 1){
+		alert(netmask_obj.value+" <#JS_validip#>");
+		netmask_obj.value = default_netmask;
+		netmask_obj.focus();
+		netmask_obj.select();
+		return false;
+	}
+	
+	var subnet_head = getSubnet(ip_obj.value, netmask_obj.value, "head");
+	var subnet_end = getSubnet(ip_obj.value, netmask_obj.value, "end");
+	
+	if(ip_num == subnet_head || ip_num == subnet_end){
+		alert(ip_obj.value+" <#JS_validip#>");
+		ip_obj.value = "";
+		ip_obj.focus();
+		ip_obj.select();
+		return false;
+	}
+	
+	// check IP changed or not
+  // No matter it changes or not, it will submit the form
+	if(sw_mode == "1")
+		var pool_change = changed_DHCP_IP_pool();
+		if(!pool_change) return false;
+	
+// Viz 2011.10 }	
+
 	
 	changed_hint();
-	checkSubnet();
+	//checkSubnet();	//change client ipaddr pool
 	
 	return true;
+}
+
+// step1. check IP changed. // step2. check Subnet is the same 
+var old_lan_ipaddr = "<% nvram_get_x("LANHostConfig","lan_ipaddr"); %>";
+function changed_DHCP_IP_pool(){
+	if(document.form.lan_ipaddr.value != old_lan_ipaddr){ // IP changed
+		if(!matchSubnet(document.form.lan_ipaddr.value, document.form.dhcp_start.value, 3) ||
+				!matchSubnet(document.form.lan_ipaddr.value, document.form.dhcp_end.value, 3)){ // Different Subnet or same
+				document.form.dhcp_start.value = subnetPrefix(document.form.lan_ipaddr.value, document.form.dhcp_start.value, 3);
+				document.form.dhcp_end.value = subnetPrefix(document.form.lan_ipaddr.value, document.form.dhcp_end.value, 3);				
+		}
+	}
+	
+	var post_lan_netmask='';
+	var pool_start='';
+	var pool_end='';
+	var nm = new Array("0", "128", "192", "224", "240", "248", "252");
+	// --- get lan_ipaddr post set .xxx  By Viz 2011.10
+	z=0;
+	tmp_ip=0;
+	for(i=0;i<document.form.lan_ipaddr.value.length;i++){
+			if (document.form.lan_ipaddr.value.charAt(i) == '.')	z++;
+			if (z==3){ tmp_ip=i+1; break;}
+	}		
+	post_lan_ipaddr = document.form.lan_ipaddr.value.substr(tmp_ip,3);
+	// --- get lan_netmask post set .xxx	By Viz 2011.10
+	c=0;
+	tmp_nm=0;
+	for(i=0;i<document.form.lan_netmask.value.length;i++){
+			if (document.form.lan_netmask.value.charAt(i) == '.')	c++;
+			if (c==3){ tmp_nm=i+1; break;}
+	}		
+	post_lan_netmask = document.form.lan_netmask.value.substr(tmp_nm,3);
+
+// Viz add 2011.10 default DHCP pool range{
+	for(i=0;i<nm.length;i++){			 		
+				 if(post_lan_netmask==nm[i]){
+							gap=256-Number(nm[i]);							
+							subnet_set = 256/gap;
+							for(j=1;j<=subnet_set;j++){
+									if(post_lan_ipaddr < 1*gap && post_lan_ipaddr==1){		//Viz add to avoid default (1st) LAN ip in DHCP pool (start)2011.11
+												pool_start=2;
+												pool_end=1*gap-2;
+												break;										//Viz add to avoid default (1st) LAN ip in DHCP pool (end)2011.11
+									}else	if(post_lan_ipaddr < j*gap){
+												pool_start=(j-1)*gap+1;
+												pool_end=j*gap-2;
+												break;						
+									}
+							}																	
+							break;
+				 }
+	}
+	
+		var update_pool_start = subnetPostfix(document.form.dhcp_start.value, pool_start, 3);
+		var update_pool_end = subnetPostfix(document.form.dhcp_end.value, pool_end, 3);							
+		if((document.form.dhcp_start.value != update_pool_start) || (document.form.dhcp_end.value != update_pool_end)){
+				if(confirm("<#JS_DHCP1#>")){
+						document.form.dhcp_start.value = update_pool_start;
+						document.form.dhcp_end.value = update_pool_end;
+				}else{
+						return false;	
+				}
+		}	
+			
+	return true;	
+	alert(document.form.dhcp_start.value+" , "+document.form.dhcp_end.value);//Viz
+	// } Viz add 2011.10 default DHCP pool range
 }
 
 function done_validating(action){
@@ -89,10 +237,12 @@ function done_validating(action){
 
 var old_lan_ipaddr = "<% nvram_get_x("LANHostConfig","lan_ipaddr"); %>";
 function changed_hint(){
-	if(document.form.lan_ipaddr.value != old_lan_ipaddr){
-		alert("<#LANHostConfig_lanipaddr_changed_hint#>");
-	}
-	return true;
+
+		if(document.form.lan_ipaddr.value != old_lan_ipaddr){
+				alert("<#LANHostConfig_lanipaddr_changed_hint#>");
+		}
+	
+		return true;
 }
 </script>
 </head>
@@ -195,7 +345,7 @@ function changed_hint(){
 		  </tr>
 
 		  <tr align="right">
-				<td colspan="2"><input class="button" onclick="checkIP()" type="button" value="<#CTL_apply#>"/></td>
+				<td colspan="2"><input class="button" onclick="applyRule()" type="button" value="<#CTL_apply#>"/></td>
 		  </tr>
 		</table>
 	  </td>

@@ -28,7 +28,7 @@ CFLAGS += -I$(TOP)/shared -I$(SRCBASE)/include
 else			# Ralink Platform
 SHDIR = $(ROOTDIR)/user/shared
 CFLAGS += -DASUS_NVRAM -I$(SHDIR)/include -I$(ROOTDIR)/linux-2.6.21.x/include
-#LDFLAGS += -lshared -L$(SHDIR)
+LDFLAGS += -lshared -L$(SHDIR)
 endif
 
 INSTALL = install

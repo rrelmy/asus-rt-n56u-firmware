@@ -19,6 +19,13 @@ LANG_DA=Dansk
 LANG_SV=Svensk
 LANG_BR=Brazil
 LANG_JP=日本語
+Enable_NAT=啟動 NAT
+[NAT Passthrough]
+NAT_PPTP_Passthrough=PPTP Passthrough
+NAT_L2TP_Passthrough=L2TP Passthrough
+NAT_IPSec_Passthrough=IPSec Passthrough
+NAT_passthrough_itemname=NAT Passthrough
+NAT_passthrough_desc=啟用 NAT Passthrough 功能，讓 Virtual Private Network (VPN) 服務所需要用到的協定允許通過。
 [Malaysia Unifi]
 PPPConnection_x_Unifi=Unifi Support:
 PPPConnection_x_Unifi_Describe=選擇 「是」 可以支援 Malaysia Unifi 的服務。
@@ -33,17 +40,18 @@ enable_noaccount_alert=若您在沒有使用AiDisk 創建一個共享賬號的�
 [iTunes]
 iTunesMediaServer=iTunes媒體伺服器
 [opmode strings]
+wireless_router=無線路由器
 BasicConfig_EnableiTunesServer_itemname=啟動 iTunes Server？
 OP_switch_button_hint1=模式切換鈕位於RT-N56U底座，
 OP_switch_button_hint2=按我觀看
-OP_GW_item=IP分享模式(預設)
-OP_GW_desc1=在「IP分享」模式下，RT-N56U可使用PPPoE、PPTP、L2TP、自動取得IP或固定IP的方式由WAN端進行網際網路連線。
+OP_GW_item=無線路由器 (預設)
+OP_GW_desc1=在無線路由器模式中，RT-N56U可使用PPPoE、PPTP、L2TP、自動取得IP或固定IP的方式由WAN端進行網際網路連線。
 OP_GW_desc2=並且提供無線網路、網路位址轉換（NAT - Network Address Translation）及DHCP以建構一個區域網路（LAN）讓用戶可以分享IP。另外，也支援一些對家庭用戶相當有用的功能，像是通用隨插即用（UPnP）及動態DNS（DDNS）。
 OP_RT_item=路由器(取消NAT)
 OP_RT_desc1=在「路由器」模式下，您可能已經建構了一個區域網路（LAN），建議您將RT-N56U的廣域網路（WAN）連接埠以網路線連接到您的區域網路，並選擇適當的網際網路設定以建立連線。
 OP_RT_desc2=路由器模式主要目的在延伸你的區域網路，並允許設定靜態路由通訊協定，但關閉網路位址轉換（NAT）以允許RT-N56U下的用戶與原本區域網路的用戶互相通訊與共享服務 (<span style='color:#EE0000'>注意：必須在原本的路由器上加入靜態路由規則</span>)。
-OP_AP_item=無線網路基地台
-OP_AP_desc1=在「無線網路基地台」模式下，建議您以網路線將RT-N56U的任何一個連接埠連接到您的區域網路，取得IP並進行連線。此時，四組區域網路（LAN）連接埠與廣域網路（WAN）連接埠及無線網路橋接在一起。
+OP_AP_item=Access Point(無線存取點)
+OP_AP_desc1=Access Point(無線存取點)模式，建議您以網路線將RT-N56U的任何一個連接埠連接到您的區域網路，取得IP並進行連線。此時，四組區域網路（LAN）連接埠與廣域網路（WAN）連接埠及無線網路橋接在一起。
 OP_AP_desc2=基地台模式主要在提供無線網路訊號，但關閉IP分享功能、防火牆與網路位址轉換（NAT）。
 OP_Modem=數據機
 OP_WirelessClient=無線用戶端
@@ -842,8 +850,9 @@ JS_fixchannel=請設定適合無線橋接的固定頻道。
 JS_AES2=如果您要啟用AES unique功能，驗證方式將會因此設成「系統開放」。
 JS_AES3=如果您要啟用AES unique功能，應該也要啟用WEP。
 JS_RESET=警告：\n所有您的設定值將會遺失！\n是否還要繼續？
-JS_DHCP1=DHCP伺服器的設定值與目前LAN的IP位址不符。您要採用自動的方式變更嗎？
+JS_DHCP1=當子網路遮罩修改過後，RT-N56U 的 IP Pool 也會跟著做調整，您希望其自動調整嗎?
 JS_DHCP2=DHCP伺服器的設定值與目前「無線防火牆」的IP位址不符。您要採用自動的方式變更嗎？
+JS_DHCP3=新的 IP Pool 與子網路遮罩不符合，您希望其自動調整嗎?
 BOP_isp_desc=您的ISP業者可能會需要以下資料以便確認您的帳號。如果沒有，就請按「下一步」省略。
 OP_desc1=RT-N56U 支援三種可滿足不同需求的運作模式。請選擇能符合您現況的模式。
 PASS_new=新密碼：
@@ -1030,6 +1039,7 @@ LANHostConfig_x_HostName_itemdesc=此一 RT-N56U 的主機名稱與您在內部�
 LANHostConfig_x_Gateway_itemname=預設閘道器：
 LANHostConfig_x_Gateway_itemdesc=此為無線網路橋接器所使用的預設閘道器的IP位址
 LANHostConfig_DHCPServerConfigurable_sectiondesc=RT-N56U 提供多達253個IP位址讓您的內部網路設備使用。若您的內部網路設備設定為自動取得IP，即可由RT-N56U自動取得IP位址。
+LANHostConfig_DHCPServerConfigurable_sectiondesc2=RT-N56U 的IP位置為:
 LANHostConfig_DHCPServerConfigurable_itemname=啟用DHCP伺服器？
 LANHostConfig_DHCPServerConfigurable_itemdesc=DHCP伺服器能自動管理並分配內部用戶所需的IP設定。
 LANHostConfig_DomainName_itemname=RT-N56U 的網域名稱：

@@ -702,13 +702,14 @@ handle_request(void)
 			int login_state = http_login_check();
 
 			if ((login_state == 1 || login_state == 2)
-					&& !nvram_match("x_Setting", "1") //2008.11 magic
+					//&& !nvram_match("x_Setting", "1") 	// user: step 0
+					/* modify QIS authentication flow */
 					&& (strstr(url, "QIS_") != NULL   // to avoid the interference of the other logined browser. 2008.11 magic
-//							|| !strcmp(url, "survey.htm")	// 1008 update
-//							|| !strcmp(url, "ureip.asp")	// 1202 update
-//							|| !strcmp(url, "Logout.asp")	// 1202 update
-//							|| !strcmp(url, "aplist.asp")	// 1008 update
-//							|| !strcmp(url, "wlconn_apply.htm")	// 1013 update
+							|| !strcmp(url, "survey.htm")	
+							|| !strcmp(url, "ureip.asp")	
+							|| !strcmp(url, "Logout.asp")	
+							|| !strcmp(url, "aplist.asp")	
+							|| !strcmp(url, "wlconn_apply.htm")
 							|| !strcmp(url, "result_of_get_changed_status.asp")
 							|| !strcmp(url, "result_of_get_changed_status_QIS.asp")
 							|| !strcmp(url, "detectWAN.asp")
@@ -727,9 +728,30 @@ handle_request(void)
 //							|| !strcmp(url, "ajax_status.asp")
 							)
 					) {
-				turn_off_auth_timestamp = request_timestamp;
-				temp_turn_off_auth = 1;
-				redirect = 0;
+/* hacker issue patch start */
+                                                if((nvram_match("x_Setting", "1")) && login_state == 1){ // user : Step1, hacker : Step2
+                                                                if (!strcmp(url, "start_apply.htm") || !strcmp(url, "start_apply2.htm") || !strcmp(url, "wlconn_apply.htm")){
+                                                                temp_turn_off_auth = 0; // auth
+                                                                turn_off_auth_timestamp = request_timestamp;
+                                                                redirect = 0;
+                                                                }
+                                                                else{ // user : Step2
+                                                                turn_off_auth_timestamp = request_timestamp;
+                                                                temp_turn_off_auth = 1; // no auth
+                                                                redirect = 0;
+                                                                }
+                                                }
+                                                else{ // user : Step3
+                                                                turn_off_auth_timestamp = request_timestamp;
+                                                                temp_turn_off_auth = 1; // no auth
+                                                                redirect = 0;
+                                                }
+/* hacker issue patch end */
+						/*
+						turn_off_auth_timestamp = request_timestamp;
+						temp_turn_off_auth = 1;
+						redirect = 0;
+						*/
 			}
 			else if(!strcmp(url, "error_page.htm")
 					|| !strcmp(url, "jquery.js") // 2010.09 James.
@@ -750,6 +772,7 @@ handle_request(void)
 					|| strstr(url, ".cgi") != NULL
 					|| strstr(url, ".htm") != NULL
 					|| strstr(url, ".CFG") != NULL
+					|| strstr(url, "QIS_") != NULL  /* modify QIS authentication flow */
 					) {
 				switch(login_state) {
 					case 0:

@@ -124,6 +124,11 @@ static int  option_send_setup(struct usb_serial_port *port);
 #define HUAWEI_PRODUCT_E1417			0x1417
 #define HUAWEI_PRODUCT_E1418			0x1418
 #define HUAWEI_PRODUCT_E1419			0x1419
+#define HUAWEI_PRODUCT_E140B                    0x140b          // 0701 ASUS    /* if target id, then use it */
+#define HUAWEI_PRODUCT_EC122                    0x140C          // 0818 ASUS
+#define HUAWEI_PRODUCT_E1820                    0x14AC          // 0818 ASUS
+#define HUAWEI_PRODUCT_EC306                    0x1506          // 0818 ASUS
+
 
 #define DATANG_VENDOR_ID			0x1ab7
 #define DATANG_PRODUCT_M5731			0x5731
@@ -237,11 +242,36 @@ static int  option_send_setup(struct usb_serial_port *port);
 /* ZTE PRODUCTS */
 #define ZTE_VENDOR_ID				0x19d2
 #define ZTE_PRODUCT_MF628			0x0015
+#define ZTE_PRODUCT_AC2746                      0xfff1
 #define ZTE_PRODUCT_CDMA_TECH			0xfffe
 #define ZTE_PRODUCT_CDMA_TECH2			0x0003
+#define ZTE_PRODUCT_CDMA_TECH3                  0x0034
+#define ZTE_PRODUCT_CDMA_TECH4                  0x0090
 
 #define ANYDATA_VENDOR_ID			0x16d5
 #define ANYDATA_PRODUCT_ID			0x6501
+
+/* QISDA PRODUCTS */
+#define QISDA_VENDOR_ID                         0x1da5
+#define QISDA_PRODUCT_H21_4512                  0x4512
+#define QISDA_PRODUCT_H21_4523                  0x4523
+#define QISDA_PRODUCT_H20_4515                  0x4515
+#define QISDA_PRODUCT_H20_4519                  0x4519
+
+/* PANTECH PRODUCTS */
+#define PANTECH_VENDOR_ID                       0x106c          // 0818 ASUS
+#define PANTECH_PRODUCT_UM150                   0x3711
+#define PANTECH_PRODUCT_UM175                   0x3714
+
+/* SIERRA PRODUCTS */
+#define SIERRA_VENDOR_ID                        0x1199          // 0818 ASUS
+#define SIERRA_PRODUCT_U595                     0x0120          // 0818 ASUS
+#define SIERRA_PRODUCT_U597                     0x0023          // 0818 ASUS
+#define SIERRA_PRODUCT_U598                     0x0025          // 0818 ASUS
+
+/* HAIER PRODUCTS */
+#define HAIER_VENDOR_ID                         0x201e          // 0824 ASUS
+#define HAIER_PRODUCT_CE100                     0x2009          // 0824 ASUS
 
 static struct usb_device_id option_ids[] = {
 	{ USB_DEVICE(OPTION_VENDOR_ID, OPTION_PRODUCT_COLT) },
@@ -298,6 +328,10 @@ static struct usb_device_id option_ids[] = {
 	{ USB_DEVICE(HUAWEI_VENDOR_ID, HUAWEI_PRODUCT_E1417) },
 	{ USB_DEVICE(HUAWEI_VENDOR_ID, HUAWEI_PRODUCT_E1418) },
 	{ USB_DEVICE(HUAWEI_VENDOR_ID, HUAWEI_PRODUCT_E1419) },
+        { USB_DEVICE(HUAWEI_VENDOR_ID, HUAWEI_PRODUCT_E140B) },         /* 0701 ASUS */
+        { USB_DEVICE(HUAWEI_VENDOR_ID, HUAWEI_PRODUCT_EC122) },         /* 0818 ASUS */
+        { USB_DEVICE(HUAWEI_VENDOR_ID, HUAWEI_PRODUCT_E1820) },         /* 0818 ASUS */
+        { USB_DEVICE(HUAWEI_VENDOR_ID, HUAWEI_PRODUCT_EC306) },         /* 0818 ASUS */
 	{ USB_DEVICE(BANDLUXE_VENDOR_ID, BANDLUXE_PRODUCT_C270) },
 	{ USB_DEVICE(DATANG_VENDOR_ID, DATANG_PRODUCT_M5731) },
 	{ USB_DEVICE(ALCATEL_VENDOR_ID, ALCATEL_PRODUCT_C820) },
@@ -376,9 +410,22 @@ static struct usb_device_id option_ids[] = {
 	{ USB_DEVICE(QUALCOMM_VENDOR_ID, 0x6613)}, /* Onda H600/ZTE MF330 */
 	{ USB_DEVICE(MAXON_VENDOR_ID, 0x6280) }, /* BP3-USB & BP3-EXT HSDPA */
 	{ USB_DEVICE(TELIT_VENDOR_ID, TELIT_PRODUCT_UC864E) },
-	{ USB_DEVICE(ZTE_VENDOR_ID, ZTE_PRODUCT_MF628) },
-	{ USB_DEVICE(ZTE_VENDOR_ID, ZTE_PRODUCT_CDMA_TECH) },
-	{ USB_DEVICE(ZTE_VENDOR_ID, ZTE_PRODUCT_CDMA_TECH2) },
+        { USB_DEVICE(ZTE_VENDOR_ID, ZTE_PRODUCT_MF628) },
+        { USB_DEVICE(ZTE_VENDOR_ID, ZTE_PRODUCT_AC2746) },
+        { USB_DEVICE(ZTE_VENDOR_ID, ZTE_PRODUCT_CDMA_TECH) },
+        { USB_DEVICE(ZTE_VENDOR_ID, ZTE_PRODUCT_CDMA_TECH2) },
+        { USB_DEVICE(ZTE_VENDOR_ID, ZTE_PRODUCT_CDMA_TECH3) },
+        { USB_DEVICE(ZTE_VENDOR_ID, ZTE_PRODUCT_CDMA_TECH4) },
+        { USB_DEVICE(QISDA_VENDOR_ID, QISDA_PRODUCT_H21_4512) },
+        { USB_DEVICE(QISDA_VENDOR_ID, QISDA_PRODUCT_H21_4523) },
+        { USB_DEVICE(QISDA_VENDOR_ID, QISDA_PRODUCT_H20_4515) },
+        { USB_DEVICE(QISDA_VENDOR_ID, QISDA_PRODUCT_H20_4519) },
+        { USB_DEVICE(PANTECH_VENDOR_ID, PANTECH_PRODUCT_UM150) },       /* 0818 ASUS */
+        { USB_DEVICE(PANTECH_VENDOR_ID, PANTECH_PRODUCT_UM175) },       /* 0818 ASUS */
+        { USB_DEVICE(SIERRA_VENDOR_ID, SIERRA_PRODUCT_U595) },          /* 0818 ASUS */
+        { USB_DEVICE(SIERRA_VENDOR_ID, SIERRA_PRODUCT_U597) },          /* 0818 ASUS */
+        { USB_DEVICE(SIERRA_VENDOR_ID, SIERRA_PRODUCT_U598) },          /* 0818 ASUS */
+        { USB_DEVICE(HAIER_VENDOR_ID, HAIER_PRODUCT_CE100) },           /* 0824 ASUS */
 	{ } /* Terminating entry */
 };
 MODULE_DEVICE_TABLE(usb, option_ids);

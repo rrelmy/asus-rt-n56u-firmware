@@ -278,10 +278,55 @@ fail:
 }
 #endif
 
+int
+stop_3g()
+{
+        char disconn_scr[100];
+        char *modem_f = (*nvram_safe_get("modf") ? nvram_safe_get("modf") : "/ttyUSB0");
+        int modem_mode = atoi(nvram_safe_get("modem_enable"));
+
+	printf("stop 3g[%d]\n", modem_mode);	// tmp test
+
+	if(!modem_mode)
+		return -1;
+
+        system("killall usb_modeswitch");	// why this still exist?
+        system("killall pppd");
+        sleep(1);
+
+        memset(disconn_scr, 0, sizeof(disconn_scr));
+        sprintf(disconn_scr, "/bin/comgt -d /dev/%s -s /etc_ro/ppp/3g/%s", modem_f, modem_mode==2?"EVDO_disconn.scr":"Generic_disconn.scr");
+        system(disconn_scr);
+
+	if(*nvram_safe_get("wan_3g_pin"))
+	{
+		printf("wait more time\n");
+		sleep(8);
+	}
+	else
+		sleep(2);
+
+	printf("stop 3g end\n");	// tmp test
+
+        return 0;
+}
+
+void
+stop_apps()
+{
+	system("killall wanduck");
+	system("killall detectWan");
+}
+
 void
 sys_reboot()
 {
-	dbG("[httpd] reboot\n");
+	dbG("[httpd] reboot...\n");
+
+	stop_apps();
+	stop_3g();
+
+	dbG("[httpd] Reboot\n");
 
 	nvram_set("reboot", "1");
 	kill(1, SIGTERM);
@@ -3568,6 +3613,215 @@ exit:
 	return 0;
 }						     /* End --Alicia, 08.09.23 */
 
+/* remove space in the end of string */
+char *trim_r(char *str)
+{
+	int i;
+
+	i = strlen(str);
+
+	while (i >= 1)
+	{
+		if (*(str+i-1) == ' ' || *(str+i-1) == 0x0a || *(str+i-1) == 0x0d)
+			*(str+i-1)=0x0;
+		else
+			break;
+
+		i--;
+	}
+	return (str);
+}
+
+static int ej_wl_scan_5g(int eid, webs_t wp, int argc, char_t **argv)
+{
+	int retval = 0, i = 0, apCount = 0;
+	char data[8192];
+	char ssid_str[256];
+	char header[128];
+	struct iwreq wrq;
+	SSA *ssap;
+	memset(data, 0x00, 255);
+	strcpy(data, "SiteSurvey=1"); 
+	wrq.u.data.length = strlen(data)+1; 
+	wrq.u.data.pointer = data; 
+	wrq.u.data.flags = 0; 
+	spinlock_lock(SPINLOCK_SiteSurvey);
+	if (wl_ioctl(WIF, RTPRIV_IOCTL_SET, &wrq) < 0)
+	{
+		spinlock_unlock(0);
+		dbg("Site Survey fails\n");
+		return 0;
+	}
+	spinlock_unlock(SPINLOCK_SiteSurvey);
+	dbg("Please wait");
+	sleep(1);
+	dbg(".");
+	sleep(1);
+	dbg(".");
+	sleep(1);
+	dbg(".");
+	sleep(1);
+	dbg(".\n\n");
+	memset(data, 0, 8192);
+	strcpy(data, "");
+	wrq.u.data.length = 8192;
+	wrq.u.data.pointer = data;
+	wrq.u.data.flags = 0;
+	if (wl_ioctl(WIF, RTPRIV_IOCTL_GSITESURVEY, &wrq) < 0)
+	{
+		dbg("errors in getting site survey result\n");
+		return 0;
+	}
+	memset(header, 0, sizeof(header));
+	//sprintf(header, "%-3s%-33s%-18s%-8s%-15s%-9s%-8s%-2s\n", "Ch", "SSID", "BSSID", "Enc", "Auth", "Siganl(%)", "W-Mode", "NT");
+	sprintf(header, "%-4s%-33s%-18s%-9s%-16s%-9s%-8s\n", "Ch", "SSID", "BSSID", "Enc", "Auth", "Siganl(%)", "W-Mode");
+	dbg("\n%s", header);
+	if (wrq.u.data.length > 0)
+	{
+		ssap=(SSA *)(wrq.u.data.pointer+strlen(header)+1);
+		int len = strlen(wrq.u.data.pointer+strlen(header))-1;
+		char *sp, *op;
+ 		op = sp = wrq.u.data.pointer+strlen(header)+1;
+		while (*sp && ((len - (sp-op)) >= 0))
+		{
+			ssap->SiteSurvey[i].channel[3] = '\0';
+			ssap->SiteSurvey[i].ssid[32] = '\0';
+			ssap->SiteSurvey[i].bssid[17] = '\0';
+			ssap->SiteSurvey[i].encryption[8] = '\0';
+			ssap->SiteSurvey[i].authmode[15] = '\0';
+			ssap->SiteSurvey[i].signal[8] = '\0';
+			ssap->SiteSurvey[i].wmode[7] = '\0';
+			sp+=strlen(header);
+			apCount=++i;
+		}
+		if (apCount)
+		{
+			retval += websWrite(wp, "[");
+			for (i = 0; i < apCount; i++)
+			{
+				dbg("%-4s%-33s%-18s%-9s%-16s%-9s%-8s\n",
+					ssap->SiteSurvey[i].channel,
+					(char*)ssap->SiteSurvey[i].ssid,
+					ssap->SiteSurvey[i].bssid,
+					ssap->SiteSurvey[i].encryption,
+					ssap->SiteSurvey[i].authmode,
+					ssap->SiteSurvey[i].signal,
+					ssap->SiteSurvey[i].wmode
+				);
+
+				memset(ssid_str, 0, sizeof(ssid_str));
+				char_to_ascii(ssid_str, trim_r(ssap->SiteSurvey[i].ssid));
+
+				if (!i)
+//					retval += websWrite(wp, "\"%s\"", ssap->SiteSurvey[i].bssid);
+					retval += websWrite(wp, "[\"%s\", \"%s\"]", ssid_str, ssap->SiteSurvey[i].bssid);
+				else
+//					retval += websWrite(wp, ", \"%s\"", ssap->SiteSurvey[i].bssid);
+					retval += websWrite(wp, ", [\"%s\", \"%s\"]", ssid_str, ssap->SiteSurvey[i].bssid);
+			}
+			retval += websWrite(wp, "]");
+			dbg("\n");
+		}
+		else
+			retval += websWrite(wp, "[]");
+	}
+	return retval;
+}
+static int ej_wl_scan_2g(int eid, webs_t wp, int argc, char_t **argv)
+{
+	int retval = 0, i = 0, apCount = 0;
+	char data[8192];
+	char ssid_str[256];
+	char header[128];
+	struct iwreq wrq;
+	SSA *ssap;
+	memset(data, 0x00, 255);
+	strcpy(data, "SiteSurvey=1"); 
+	wrq.u.data.length = strlen(data)+1; 
+	wrq.u.data.pointer = data; 
+	wrq.u.data.flags = 0; 
+	spinlock_lock(SPINLOCK_SiteSurvey);
+	if (wl_ioctl(WIF2G, RTPRIV_IOCTL_SET, &wrq) < 0)
+	{
+		spinlock_unlock(0);
+		dbg("Site Survey fails\n");
+		return 0;
+	}
+	spinlock_unlock(SPINLOCK_SiteSurvey);
+	dbg("Please wait");
+	sleep(1);
+	dbg(".");
+	sleep(1);
+	dbg(".");
+	sleep(1);
+	dbg(".");
+	sleep(1);
+	dbg(".\n\n");
+	memset(data, 0, 8192);
+	strcpy(data, "");
+	wrq.u.data.length = 8192;
+	wrq.u.data.pointer = data;
+	wrq.u.data.flags = 0;
+	if (wl_ioctl(WIF2G, RTPRIV_IOCTL_GSITESURVEY, &wrq) < 0)
+	{
+		dbg("errors in getting site survey result\n");
+		return 0;
+	}
+	memset(header, 0, sizeof(header));
+	//sprintf(header, "%-3s%-33s%-18s%-8s%-15s%-9s%-8s%-2s\n", "Ch", "SSID", "BSSID", "Enc", "Auth", "Siganl(%)", "W-Mode", "NT");
+	sprintf(header, "%-4s%-33s%-18s%-9s%-16s%-9s%-8s\n", "Ch", "SSID", "BSSID", "Enc", "Auth", "Siganl(%)", "W-Mode");
+	dbg("\n%s", header);
+	if (wrq.u.data.length > 0)
+	{
+		ssap=(SSA *)(wrq.u.data.pointer+strlen(header)+1);
+		int len = strlen(wrq.u.data.pointer+strlen(header))-1;
+		char *sp, *op;
+ 		op = sp = wrq.u.data.pointer+strlen(header)+1;
+		while (*sp && ((len - (sp-op)) >= 0))
+		{
+			ssap->SiteSurvey[i].channel[3] = '\0';
+			ssap->SiteSurvey[i].ssid[32] = '\0';
+			ssap->SiteSurvey[i].bssid[17] = '\0';
+			ssap->SiteSurvey[i].encryption[8] = '\0';
+			ssap->SiteSurvey[i].authmode[15] = '\0';
+			ssap->SiteSurvey[i].signal[8] = '\0';
+			ssap->SiteSurvey[i].wmode[7] = '\0';
+			sp+=strlen(header);
+			apCount=++i;
+		}
+		if (apCount)
+		{
+			retval += websWrite(wp, "[");
+			for (i = 0; i < apCount; i++)
+			{
+				dbg("%-4s%-33s%-18s%-9s%-16s%-9s%-8s\n",
+					ssap->SiteSurvey[i].channel,
+					(char*)ssap->SiteSurvey[i].ssid,
+					ssap->SiteSurvey[i].bssid,
+					ssap->SiteSurvey[i].encryption,
+					ssap->SiteSurvey[i].authmode,
+					ssap->SiteSurvey[i].signal,
+					ssap->SiteSurvey[i].wmode
+				);
+
+				memset(ssid_str, 0, sizeof(ssid_str));
+                                char_to_ascii(ssid_str, trim_r(ssap->SiteSurvey[i].ssid));
+
+				if (!i)
+					retval += websWrite(wp, "[\"%s\", \"%s\"]", ssid_str, ssap->SiteSurvey[i].bssid);
+				else
+					retval += websWrite(wp, ", [\"%s\", \"%s\"]", ssid_str, ssap->SiteSurvey[i].bssid);
+
+
+			}
+			retval += websWrite(wp, "]");
+			dbg("\n");
+		}
+		else
+			retval += websWrite(wp, "[]");
+	}
+	return retval;
+}
 static int ej_disk_pool_mapping_info(int eid, webs_t wp, int argc, char_t **argv) {
 	disk_info_t *disks_info, *follow_disk;
 	partition_info_t *follow_partition;
@@ -5639,23 +5893,27 @@ int stop_usbled()
 static int ej_safely_remove_disk(int eid, webs_t wp, int argc, char_t **argv) {
 	int result = -1;
         char *disk_port = websGetVar(wp, "disk", "");
-//	disk_info_t *disks_info = NULL, *follow_disk = NULL;
-//	int disk_num = 0;
 	int part_num = 0;
+	int modem_mode = atoi(nvram_safe_get("modem_enable"));
 
 	csprintf("disk_port = %s\n", disk_port);
 
 	start_usbled();
-#if 0
-	result = eval("/sbin/ejusb", disk_port);
-#else
+
+        if(modem_mode > 0)
+	{
+		nvram_set("manually_disconnect_wan", "1");	/* unless do it, wanduck won't stop restart-modem... */
+                stop_3g();
+	}
+	printf("safely remove confirm:%d\n", modem_mode);	// tmp test
+
 	if (!disk_port)
 		;
 	else if (atoi(disk_port) == 1)
 		result = eval("/sbin/ejusb1");
 	else if (atoi(disk_port) == 2)
 		result = eval("/sbin/ejusb2");
-#endif
+
 	if (result != 0) {
 		show_error_msg("Action9");
 
@@ -5666,30 +5924,12 @@ static int ej_safely_remove_disk(int eid, webs_t wp, int argc, char_t **argv) {
 		stop_usbled();
 		return -1;
 	}
-/*
-	part_num = count_sddev_mountpoint();
-	csprintf("part_num = %d\n", part_num);
-
-	if (part_num > 0)
-	{
-		result = eval("/sbin/check_proc_mounts_parts");
-		result = eval("/sbin/run_ftpsamba");
-		result = eval("/sbin/run_dms");
-	}
-	else
-	{
-		result = eval("/sbin/stop_ftpsamba");
-		result = eval("/sbin/stop_dms");
-	}
-*/
 	websWrite(wp, "<script>\n");
 	websWrite(wp, "safely_remove_disk_success(\'%s\');\n", error_msg);
 	websWrite(wp, "</script>\n");
 
-	//if ((!nvram_match("wan0_proto", "3g")) && (nvram_match("ftp_setting_chg", "1")))
-	//	system("nvram commit");
-
 	stop_usbled();
+	printf("chk 3\n");	// tmp test
 	return 0;
 }
 
@@ -7565,6 +7805,8 @@ struct ej_handler ej_handlers[] = {
 	{ "get_static_client", ej_get_static_client},
 	{ "get_changed_status", ej_get_changed_status},
 	{ "wl_auth_list", ej_wl_auth_list},
+	{ "wl_scan_5g", ej_wl_scan_5g},
+	{ "wl_scan_2g", ej_wl_scan_2g},
 	{ "shown_time", ej_shown_time},
 	{ "shown_language_option", ej_shown_language_option},
 	{ "disk_pool_mapping_info", ej_disk_pool_mapping_info},

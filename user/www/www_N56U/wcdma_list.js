@@ -202,11 +202,11 @@ function gen_wcdma_list(){
 		passlist = new Array("beeline", "", "", "");
 	}
   else if(country == "UA"){
-    isplist = new Array("BeeLine", "Kyivstar Contract", "Kyivstar Prepaid", "Kyivstar XL", "Kyivstart 3G", "Djuice", "MTS", "Utel");
-    apnlist = new Array("internet.beeline.ua", "www.kyivstar.net", "www.ab.kyivstar.net", "xl.kyivstar.net", "3g.kyivstar.net", "www.djuice.com.ua", "", "3g.utel.ua");
-    daillist = new Array("*99#", "*99#", "*99#", "*99#", "*99#", "*99#", "#777", "*99#");
-    userlist = new Array("", "", "", "", "", "", "mobile", "");
-    passlist = new Array("", "", "", "", "", "", "internet", "");
+    isplist = new Array("BeeLine", "Kyivstar Contract", "Kyivstar Prepaid", "Kyivstar XL", "Kyivstart 3G", "Djuice", "MTS", "Utel", "PEOPLEnet", "Intertelecom", "Intertelecom.Rev.B", "Life");
+    apnlist = new Array("internet.beeline.ua", "www.kyivstar.net", "www.ab.kyivstar.net", "xl.kyivstar.net", "3g.kyivstar.net", "www.djuice.com.ua", "", "3g.utel.ua", "", "", "", "Internet");
+    daillist = new Array("*99#", "*99#", "*99#", "*99#", "*99#", "*99#", "#777", "*99#", "#777", "#777", "#777", "*99#");
+    userlist = new Array("", "", "", "", "", "", "mobile", "", "", "IT", "3G_TURBO", "");
+    passlist = new Array("", "", "", "", "", "", "internet", "", "", "IT", "3G_TURBO", "");
   }
 	else if(country == "TH"){
 		isplist = new Array("TOT", "TH GSM");

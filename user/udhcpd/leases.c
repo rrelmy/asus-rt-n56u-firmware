@@ -25,12 +25,16 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 
+#include <sys/ioctl.h>
+
 #include "debug.h"
 #include "dhcpd.h"
 #include "files.h"
 #include "options.h"
 #include "leases.h"
 #include "arpping.h"
+
+#include <nvram/bcmnvram.h>
 
 unsigned char blank_chaddr[] = {[0 ... 15] = 0};
 struct dhcpOfferedAddr *static_lease;
@@ -138,6 +142,7 @@ struct dhcpOfferedAddr *find_lease_by_yiaddr(u_int32_t yiaddr)
 	return NULL;
 }
 
+char *get_lan_ipaddr();
 
 /* find an assignable address, it check_expired is true, we check all the expired leases as well.
  * Maybe this should try expired leases by age... */
@@ -168,6 +173,8 @@ u_int32_t find_address(u_int8_t *chaddr, int check_expired)
 		/* check if an IP is used by LAN IP */
 		if (addr == ntohl(server_config.server)) goto next_addr;
 
+		if (same_as_lan_ip(htonl(addr))) goto next_addr;
+
 		/* lease is not taken */
 		ret = htonl(addr);
 		if ((!(lease = find_lease_by_yiaddr(ret)) ||
@@ -176,7 +183,7 @@ u_int32_t find_address(u_int8_t *chaddr, int check_expired)
 		     (check_expired  && lease_expired(lease))) &&
 
 		     /* and it isn't on the network */
-	    	     !check_ip(ret)) {
+		     !check_ip(ret)) {
 			return ret;
 			break;
 		}
@@ -189,6 +196,29 @@ u_int32_t find_address(u_int8_t *chaddr, int check_expired)
 	return 0;
 }
 
+char *
+get_lan_ipaddr()
+{
+	int s;
+	struct ifreq ifr;
+	struct sockaddr_in *inaddr;
+	struct in_addr ip_addr;
+
+	/* Retrieve IP info */
+	if ((s = socket(AF_INET, SOCK_RAW, IPPROTO_RAW)) < 0)
+		return strdup("0.0.0.0");
+
+	strncpy(ifr.ifr_name, "br0", IFNAMSIZ);
+	inaddr = (struct sockaddr_in *)&ifr.ifr_addr;
+	inet_aton("0.0.0.0", &inaddr->sin_addr);
+
+	/* Get IP address */
+	ioctl(s, SIOCGIFADDR, &ifr);
+	close(s);
+
+	ip_addr = ((struct sockaddr_in*)&ifr.ifr_addr)->sin_addr;
+	return inet_ntoa(ip_addr);
+}
 
 /* check if an IP is taken, if it is, add it to the lease table */
 int check_ip(u_int32_t addr)
@@ -203,3 +233,17 @@ int check_ip(u_int32_t addr)
 		return 1;
 	} else return 0;
 }
+
+/* check if an IP is used by LAN IP */
+int same_as_lan_ip(u_int32_t addr)
+{
+	struct in_addr temp;
+	temp.s_addr = addr;
+
+	if (nvram_match("lan_ipaddr_t", inet_ntoa(temp))
+		|| !strcmp(get_lan_ipaddr(), inet_ntoa(temp)))
+		return 1;
+	else
+		return 0;
+}
+

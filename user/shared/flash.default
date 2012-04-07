@@ -90,8 +90,10 @@
 { "filter_wl_default_x", "ACCEPT", 0 },
 { "filter_wl_icmp_x", "", 0 },
 { "fw_lw_enable_x", "0", 0 },
+{ "fw_lw_enable_x_1", "0", 0 },
 { "filter_lw_date_x", "1111111", 0 },
 { "filter_lw_time_x", "00002359", 0 },
+{ "filter_lw_time_x_1", "00002359", 0 },
 { "filter_lw_default_x", "ACCEPT", 0 },
 { "filter_lw_icmp_x", "", 0 },
 { "url_enable_x", "0", 0 },
@@ -165,7 +167,6 @@
 { "wl_wpa_mode", "0", 0 },
 
 #ifdef DLM
-{ "usb_ftpenable_x", "1", 0 },
 { "usb_ftpanonymous_x", "1", 0 },
 { "usb_ftpsuper_x", "0", 0 },
 { "usb_ftpport_x", "21", 0 },
@@ -202,7 +203,7 @@
 { "lan1_ipaddr", "192.168.2.1", 0 },
 { "lan1_netmask", "255.255.255.0", 0 },
 { "dhcp1_enable_x", "1", 0 },
-{ "dhcp1_start", "192.168.2.2", 0 },
+{ "dhcp1_start", "192.168.2.1", 0 },
 { "dhcp1_end", "192.168.2.254", 0 },
 { "lan1_lease", "86400", 0 },
 */

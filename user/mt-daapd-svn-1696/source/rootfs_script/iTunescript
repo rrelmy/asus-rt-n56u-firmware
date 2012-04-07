@@ -1,0 +1,140 @@
+#!/bin/sh
+
+iTunes_ENABLE=`xmldbc -g /system/itunes/enable`
+
+create_new_conf() {
+	CONF_PATH="/etc/mt-daapd.conf"
+
+	MODULE_NAME=`xmldbc -g /system/produce_name`
+	password=`xmldbc -g /system/itunes/admin_pw`
+	mp3_dir=`xmldbc -g /system/itunes/share_path`
+	db_parms=`xmldbc -g /system/itunes/db_parms`
+	servername=`xmldbc -g /system/lan/hostname`
+
+	if [ "$mp3_dir" = "root" ] ; then
+		mp3_dir="/mnt"
+	else
+		mp3_dir=`web_system GetRealPath "$mp3_dir"`
+	fi
+	
+	[ -z "$servername" ] && servername="$MODULE_NAME"
+
+	echo "[general]" > $CONF_PATH
+	echo "web_root = /web/www/data/" >> $CONF_PATH
+	echo "port = 3689" >> $CONF_PATH
+	echo "db_type = sqlite3" >> $CONF_PATH
+
+	echo "password = $password" >> $CONF_PATH
+	echo "mp3_dir = $mp3_dir" >> $CONF_PATH
+	echo "db_parms = $db_parms" >> $CONF_PATH
+	echo "servername = $servername" >> $CONF_PATH
+
+	echo "runas = root" >> $CONF_PATH
+	echo "playlist = /etc/mt-daapd.playlist" >> $CONF_PATH
+	echo "extensions = .mp3,.m3u" >> $CONF_PATH
+	echo "always_scan = 0" >> $CONF_PATH
+	echo "rescan_interval = 0" >> $CONF_PATH
+	echo "#logfile = /dev/console" >> $CONF_PATH
+
+	echo "" >> $CONF_PATH
+	echo "[daap]" >> $CONF_PATH
+	echo "supports_update = 1" >> $CONF_PATH
+
+	echo "" >> $CONF_PATH
+	echo "[plugins]" >> $CONF_PATH
+	echo "plugin_dir = /etc/plugins" >> $CONF_PATH
+
+	echo "" >> $CONF_PATH
+	echo "[scanning]" >> $CONF_PATH
+	echo "process_m3u = 1" >> $CONF_PATH
+	echo "ignore_dotfiles = 1" >> $CONF_PATH
+	echo "follow_symlinks = 0" >> $CONF_PATH
+	echo "" >> $CONF_PATH
+}
+
+start() {
+	CHECK_HD_READY=`web_system GetFirstMount`
+	if [ "$CHECK_HD_READY" = "" ] ; then
+		xmldbc -s /system/itunes/db_parms ""
+		xmldbc -s /temp/itunes_scan_media/scan_done 1
+		exit 0;
+	fi
+
+	SHARE_FOLDER=`xmldbc -g /system/itunes/share_path`
+	if [ -n "$SHARE_FOLDER" ] ; then
+		R_SHARE_FOLDER=`web_system GetRealPath $SHARE_FOLDER`
+		if [ -d "$R_SHARE_FOLDER" -o "$R_SHARE_FOLDER" = "root" ] ; then
+			DB_PATH=`xmldbc -g /system/itunes/db_parms`
+			REBOOT_FLAG=`xmldbc -g /system/itunes/reboot`
+			xmldbc -d /system/itunes/reboot
+			[ "$REBOOT_FLAG" = "1" ] && sleep 10
+			SCAN_FLAG="1"
+			if [ "$DB_PATH" != "" ] ; then
+				echo "$DB_PATH./songs3.db" > /dev/console
+				[ -e "$DB_PATH./songs3.db" -a "$1" = "restart" ] && SCAN_FLAG="0"
+			fi
+	
+			if [ "$SCAN_FLAG" = "1" ] ; then
+				xmldbc -s /system/itunes/db_parms ""
+				rm -f $CHECK_HD_READY/.systemfile/.mt-daapd/songs3.db*
+				xmldbc -s /temp/itunes_scan_media/scan_done 0
+				SCAN_FLAG_AG="-r" #rescan media files
+			else
+				xmldbc -s /temp/itunes_scan_media/scan_done 1
+			fi
+	
+			DB_PATH=`web_system GetFirstMount`
+			if [ "$DB_PATH" != "" ] ; then
+				xmldbc -s /system/itunes/db_parms "$DB_PATH/.systemfile/.mt-daapd/"
+				create_new_conf
+				UpdateDB_Daemon_I &
+				mt-daapd $SCAN_FLAG_AG &
+				inotify_iTune -mqqr "$SHARE_FOLDER" &
+			fi
+		fi
+		xmldbc -s /temp/itunes_scan_media/scan_done 1
+	fi
+}
+
+stop() {
+	killall -SIGTERM inotify_iTune
+	killall -SIGTERM UpdateDB_Daemon_I
+	killall -SIGTERM mt-daapd
+	sleep 2
+	MT_DAAPD_PID=`pidof mt-daapd`
+	[ -n "$MT_DAAPD_PID" ] && killall -SIGKILL mt-daapd
+}
+
+case "$1" in
+	start)
+		if [ "$iTunes_ENABLE" = "1" ] ; then
+			stop
+			start
+		else
+			stop
+			xmldbc -s /temp/itunes_scan_media/scan_done 1
+		fi
+		;;
+	stop)
+		stop
+		xmldbc -s /temp/itunes_scan_media/scan_done 1
+		;;
+	restart)
+		stop
+		[ "$iTunes_ENABLE" = "1" ] && start $1
+		;;
+	check_path)
+		ret=`ms_PathChk -t itune -p $2`
+		[ $ret = "1" ] && /etc/iTunescript &
+		;;
+	*)
+		if [ $# = 0 ] ; then
+			stop
+			start
+		else
+			echo $"Usage: $0 [{start|stop|restart|check_path full_path}]"
+			exit 1
+		fi
+esac
+
+exit 0

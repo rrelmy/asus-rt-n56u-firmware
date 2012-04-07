@@ -19,6 +19,7 @@ ROMFS_DIRS = \
 	home \
 	etc \
 	etc_ro etc_ro/web etc_ro/ppp etc_ro/ppp/peers etc_ro/ppp/plugins etc_ro/ppp/3g \
+	etc_ro/mt-daapd etc_ro/mt-daapd/plugins \
 	etc_ro/wlan etc_ro/Wireless etc_ro/xml etc_ro/usb \
 	etc_ro/linuxigd etc_ro/Wireless/RT2860AP etc_ro/Wireless/RT61AP etc_ro/Wireless/iNIC \
 	etc_ro/Wireless/RT2860STA \

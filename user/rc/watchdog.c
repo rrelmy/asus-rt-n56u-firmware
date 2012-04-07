@@ -697,7 +697,10 @@ int ntp_timesync(void)
 			ntp_first_refresh = 1;
 
 			if (!nvram_match("ddns_updated", "1"))
+			{
+				logmessage("RT-N56U", "[start ddns] ntp timesync");
 				start_ddns();
+			}
 
 			sync_interval = 4320;
 			logmessage("ntp client", "time is synchronized to %s", nvram_safe_get("ntp_server0"));
@@ -1640,6 +1643,7 @@ void watchdog(void)
 			(!nvram_match("ddns_updated", "1") || !ddns_timer)
 		)
 		{
+			logmessage("RT-N56U", "[start ddns] watchdog");
 			start_ddns();
 		}
 

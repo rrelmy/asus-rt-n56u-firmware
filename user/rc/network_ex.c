@@ -155,10 +155,8 @@ int start_pppd(char *prefix)
 	fprintf(fp, "novj nobsdcomp nodeflate\n");
 
 	/* echo failures */
-	fprintf(fp, "lcp-echo-interval 6\n");	// disable for tmp
-	fprintf(fp, "lcp-echo-failure 10\n");		// disable for tmp
-	//fprintf(fp, "lcp-echo-interval 3\n");	// disable for tmp
-	//fprintf(fp, "lcp-echo-failure 4\n");		// disable for tmp
+	fprintf(fp, "lcp-echo-interval 6\n");	
+	fprintf(fp, "lcp-echo-failure 10\n");
 
 	fprintf(fp, "unit %s\n",
 		nvram_safe_get(strcat_r(prefix, "unit", tmp)) ? : "0");
