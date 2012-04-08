@@ -316,7 +316,7 @@ vendor_%:
 	$(MAKEARCH) -C vendors $@
 
 .PHONY: linux
-linux linux%_only:
+linux%_only:
 	@if [ $(LINUXDIR) = linux-2.4.x -a ! -f $(LINUXDIR)/.depend ] ; then \
 		echo "ERROR: you need to do a 'make dep' first" ; \
 		exit 1 ; \
