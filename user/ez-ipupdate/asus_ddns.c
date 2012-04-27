@@ -1,19 +1,3 @@
-/*
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License as
- * published by the Free Software Foundation; either version 2 of
- * the License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston,
- * MA 02111-1307 USA
- */
 #include <ctype.h>
 #include <stdio.h>
 #include <string.h>
@@ -82,6 +66,7 @@ enum {
 
 int g_asus_ddns_mode = 0; /* 0: disable;  1: register domain;  2: update ip */
 
+char ipbuf[64];
 
 static void hm(text, text_len, key, key_len, digest)
 unsigned char *text;			/* pointer to data stream */
@@ -148,7 +133,6 @@ unsigned char *digest;			/* caller digest to be filled in */
 	md5_process_bytes(digest, 16, &context);	/* then results of 1st * hash */
 	md5_finish_ctx(&context, digest);			/* finish up 2nd pass */
 }
-
 
 #ifdef TEST_HMAC_MD5
 /*
@@ -245,6 +229,8 @@ int asus_reg_domain (void)
 
 	if (do_connect((int *) &client_sockfd, server, port) != 0) {
 		PRINT ("error connecting to %s:%s\n", server, port);
+		syslog (LOG_NOTICE,"error connecting to %s:%s\n", server, port);
+		nvram_set ("ddns_return_code", "time_out");
 		return (REGISTERES_ERROR);
 	}
 
@@ -259,20 +245,20 @@ int asus_reg_domain (void)
 	snprintf(buf, BUFFER_SIZE, "\015\012");
 	output(buf);
 
-
 	memset (buf, 0, sizeof (buf));
 	bp = buf;
 	bytes = 0;
 	btot = 0;
+	ret = 0;
 	while ((bytes = read_input(bp, BUFFER_SIZE - btot)) > 0) {
 		bp += bytes;
 		btot += bytes;
-		dprintf((stderr, "btot: %d\n", btot));
+		fprintf(stderr, "btot: %d\n", btot);
 	}
 	close(client_sockfd);
 	buf[btot] = '\0';
-
-	// TODO: according to server response, parsing code have to rewrite
+	fprintf(stderr, "Asus Reg domain:: return: %s\n", buf);
+	if(btot) { // TODO: according to server response, parsing code have to rewrite
 	if (sscanf(buf, " HTTP/1.%*c %3d", &ret) != 1) {
 		ret = -1;
 	}
@@ -285,7 +271,11 @@ int asus_reg_domain (void)
 		p = "";
 	}
 	snprintf (ret_buf, sizeof (ret_buf), "%s,%d", "register", ret);
-	nvram_set ("ddns_return_code", ret_buf);
+	}
+
+	if(ret_buf!=NULL)
+		nvram_set ("ddns_return_code", ret_buf);
+
 	switch (ret) {
 	case -1:
 		PRINT ("strange server response, are you connecting to the right server?\n");
@@ -294,6 +284,7 @@ int asus_reg_domain (void)
 
 	case 200:
 		PRINT ("Registration success.\n");
+		ddns_updated();
 		break;
 
 	case 203:
@@ -307,10 +298,12 @@ int asus_reg_domain (void)
 
 	case 220:
 		PRINT ("Registration same domain success.\n");
+		ddns_updated();
 		break;
 
 	case 230:
 		PRINT ("Registration new domain success.\n");
+		ddns_updated();
 		memset (old_name, 0, sizeof (old_name));
 		sscanf (p, "|%[^|\r\n]c", old_name);
 		nvram_set ("ddns_old_name", old_name);
@@ -356,8 +349,10 @@ int asus_reg_domain (void)
 		PRINT ("unknown return code: %d\n", ret);
 		if (ret >= 500)	{
 			retval = REGISTERES_SHUTDOWN;
+			nvram_set ("ddns_return_code","unknown_error");
 		} else {
 			retval = REGISTERES_ERROR;
+			nvram_set ("ddns_return_code","time_out");
 		}
 		break;
 	}
@@ -381,6 +376,7 @@ int asus_update_entry(void)
 
 	if (do_connect((int *) &client_sockfd, server, port) != 0) {
 		PRINT("error connecting to %s:%s\n", server, port);
+		nvram_set ("ddns_return_code", "connect_fail");
 		return (UPDATERES_ERROR);
 	}
 
@@ -401,11 +397,12 @@ int asus_update_entry(void)
 	while ((bytes = read_input(bp, BUFFER_SIZE - btot)) > 0) {
 		bp += bytes;
 		btot += bytes;
-		dprintf((stderr, "btot: %d\n", btot));
+		fprintf(stderr, "btot: %d\n", btot);
 	}
 	close(client_sockfd);
 	buf[btot] = '\0';
 
+	fprintf(stderr, "Asus update entry:: return: %s\n", buf);
 	if (sscanf(buf, " HTTP/1.%*c %3d", &ret) != 1) {
 		ret = -1;
 	}
@@ -420,6 +417,7 @@ int asus_update_entry(void)
 
 	case 200:
 		PRINT("Update IP successful\n");
+		ddns_updated();
 		break;
 
 	case 297:
@@ -533,7 +531,7 @@ int asus_private(void)
 #define MAX_SECRET_CODE_LEN	8
 	int i, l, c;
 	unsigned long secret;
-	unsigned char *p, user[256], hwaddr[6], hwaddr_str[18], key[64], msg[256], ipbuf[20], bin_pwd[16];
+	unsigned char *p, user[256], hwaddr[6], hwaddr_str[18], key[64], msg[256], bin_pwd[16];
 
 	memset (hwaddr, 0, sizeof (hwaddr));
 	memset (key, 0, sizeof (key));

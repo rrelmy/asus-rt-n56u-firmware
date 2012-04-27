@@ -19,8 +19,9 @@ LANG_DA=Dansk
 LANG_SV=Svensk
 LANG_BR=Brazil
 LANG_JP=日本語
-Enable_NAT=啟動 NAT
+LANG_ES=Español
 [NAT Passthrough]
+Enable_NAT=啟動 NAT
 NAT_PPTP_Passthrough=PPTP Passthrough
 NAT_L2TP_Passthrough=L2TP Passthrough
 NAT_IPSec_Passthrough=IPSec Passthrough
@@ -1153,6 +1154,7 @@ LANHostConfig_x_NTPServer_itemdesc=RT-N56U可與NTP伺服器同步，維持系�
 LANHostConfig_x_DDNSEnable_sectionname=DDNS設定：
 LANHostConfig_x_DDNSEnable_sectiondesc=動態DNS（DDNS）讓您即使在沒有靜態IP位址的情況下，仍可將伺服器連同特有名稱一併匯出至網際網路上。目前，在 RT-N56U 之中已有數台嵌入的DDNS客戶端。您可點選下方的「免費試用」，來啟用一個免費試用帳號。<p>
 LANHostConfig_x_DDNSEnable_sectiondesc2=目前無線路由器使用一個私人的 WAN IP 位址（192.168.x.x, 10.x.x.x, or 172.16.x.x）。此路由器可能處於多層 NAT網路中，而 DDNS 服務不能在此環境下工作。請連絡您的網路管理人員處理此問題。
+LANHostConfig_x_DDNSEnable_sectiondesc3=主機名稱已登記成功。您可以使用 "[hostname].asuscomm.com" 從 WAN 中獲取主機網路服務。使用"[hostname].asuscomm.com" 遠端存取您的網路。<p>前往 進階設定 > 外部網路 虛擬伺服器或 DMZ，可做 WAN 用戶端遠端存取內部網路的相關設定。<p>若您想要遠端設定無線路由器，選擇 <a href="../Advanced_BasicFirewall_Content.asp" target="_blank" style="text-decoration: underline; font-family:Lucida Console;">這裡</a>。
 LANHostConfig_x_DDNSEnable_itemname=啟用DDNS Client？
 LANHostConfig_x_DDNSServer_itemname=伺服器：
 LANHostConfig_x_DDNSUserName_itemname=用戶名稱或E-mail帳號：

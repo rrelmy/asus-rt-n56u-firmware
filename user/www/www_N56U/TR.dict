@@ -19,8 +19,9 @@ LANG_DA=Dansk
 LANG_SV=Svensk
 LANG_BR=Brazil
 LANG_JP=日本語
-Enable_NAT=NAT etkinleştirilsin mi
+LANG_ES=Español
 [NAT Passthrough]
+Enable_NAT=NAT etkinleştirilsin mi
 NAT_PPTP_Passthrough=PPTP Düz geçiş
 NAT_L2TP_Passthrough=L2TP Düz geçiş
 NAT_IPSec_Passthrough=IPSec Düz geçiş
@@ -1151,6 +1152,7 @@ LANHostConfig_x_NTPServer_itemdesc=Sistem zamanınızı NTP Sunucusuyla eşleşt
 LANHostConfig_x_DDNSEnable_sectionname=DDNS Ayarı
 LANHostConfig_x_DDNSEnable_sectiondesc=Dinamik DNS (DDNS), dinamik IP adresine sahip bir bilgisayara Internet etki alanı adı atamanızı sağlar. RT-N56U yönlendiricisine birkaç DDNS hizmeti eklenmiş durumdadır. Ücretsiz deneme hesabını etkinleştirmek için aşağıdaki Ücretsiz Deneme'yi tıklatabilirsiniz.<p>
 LANHostConfig_x_DDNSEnable_sectiondesc2=Kablosuz yönlendirici şu anda özel bir WAN IP adresi (192.168.x.x, 10,x,x,x, veya 172.16.x.x) kullanır.  Bu yönlendirici çoklu NAT ortamında olabilir ve DDNS hizmeti bu ortamda çalışamaz.
+LANHostConfig_x_DDNSEnable_sectiondesc3=Ana bilgisayar adı başarılı bir şekilde kaydedildi. Ev ağında WAN'dan hizmete erişmek için "[hostname (anabilgisayaradi)].asuscomm.com" kullanabilirsiniz. Ağınıza uzaktan erişmek için "[hostname (anabilgisayaradi)].asuscomm.com" kullanın.<p>Diğer WAN istemcilerini ağınıza uzaktan erişimini sağlamak amacıyla Port yönlendirmeyi veya DMZ ayarlarını yapılandırmak için Advanced Setting (Gelişmiş Ayarlar)>WAN yoluyla gidin.<p>Kablosuz yönlendiriciyi uzaktan yapılandırmak isterseniz <a href="../Advanced_BasicFirewall_Content.asp" target="_blank" style="text-decoration: underline; font-family:Lucida Console;">burada</a>.
 LANHostConfig_x_DDNSEnable_itemname=DDNS İstemcisi Etkinleştirilsin mi?
 LANHostConfig_x_DDNSServer_itemname=Sunucu:
 LANHostConfig_x_DDNSUserName_itemname=Kullanıcı Adı veya E-posta Adresi:

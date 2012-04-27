@@ -294,6 +294,7 @@ int handleURB(PIRP_SAVE pirp_saverw, struct u2ec_list_head *curt_pos)
 		pirp_saverw->StackLocation.Parameters.Others.Argument2 = (u_int64_t)0;
 		pirp_saverw->StackLocation.Parameters.Others.Argument3 = (u_int64_t)0;
 		pirp_saverw->StackLocation.Parameters.Others.Argument4 = (u_int64_t)0;
+		pbuf = pirp_saverw->Buffer + UrbLength;
 
 		if (dev) {
 			if (purb->UrbSelectConfiguration.ConfigurationDescriptor == 0x0)
@@ -301,7 +302,8 @@ int handleURB(PIRP_SAVE pirp_saverw, struct u2ec_list_head *curt_pos)
 			else {
 				purb->UrbHeader.UsbdDeviceHandle = (void*)0x80000000;
 
-				tmp_config = *(pirp_saverw->Buffer + UrbLength + 5) - 1;
+//				tmp_config = *(pirp_saverw->Buffer + UrbLength + 5) - 1;
+				tmp_config = (*(USB_CONFIGURATION_DESCRIPTOR*)pbuf).bConfigurationValue- 1;
 				// *(pirp_saverw->Buffer + UrbLength + 5) is bConfigurationVaule field of Configuration Descriptor
 				purb->UrbSelectConfiguration.ConfigurationHandle = (void*)0x80000000+0x1000*(tmp_config+1);
 
@@ -309,8 +311,8 @@ int handleURB(PIRP_SAVE pirp_saverw, struct u2ec_list_head *curt_pos)
 				int tmp_len = purb->UrbHeader.Length - 24;
 				
 				for (i = 0; tmp_len > 0; i++) {
-					int tmp_int = (*(USBD_INTERFACE_INFORMATION*)tmp).InterfaceNumber;
-					int tmp_alt = (*(USBD_INTERFACE_INFORMATION*)tmp).AlternateSetting;
+					tmp_int = (*(USBD_INTERFACE_INFORMATION*)tmp).InterfaceNumber;
+					tmp_alt = (*(USBD_INTERFACE_INFORMATION*)tmp).AlternateSetting;
 
 //					(*(USBD_INTERFACE_INFORMATION*)tmp).Length = dev->config[tmp_config].interface[tmp_int].altsetting[tmp_alt].bLength;
 //					(*(USBD_INTERFACE_INFORMATION*)tmp).InterfaceNumber = dev->config[tmp_config].interface[tmp_int].altsetting[tmp_alt].bInterfaceNumber;
@@ -327,6 +329,7 @@ int handleURB(PIRP_SAVE pirp_saverw, struct u2ec_list_head *curt_pos)
 						(*(USBD_INTERFACE_INFORMATION*)tmp).Pipes[j].Interval = dev->config[tmp_config].interface[tmp_int].altsetting[tmp_alt].endpoint[j].bInterval;
 						(*(USBD_INTERFACE_INFORMATION*)tmp).Pipes[j].PipeType = dev->config[tmp_config].interface[tmp_int].altsetting[tmp_alt].endpoint[j].bmAttributes & USB_ENDPOINT_TYPE_MASK;
 						(*(USBD_INTERFACE_INFORMATION*)tmp).Pipes[j].PipeHandle = (void*)0x80000000+0x1000*(tmp_config+1)+0x100*(tmp_int+1)+0x10*(tmp_alt+1)+0x1*(j+2);
+PDEBUG("URB_FUNCTION_SELECT_CONFIGURATION:: config, int, alt, ep: %x %x %x %x\n", tmp_config, tmp_int, tmp_alt, j);
 						if ((*(USBD_INTERFACE_INFORMATION*)tmp).Pipes[j].MaximumTransferSize > MAX_BUFFER_SIZE)
 							(*(USBD_INTERFACE_INFORMATION*)tmp).Pipes[j].MaximumTransferSize = MAX_BUFFER_SIZE;
 						(*(USBD_INTERFACE_INFORMATION*)tmp).Pipes[j].PipeFlags = 0;
@@ -372,8 +375,8 @@ int handleURB(PIRP_SAVE pirp_saverw, struct u2ec_list_head *curt_pos)
 			tmp_config = (((u_int32_t)purb->UrbSelectInterface.ConfigurationHandle)<<16)>>28;
 			tmp_config--;
 			char *tmp = (char*)&(purb->UrbSelectInterface.Interface);
-			int tmp_int = (*(USBD_INTERFACE_INFORMATION*)tmp).InterfaceNumber;
-			int tmp_alt = (*(USBD_INTERFACE_INFORMATION*)tmp).AlternateSetting;
+			tmp_int = (*(USBD_INTERFACE_INFORMATION*)tmp).InterfaceNumber;
+			tmp_alt = (*(USBD_INTERFACE_INFORMATION*)tmp).AlternateSetting;
 
 //			purb->UrbSelectInterface.ConfigurationHandle = 0x80000000+0x1000*(tmp_config+1);
 
@@ -393,6 +396,7 @@ int handleURB(PIRP_SAVE pirp_saverw, struct u2ec_list_head *curt_pos)
 				(*(USBD_INTERFACE_INFORMATION*)tmp).Pipes[j].Interval = dev->config[tmp_config].interface[tmp_int].altsetting[tmp_alt].endpoint[j].bInterval;
 				(*(USBD_INTERFACE_INFORMATION*)tmp).Pipes[j].PipeType = dev->config[tmp_config].interface[tmp_int].altsetting[tmp_alt].endpoint[j].bmAttributes & USB_ENDPOINT_TYPE_MASK;
 				(*(USBD_INTERFACE_INFORMATION*)tmp).Pipes[j].PipeHandle = (void*)0x80000000+0x1000*(tmp_config+1)+0x100*(tmp_int+1)+0x10*(tmp_alt+1)+0x1*(j+2);
+PDEBUG("URB_FUNCTION_SELECT_INTERFACE:: config, int, alt, ep: %x %x %x %x\n", tmp_config, tmp_int, tmp_alt, j);
 				if ((*(USBD_INTERFACE_INFORMATION*)tmp).Pipes[j].MaximumTransferSize > MAX_BUFFER_SIZE)
 					(*(USBD_INTERFACE_INFORMATION*)tmp).Pipes[j].MaximumTransferSize = MAX_BUFFER_SIZE;
 				(*(USBD_INTERFACE_INFORMATION*)tmp).Pipes[j].PipeFlags = 0;
@@ -979,7 +983,7 @@ int handleURB(PIRP_SAVE pirp_saverw, struct u2ec_list_head *curt_pos)
 		purb->UrbHeader.UsbdDeviceHandle = (void*)0x80000000;	// according to packet
 		purb->UrbHeader.UsbdFlags = 0x10;
 
-//		PDEBUG("\n\t PipeHandle: 0x%x", purb->UrbPipeRequest.PipeHandle);
+		PDEBUG("PipeHandle: 0x%x", purb->UrbPipeRequest.PipeHandle);
 		tmp_config = (((u_int32_t)purb->UrbPipeRequest.PipeHandle)<<16)>>28;
 		tmp_int = (((u_int32_t)purb->UrbPipeRequest.PipeHandle)<<20)>>28;
 		tmp_alt = (((u_int32_t)purb->UrbPipeRequest.PipeHandle)<<24)>>28;
@@ -988,7 +992,7 @@ int handleURB(PIRP_SAVE pirp_saverw, struct u2ec_list_head *curt_pos)
 		tmp_int--;
 		tmp_alt--;
 		tmp_ep -= 2;
-//		PDEBUG("\n\t config, int, alt, ep: %x %x %x %x", tmp_config, tmp_int, tmp_alt, tmp_ep);
+		PDEBUG("config, int, alt, ep: %x %x %x %x\n", tmp_config, tmp_int, tmp_alt, tmp_ep);
 
 		if (dev) {
 			udev = usb_open(dev);
@@ -1010,7 +1014,7 @@ int handleURB(PIRP_SAVE pirp_saverw, struct u2ec_list_head *curt_pos)
 		purb->UrbHeader.UsbdDeviceHandle = (void*)0x80000000;	// according to packet
 		purb->UrbHeader.UsbdFlags = 0x10;
 
-//		PDEBUG("\n\t PipeHandle: 0x%x", purb->UrbPipeRequest.PipeHandle);
+		PDEBUG("PipeHandle: 0x%x", purb->UrbPipeRequest.PipeHandle);
 		tmp_config = (((u_int32_t)purb->UrbPipeRequest.PipeHandle)<<16)>>28;
 		tmp_int = (((u_int32_t)purb->UrbPipeRequest.PipeHandle)<<20)>>28;
 		tmp_alt = (((u_int32_t)purb->UrbPipeRequest.PipeHandle)<<24)>>28;
@@ -1019,7 +1023,7 @@ int handleURB(PIRP_SAVE pirp_saverw, struct u2ec_list_head *curt_pos)
 		tmp_int--;
 		tmp_alt--;
 		tmp_ep -= 2;
-//		PDEBUG("\n\t config, int, alt, ep: %x %x %x %x", tmp_config, tmp_int, tmp_alt, tmp_ep);
+		PDEBUG("config, int, alt, ep: %x %x %x %x\n", tmp_config, tmp_int, tmp_alt, tmp_ep);
 
 		if (dev) {
 			udev = usb_open(dev);
@@ -1055,11 +1059,11 @@ int handleURB_64(PIRP_SAVE pirp_saverw, struct u2ec_list_head *curt_pos)
 	int		tmpReq = 0;
 	int		tmpReqType = 0;
 
-	u_int64_t tmp_config;
-	u_int64_t tmp_int;
-	u_int64_t tmp_alt;
-	u_int64_t tmp_ep;
-	u_int64_t tmp_intclass;
+	u_int32_t tmp_config;
+	u_int32_t tmp_int;
+	u_int32_t tmp_alt;
+	u_int32_t tmp_ep;
+	u_int32_t tmp_intclass;
 
 	int timeout_bulk_read_msg_tmp;
 	int timeout_bulk_write_msg_tmp;
@@ -1239,15 +1243,14 @@ int handleURB_64(PIRP_SAVE pirp_saverw, struct u2ec_list_head *curt_pos)
 
 				tmp_config = (*(USB_CONFIGURATION_DESCRIPTOR_64*)pbuf).bConfigurationValue- 1;
 				// *(pirp_saverw->Buffer + UrbLength + 5) is bConfigurationVaule field of Configuration Descriptor
-
 				purb->UrbSelectConfiguration.ConfigurationHandle = (u_int64_t)0x80000000+0x1000*(tmp_config+1);
 
 				char *tmp = (char*)&(purb->UrbSelectConfiguration.Interface);
 				int tmp_len = purb->UrbHeader.Length - 0x28;
 
 				for (i = 0; tmp_len > 0; i++) {
-					int tmp_int=(*(USBD_INTERFACE_INFORMATION_64*)tmp).InterfaceNumber;
-					int tmp_alt=(*(USBD_INTERFACE_INFORMATION_64*)tmp).AlternateSetting;
+					tmp_int=(*(USBD_INTERFACE_INFORMATION_64*)tmp).InterfaceNumber;
+					tmp_alt=(*(USBD_INTERFACE_INFORMATION_64*)tmp).AlternateSetting;
 
 //					(*(USBD_INTERFACE_INFORMATION_64*)tmp).Length = dev->config[tmp_config].interface[tmp_int].altsetting[tmp_alt].bLength;
 //					(*(USBD_INTERFACE_INFORMATION_64*)tmp).InterfaceNumber = dev->config[tmp_config].interface[tmp_int].altsetting[tmp_alt].bInterfaceNumber;
@@ -1264,6 +1267,7 @@ int handleURB_64(PIRP_SAVE pirp_saverw, struct u2ec_list_head *curt_pos)
 						(*(USBD_INTERFACE_INFORMATION_64*)tmp).Pipes[j].Interval = dev->config[tmp_config].interface[tmp_int].altsetting[tmp_alt].endpoint[j].bInterval;
 						(*(USBD_INTERFACE_INFORMATION_64*)tmp).Pipes[j].PipeType = dev->config[tmp_config].interface[tmp_int].altsetting[tmp_alt].endpoint[j].bmAttributes & USB_ENDPOINT_TYPE_MASK;
 						(*(USBD_INTERFACE_INFORMATION_64*)tmp).Pipes[j].PipeHandle = (u_int64_t)0x80000000+0x1000*(tmp_config+1)+0x100*(tmp_int+1)+0x10*(tmp_alt+1)+0x1*(j+2);
+//						PDEBUG("URB64_FUNCTION_SELECT_CONFIGURATION:: config, int, alt, ep: %x %x %x %x %d\n", tmp_config, tmp_int, tmp_alt, j, j);
 						if ((*(USBD_INTERFACE_INFORMATION_64*)tmp).Pipes[j].MaximumTransferSize > MAX_BUFFER_SIZE)
 							(*(USBD_INTERFACE_INFORMATION_64*)tmp).Pipes[j].MaximumTransferSize = MAX_BUFFER_SIZE;
 						(*(USBD_INTERFACE_INFORMATION_64*)tmp).Pipes[j].PipeFlags = 0;
@@ -1309,8 +1313,8 @@ int handleURB_64(PIRP_SAVE pirp_saverw, struct u2ec_list_head *curt_pos)
 			tmp_config = (((u_int32_t)purb->UrbSelectInterface.ConfigurationHandle)<<16)>>28;
 			tmp_config--;
 			char *tmp = (char*)&(purb->UrbSelectInterface.Interface);
-			int tmp_int = (*(USBD_INTERFACE_INFORMATION_64*)tmp).InterfaceNumber;
-			int tmp_alt = (*(USBD_INTERFACE_INFORMATION_64*)tmp).AlternateSetting;
+			tmp_int = (*(USBD_INTERFACE_INFORMATION_64*)tmp).InterfaceNumber;
+			tmp_alt = (*(USBD_INTERFACE_INFORMATION_64*)tmp).AlternateSetting;
 
 //			purb->UrbSelectInterface.ConfigurationHandle = 0x80000000+0x1000*(tmp_config+1);
 
@@ -1330,6 +1334,7 @@ int handleURB_64(PIRP_SAVE pirp_saverw, struct u2ec_list_head *curt_pos)
 				(*(USBD_INTERFACE_INFORMATION_64*)tmp).Pipes[j].Interval = dev->config[tmp_config].interface[tmp_int].altsetting[tmp_alt].endpoint[j].bInterval;
 				(*(USBD_INTERFACE_INFORMATION_64*)tmp).Pipes[j].PipeType = dev->config[tmp_config].interface[tmp_int].altsetting[tmp_alt].endpoint[j].bmAttributes & USB_ENDPOINT_TYPE_MASK;
 				(*(USBD_INTERFACE_INFORMATION_64*)tmp).Pipes[j].PipeHandle = (u_int64_t)0x80000000+0x1000*(tmp_config+1)+0x100*(tmp_int+1)+0x10*(tmp_alt+1)+0x1*(j+2);
+//				PDEBUG("URB64_FUNCTION_SELECT_INTERFACE:: config, int, alt, ep: %x %x %x %x\n", tmp_config, tmp_int, tmp_alt, j);
 				if ((*(USBD_INTERFACE_INFORMATION_64*)tmp).Pipes[j].MaximumTransferSize > MAX_BUFFER_SIZE)
 					(*(USBD_INTERFACE_INFORMATION_64*)tmp).Pipes[j].MaximumTransferSize = MAX_BUFFER_SIZE;
 				(*(USBD_INTERFACE_INFORMATION_64*)tmp).Pipes[j].PipeFlags = 0;
@@ -1413,13 +1418,13 @@ int handleURB_64(PIRP_SAVE pirp_saverw, struct u2ec_list_head *curt_pos)
 				tmpL = purb->UrbControlVendorClassRequest.TransferBufferLength;
 				tmpReq = purb->UrbControlVendorClassRequest.Request;
 				if (USBD_TRANSFER_DIRECTION_OUT == USBD_TRANSFER_DIRECTION(purb->UrbBulkOrInterruptTransfer.TransferFlags)) {
-/*
+
 					PDEBUG("OUT ");
 					PDEBUG("req: %x ", purb->UrbControlVendorClassRequest.Request);
 					PDEBUG("value: %x ", purb->UrbControlVendorClassRequest.Value);
 					PDEBUG("index: %x ", purb->UrbControlVendorClassRequest.Index);
 					PDEBUG("len: %x\n", purb->UrbControlVendorClassRequest.TransferBufferLength);
-*/
+
 					if (Is_Canon && flag_canon_state != 0)
 					{
 						if (	purb->UrbControlVendorClassRequest.Request == 0x2 &&
@@ -1444,13 +1449,13 @@ int handleURB_64(PIRP_SAVE pirp_saverw, struct u2ec_list_head *curt_pos)
 //					PDEBUG("usb_control_msg() out return: %d\n", ret);
 					((PCONNECTION_INFO)curt_pos)->count_class_int_in = 0;
 				} else {
-/*
+
 					PDEBUG("IN ");
 					PDEBUG("req: %x ", purb->UrbControlVendorClassRequest.Request);
 					PDEBUG("value: %x ", purb->UrbControlVendorClassRequest.Value);
 					PDEBUG("index: %x ", purb->UrbControlVendorClassRequest.Index);
 					PDEBUG("len: %x\n", purb->UrbControlVendorClassRequest.TransferBufferLength);
-*/
+
 					pbuf = pirp_saverw->Buffer + purb->UrbHeader.Length;
 					memset(pbuf, 0x0, purb->UrbControlVendorClassRequest.TransferBufferLength);
 					tmpReqType = (USB_TYPE_CLASS | USB_DIR_IN | USB_RECIP_INTERFACE);
@@ -1527,8 +1532,8 @@ int handleURB_64(PIRP_SAVE pirp_saverw, struct u2ec_list_head *curt_pos)
 		purb->UrbHeader.UsbdDeviceHandle = (u_int64_t)0x80000000;
 		purb->UrbHeader.UsbdFlags = 0x22;
 		purb->UrbBulkOrInterruptTransfer.UrbLink = 0;
-		//purb->UrbBulkOrInterruptTransfer.hca.HcdEndpoint = (u_int64_t)0xffffffff;
-		//purb->UrbBulkOrInterruptTransfer.hca.HcdIrp = (u_int64_t)0xdeadf00d;
+//		purb->UrbBulkOrInterruptTransfer.hca.HcdEndpoint = (u_int64_t)0xffffffff;
+//		purb->UrbBulkOrInterruptTransfer.hca.HcdIrp = (u_int64_t)0xdeadf00d;
 		purb->UrbControlDescriptorRequest.TransferBuffer = (u_int64_t)(u_int32_t)pbuf;
 
 //		PDEBUG("PipeHandle: 0x%x\n", purb->UrbBulkOrInterruptTransfer.PipeHandle);
@@ -1540,7 +1545,7 @@ int handleURB_64(PIRP_SAVE pirp_saverw, struct u2ec_list_head *curt_pos)
 		tmp_int--;
 		tmp_alt--;
 		tmp_ep -= 2;
-//		PDEBUG("config, int, alt, ep: %x %x %x %x\n", tmp_config, tmp_int, tmp_alt, tmp_ep);
+		PDEBUG("config, int, alt, ep: %x %x %x %x\n", tmp_config, tmp_int, tmp_alt, tmp_ep);
 
 		if (dev) {
 			tmp_intclass = dev->config[tmp_config].interface[tmp_int].altsetting[tmp_alt].bInterfaceClass;
@@ -1882,7 +1887,7 @@ int handleURB_64(PIRP_SAVE pirp_saverw, struct u2ec_list_head *curt_pos)
 		purb->UrbHeader.UsbdDeviceHandle = (u_int64_t)0x80000000;	// according to packet
 		purb->UrbHeader.UsbdFlags = 0x10;
 
-//		PDEBUG("\n\t PipeHandle: 0x%x", purb->UrbPipeRequest.PipeHandle);
+		PDEBUG("PipeHandle: 0x%x", purb->UrbPipeRequest.PipeHandle);
 		tmp_config = (((u_int32_t)purb->UrbPipeRequest.PipeHandle)<<16)>>28;
 		tmp_int = (((u_int32_t)purb->UrbPipeRequest.PipeHandle)<<20)>>28;
 		tmp_alt = (((u_int32_t)purb->UrbPipeRequest.PipeHandle)<<24)>>28;
@@ -1891,7 +1896,7 @@ int handleURB_64(PIRP_SAVE pirp_saverw, struct u2ec_list_head *curt_pos)
 		tmp_int--;
 		tmp_alt--;
 		tmp_ep -= 2;
-//		PDEBUG("\n\t config, int, alt, ep: %lld %lld %lld %lld in Dec", tmp_config, tmp_int, tmp_alt, tmp_ep);
+		PDEBUG("config, int, alt, ep: %x %x %x %x\n", tmp_config, tmp_int, tmp_alt, tmp_ep);
 
 		if (dev) {
 			udev = usb_open(dev);
@@ -1913,7 +1918,7 @@ int handleURB_64(PIRP_SAVE pirp_saverw, struct u2ec_list_head *curt_pos)
 		purb->UrbHeader.UsbdDeviceHandle = (u_int64_t)0x80000000;	// according to packet
 		purb->UrbHeader.UsbdFlags = 0x10;
 
-//		PDEBUG("\n\t PipeHandle: 0x%x", purb->UrbPipeRequest.PipeHandle);
+		PDEBUG("PipeHandle: 0x%x", purb->UrbPipeRequest.PipeHandle);
 		tmp_config = (((u_int32_t)purb->UrbPipeRequest.PipeHandle)<<16)>>28;
 		tmp_int = (((u_int32_t)purb->UrbPipeRequest.PipeHandle)<<20)>>28;
 		tmp_alt = (((u_int32_t)purb->UrbPipeRequest.PipeHandle)<<24)>>28;
@@ -1922,7 +1927,7 @@ int handleURB_64(PIRP_SAVE pirp_saverw, struct u2ec_list_head *curt_pos)
 		tmp_int--;
 		tmp_alt--;
 		tmp_ep -= 2;
-//		PDEBUG("\n\t config, int, alt, ep: %lld %lld %lld %lld in Dec", tmp_config, tmp_int, tmp_alt, tmp_ep);
+		PDEBUG("config, int, alt, ep: %x %x %x %x\n", tmp_config, tmp_int, tmp_alt, tmp_ep);
 
 		if (dev) {
 			udev = usb_open(dev);
@@ -2327,7 +2332,7 @@ int exchangeIRP(PIRP_SAVE pirp_saver, PIRP_SAVE pirp_saverw, struct u2ec_list_he
 			break;
 
 		default:
-			PDEBUG("Mirnor function not supported.\n");
+			PDEBUG("Mirnor function not supported: %x\n", pirp_saver->StackLocation.MinorFunction);
 		}//end of switch MN
 		break;
 

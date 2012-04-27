@@ -19,8 +19,9 @@ LANG_DA=Dansk
 LANG_SV=Svensk
 LANG_BR=Brazil
 LANG_JP=日本語
-Enable_NAT=启动 NAT
+LANG_ES=Español
 [NAT Passthrough]
+Enable_NAT=启动 NAT
 NAT_PPTP_Passthrough=PPTP Passthrough
 NAT_L2TP_Passthrough=L2TP Passthrough
 NAT_IPSec_Passthrough=IPSec Passthrough
@@ -1153,6 +1154,7 @@ LANHostConfig_x_NTPServer_itemdesc=RT-N56U可与NTP服务器同步，维持系�
 LANHostConfig_x_DDNSEnable_sectionname=DDNS设置：
 LANHostConfig_x_DDNSEnable_sectiondesc=动态DNS（DDNS）让您即使在没有静态IP地址的情况下，仍可将服务器连同特有名称一并导出至互联网上。目前，在 RT-N56U 之中已有数台嵌入的DDNS客户端。您可点选下方的「免费试用」，来启用一个免费试用账号。<p>
 LANHostConfig_x_DDNSEnable_sectiondesc2=目前无线路由器使用一个私人的 WAN IP 地址（192.168.x.x, 10,x,x,x, or 172.16.x.x）。此路由器可能处于多个 NAT 中并且 DDNS 服务不能在此环境下工作。
+LANHostConfig_x_DDNSEnable_sectiondesc3=主机名已登记成功。您可以使用 "[hostname].asuscomm.com" 从 WAN 中获取主机网络服务。使用"[hostname].asuscomm.com" 远程获取您的网络。<p>选择 进阶设定 > 外部网络 设定端口转发或 DMZ，允许其他 WAN 客户端远程获取您的网络。<p>若您想要远程设置无线路由器，选择 <a href="../Advanced_BasicFirewall_Content.asp" target="_blank" style="text-decoration: underline; font-family:Lucida Console;">这里</a>。
 LANHostConfig_x_DDNSEnable_itemname=启用DDNS Client？
 LANHostConfig_x_DDNSServer_itemname=服务器：
 LANHostConfig_x_DDNSUserName_itemname=用户名称或E-mail账号：

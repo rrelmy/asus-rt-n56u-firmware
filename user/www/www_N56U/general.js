@@ -3943,7 +3943,7 @@ function showhide(element, sh)
 {
 	var status;
 	if (sh == 1){
-		status = "block";
+		status = "";
 	}
 	else{
 		status = "none"

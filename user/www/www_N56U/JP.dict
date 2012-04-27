@@ -19,8 +19,9 @@ LANG_DA=Dansk
 LANG_SV=Svensk
 LANG_BR=Brazil
 LANG_JP=日本語
-Enable_NAT=NAT を有効
+LANG_ES=Español
 [VPN Passthrough]
+Enable_NAT=NAT を有効
 VPN_PPTP_Passthrough=VPN PPTP パススルー
 VPN_L2TP_Passthrough=VPN L2TP パススルー
 VPN_IPSec_Passthrough=VPNIPSec パススルー
@@ -669,7 +670,6 @@ ALERT_OF_ERROR_Input22=新しいパーティションの名前に関する入力
 ALERT_OF_ERROR_Input23=新しいパーティションの名前のフォーマットに誤りがあります!
 ALERT_OF_ERROR_Input24=新しいパーティションのサイズに関する入力に誤りがあります!
 ALERT_OF_ERROR_Input25=新しいパーティションのファイルシステムに関する入力がありません!
-ALERT_OF_ERROR_Input25=このファイルシステムはサポート対象外です。
 ALERT_OF_ERROR_Action1=アクセス許可/アクセス権の設定に失敗しました。
 ALERT_OF_ERROR_Action2=アカウントの作成に失敗しました。
 ALERT_OF_ERROR_Action3=アカウントの削除に失敗しました。
@@ -1153,6 +1153,7 @@ LANHostConfig_x_NTPServer_itemdesc=システム時間とNTPサーバーを同期
 LANHostConfig_x_DDNSEnable_sectionname=DDNS設定
 LANHostConfig_x_DDNSEnable_sectiondesc=Dynamic DNS (DDNS) は、動的IPアドレスでインターネットドメイン名をコンピューターに割り当てます。現在、複数のDDNSサービスがRT-N56Uに組み込まれており、「無料お試し」をクリックすれば、無料お試し版のアカウントを使用することができます。<p>
 LANHostConfig_x_DDNSEnable_sectiondesc2=The wireless router currently uses a private WAN IP address (192.168.x.x, 10,x,x,x, or 172.16.x.x). This router may be in the multiple-NAT environment and DDNS service cannot work in this environment.
+LANHostConfig_x_DDNSEnable_sectiondesc3=The host name is successfully registered. You can use "[hostname].asuscomm.com" to access the service in home network from WAN. Use "[hostname].asuscomm.com" to remotely access your network.<p>  Go to Advanced Setting > WAN to configure the port forwarding or DMZ settings to allow other WAN clients to remotely access your network.<p> If you want to remotely configure the wireless router, go to <a href="../Advanced_BasicFirewall_Content.asp" target="_blank" style="text-decoration: underline; font-family:Lucida Console;">here</a>.
 LANHostConfig_x_DDNSEnable_itemname=DDNSクライアントを有効にしますか？
 LANHostConfig_x_DDNSServer_itemname=サーバー：
 LANHostConfig_x_DDNSUserName_itemname=ユーザー名またはEメールアドレス：

@@ -1,19 +1,3 @@
-/*
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License as
- * published by the Free Software Foundation; either version 2 of
- * the License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston,
- * MA 02111-1307 USA
- */
 /* ============================================================================
  * Copyright (C) 1998-2001 Angus Mackay. All rights reserved; 
  *
@@ -79,6 +63,10 @@
 #define DHS_REQUEST "/nic/hosts"
 #define DHS_SUCKY_TIMEOUT 5 //60
 
+#define DNSOMATIC_DEFAULT_SERVER "updates.dnsomatic.com"
+#define DNSOMATIC_DEFAULT_PORT "80"
+#define DNSOMATIC_REQUEST "/nic/update"
+
 #define DYNDNS_DEFAULT_SERVER "members.dyndns.org"
 #define DYNDNS_DEFAULT_PORT "80"
 #define DYNDNS_REQUEST "/nic/update"
@@ -131,7 +119,7 @@
 #define HEIPV6TB_DEFAULT_PORT "80"
 #define HEIPV6TB_REQUEST "/index.cgi"
 
-#define DEFAULT_TIMEOUT 5 //120
+#define DEFAULT_TIMEOUT 16 //120
 #define DEFAULT_UPDATE_PERIOD 120
 #define DEFAULT_RESOLV_PERIOD 30
 
@@ -597,6 +585,16 @@ struct service_t services[] = {
     HEIPV6TB_REQUEST
   },
 #endif
+  { "dnsomatic",
+    { "dnsomatic", 0, 0, },
+    DYNDNS_init,
+    DYNDNS_update_entry,
+    DYNDNS_check_info,
+    DYNDNS_fields_used,
+    DNSOMATIC_DEFAULT_SERVER,
+    DNSOMATIC_DEFAULT_PORT,
+    DNSOMATIC_REQUEST
+  },
 };
 
 static struct service_t *service = NULL;
@@ -763,7 +761,7 @@ void print_usage( void )
 
 void print_version( void )
 {
-  fprintf(stdout, "%s: - %s - $Id: ez-ipupdate.c,v 1.2 2007/03/28 07:42:40 boyau Exp $\n", program_name, VERSION);
+  fprintf(stdout, "%s: - %s - $Id: ez-ipupdate.c,v 1.1.1.1 2008/07/21 09:17:41 james26_jang Exp $\n", program_name, VERSION);
 }
 
 void print_credits( void )
@@ -912,7 +910,7 @@ void show_message(char *fmt, ...)
     sprintf(buf, "message incomplete because your OS sucks: %s\n", fmt);
 #endif
 
-    syslog(LOG_NOTICE, buf);
+    syslog(LOG_NOTICE, "%s", buf);
   }
   else
   {
@@ -938,7 +936,7 @@ void show_message(char *fmt, ...)
   va_start(args, fmt);
   vsnprintf(buf, sizeof(buf), fmt, args);
   openlog("ddns update", 0, 0);
-  syslog(0, buf);
+  syslog(0, "%s", buf);
   closelog();
   va_end(args);
 }
@@ -1715,7 +1713,7 @@ void output(void *buf)
   }
   else if(ret == 0)
   {
-    show_message("timeout\n");
+    show_message("output timeout\n");
   }
   else
   {
@@ -1757,7 +1755,7 @@ int read_input(char *buf, int len)
   }
   else if(ret == 0)
   {
-    show_message("timeout\n");
+    show_message("Server timeout\n");
   }
   else
   {
@@ -2131,6 +2129,8 @@ int DYNDNS_update_entry(void)
   buf[btot] = '\0';
 
   dprintf((stderr, "server output: %s\n", buf));
+fprintf(stderr, "server output: %s\n", buf);
+show_message("server output: %s\n", buf);
 
   if(sscanf(buf, " HTTP/1.%*c %3d", &ret) != 1)
   {
@@ -3096,7 +3096,7 @@ int TZO_update_entry(void)
         {
           bp = "";
         }
-        dprintf((stderr, "location: %s\n", bp));
+        fprintf(stderr, "location: %s\n", bp);
 
         if(!(strncmp(bp, "domainmismatch.htm", strlen(bp)) && strncmp(bp, "invname.htm", strlen(bp))))
         {
@@ -4501,6 +4501,12 @@ void handle_sig(int sig)
   }
 }
 
+void ddns_updated()
+{
+        write_cache_file("/tmp/ddns.cache", time(NULL), ipbuf);
+        exec_cmd("/sbin/ddns_updated");
+}
+
 int main(int argc, char **argv)
 {
   int ifresolve_warned = 0;
@@ -4631,11 +4637,13 @@ int main(int argc, char **argv)
 //2007.03.14 Yau add
 #ifdef ASUS_DDNS
         if (g_asus_ddns_mode != 0)      {
-                nvram_unset ("ddns_return_code");
+                nvram_set ("ddns_return_code", "ddns_query");
                 nvram_unset ("ddns_suggest_name");
                 nvram_unset ("ddns_old_name");
-                if (asus_private() == -1)
+                if (asus_private() == -1) {
+			nvram_set ("ddns_return_code", "connect_fail");
                         goto exit_main;
+                }
         }
         if (g_asus_ddns_mode == 1)      {
                 asus_reg_domain ();

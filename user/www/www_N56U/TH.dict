@@ -19,8 +19,9 @@ LANG_DA=Dansk
 LANG_SV=Svensk
 LANG_BR=Brazil
 LANG_JP=日本語
-Enable_NAT=เปิดทำงาน NAT
+LANG_ES=Español
 [NAT Passthrough]
+Enable_NAT=เปิดทำงาน NAT
 NAT_PPTP_Passthrough=PPTP ผ่านตลอด
 NAT_L2TP_Passthrough=L2TP ผ่านตลอด
 NAT_IPSec_Passthrough=IPSec ผ่านตลอด
@@ -1151,6 +1152,7 @@ LANHostConfig_x_NTPServer_itemdesc=เพื่อซิงโครไนซ์
 LANHostConfig_x_DDNSEnable_sectionname=การตั้งค่า DDNS 
 LANHostConfig_x_DDNSEnable_sectiondesc=ไดนามิก DNS (DDNS) อนุญาตให้คุณกำหนดชื่อโดเมนอินเทอร์เน็ตให้กับคอมพิวเตอร์ด้วยไดนามิก IP แอดเดรส ขณะนี้ บริการ DDNS หลายรายการถูกฝังอยู่ใน RT-N56U คุณสามารถคลิก ทดลองฟรี ด้านล่าง เพื่อเริ่มบัญชีทดลองใช้ฟรีได้<p>
 LANHostConfig_x_DDNSEnable_sectiondesc2=ขณะนี้ไวร์เลสเราเตอร์ใช้ WAN IP แอดเดรสส่วนตัว (192.168.x.x, 10,x,x,x หรือ 172.16.x.x) เราเตอร์นี้อาจอยู่ในสภาพแวดล้อมแบบหลาย NAT และบริการ DDNS ไม่สามารถทำงานในสภาพแวดล้อมนี้ได้ 
+LANHostConfig_x_DDNSEnable_sectiondesc3=ชื่อโฮสต์ได้รับการจดทะเบียนสำเร็จ คุณสามารถใช้ "[ชื่อโฮสต์].asuscomm.com" เพื่อเข้าถึงบริการในเครือข่ายที่บ้านของคุณจาก WAN ได้ ใช้ "[ชื่อโฮสต์].asuscomm.com" เพื่อเข้าถึงเครือข่ายของคุณจากระยะไกล<p>ไปที่ Advanced Setting (การตั้งค่าขั้นสูง) > WAN (แวน) เพื่อกำหนดค่าการตั้งค่าพอร์ตฟอร์เวิร์ดดิ้ง หรือ DMZ เพื่ออนุญาตให้ WAN ไคลเอ็นต์อื่นเข้าถึงเครือข่ายของคุณได้จากระยะไกล<p>ถ้าคุณต้องการกำหนดค่าไวร์เลสเราเตอร์จากระยะไกล ให้ไปที่ <a href="../Advanced_BasicFirewall_Content.asp" target="_blank" style="text-decoration: underline; font-family:Lucida Console;">ที่นี่</a>
 LANHostConfig_x_DDNSEnable_itemname=เปิดทำงานไคลเอ็นต์ DDNS?
 LANHostConfig_x_DDNSServer_itemname=เซิร์ฟเวอร์:
 LANHostConfig_x_DDNSUserName_itemname=ชื่อผู้ใช้หรืออีเมลแอดเดรส:

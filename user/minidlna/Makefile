@@ -1,4 +1,4 @@
-# $Id: Makefile,v 1.31 2011/04/21 08:50:44 jmaggard Exp $
+# $Id: Makefile,v 1.31.2.1 2012/01/17 22:49:01 jmaggard Exp $
 # MiniDLNA project
 # http://sourceforge.net/projects/minidlna/
 # (c) 2008-2009 Justin Maggard
@@ -13,24 +13,25 @@
 #CFLAGS = -Wall -O -D_GNU_SOURCE -g -DDEBUG
 #CFLAGS = -Wall -g -Os -D_GNU_SOURCE
 CFLAGS = -Wall -g -O3 -D_GNU_SOURCE -D_FILE_OFFSET_BITS=64 \
-	-I../../lib/include \
-	-I../sqlite-autoconf-3070500/source \
-	-I../libexif-0.6.20/source \
-	-I../jpeg-6b/source \
-	-I../ffmpeg-0.6.2/source \
-	-I../ffmpeg-0.6.2/install/include/libavcodec \
-	-I../ffmpeg-0.6.2/install/include/libavformat \
-	-I../ffmpeg-0.6.2/install/include/libavutil \
-	-I../../lib/libid3tag-0.15.1b \
-	-I../libogg-1.2.2/source/include \
-	-I../libvorbis-1.3.2/source/include \
-	-I../flac-1.2.1/source/include \
-	-I../libexif-0.6.20/source/libexif
-#	-I/usr/include/ffmpeg \
-#	-I/usr/include/libavutil -I/usr/include/libavcodec -I/usr/include/libavformat \
-#	-I/usr/include/ffmpeg/libavutil -I/usr/include/ffmpeg/libavcodec -I/usr/include/ffmpeg/libavformat
+	 -I../../lib/include \
+	 -I../sqlite-autoconf-3070500/source \
+	 -I../libexif-0.6.20/source \
+	 -I../jpeg-6b/source \
+	 -I../ffmpeg-0.6.2/source \
+	 -I../ffmpeg-0.6.2/install/include/libavcodec \
+	 -I../ffmpeg-0.6.2/install/include/libavformat \
+	 -I../ffmpeg-0.6.2/install/include/libavutil \
+	 -I../../lib/libid3tag-0.15.1b \
+	 -I../libogg-1.2.2/source/include \
+	 -I../libvorbis-1.3.2/source/include \
+	 -I../flac-1.2.1/source/include \
+	 -I../libexif-0.6.20/source/libexif
+#	 -I/usr/include/ffmpeg \
+#	 -I/usr/include/libavutil -I/usr/include/libavcodec -I/usr/include/libavformat \
+#	 -I/usr/include/ffmpeg/libavutil -I/usr/include/ffmpeg/libavcodec -I/usr/include/ffmpeg/libavformat
 #STATIC_LINKING: CFLAGS += -DSTATIC
 #STATIC_LINKING: LDFLAGS = -static
+#CC = gcc
 CC = mipsel-linux-gcc
 RM = rm -f
 INSTALL = install
@@ -43,7 +44,7 @@ BASEOBJS = minidlna.o upnphttp.o upnpdescgen.o upnpsoap.o \
            upnpreplyparse.o minixml.o \
            getifaddr.o daemonize.o upnpglobalvars.o \
            options.o minissdp.o uuid.o upnpevents.o \
-           sql.o naturalsort.o utils.o metadata.o scanner.o inotify.o \
+           sql.o utils.o metadata.o scanner.o inotify.o \
            tivo_utils.o tivo_beacon.o tivo_commands.o \
            tagutils/textutils.o tagutils/misc.o tagutils/tagutils.o \
            playlist.o image_utils.o albumart.o log.o
@@ -64,10 +65,8 @@ LIBS += -L../../lib/lib
 LIBS += -lpthread -lexif -ljpeg -lsqlite3 -lid3tag -lFLAC -lvorbis -logg -lavformat -lavcodec -lavutil -ldl -lz -lm# -liconv
 #LIBS += -lintl # NLS support
 #SHDIR = $(ROOTDIR)/user/shared
-#USERDIR = $(ROOTDIR)/user
 #CFLAGS += -DASUS_NVRAM -I$(ROOTDIR)/linux-2.6.21.x/include
 #LIBS += -L$(SHDIR) -lshared
-
 #STATIC_LINKING: LIBS = -lvorbis -logg -lm -lsqlite3 -lpthread -lexif -ljpeg -lFLAC -lm -lid3tag -lz -lavformat -lavutil -lavcodec -lm
 
 TESTUPNPDESCGENOBJS = testupnpdescgen.o upnpdescgen.o
@@ -89,18 +88,20 @@ distclean: clean
 install:	minidlna
 	$(INSTALL) -d $(SBININSTALLDIR)
 	$(INSTALL) minidlna $(SBININSTALLDIR)
+
+install-conf:
 	$(INSTALL) -d $(ETCINSTALLDIR)
 	$(INSTALL) --mode=0644 minidlna.conf $(ETCINSTALLDIR)
 
-romfs: minidlna
-	$(ROMFSINST) /usr/bin/minidlna
-	$(STRIP) $(INSTALLDIR)/usr/bin/minidlna
-	$(ROMFSINST) /etc_ro/minidlna.conf
-
-minidlna:	$(BASEOBJS) $(LNXOBJS) #$(LIBS)
+#minidlna:	$(BASEOBJS) $(LNXOBJS) $(LIBS)
+minidlna:	$(BASEOBJS) $(LNXOBJS)
 	@echo Linking $@
 	@$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $(BASEOBJS) $(LNXOBJS) $(LIBS)
 
+romfs:		minidlna
+	$(ROMFSINST) /usr/bin/minidlna
+	$(STRIP) $(INSTALLDIR)/usr/bin/minidlna
+	$(ROMFSINST) /etc_ro/minidlna.conf
 
 testupnpdescgen:	$(TESTUPNPDESCGENOBJS)
 	@echo Linking $@
@@ -117,7 +118,7 @@ depend:	config.h
 
 minidlna.o: config.h upnpglobalvars.h minidlnatypes.h
 minidlna.o: upnphttp.h upnpdescgen.h minidlnapath.h getifaddr.h upnpsoap.h
-minidlna.o: options.h minissdp.h daemonize.h upnpevents.h log.h naturalsort.h
+minidlna.o: options.h minissdp.h daemonize.h upnpevents.h log.h
 upnphttp.o: config.h upnphttp.h upnpdescgen.h minidlnapath.h upnpsoap.h
 upnphttp.o: upnpevents.h image_utils.h sql.h log.h icons.c
 upnpdescgen.o: config.h upnpdescgen.h minidlnapath.h upnpglobalvars.h
@@ -156,7 +157,6 @@ tivo_beacon.o: config.h tivo_beacon.h tivo_utils.h
 tivo_commands.o: config.h tivo_commands.h tivo_utils.h utils.h
 utils.o: utils.h
 sql.o: sql.h
-naturalsort.o: naturalsort.h
 log.o: log.h
 
 .SUFFIXES: .c .o

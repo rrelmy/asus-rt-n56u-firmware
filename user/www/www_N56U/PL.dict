@@ -19,8 +19,9 @@ LANG_DA=Dansk
 LANG_SV=Svensk
 LANG_BR=Brazil
 LANG_JP=日本語
-Enable_NAT=Uruchom NAT
+LANG_ES=Español
 [NAT Passthrough]
+Enable_NAT=Uruchom NAT
 NAT_PPTP_Passthrough=Okienko PPTP
 NAT_L2TP_Passthrough=Okienko L2TP
 NAT_IPSec_Passthrough=Okienko IPSec
@@ -1151,6 +1152,7 @@ LANHostConfig_x_NTPServer_itemdesc=W celu zsynchronizowania czasu systemowego z 
 LANHostConfig_x_DDNSEnable_sectionname=Ustawienia DDNS.
 LANHostConfig_x_DDNSEnable_sectiondesc=Usługa dynamicznego DNS (DDNS) pozwala na przypisanie Internetowej nazwy domenowej do routera pracującego ze zmiennym adresem IP. Obsługiwane jest kilka rodzajów usługi DDNS.<p>
 LANHostConfig_x_DDNSEnable_sectiondesc2=Router sieci bezprzewodowej aktualnie wykorzystuje prywatny adres IP WAN (192.168.x.x, 10,x,x,x, lub 172.16.x.x). Router ten może znajdować się w środowisku wielu NAT, a w tym środowisku usługa DDNS nie może działać.
+LANHostConfig_x_DDNSEnable_sectiondesc3=Nazwa hosta została pomyślnie zarejestrowana. Można użyć "[nazwa hosta].asuscomm.com" do dostępu do usługi w sieci domowej z sieci WAN. Użyj "[nazwa hosta].asuscomm.com" do zdalnego dostępu do sieci.<p>Przejdź do Advanced Setting (Ustawienia zaawansowane) > WAN w celu konfiguracji przekierowania portów lub ustawień DMZ, aby umożliwić zdalne połączenie z siecią innym klientom WAN.<p>Aby zdalnie skonfigurować router router sieci bezprzewodowej, przejdź do <a href="../Advanced_BasicFirewall_Content.asp" target="_blank" style="text-decoration: underline; font-family:Lucida Console;">tutaj</a>.
 LANHostConfig_x_DDNSEnable_itemname=Uruchomić klienta DDNS ?
 LANHostConfig_x_DDNSServer_itemname=Serwer:
 LANHostConfig_x_DDNSUserName_itemname=Nazwa użytkownika lub adres email:

@@ -19,8 +19,9 @@ LANG_DA=Dansk
 LANG_SV=Svensk
 LANG_BR=Brazil
 LANG_JP=日本語
-Enable_NAT=Activer le NAT
+LANG_ES=Español
 [NAT Passthrough]
+Enable_NAT=Activer le NAT
 NAT_PPTP_Passthrough=Relai PPTP
 NAT_L2TP_Passthrough=Relai L2TP
 NAT_IPSec_Passthrough=Relai IPSec
@@ -667,7 +668,6 @@ ALERT_OF_ERROR_Input22=Le nom de la nouvelle partition n'a pas été saisi!
 ALERT_OF_ERROR_Input23=Le nom de la nouvelle partition utilise un format incorrect!
 ALERT_OF_ERROR_Input24=Il n'y a pas d'entrée concernant la taille de la nouvelle partition!
 ALERT_OF_ERROR_Input25=Il n'y a pas d'entrée concernant le système de fichier de la nouvelle partition!
-ALERT_OF_ERROR_Input25=Ce système de fichier n'est pas supporté.
 ALERT_OF_ERROR_Action1=Echec de la configuration des droits d'accès.
 ALERT_OF_ERROR_Action2=Echec de la création du compte.
 ALERT_OF_ERROR_Action3=Echec de la suppression du compte.
@@ -1151,6 +1151,7 @@ LANHostConfig_x_NTPServer_itemdesc=Pour synchroniser votre système avec le serv
 LANHostConfig_x_DDNSEnable_sectionname=Configuration DDNS
 LANHostConfig_x_DDNSEnable_sectiondesc=le Dynamic DNS (DDNS) vous permet d'assigner un nom de domaine Internet à un ordinateur à l'aide d'une adresse IP dynamique. A l'heure actuelle, plusieurs services DDNS sont intégrés dans le RT-N56U. Vous pouvez cliquer sur  Free Trial pour créer un c<p>
 LANHostConfig_x_DDNSEnable_sectiondesc2=Le routeur utilise actuellement une adresse IP WAN privée (192.168.X.X, 10.X.X.X ou 172.16.X.X) et peut faire parti de multiples environnements NAT résultant dans l'impossibilité d'utiliser le service DDNS.
+LANHostConfig_x_DDNSEnable_sectiondesc3=L'enregistrement du nom d'hôte a réussi. Vous pouvez utiliser "[nom d'hôte].asuscomm.com" pour accéder au service à partir d'Internet. Utilisez "[nom d'hôte].asuscomm.com" pour accéder au réseau local à distance.<p>Allez dans Paramètres avancés > Réseau étendu pour configurer la redirection de port ou les paramètres DMZ afin d'autoriser d'autres clients WAN à accéder à votre réseau.<p>Si vous souhaitez configurer le routeur à distance, allez <a href="../Advanced_BasicFirewall_Content.asp" target="_blank" style="text-decoration: underline; font-family:Lucida Console;">ici</a>.
 LANHostConfig_x_DDNSEnable_itemname=Activer le client DDNS ?
 LANHostConfig_x_DDNSServer_itemname=Serveur:
 LANHostConfig_x_DDNSUserName_itemname=Nom d'utilisateur ou adresse email:

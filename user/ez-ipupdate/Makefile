@@ -14,8 +14,6 @@
 
 SHELL = /bin/sh
 
-SHDIR = $(ROOTDIR)/user/shared
-
 srcdir = .
 top_srcdir = .
 prefix = /usr/local
@@ -100,13 +98,11 @@ ez_ipupdate_LDFLAGS =
 # 2007.03.14 Yau add for ASUS DDNS
 ez_ipupdate_OBJECTS += asus_ddns.o
                                                                                 
-#CFLAGS += -DASUS_DDNS
 CFLAGS += -DASUS_DDNS -DASUS_NVRAM
-#CFLAGS += -I$(SRCBASE)/include
+SHDIR = $(ROOTDIR)/user/shared
 CFLAGS += -I$(SHDIR)/ -I$(SHDIR)/include -I$(ROOTDIR)/linux-2.6.21.x/include
-#CFLAGS += -I/root/WL520gu/src/include
-#LDFLAGS += -L$(TOP)/nvram -L$(INSTALLDIR)/nvram/usr/lib -lnvram 
-LDFLAGS += -L$(SHDIR) -lshared 
+LDFLAGS += -L$(SHDIR) -lshared
+
 #end of Yau add
 
 COMPILE = $(CC) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
@@ -174,6 +170,7 @@ mostlyclean-binPROGRAMS:
 
 clean-binPROGRAMS:
 	-test -z "$(bin_PROGRAMS)" || rm -f $(bin_PROGRAMS)
+	-test -z test_hmac_md5" || rm -f test_hmac_md5
 
 distclean-binPROGRAMS:
 
@@ -349,13 +346,12 @@ install: $(PROGRAMS)
 	install -D ez-ipupdate $(INSTALLDIR)/usr/sbin/ez-ipupdate
 	$(STRIP) $(INSTALLDIR)/usr/sbin/ez-ipupdate
 #2007.03.14 Yau add
-	install -D test_hmac_md5 $(INSTALLDIR)/usr/sbin/test_hmac_md5
-	$(STRIP) $(INSTALLDIR)/usr/sbin/test_hmac_md5
+#	install -D test_hmac_md5 $(INSTALLDIR)/usr/sbin/test_hmac_md5
+#	$(STRIP) $(INSTALLDIR)/usr/sbin/test_hmac_md5
 
 romfs:
 	$(STRIP) ez-ipupdate
 	$(ROMFSINST) /bin/ez-ipupdate
-
 
 mostlyclean-generic:
 

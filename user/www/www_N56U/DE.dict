@@ -19,8 +19,9 @@ LANG_DA=Dansk
 LANG_SV=Svensk
 LANG_BR=Brazil
 LANG_JP=日本語
-Enable_NAT=NAT aktivieren
+LANG_ES=Español
 [NAT Passthrough]
+Enable_NAT=NAT aktivieren
 NAT_PPTP_Passthrough=PPTP Passthrough
 NAT_L2TP_Passthrough=L2TP Passthrough
 NAT_IPSec_Passthrough=IPSec Passthrough
@@ -565,7 +566,7 @@ AiDisk_Read=Lesen
 AiDisk_Write=Schreiben
 AiDisk_moreconfig=Zur erweiterten Konfiguration der Dateifreigabe.
 btn_pre=Zurück
-btn_next=Vorwarts
+btn_next=Vorwärts
 DDNSterm_agreeword=Ich werde den Service nutzen und akzeptieren
 DDNS_termofservice_Title=Nutzungsbedingungen
 Time=Zeit
@@ -857,7 +858,7 @@ BOP_isp_desc=Vom Internetanbieter zugewiesener Hostname:
 OP_desc1=Der RT-N56U unterstützt drei Betriebsmodi für unterschiedliche Einsatzbedingungen. Bitte wählen Sie den Modus, der am besten zu Ihrer Situation passt.
 PASS_new=Neues Kennwort:
 PASS_retype=Neues Kennwort erneut eingeben:
-PASS_changepasswd=Systemkennwort andern
+PASS_changepasswd=Systemkennwort ändern
 FW_desc1=Fuhren Sie die nachstehenden Schritte aus:
 FW_desc2=Prüfen, ob eine neue Version der Firmware verfügbar ist auf: <a href= http://support.asus.com.tw/download/download.aspx?product=11&model=RT-N56U&SLanguage=en-us target=blank>ASUS Website</a>.
 FW_desc3=Laden Sie eine passende Version auf Ihren lokalen Computer herunter.
@@ -1152,6 +1153,7 @@ LANHostConfig_x_NTPServer_itemdesc=Zur Synchronisierung Ihrer Systemzeit mit ein
 LANHostConfig_x_DDNSEnable_sectionname=DDNS-Einstellungen
 LANHostConfig_x_DDNSEnable_sectiondesc=Der dynamische DNS (DDNS) ermöglicht die Zuweisung eines Internet-Domänennamens zu einem Computer mit einer dynamischen IP-Adresse. Derzeit sind verschiedene DDNS-Services in den RT-N56U integriert. Klicken Sie auf die Kostenlose Probe-Schaltfläche, w<p>
 LANHostConfig_x_DDNSEnable_sectiondesc2=Der drahtlose Router verwendet derzeitig eine private WAN IP-Adresse (192.168.x.x, 10,x,x,x, oder 172.16.x.x). Er befindet sich evtl. im Multi-NAT-Betrieb, wobei DDNS-Service in solcher Umgebung nicht unterstützt wird.
+LANHostConfig_x_DDNSEnable_sectiondesc3=Hostname wurde erfolgreich registriert. Verwenden Sie "[hostname].asuscomm.com", um im Heimnetzwerk von WAN auf diesen Service zuzugreifen. Verwenden Sie "[hostname].asuscomm.com" für den Fernzugriff auf Ihr Netzwerk.<p>Gehen Sie zu Advanced Setting (Erweiterte Einstellungen) > WAN, um Einstellungen für Port Forwarding oder DMZ zu konfigurieren, damit andere WAN-Clients auf Ihr Netzwerk zugreifen können. <p>Falls Sie den drahtlosen Router per Fernzugriff konfigurieren möchten, beziehen Sie <a href="../Advanced_BasicFirewall_Content.asp" target="_blank" style="text-decoration: underline; font-family:Lucida Console;">hier</a>.
 LANHostConfig_x_DDNSEnable_itemname=DDNS-Client aktivieren?
 LANHostConfig_x_DDNSServer_itemname=Server:
 LANHostConfig_x_DDNSUserName_itemname=Benutzername oder eMail-Adresse:

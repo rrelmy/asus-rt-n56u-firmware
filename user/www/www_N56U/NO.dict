@@ -19,8 +19,9 @@ LANG_DA=Dansk
 LANG_SV=Svensk
 LANG_BR=Brazil
 LANG_JP=日本語
-Enable_NAT=Aktiver NAT
+LANG_ES=Español
 [NAT Passthrough]
+Enable_NAT=Aktiver NAT
 NAT_PPTP_Passthrough=PPTP Gjennomgang
 NAT_L2TP_Passthrough=L2TP Gjennomgang
 NAT_IPSec_Passthrough=IPSec Gjennomgang
@@ -667,7 +668,6 @@ ALERT_OF_ERROR_Input22=Det er ingen inndata om navnet til den nye partisjonen!
 ALERT_OF_ERROR_Input23=Det er feil format for navnet til den nye partisjonen!
 ALERT_OF_ERROR_Input24=Det er ingen inndata om størrelsen til den nye partisjonen!
 ALERT_OF_ERROR_Input25=Det er ingen inndata om filsystemet til den nye partisjonen!
-ALERT_OF_ERROR_Input25=Det er ingen støtte for filsystemet.
 ALERT_OF_ERROR_Action1=Kunne ikke stille inn tilgangsrettighetene.
 ALERT_OF_ERROR_Action2=Kunne ikke opprette kontoen.
 ALERT_OF_ERROR_Action3=Kunne ikke slette kontoen.
@@ -1151,6 +1151,7 @@ LANHostConfig_x_NTPServer_itemdesc=For å synkronisere systemtiden din med NTP-s
 LANHostConfig_x_DDNSEnable_sectionname=DDNS-innstilling
 LANHostConfig_x_DDNSEnable_sectiondesc=Dynamisk DNS (DDNS) lar deg tilordne et Internett-domenenavn til en datamaskin med en dynamisk IP-adresse. For øyeblikket er flere DDNS-tjenester bygd inn i RT-N56U. Du kan klikke på Gratis prøveversjon under for å starte med en gratis prøvekonto.<p>
 LANHostConfig_x_DDNSEnable_sectiondesc2=Den trådløse ruterens bruker for øyeblikket en privat WAN IP-adresse (192.168.x.x, 10,x,x,x, eller 172.16.x.x). Denne ruteren kan være i NAT-multimiljøet og DDNS-tjenester fungerer ikke i dette miljøet.
+LANHostConfig_x_DDNSEnable_sectiondesc3=Vertsnavnet er registrert. Du kan bruke "[vertsnavn].asuscomm.com" til å få tilgang til tjenesten i hjemmenettverket fra WAN. Bruk "[vertsnavn].asuscomm.com" for å få ekstern tilgang til nettverket ditt.<p>Gå til Advanced Setting (Avansert innstilling) > WAN for å konfigurere portviderekobling eller DMZ-innstillingene for å la andre WAN-klienter få ekstern tilgang til nettverket ditt.<p>Hvis du vil eksternt konfigurere den trådløse ruteren, gå til <a href="../Advanced_BasicFirewall_Content.asp" target="_blank" style="text-decoration: underline; font-family:Lucida Console;">her</a>.
 LANHostConfig_x_DDNSEnable_itemname=Aktiver DDNS-klienten?
 LANHostConfig_x_DDNSServer_itemname=Server:
 LANHostConfig_x_DDNSUserName_itemname=Brukernavn eller e-postadresse:

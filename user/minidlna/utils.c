@@ -45,6 +45,13 @@ strcatf(struct string_s *str, const char *fmt, ...)
 	return ret;
 }
 
+inline void
+strncpyt(char *dst, const char *src, size_t len)
+{
+	strncpy(dst, src, len);
+	dst[len-1] = '\0';
+}
+
 int
 ends_with(const char * haystack, const char * needle)
 {
@@ -62,16 +69,32 @@ ends_with(const char * haystack, const char * needle)
 char *
 trim(char *str)
 {
-        if (!str)
-                return(NULL);
-        int i;
-        for (i=0; i <= strlen(str) && (isspace(str[i]) || str[i] == '"'); i++) {
+	int i;
+	int len;
+
+	if (!str)
+		return(NULL);
+
+	len = strlen(str);
+	for (i=len-1; i >= 0 && isspace(str[i]); i--)
+	{
+		str[i] = '\0';
+		len--;
+	}
+	while (isspace(*str))
+	{
+		str++;
+		len--;
+	}
+
+	if (str[0] == '"' && str[len-1] == '"')
+	{
+		str[0] = '\0';
+		str[len-1] = '\0';
 		str++;
 	}
-        for (i=(strlen(str)-1); i >= 0 && (isspace(str[i]) || str[i] == '"'); i--) {
-                str[i] = '\0';
-        }
-        return str;
+
+	return str;
 }
 
 /* Find the first occurrence of p in s, where s is terminated by t */
@@ -83,13 +106,36 @@ strstrc(const char *s, const char *p, const char t)
 
 	endptr = strchr(s, t);
 	if (!endptr)
-		return NULL;
+		return strstr(s, p);
 
 	plen = strlen(p);
 	slen = endptr - s;
 	while (slen >= plen)
 	{
 		if (*s == *p && strncmp(s+1, p+1, plen-1) == 0)
+			return (char*)s;
+		s++;
+		slen--;
+	}
+
+	return NULL;
+} 
+
+char *
+strcasestrc(const char *s, const char *p, const char t)
+{
+	char *endptr;
+	size_t slen, plen;
+
+	endptr = strchr(s, t);
+	if (!endptr)
+		return strcasestr(s, p);
+
+	plen = strlen(p);
+	slen = endptr - s;
+	while (slen >= plen)
+	{
+		if (*s == *p && strncasecmp(s+1, p+1, plen-1) == 0)
 			return (char*)s;
 		s++;
 		slen--;
@@ -159,12 +205,13 @@ escape_tag(const char *tag, int force_alloc)
 {
 	char *esc_tag = NULL;
 
-	if( strchr(tag, '&') || strchr(tag, '<') || strchr(tag, '>') )
+	if( strchr(tag, '&') || strchr(tag, '<') || strchr(tag, '>') || strchr(tag, '"') )
 	{
 		esc_tag = strdup(tag);
 		esc_tag = modifyString(esc_tag, "&", "&amp;amp;", 0);
 		esc_tag = modifyString(esc_tag, "<", "&amp;lt;", 0);
 		esc_tag = modifyString(esc_tag, ">", "&amp;gt;", 0);
+		esc_tag = modifyString(esc_tag, "\"", "&amp;quot;", 0);
 	}
 	else if( force_alloc )
 		esc_tag = strdup(tag);
@@ -225,6 +272,21 @@ make_dir(char * path, mode_t mode)
 	} while (1);
 }
 
+/* Simple, efficient hash function from Daniel J. Bernstein */
+unsigned int
+DJBHash(const char *str, int len)
+{
+	unsigned int hash = 5381;
+	unsigned int i = 0;
+
+	for(i = 0; i < len; str++, i++)
+	{
+		hash = ((hash << 5) + hash) + (*str);
+	}
+
+	return hash;
+}
+
 int
 is_video(const char * file)
 {
@@ -235,8 +297,8 @@ is_video(const char * file)
 		ends_with(file, ".mts") || ends_with(file, ".m2ts")  ||
 		ends_with(file, ".m2t") || ends_with(file, ".mkv")   ||
 		ends_with(file, ".vob") || ends_with(file, ".ts")    ||
-		ends_with(file, ".tp")  || /* ASUS EXT */
 		ends_with(file, ".flv") || ends_with(file, ".xvid")  ||
+		ends_with(file, ".tp")  || /* ASUS EXT */
 #ifdef TIVO_SUPPORT
 		ends_with(file, ".TiVo") ||
 #endif

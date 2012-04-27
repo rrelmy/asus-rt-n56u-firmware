@@ -19,8 +19,9 @@ LANG_DA=Dansk
 LANG_SV=Svensk
 LANG_BR=Brazil
 LANG_JP=日本語
-Enable_NAT=Povolit NAT
+LANG_ES=Español
 [NAT Passthrough]
+Enable_NAT=Povolit NAT
 NAT_PPTP_Passthrough=Průchod PPTP
 NAT_L2TP_Passthrough=Průchod L2TP
 NAT_IPSec_Passthrough=Průchod IPSec
@@ -1151,6 +1152,7 @@ LANHostConfig_x_NTPServer_itemdesc=Synchronizovat váš systémpvý čas s NTP s
 LANHostConfig_x_DDNSEnable_sectionname=Nastavení DDNS
 LANHostConfig_x_DDNSEnable_sectiondesc=Pomocí dynamického DNS (DDNS) můžete přiřadit název internetové domény počítači s dynamickou IP adresou. Momentálně je několik služeb DDNS přiřazeno k RT-N56U. Dále je uveden odkaz na zkušební verzi, klikněte na něj, abyste spustili zkušební verzi účtu.<p>
 LANHostConfig_x_DDNSEnable_sectiondesc2=Tento bezdrátový směrovač aktuálně používá soukromou adresu IP WAN (192.168.x.x, 10,x,x,x nebo 172.16.x.x). Tento směrovač může být v prostředí s více překlady adres (NAT) a služba DDNS nemůže v tomto prostředí fungovat.
+LANHostConfig_x_DDNSEnable_sectiondesc3=Název hostitele byl úspěšně zaregistrován. Můžete použít "[názevhostitele].asuscomm.com" pro přístup ke službě na domácí síti ze sítě WAN. Použijte "[názevhostitele].asuscomm.com" pro vzdálený přístup k vaší síti.<p>Přejděte na Advanced Setting (Upřesnit nastavení) > WAN a nakonfigurujte předávání portů nebo nastavení DMZ tak, aby mohli ostatní klienti WAN vzdáleně přistupovat k vaší síti.<p>Chcete-li konfigurovat bezdrátový směrovač vzdáleně, přejděte na <a href="../Advanced_BasicFirewall_Content.asp" target="_blank" style="text-decoration: underline; font-family:Lucida Console;">zde</a>.
 LANHostConfig_x_DDNSEnable_itemname=Povolit klienta DDNS?
 LANHostConfig_x_DDNSServer_itemname=Server:
 LANHostConfig_x_DDNSUserName_itemname=Uživatelské jméno nebo e-mailová adresa:

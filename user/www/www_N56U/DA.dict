@@ -19,8 +19,9 @@ LANG_DA=Dansk
 LANG_SV=Svensk
 LANG_BR=Brazil
 LANG_JP=日本語
-Enable_NAT=Skal NAT aktiveres
+LANG_ES=Español
 [NAT Passthrough]
+Enable_NAT=Skal NAT aktiveres
 NAT_PPTP_Passthrough=PPTP-gennemgang
 NAT_L2TP_Passthrough=L2TP-gennemgang
 NAT_IPSec_Passthrough=IPSec-gennemgang
@@ -667,7 +668,6 @@ ALERT_OF_ERROR_Input22=Der er ingen data om navnet på den nye partition!
 ALERT_OF_ERROR_Input23=Der er forkert format i navnet på den nye partition!
 ALERT_OF_ERROR_Input24=Der er ingen data om størrelsen på den nye partition!
 ALERT_OF_ERROR_Input25=Der er ingen data om filsystemet på den nye partition!
-ALERT_OF_ERROR_Input25=Filsystemet understøttes ikke.
 ALERT_OF_ERROR_Action1=Det lykkedes ikke at tildele tilladelse/adgangsrettigheder.
 ALERT_OF_ERROR_Action2=Det lykkedes ikke at oprette kontoen.
 ALERT_OF_ERROR_Action3=Det lykkedes ikke at slette kontoen.
@@ -1151,6 +1151,7 @@ LANHostConfig_x_NTPServer_itemdesc=Til synkronisering af systemtiden med NTP-ser
 LANHostConfig_x_DDNSEnable_sectionname=DDNS-indstilling
 LANHostConfig_x_DDNSEnable_sectiondesc=Den dynamiske DNS (DDNS) gør det muligt at tildele et internetdomænenavn til en computer med en dynamisk IP-adresse. Der er for tiden indlagt flere DDNS-tjenester i RT-N56U'en Klik på Prøv gratis nedenfor for at starte en gratis prøveversion af tjenesten.<p>
 LANHostConfig_x_DDNSEnable_sectiondesc2=Den trådløse router bruger i øjeblikket en privat WAN IP-adresse (192.168.x.x, 10,x,x,x eller 172.16.x.x). Denne router findes muligvis i multi-NAT miljøet, og DDNS tjenesten virker ikke i dette miljø.
+LANHostConfig_x_DDNSEnable_sectiondesc3=Værtsnavnet er blevet registreret. Du kan bruge "[værtsnavn].asuscomm.com" til, at tilslutte til tjenesten på et hjemmenetværk fra et WAN netværk. Brug "[værtsnavn].asuscomm.com" til, at oprette en fjernadgang til dit netværk.<p>Gå til Advanced Setting (avancerede indstillinger) > WAN for, at konfigurer port videresendelsen eller DMZ indstillingerne, så andre WAN klienter kan få adgang til dit netværk.<p>Hvis du ønsker, at fjern-konfigurere den trådløse router, skal du gå til <a href="../Advanced_BasicFirewall_Content.asp" target="_blank" style="text-decoration: underline; font-family:Lucida Console;">her</a>.
 LANHostConfig_x_DDNSEnable_itemname=Skal DDNS-klienten aktiveres?
 LANHostConfig_x_DDNSServer_itemname=Server:
 LANHostConfig_x_DDNSUserName_itemname=Brugernavn eller e-postadresse:

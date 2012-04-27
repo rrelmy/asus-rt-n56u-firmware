@@ -1,3 +1,9 @@
+1.0.1.8f - 2012.04.25
+1. improve DLNA media server interoperability
+2. optimize ASUSDDNS update request handling
+3. update GUI translation
+
+
 1.0.1.8e - 2012.03.16
 1. improve usb modem support interoperability
 2. add GUI PPPoE+DHCP Connection setting

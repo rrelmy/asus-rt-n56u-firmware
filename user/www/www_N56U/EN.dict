@@ -19,8 +19,9 @@ LANG_DA=Dansk
 LANG_SV=Svensk
 LANG_BR=Brazil
 LANG_JP=日本語
-Enable_NAT=Enable NAT
+LANG_ES=Español
 [NAT Passthrough]
+Enable_NAT=Enable NAT
 NAT_PPTP_Passthrough=PPTP Passthrough
 NAT_L2TP_Passthrough=L2TP Passthrough
 NAT_IPSec_Passthrough=IPSec Passthrough
@@ -346,7 +347,7 @@ File_content_alert_desc11=MYSHARE1 is the system folder and cannot be edited.
 File_content_alert_desc12=There is no volume in this device.
 File_content_alert_desc13=There is no folder in this volume.
 File_content_alert_desc14=You cannot delete this share or modify its name. If you want to do so, please translate the file system of this hard drive to ReiserFS file system.
-[AiDisk Advanced]		
+[AiDisk Advanced]
 enableCIFS=Enable Share
 disableCIFS=Disable Share
 enableFTP=Enable FTP
@@ -391,7 +392,7 @@ HowToSharebySamba_notIE2=then Click [OK] to enter share space in the Network Nei
 HowToSharebyFTP1=to enter FTP share space.
 HowToSharebyFTP3=Enable the DDNS service to allow access via the ftp, or click the following link:
 HowToSharebyFTP4=(Only accessible in LAN.)
-[LeftMenu]		
+[LeftMenu]
 menu1=Network Map
 menu2=UPnP Media Server
 menu3=AiDisk
@@ -538,7 +539,7 @@ Day=days
 Hour=hours
 Minute=minutes
 Second=seconds
-[AiDisk Wizard]		
+[AiDisk Wizard]
 AiDiskWelcome_title=Welcome to AiDisk wizard
 AiDiskWelcome_desp=AiDisk enables you to:
 AiDiskWelcome_desp1=Share files in the USB disk through the Internet.
@@ -641,7 +642,7 @@ Help_button_default_hint=Click to open Help.
 Help_init_word1=Help provides you with guidelines and information about using the router's functions.  Click the
 Help_init_word2=hyperlinked words with yellow and blue underline.
 Help_init_word3=to get help.
-[hook error]		
+[hook error]
 ALERT_OF_ERROR_Input1=There is no input about PROCOTOL! 
 ALERT_OF_ERROR_Input2=The input about PROCOTOL is incorrect! 
 ALERT_OF_ERROR_Input3=There is no input about MODE!
@@ -667,7 +668,6 @@ ALERT_OF_ERROR_Input22=There is no input about the name of the new partition!
 ALERT_OF_ERROR_Input23=There is a wrong format about the name of the new partition!
 ALERT_OF_ERROR_Input24=There is no input about the size of the new partition!
 ALERT_OF_ERROR_Input25=There is no input about the file system of the new partition!
-ALERT_OF_ERROR_Input25=There is no support for the file system.
 ALERT_OF_ERROR_Action1=Failed to set the permission/access rights.
 ALERT_OF_ERROR_Action2=Failed to create the account.
 ALERT_OF_ERROR_Action3=Failed to delete the account.
@@ -696,7 +696,7 @@ QKSet_detect_freshbtn=Detect again
 QKSet_detect_waitdesc=Start to detect your connection type...
 QKSet_detect_timedesc1=Detecting at
 QKSet_detect_timedesc2=times.
-[QIS_finish.js]		
+[QIS_finish.js]
 QKSet_all_title=Quick Start
 QKSet_finishpre_webtitle=You have finished all settings. Now you can click the [Finish] and then we will redirect to your default Home page. Or you can click [Previous] to back the setting page.
 QKSet_finishpre_rebootnow=Finish
@@ -750,9 +750,9 @@ QKSet_finish_moveto5=Simply Wireless Security Setting
 QKSet_finish_moveto6=Look up and configure the encryption setup.
 QKSet_finish_moveto7=Advanced Settings page
 QKSet_finish_moveto8=Manual configuration and fine-tuning.
-[QIS_internet_success.js]		
+[QIS_internet_success.js]
 QKSet_finish_desc=Internet connection setting is finished.
-[QIS_internet_type.js]		
+[QIS_internet_type.js]
 QKSet_type_head=Internet WAN connection type
 QKSet_type_desc=Please Choose the WAN connection type provided by your ISP.
 BOP_ctype_title1=Automatic IP
@@ -773,7 +773,7 @@ WLANConfig11b_WEPDefaultKey_itemname=Key Index:
 JS_passzero=Pre-shared key should be 8 to 63 characters. If you leave this field blank, system will assign [00000000] as your passphrase.
 JS_PSK64Hex=Pre-shared key should be 8 to 63 characters or 64 hex digits!
 JS_wepkey=Please enter the correct WEP key.
-[error_page.htm]		
+[error_page.htm]
 web_redirect_title=Failed Connection Message
 web_redirect_message=You failed to access to the web page that you want to view.
 web_redirect_fail_reason0=Reason for failed connection
@@ -793,7 +793,7 @@ web_redirect_suggestion_final1=Please
 web_redirect_suggestion_etc=Go to Setting page of the RT-N56U
 web_redirect_suggestion_etc_desc= and you can check and config your setting by yourself.
 web_redirect_suggestion_manually_start_wan=Renew the WAN.
-[error_page.js]		
+[error_page.js]
 web_redirect_reason1=The cable for Ethernet is not plugged in.
 web_redirect_reason2_1=Your PPPoE or PPTP authentification failed.
 web_redirect_reason2_2=No response from the remote server.
@@ -802,7 +802,7 @@ web_redirect_reason3_2=We have detected that your WAN Connection Type is PPPoE. 
 web_redirect_reason4=The Internet connection failed. Your router's IP address is the same as that of the gateway IP address.
 web_redirect_reason5_1=You have probably stopped the WAN connection manually.
 web_redirect_reason5_2=You have set the wrong dynamic or static IP address for your RT-N56U.
-[objcommon.js]		
+[objcommon.js]
 CTL_nonsupported=Nonsupported
 CTL_localdevice=Local Device
 CTL_unknown=Unknown Device
@@ -824,12 +824,12 @@ CTL_Enabled=Enabled
 CTL_Disabled=Disabled
 CTL_Connect=Connected
 CTL_Disconnect=Disconnected
-[popup.js]		
+[popup.js]
 Main_alert_proceeding_desc1=Proceeding
 Main_alert_proceeding_desc4=Please wait, 
 Main_alert_proceeding_desc3=Complete!
 Main_content_Login_Item7=Rebooting the router takes about 60 seconds. Are you sure you want to reboot the router now?
-[QIS-general.js]		
+[QIS-general.js]
 JS_fieldblank=Fields cannot be blank!
 JS_validip=is not a valid IP address!
 JS_itemlimit1=This table only allow
@@ -1151,6 +1151,7 @@ LANHostConfig_x_NTPServer_itemdesc=To synchronize your system time with NTP Serv
 LANHostConfig_x_DDNSEnable_sectionname=DDNS Setting
 LANHostConfig_x_DDNSEnable_sectiondesc=Dynamic DNS (DDNS) allows you to assign an Internet domain name to a computer with a dynamic IP address. Currently, several DDNS services are embedded in RT-N56U. You can click Free Trial below to start with a free trial account.<p>
 LANHostConfig_x_DDNSEnable_sectiondesc2=The wireless router currently uses a private WAN IP address (192.168.x.x, 10,x,x,x, or 172.16.x.x). This router may be in the multiple-NAT environment and DDNS service cannot work in this environment.
+LANHostConfig_x_DDNSEnable_sectiondesc3=The host name is successfully registered. You can use "[hostname].asuscomm.com" to access the service in home network from WAN. Use "[hostname].asuscomm.com" to remotely access your network.<p>  Go to Advanced Settings > WAN to configure the port forwarding or DMZ settings to allow other WAN clients to remotely access your network.<p> If you want to remotely configure the wireless router, go to <a href="../Advanced_BasicFirewall_Content.asp" target="_blank" style="text-decoration: underline; font-family:Lucida Console;">here</a>.
 LANHostConfig_x_DDNSEnable_itemname=Enable the DDNS Client?
 LANHostConfig_x_DDNSServer_itemname=Server:
 LANHostConfig_x_DDNSUserName_itemname=User Name or E-mail Address:

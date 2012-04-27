@@ -10,16 +10,17 @@
 <link rel="stylesheet" type="text/css" href="aidisk.css">
 
 <script type="text/javascript" src="/state.js"></script>
+<script type="text/javaScript" src="/jquery.js"></script>
 <script>
 var ddns_server_x = '<% nvram_get_x("LANHostConfig", "ddns_server_x"); %>';
 var ddns_hostname_x = '<% nvram_get_x("LANHostConfig", "ddns_hostname_x"); %>';
 var ddns_old_name = '<% nvram_get_x("LANHostConfig", "ddns_old_name"); %>';
 
-var ddns_timeout = '<% nvram_get_ddns("LANHostConfig", "ddns_timeout"); %>';
 var ddns_return_code = '<% nvram_get_ddns("LANHostConfig", "ddns_return_code"); %>';
 var wan_ipaddr_t='<% nvram_get_x("IPConnection","wan_ipaddr_t"); %>';
 
 var ddns_hostname_title;
+var $j = jQuery.noConflict();
 
 function initial(){
 	//parent.show_help_iframe(3);
@@ -133,13 +134,9 @@ function hide_alert_block(){
 }
 
 function check_return_code(){
-	if(this.ddns_return_code == ''){
-		if(wan_ipaddr_t == ''){
-			show_alert_block("<#QKSet_detect_wanconnfault#>");
-		}else if(this.ddns_timeout == '1')
-			show_alert_block("<#LANHostConfig_x_DDNS_alarm_1#>");
-	}
-	else if(this.ddns_return_code == 'register,-1')
+	parent.hideLoading();
+
+	if(this.ddns_return_code == 'register,-1')
 		show_alert_block("<#LANHostConfig_x_DDNS_alarm_2#>");
 	else if(this.ddns_return_code == 'register,200'){
 		show_alert_block("<#LANHostConfig_x_DDNS_alarm_3#>");
@@ -187,10 +184,12 @@ function check_return_code(){
 		show_alert_block("<#LANHostConfig_x_DDNS_alarm_10#>");
 	else if(this.ddns_return_code == 'register,407')
 		show_alert_block("<#LANHostConfig_x_DDNS_alarm_11#>");
-	else if(this.ddns_return_code == 'Time-out')
-		show_alert_block("<#LANHostConfig_x_DDNS_alarm_12#>");
-	else 
-		show_alert_block("<#LANHostConfig_x_DDNS_alarm_2#>");	
+        else if(this.ddns_return_code == 'time_out')
+                show_alert_block("<#LANHostConfig_x_DDNS_alarm_12#>");
+        else if(this.ddns_return_code =='unknown_error')
+                show_alert_block("<#LANHostConfig_x_DDNS_alarm_2#>");
+        else if(this.ddns_return_code =='connect_fail')
+                show_alert_block("<#LANHostConfig_x_DDNS_alarm_12#>");
 
 	this.ddns_return_code = "";
 }
@@ -293,6 +292,23 @@ function showLoading(seconds, flag){
 
 function hideLoading(flag){
 	parent.hideLoading(flag);
+}
+
+function checkDDNSReturnCode(){
+    $j.ajax({
+        url: '/ajax_ddnscode.asp',
+        dataType: 'script', 
+        
+        error: function(xhr){
+                checkDDNSReturnCode();
+        },
+        success: function(response){
+                if(ddns_return_code == 'ddns_query')
+                        setTimeout("checkDDNSReturnCode();", 500);
+                else 
+                        check_return_code();
+        }
+   });
 }
 </script>
 </head>

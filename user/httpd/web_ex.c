@@ -552,14 +552,14 @@ void sys_script(char *name)
 
 	//Clear asus ddns nvram variables.
 //	nvram_set("httpd_check_ddns","1");	// J++
-	nvram_set("ddns_timeout", "0");
+//	nvram_set("ddns_timeout", "0");
 	nvram_set("rc_service", "ddns_hostname_check");
 
 //	kill(1, SIGUSR1);
 	dbG("[httpd] send SIGUSR1 to watchdog for rc_service: %s\n", nvram_safe_get("rc_service"));
 	doSystem("killall -%d watchdog", SIGUSR1);
 	sleep(1);
-
+#if 0
 	while (1)
 	{
 		strcpy(return_buf, nvram_safe_get("ddns_return_code"));
@@ -575,6 +575,7 @@ void sys_script(char *name)
 		sleep(1);
 		i++;
 	}
+#endif
      }
 #endif
      else if (strstr(scmd, " ") == 0) // no parameter, run script with eval
@@ -716,11 +717,18 @@ ej_nvram_get_ddns(int eid, webs_t wp, int argc, char_t **argv)
 		else
 			ret += websWrite(wp, "&#%d", *c);
 	}
-
+#if 0
 	if (strcmp(name,"ddns_return_code")==0)
 		nvram_set("ddns_return_code","");
 	if (strcmp(name,"ddns_timeout")==0)
 		nvram_set("ddns_timeout","0");
+#else
+	if (strcmp(name,"ddns_return_code")==0) {
+		if (!nvram_match("ddns_return_code", "ddns_query")) {
+			nvram_set("ddns_return_code","");
+		}
+	}
+#endif
 
 	return ret;
 }
@@ -4383,7 +4391,7 @@ int ej_shown_language_option(int eid, webs_t wp, int argc, char **argv) {
 
 	memset(lang, 0, 4);
 	strcpy(lang, nvram_safe_get("preferred_lang"));
-
+#if 0
 	for (i = 0; i < 21; ++i) {
 		memset(buffer, 0, sizeof(buffer));
 		if ((follow_info = fgets(buffer, sizeof(buffer), fp)) != NULL) {
@@ -4415,6 +4423,39 @@ int ej_shown_language_option(int eid, webs_t wp, int argc, char **argv) {
 		else
 			break;
 	}
+#else
+        while (1) {
+                memset(buffer, 0, sizeof(buffer));
+                if ((follow_info = fgets(buffer, sizeof(buffer), fp)) != NULL){
+                        if (strncmp(follow_info, "LANG_", 5))    // 5 = strlen("LANG_")
+                                continue;
+
+                        follow_info += 5;
+                        follow_info_end = strstr(follow_info, "=");
+                        len = follow_info_end-follow_info;
+                        memset(key, 0, sizeof(key));
+                        strncpy(key, follow_info, len);
+
+                        for (pLang = language_tables; pLang->Lang != NULL; ++pLang){
+                                if (strcmp(key, pLang->Target_Lang))
+                                        continue;
+                                follow_info = follow_info_end+1;
+                                follow_info_end = strstr(follow_info, "\n");
+                                len = follow_info_end-follow_info;
+                                memset(target, 0, sizeof(target));
+                                strncpy(target, follow_info, len);
+
+                                if (!strcmp(key, lang))
+                                        websWrite(wp, "<option value=\"%s\" selected>%s</option>\\n", key, target);
+                                else
+                                        websWrite(wp, "<option value=\"%s\">%s</option>\\n", key, target);
+                                break;
+                        }
+                }
+                else
+                        break;
+        }
+#endif
 	fclose(fp);
 
 	return 0;

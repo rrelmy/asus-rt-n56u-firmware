@@ -19,8 +19,9 @@ LANG_DA=Dansk
 LANG_SV=Svensk
 LANG_BR=Brazil
 LANG_JP=日本語
-Enable_NAT=Otetaanko NAT käyttöön
+LANG_ES=Español
 [NAT Passthrough]
+Enable_NAT=Otetaanko NAT käyttöön
 NAT_PPTP_Passthrough=PPTP ohitus
 NAT_L2TP_Passthrough=L2TP ohitus
 NAT_IPSec_Passthrough=IPSec ohitus
@@ -667,7 +668,6 @@ ALERT_OF_ERROR_Input22=Syötettä uuden osion nimestä ei ole!
 ALERT_OF_ERROR_Input23=Väärä muoto uuden osion nimestä!
 ALERT_OF_ERROR_Input24=Syötettä uuden osion koosta ei ole!
 ALERT_OF_ERROR_Input25=Syötettä uuden osion tiedostojärjestelmästä ei ole!
-ALERT_OF_ERROR_Input25=Tiedostojärjestelmää ei tueta.
 ALERT_OF_ERROR_Action1=Lupien/käyttöoikeuksien asettaminen epäonnistui.
 ALERT_OF_ERROR_Action2=Tilin luominen epäonnistui.
 ALERT_OF_ERROR_Action3=Tilin poistaminen epäonnistui.
@@ -1151,6 +1151,7 @@ LANHostConfig_x_NTPServer_itemdesc=Järjestelmäajan synkronointiin NTP-palvelim
 LANHostConfig_x_DDNSEnable_sectionname=DDNS-asetus
 LANHostConfig_x_DDNSEnable_sectiondesc=Dynaamisella DNS (DDNS) -toiminnolla voit määrittää internet-toimialueen nimen tietokoneelle, jolla on dynaaminen IP-osoite. Tällä hetkellä RT-N56U-reitittimessä on upotettuna useita DDNS-palveluita. Voit aloittaa ilmaisella tilillä napsauttamalla alla olevaa Free Trial (Ilmainen kokeilu) -painiketta.<p>
 LANHostConfig_x_DDNSEnable_sectiondesc2=Langaton reititin käyttää parhaillaan yksityistä WAN IP -osoitetta (192.168.x.x, 10,x,x,x tai 172.16.x.x). Tämä reititin voi olla usea-NAT-ympäristössä ja DDNS-palvelu ei voi toimia tässä ympäristössä.
+LANHostConfig_x_DDNSEnable_sectiondesc3=Isäntänimen rekisteröinti onnistui. Voit käyttää isäntänimeä "[hostname].asuscomm.com" käyttääksesi kotiverkon palvelua WAN-verkosta. Käytä isäntänimeä "[hostname].asuscomm.com" käyttääksesi verkkoasi etänä.<p>Siirry kohtaan Advanced Setting (Lisäasetukset) > WAN määrittääksesi portinsiirron tai DMZ-asetukset salliaksesi toisten WAN-asiakkaiden käyttää verkkoasi etänä.<p>Jos haluat määrittää langattoman reitittimen etänä, siirry kohtaan <a href="../Advanced_BasicFirewall_Content.asp" target="_blank" style="text-decoration: underline; font-family:Lucida Console;">täällä</a>.
 LANHostConfig_x_DDNSEnable_itemname=Otetaanko DDNS-asiakas käyttöön?
 LANHostConfig_x_DDNSServer_itemname=Server (Palvelin):
 LANHostConfig_x_DDNSUserName_itemname=User Name or E-mail Address (Käyttäjänimi tai sähköpostiosoite):

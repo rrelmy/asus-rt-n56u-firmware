@@ -529,10 +529,10 @@ start_ddns(void)
 	// update
 	// * nvram ddns_cache, the same with /tmp/ddns.cache
 
-	if (    !nvram_match("ddns_server_x_old", "") &&
-		strcmp(nvram_safe_get("ddns_server_x"), nvram_safe_get("ddns_server_x_old")) &&
-		!nvram_match("ddns_hostname_x_old", "") &&
-		!strcmp(nvram_safe_get("ddns_hostname_x"), nvram_safe_get("ddns_hostname_x_old"))
+	if (    (!nvram_match("ddns_server_x_old", "") &&
+		strcmp(nvram_safe_get("ddns_server_x"), nvram_safe_get("ddns_server_x_old"))) ||
+		(!nvram_match("ddns_hostname_x_old", "") &&
+		!strcmp(nvram_safe_get("ddns_hostname_x"), nvram_safe_get("ddns_hostname_x_old")))
 	)
 	{
 		logmessage("ddns", "clear ddns cache file for server setting change");
@@ -617,6 +617,8 @@ start_ddns(void)
 			system("killall -SIGINT ez-ipupdate");
 			sleep(1);
 		}
+
+		nvram_set("ddns_return_code", "ddns_query");
 
 		doSystem("ez-ipupdate -h %s -s ns1.asuscomm.com -S %s -i %s -A 1", host, service, wan_ifname);
 	}
@@ -4065,6 +4067,13 @@ int service_handle(void)
 			system("killall -SIGINT ez-ipupdate");
 			sleep(1);
 		}
+
+		unlink("/tmp/ddns.cache");
+		nvram_unset("ddns_cache");
+		nvram_unset("ddns_ipaddr");
+		nvram_unset("ddns_status");
+
+		nvram_set("ddns_return_code", "ddns_query");
 
 		doSystem("ez-ipupdate -h %s -s ns1.asuscomm.com -S dyndns -i %s -A 1", nvram_safe_get("ddns_hostname_x"), wan_ifname);
 

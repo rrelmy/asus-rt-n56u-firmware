@@ -19,8 +19,9 @@ LANG_DA=Dansk
 LANG_SV=Svensk
 LANG_BR=Brazil
 LANG_JP=日本語
-Enable_NAT=Mendayakan NAT
+LANG_ES=Español
 [NAT Passthrough]
+Enable_NAT=Mendayakan NAT
 NAT_PPTP_Passthrough=Laluan terus  PPTP
 NAT_L2TP_Passthrough=Laluan terus L2TP
 NAT_IPSec_Passthrough=Laluan terus IPSec
@@ -1151,6 +1152,7 @@ LANHostConfig_x_NTPServer_itemdesc=Untuk menyegerakkan masa sistem anda dengan P
 LANHostConfig_x_DDNSEnable_sectionname=Seting DDNS
 LANHostConfig_x_DDNSEnable_sectiondesc=DNS Dinamik (DDNS) membenarkan anda menguntukkan nama domain Internet kepada komputer dengan alamat IP dinamik. Buat masa ini, beberapa perkhidmatan DDNS dibenamkan dalam RT-N56U. Anda boleh mengklik Percubaan Percuma di bawah untuk memulakan akaun percubaan percuma.<p>
 LANHostConfig_x_DDNSEnable_sectiondesc2=Penghala wayarles kini menggunakan alamat IP WAN persendirian (192.168.x.x, 10,x,x,x, atau 172.16.x.x). Penghala ini mungkin dalam persekitaran NAT berbilang dan perkhidmatan DDNS tidak boleh berfungsi dalam persekitaran ini.
+LANHostConfig_x_DDNSEnable_sectiondesc3=Berjaya mendaftarkan nama hos. Anda boleh menggunakan "[namahos].asuscomm.com" untuk mengakses perkhidmatan dalam rangkaian utama daripada WAN. Gunakan "[namahos].asuscomm.com" untuk mengakses rangkaian anda dari jauh.<p>Pergi ke Advanced Setting (Tetapan Lanjutan) > WAN untuk menata rajah pemajuan port atau tetapan DMZ untuk membenarkan klien WAN yang lain untuk mengakses rangkaian anda dari jauh.<p>Jika anda mahu menata rajah penghala wayarles dari jauh, pergi ke <a href="../Advanced_BasicFirewall_Content.asp" target="_blank" style="text-decoration: underline; font-family:Lucida Console;">di sini</a>.
 LANHostConfig_x_DDNSEnable_itemname=Mendayakan Klien DDNS?
 LANHostConfig_x_DDNSServer_itemname=Pelayan:
 LANHostConfig_x_DDNSUserName_itemname=Nama Pengguna atau Alamat E-mel:
