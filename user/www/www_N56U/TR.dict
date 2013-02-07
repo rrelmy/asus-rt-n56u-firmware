@@ -37,7 +37,7 @@ VPN_IPSec_Passthrough=VPN IPSec Düz geçiş
 vpn_passthrough_itemname=VPN Düz geçiş
 vpn_passthrough_desc=Sanal Özel Ağ (VPN) bağlantısının yönlendiriciden doğrudan ağ istemcilerine geçmesi için VPN Düz Geçiş'i etkinleştirin.
 [AiDisk account alert]
-enable_noaccount_alert=Eğer dosyaları AiDisk ile paylaşılan bir hesap oluşturmadan USB diskinizde paylaşmayı denerseniz, Samba Sunucusunda sve Download Master’da sorun oluşacakır.
+enable_noaccount_alert=Eğer dosyaları AiDisk ile paylaşılan bir hesap oluşturmadan USB diskinizde paylaşmayı denerseniz, Samba Sunucusunda sve Download Master'da sorun oluşacakır.
 [iTunes]
 iTunesMediaServer=iTunes Medya Sunucusu
 [opmode strings]
@@ -727,6 +727,7 @@ IPConnection_x_DNSServer1_itemname=DNS Sunucusu1:
 IPConnection_x_DNSServer2_itemdesc=Bu alan, RT-N56U yönlendiricisinin irtibat sağladığı DNS IP adresini gösterir.
 IPConnection_x_DNSServer2_itemname=DNS Sunucusu2:
 IPConnection_warning_WANIPEQUALGatewayIP=WAN IP'sini RT-N56U Ağ Geçidi olarak ayarladınız ve RT-N56U Internet bağlanamayabilir. Lütfen Ağ Geçidini doğru değerde ayarlayın.
+IPConnection_x_illegal_mac=MAC adresi geçerli değil.
 [QIS_internet_isp.js]
 BOP_isp_host_desc=Bu alan size RT-N56U ana bilgisayar adını verir. Genellikle ISS'nız tarafından istenir.
 BOP_isp_host_item=Ana Bilgisayar Adı (isteğe bağlı):
@@ -1308,8 +1309,8 @@ WLANConfig11b_WPAType_itemname=WPA Şifrelemesi:
 WLANConfig11b_WPAType_itemdesc=Verileri şifrelemek için WPA Şifrelemesini etkinleştirin.
 WLANConfig11b_x_IsolateAP_itemname=Yalıtılmış AP ayarlansın mı?
 WLANConfig11b_x_IsolateAP_itemdesc=Kablosuz mobil istemciler arasında bağlantıya izin vermek için [Evet]'i seçin.
-WLANConfig11b_x_AfterBurner_itemname=AfterBurner etkinleştirilsin mi?
-WLANConfig11b_x_AfterBurner_itemdesc=Yönlendiriciye bağlanmak için kablosuz kartıyla (AfterBurner özelliğine sahip) AfterBurner etkinleştirildiğinde, iletişim performansı artar. AfterBurner modu şunları gerektirir: [Authentication Method (Kimlik Doğrulama Yöntemi)] [Open System or Shared Key (Açık Sistem veya Paylaşımlı Anahtar)] olarak, [AP Mode (AP Modu)] [AP only (Yalnızca AP)] olarak ve [Allow Anonymous (Adsıza İzin Ver)] [No (Hayır)] olarak ayarlanmalıdır.
+WLANConfig11b_x_IGMPSnooping_itemname=IGMP Snooping:
+WLANConfig11b_x_IGMPSnooping_itemdesc=When enabled, it monitors IGMP conversation between devices and optimize wireless multicast traffic.
 LANHostConfig_x_NTPServer1_itemname=NTP Sunucusu:
 RouterConfig_GWStaticMT_itemname=Metrik 
 RouterConfig_GWStaticIF_itemname=Arabirim
@@ -1403,6 +1404,8 @@ BM_desc1=Oyun Hızlandırıcı altında, RT-N56U oyun trafiğine ilk önceliği 
 BM_desc2=E-posta, web taraması ve diğer Internet uygulamaları birinci öncelikle işlenir.
 BM_desc3=RT-N56U\ USB FTP sunucusu karşıdan yükleme / karşıya yükleme hizi daha hızlıdır. Aksi takdirde, bu hizmet için \"Kullanıcı Belirleme Hizmeti\" sayfasında daha fazla bant genişliği ile sorunu giderebilirsiniz.
 BM_desc4=RT-N56U tüm ses/video trafiğini yönetir. IP telefon üzerinden görüşürken veya çevrimiçi video izlerken artık gecikme yok. Bu seçtiğinizde ve P2P durumunda, P2P bant genişliği %10 ile sınırlandırılır.
+BM_notice1=QoS sadece üst bağlantı hızı manuel ayarladığınızda etkinleştirilebilir.
+BM_notice2=ISP'nizin (İnternet Servis Sağlayıcısı) verdiği bant genişliğinden daha yüksek bir üst bağlantı hızı ayarlamanızı öneririz.
 BM_hint=Üst bağlantı hızınız ideal değere ulaştı. Sistem kaynaklarından tasarruf etmek için EzQoS'u etkinleştirmemenizi öneririz.
 BM_GB=Oyun Hızlandırıcı
 BM_IA=Internet Uygulaması

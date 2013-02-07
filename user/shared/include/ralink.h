@@ -23,7 +23,7 @@
 #define URE	"apcli0"
 
 #define ETHER_ADDR_LEN		6
-#define MAX_NUMBER_OF_MAC	32
+#define MAX_NUMBER_OF_MAC	64
 
 #define MODE_CCK		0
 #define MODE_OFDM		1

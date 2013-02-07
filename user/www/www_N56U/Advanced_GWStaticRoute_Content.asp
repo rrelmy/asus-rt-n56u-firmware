@@ -295,7 +295,17 @@ function disable_udpxy(){
           </td>
 				</tr>
 				<!-- 2008.03 James. patch for Oleg's patch. } -->
-				
+
+                        <tr>
+                                <th width="50%"><a class="hintstyle" href="javascript:void(0);" onClick="openHint(3, 4);">2.4GHz <#WLANConfig11b_x_IGMPSnooping_itemname#></a></th>
+                                <td>
+                                        <select name="rt_igmpsnenable" class="input" onClick="openHint(3, 4);" onChange="return change_common(this, 'WLANConfig11b', 'rt_igmpsnenable')">
+                                                <option value="0" <% nvram_match_x("WLANConfig11b","rt_igmpsnenable", "0","selected"); %>><#WLANConfig11b_WirelessCtrl_buttonname#></option>
+                                                <option value="1" <% nvram_match_x("WLANConfig11b","rt_igmpsnenable", "1","selected"); %>><#WLANConfig11b_WirelessCtrl_button1name#></option>
+                                        </select>
+                                </td>
+                        </tr>
+	
 				<!-- 2008.03 James. patch for Oleg's patch. { -->
 				<tr>
 					<th width="50%"><a class="hintstyle" href="javascript:void(0);" onClick="openHint(3, 7);">2.4GHz <#WLANConfig11b_MultiRateAll_itemname#></a></th>
@@ -319,6 +329,16 @@ function disable_udpxy(){
 					</td>
 				</tr>
 				<!-- 2008.03 James. patch for Oleg's patch. } -->
+
+                        <tr>
+                                <th width="50%"><a class="hintstyle" href="javascript:void(0);" onClick="openHint(3, 4);">5GHz <#WLANConfig11b_x_IGMPSnooping_itemname#></a></th>
+                                <td>
+                                        <select name="wl_igmpsnenable" class="input" onClick="openHint(3, 4);" onChange="return change_common(this, 'WLANConfig11b', 'wl_igmpsnenable')">
+                                                <option value="0" <% nvram_match_x("WLANConfig11b","wl_igmpsnenable", "0","selected"); %>><#WLANConfig11b_WirelessCtrl_buttonname#></option>
+                                                <option value="1" <% nvram_match_x("WLANConfig11b","wl_igmpsnenable", "1","selected"); %>><#WLANConfig11b_WirelessCtrl_button1name#></option>
+                                        </select>
+                                </td>
+                        </tr>
 
 				<!-- 2008.03 James. patch for Oleg's patch. { -->
 				<tr>

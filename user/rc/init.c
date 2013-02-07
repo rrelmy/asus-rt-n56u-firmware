@@ -396,15 +396,11 @@ fatal_signal(int sig)
 	loop_forever();
 }
 
-static void
-reap(int sig)
+static void handle_reap(int sig)
 {
-	pid_t pid;
-
-	while ((pid = waitpid(-1, NULL, WNOHANG)) > 0)
-		dprintf("Reaped %d\n", pid);
+	chld_reap(sig);
+	raise(SIGALRM);
 }
-
 
 void
 signal_init(void)
@@ -414,5 +410,5 @@ signal_init(void)
 	for (i = 0; i < sizeof(fatal_signals)/sizeof(fatal_signals[0]); i++)
 		signal(fatal_signals[i], fatal_signal);
 
-	signal(SIGCHLD, reap);
+	signal(SIGCHLD, handle_reap);
 }

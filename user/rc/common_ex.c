@@ -1049,10 +1049,10 @@ void convert_asus_values(int skipflag)
 #endif
 
 	if (nvram_match("wsc_config_state", "2"))
-		nvram_match("wsc_config_state", "1");
+		nvram_set("wsc_config_state", "1");
 
 	if (nvram_match("rt_wsc_config_state", "2"))
-		nvram_match("rt_wsc_config_state", "1");
+		nvram_set("rt_wsc_config_state", "1");
 
 	if (!nvram_match("wsc_config_state", "0") || !nvram_match("rt_wsc_config_state", "0"))
 		nvram_set("x_Setting", "1");      
@@ -1096,6 +1096,8 @@ void convert_asus_values(int skipflag)
 	nvram_set("qos_ubw_status", "");
 	nvram_set("qos_ubw_reason", "");
 	nvram_set("wanduck_redirect", "0");
+
+	nvram_set("wanduck_ft", "1");
 
 	}
 }

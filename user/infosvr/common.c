@@ -715,7 +715,7 @@ char *get_lan_netmask()
 	/* IPv4 netmask */
 	ifr.ifr_addr.sa_family = AF_INET;
 
-	strncpy(ifr.ifr_name, "br0", IFNAMSIZ-1);
+	strncpy(ifr.ifr_name, "br0", IFNAMSIZ);
 	ioctl(fd, SIOCGIFNETMASK, &ifr);
 	close(fd);
 
@@ -805,14 +805,23 @@ char *processPacket(int sockfd, char *pdubuf)
 		     printf("NET CMD GETINFO\n");	// tmp test
 		     ginfo=(PKT_GET_INFO *)(pdubuf_res+sizeof(IBOX_COMM_PKT_RES));
 		     memset(ginfo, 0, sizeof(ginfo));
+#if 0
 #ifdef PRNINFO
 		     readPrnID(ginfo->PrinterInfo);
 #else
 		     memset(ginfo->PrinterInfo, 0, sizeof(ginfo->PrinterInfo));
 #endif
+#else
+			if (strlen(nvram_safe_get("u2ec_mfg")) && strlen(nvram_safe_get("u2ec_device")))
+			{
+				if (strstr(nvram_safe_get("u2ec_device"), nvram_safe_get("u2ec_mfg")))
+					sprintf(ginfo->PrinterInfo, "%s", nvram_safe_get("u2ec_device"));
+				else
+					sprintf(ginfo->PrinterInfo, "%s %s", nvram_safe_get("u2ec_mfg"), nvram_safe_get("u2ec_device"));
+			}
+#endif
 		     /* get disk type */
 		     strcpy(ssid_g, nvram_safe_get("rt_ssid"));
-//		   strcpy(productid_g, nvram_safe_get("machine_name"));
 		     strcpy(productid_g, nvram_safe_get("productid"));
 		     strcpy(ginfo->SSID, ssid_g);
 		     strcpy(ginfo->SSID, ssid_g);
@@ -852,15 +861,26 @@ char *processPacket(int sockfd, char *pdubuf)
 		case NET_CMD_ID_GETINFO:
 		     ginfo=(PKT_GET_INFO *)(pdubuf_res+sizeof(IBOX_COMM_PKT_RES));
 		     memset(ginfo, 0, sizeof(ginfo));
+#if 0
 #ifdef PRNINFO
     		     readPrnID(ginfo->PrinterInfo);
 #else
 		     memset(ginfo->PrinterInfo, 0, sizeof(ginfo->PrinterInfo));
 #endif
+#else
+			if (strlen(nvram_safe_get("u2ec_mfg")) && strlen(nvram_safe_get("u2ec_device")))
+			{
+				if (strstr(nvram_safe_get("u2ec_device"), nvram_safe_get("u2ec_mfg")))
+					sprintf(ginfo->PrinterInfo, "%s", nvram_safe_get("u2ec_device"));
+				else
+					sprintf(ginfo->PrinterInfo, "%s %s", nvram_safe_get("u2ec_mfg"), nvram_safe_get("u2ec_device"));
+			}
+#endif
 		     strcpy(ssid_g, nvram_safe_get("rt_ssid"));	
 		     strcpy(productid_g, nvram_safe_get("productid"));
    		     strcpy(ginfo->SSID, ssid_g);
-		     strcpy(ginfo->NetMask, netmask_g);
+//		     strcpy(ginfo->NetMask, netmask_g);
+		     strcpy(ginfo->NetMask, get_lan_netmask());
 		     strcpy(ginfo->ProductID, productid_g);	// disable for tmp
 		     strcpy(ginfo->FirmwareVersion, firmver_g); // disable for tmp
 

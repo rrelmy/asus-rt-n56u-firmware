@@ -8,6 +8,7 @@ romfs:
 	$(ROMFSINST) /bin/ated
 	$(ROMFSINST) /bin/flash
 #	$(ROMFSINST) /bin/reg
+	$(ROMFSINST) /bin/hw_nat
 #	$(ROMFSINST) /usr/sbin/chkntfs
 	cp chkntfs $(ROMFS_DIR)/usr/sbin/chkntfs
 #	$(ROMFSINST) /usr/lib/ufsd.ko

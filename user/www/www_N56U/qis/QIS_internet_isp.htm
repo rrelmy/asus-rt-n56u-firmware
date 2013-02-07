@@ -96,7 +96,8 @@ function submitForm(){
 		document.form.wan_hostname.focus();
 		return false;
 	}
-	if(!validate_hwaddr(document.form.wan_hwaddr_x)){
+
+	if(!check_macaddr(document.form.wan_hwaddr_x, check_hwaddr_flag(document.form.wan_hwaddr_x))){
 		document.form.wan_hwaddr_x.select();
 		document.form.wan_hwaddr_x.focus();
 		return false;
@@ -167,21 +168,17 @@ function submitForm(){
   <table id="tblsetting_1" class="QISform" width="400" border=0 align="center" cellpadding="5" cellspacing="0">
 	<tr>
 	  <th width="120" onmouseout="writetxt(0);" onmouseover="writetxt('<#PPPConnection_x_HostNameForISP_itemdesc#>');"><#BOP_isp_host_item#></th>
-	  <td class="QISformtd">
+	  <td class="QISformtd" colspan="2">
 		<input type="text" name="wan_hostname" onkeypress="return is_string(this);" class="input" maxlength="" size="36" value=""/>
 	  </td>
 	</tr>
 	
 	<tr>
 	  <th width="120" onmouseout="writetxt(0);" onmouseover="writetxt('<#PPPConnection_x_MacAddressForISP_itemdesc#>');"><#BOP_isp_mac_item#></th>
-	  <td class="QISformtd">
-		<input type="text" name="wan_hwaddr_x" onkeypress="return is_hwaddr(this);" class="input" maxlength="" size="36" value=""/>
-	  </td>
+	  <td class="QISformtd"><input type="text" name="wan_hwaddr_x" onkeypress="return is_hwaddr(this);" class="input" maxlength="12" size="16" value=""/></td>
+	  <td><input type="button" class="button" onclick="showMAC();" value="<#BOP_isp_MACclone#>"></td>
 	</tr>
-	
-	<tr valign="top" Height="50"><td colspan="2" align="right">
-		<input type="button" class="button" onclick="showMAC();" value="<#BOP_isp_MACclone#>">
-	</td></tr>
+
   </table>
 
 <div class='QISfoot'>

@@ -149,10 +149,9 @@ function prevent_lock(){
             <th width="30%"><#FirewallConfig_MFhwaddr_itemname#>
                 <input type="hidden" name="wl_macnum_x_0" value="<% nvram_get_x("DeviceSecurity11a", "wl_macnum_x"); %>" readonly="1" /></th>
 			  <td>
-                <input type="text" maxlength="12" class="input" size="14" name="wl_maclist_x_0" onkeypress="return is_hwaddr()" />
+                <input type="text" maxlength="12" class="input" size="16" name="wl_maclist_x_0" onkeypress="return is_hwaddr()" />
                 
                 <input class="button" type="submit" onclick="return markGroup(this, 'ACLList', 32, ' Add ');" name="ACLList2" value="<#CTL_add#>" size="12"/>
-                <br/><span>*<#JS_validmac#></span>
               </td>
           </tr>
           <tr>

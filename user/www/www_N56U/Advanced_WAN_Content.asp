@@ -42,9 +42,7 @@ function initial(){
 	if(document.form.wan_pppoe_txonly_x.value == "1")
 		document.form.wan_pppoe_idletime_check.checked = true;
 		
-	$("wan_proto_menu").style.display = (wan_proto == "3g")?"none":"block";
-	$("wan_proto_hint").style.display = (wan_proto == "3g")?"block":"none";
-	if(wan_proto == "3g"){
+	if(wan_proto == "Modem"){
 		$("ip_sect").style.display = "none";
 		$("dns_sect").style.display = "none";
 		$("account_sect").style.display = "none";
@@ -152,8 +150,8 @@ function validForm(){
 		 	return false;
 	
 	if(document.form.wan_hwaddr_x.value.length > 0)
-		 if(!validate_hwaddr(document.form.wan_hwaddr_x))
-		 	return false;
+		 if(!check_macaddr(document.form.wan_hwaddr_x, check_hwaddr_flag(document.form.wan_hwaddr_x)))
+		 	return false;		 	
 	
 	if(document.form.wan_heartbeat_x.value.length > 0)
 		 if(!validate_string(document.form.wan_heartbeat_x))
@@ -344,15 +342,13 @@ function fixed_change_wan_type(wan_type){
 			inputCtrl(document.form.wan_dns2_x, 0);
 		}
 	}
-	else if(wan_type == "pptp"
-			|| wan_type == "l2tp"
-			){
+	else if(wan_type == "pptp" || wan_type == "l2tp"){
 		if(wan_type == original_wan_type){
 			document.form.wan_dnsenable_x[0].checked = original_dnsenable;
 			document.form.wan_dnsenable_x[1].checked = !original_dnsenable;
 			change_common_radio(document.form.wan_dnsenable_x, 'IPConnection', 'wan_dnsenable_x', original_dnsenable);
 			
-			if(flag == true && document.form.wan_dns1_x.value.length == 0)
+			if(flag != true && document.form.wan_dns1_x.value.length == 0)
 				document.form.wan_dns1_x.focus();
 		}
 		else{
@@ -642,7 +638,6 @@ function ISPSelection(isp){
 										<option value="l2tp" <% nvram_match_x("Layer3Forwarding", "wan_proto", "l2tp", "selected"); %>>L2TP</option>
 										<option value="static" <% nvram_match_x("Layer3Forwarding", "wan_proto", "static", "selected"); %>><#BOP_ctype_title5#></option>
 									</select>
-									<span style="font-weight:normal;" id="wan_proto_hint"><span style="color:#000;font-size:14px;">3G/3.5G</span><input class="button" onclick="hsdpa_disable();" type="button" value="<#Disconnected#>"/></span>
 								</td>
 							</tr>
 							<tr>
@@ -896,7 +891,7 @@ function ISPSelection(isp){
         </tr>
         <tr id="clone_mac_x">
           <th><a class="hintstyle" href="javascript:void(0);" onClick="openHint(7,16);"><#PPPConnection_x_MacAddressForISP_itemname#></a></th>
-          <td><input type="text" name="wan_hwaddr_x" class="input" maxlength="12" size="12" value="<% nvram_get_x("PPPConnection","wan_hwaddr_x"); %>" onKeyPress="return is_hwaddr()"></td>
+          <td><input type="text" name="wan_hwaddr_x" class="input" maxlength="12" size="16" value="<% nvram_get_x("PPPConnection","wan_hwaddr_x"); %>" onKeyPress="return is_hwaddr()"></td>
         </tr>
         
       </table>

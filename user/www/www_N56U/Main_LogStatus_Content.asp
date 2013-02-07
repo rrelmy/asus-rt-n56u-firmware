@@ -30,8 +30,9 @@ function showclock(){
 				  checkTime(JS_timeObj.getHours()) + ":" +
 				  checkTime(JS_timeObj.getMinutes()) + ":" +
 				  checkTime(JS_timeObj.getSeconds()) + "  " +
-				  JS_timeObj.getFullYear() + " GMT" +
-				  timezone;
+				  /*JS_timeObj.getFullYear() + " GMT" +
+				  timezone;*/ // Viz remove GMT timezone 2011.08
+				  JS_timeObj.getFullYear();		  
 	$("system_time").value = JS_timeObj2;
 	setTimeout("showclock()", 1000);
 	if(navigator.appName.indexOf("Microsoft") >= 0)
@@ -109,7 +110,7 @@ function clearLog(){
 									<tr>
 										<th width="20%"><#General_x_SystemTime_itemname#> : </th>
 										<td>
-											<input type="text" id="system_time" name="system_time" size="40" class="devicepin" value="" readonly="1" style="font-size:12px;">											
+											<input type="text" id="system_time" name="system_time" size="40" class="devicepin" value="" readonly="1" style="font-size:12px;">
 										</td>										
 									</tr>
 									<tr>

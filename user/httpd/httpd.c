@@ -1093,39 +1093,15 @@ rtl8367m_wanPort_phyStatus()
 	return value;
 }
 
-int is_phyconnected(void)       // ASUS add
+int is_phyconnected(void)
 {
-	int /*val = 0, idx = 1, */ret;
-#if 0
-	//printf("chk is_phyconn\n");	// tmp test
-	if ((nvram_match("wan0_proto", "3g")) && (strlen(nvram_safe_get("usb_path1")) > 0) && (strlen(nvram_safe_get("wan0_ipaddr")) > 6) && (strcmp(nvram_safe_get("wan0_ipaddr"), "0.0.0.0")!=0))
-	{
-		//printf("chk is_phyconn:%d\n", strlen(nvram_safe_get("wan0_ipaddr")));	// tmp test
-		return 1;
-	} 
-	else if (nvram_match("wan0_proto", "3g"))
-	{
-		return 0;
-	}
+	int ret;
 
-	if (switch_init() < 0)
-		return 0;
-
-	if (ra3052_reg_read(0x80, &val) != 0)
-		return 0;
-
-	ret = ((val & (idx << 29))) >> 29;
-	switch_fini();
-#endif
-
-//	ret = rtl8367m_wanPort_phyStatus();
-
-//	if (ret)
-	
 	if (nvram_match("link_wan", "1"))
+//	if ((ret = rtl8367m_wanPort_phyStatus()))
 	{
 		ret = 1;
-		//nvram_set_x("", "wan_status_t", "Connected");
+//		nvram_set_x("", "wan_status_t", "Connected");
 	}
 #ifdef RTCONFIG_USB_MODEM
 	else if(is_usb_modem_ready()){

@@ -394,10 +394,10 @@ HowToSharebyFTP3=Habilite el servicio DDNS para permitir el acceso a través de 
 HowToSharebyFTP4=(Solamente accesible en LAN.)
 [LeftMenu]
 menu1=Mapa de la red
-menu2=Servidor multimedia UPnP
+menu2=<div style=\"margin-top:-5px;\">Servidor multimedia UPnP</div>
 menu3=AiDisk
 menu4=Administración<br/> de ancho de banda<br/> de EzQoS
-menu5=<div style=\"padding-top:10px;\">Configuración avanzada</div>
+menu5=Configuración avanzada
 menu5_title=Configuración avanzada
 menu5_1=Inalámbrico
 menu5_2=LAN
@@ -726,6 +726,7 @@ IPConnection_x_DNSServer1_itemname=Servidor DNS 1:
 IPConnection_x_DNSServer2_itemdesc=Este campo indica la dirección IP del DNS al que se conecta RT-N56U.
 IPConnection_x_DNSServer2_itemname=Servidor DNS 2:
 IPConnection_warning_WANIPEQUALGatewayIP=Ha establecido la IP WAN como puerta de enlace de su RT-N56U, y es posible que RT-N56U no pueda conectarse a Internet. Establezca la puerta de enlace con el valor correcto.
+IPConnection_x_illegal_mac=La dirección MAC no es válida.
 [QIS_internet_isp.js]
 BOP_isp_host_desc=Este campo permite asignar un nombre de host a su RT-N56U. Normalmente, se lo solicitará su ISP.
 BOP_isp_host_item= Nombre de host (opcional):
@@ -1307,8 +1308,8 @@ WLANConfig11b_WPAType_itemname=Cifrado WPA:
 WLANConfig11b_WPAType_itemdesc=Habilite el cifrado WPA para cifrar datos.
 WLANConfig11b_x_IsolateAP_itemname=¿Desea establecer el PA aislado?
 WLANConfig11b_x_IsolateAP_itemdesc=Seleccione [SÍ] para deshabilitar la conexión entre los clientes móviles inalámbricos.
-WLANConfig11b_x_AfterBurner_itemname=¿Desea habilitar AfterBurner?
-WLANConfig11b_x_AfterBurner_itemdesc=Cuando la opción AfterBurner está habilitada, el uso de una tarjeta inalámbrica (con la funcionalidad AfterBurner) para establecer conexión con el enrutador mejorará el rendimiento de la transmisión. El modo AfterBurner requiere que [Método de autenticación] se establezca en [Sistema abierto o Clave compartida], [Modo PA] se establezca en [Solo PA] y [Permitir anónimos] se establezca en [No].
+WLANConfig11b_x_IGMPSnooping_itemname=IGMP Snooping:
+WLANConfig11b_x_IGMPSnooping_itemdesc=When enabled, it monitors IGMP conversation between devices and optimize wireless multicast traffic.
 LANHostConfig_x_NTPServer1_itemname=Servidor NTP:
 RouterConfig_GWStaticMT_itemname=Métrica 
 RouterConfig_GWStaticIF_itemname=Interfaz
@@ -1402,6 +1403,8 @@ BM_desc1=En el modo Gaming Blaster, su RT-N56U administra el tráfico de juegos 
 BM_desc2=El correo electrónico, la navegación Web y otras aplicaciones de Internet se controlan con máxima prioridad.
 BM_desc3=La velocidad de carga y descarga en servidores FTP es más rápida. De lo contrario, puede resolver más ancho de banda para este servicio en la página \"Servicio de especificación de usuarios\".
 BM_desc4=Su RT-N56U administra todo el tráfico de vídeo y sonido. No más tiempos de espera cuando hable por teléfono IP o cuando vea vídeos en Internet. Cuando elija esta opción y en modo P2P, el ancho de banda de P2P se limitará a un 10 %.
+BM_notice1=CdS solamente se puede habilitar cuando establece velocidad ascendente manualmente.
+BM_notice2=Le recomendamos que establezca velocidad ascendente en un valor superior al ancho de banda proporcionado por su proveedor de servicio de Internet (ISP, Internet Service Provider).
 BM_hint=La velocidad ascendente ha alcanzado el valor ideal. Les recomendamos que habilite EzQoS para ahorrar recursos del sistema.
 BM_GB=Gaming Blaster
 BM_IA=Aplicación de Internet

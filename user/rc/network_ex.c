@@ -224,7 +224,15 @@ int start_pppd(char *prefix)
 		/* nopcomp novj novjccomp file /tmp/ppp/options.l2tp */
 
 	} else
+	{
+		if (pids("pppd"))
+		{
+			system("killall -SIGKILL pppd");
+			sleep(1);
+		}
+
 		_eval(pppd_argv, NULL, 0, &pid);
+	}
 
 	return 0;
 }

@@ -148,7 +148,6 @@ romfs:
 	cd $(INSTALLDIR)/sbin && ln -sf rc start_telnetd
 	cd $(INSTALLDIR)/sbin && ln -sf rc start_wanduck
 	cd $(INSTALLDIR)/sbin && ln -sf rc stop_wanduck
-	cd $(INSTALLDIR)/sbin && ln -sf rc restart_wanduck
 	cd $(INSTALLDIR)/sbin && ln -sf rc start_ots
 	cd $(INSTALLDIR)/sbin && ln -sf rc start_ntp
 	cd $(INSTALLDIR)/sbin && ln -sf rc get_sw

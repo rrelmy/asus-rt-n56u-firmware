@@ -171,13 +171,6 @@ int fe_qos_packet_send(struct net_device *dev, struct sk_buff* skb, unsigned int
 	    tx_desc[tx_cpu_owner_idx].txd_info4.PN = pn; 
 	}
 	
-	//tell hwnat module, which is incoming interface of this packet
-#if defined (CONFIG_RALINK_RT2880) || defined (CONFIG_RALINK_RT3052)
-	tx_desc[tx_cpu_owner_idx].txd_info4.RXIF = FOE_ALG_RXIF(skb); /* 0: WLAN, 1: PCI */
-#else
-	tx_desc[tx_cpu_owner_idx].txd_info4.UDF = FOE_UDF(skb); 
-#endif
-
 #endif
 
 	spin_lock_irqsave(&ei_local->page_lock, flags);
@@ -286,25 +279,25 @@ int fe_tx_desc_init(struct net_device *dev, unsigned int ring_no, unsigned int q
 			*(unsigned long*)TX_BASE_PTR0 = phys_to_bus((u32) phy_tx_ring);
 			*(unsigned long*)TX_MAX_CNT0  = cpu_to_le32((u32)NUM_TX_DESC);
 			*(unsigned long*)TX_CTX_IDX0  = cpu_to_le32((u32) tx_cpu_owner_idx);
-			sysRegWrite(PDMA_RST_CFG, RT2880_PST_DTX_IDX0);
+			sysRegWrite(PDMA_RST_CFG, PST_DTX_IDX0);
 			break;
 		case 1 :
 			*(unsigned long*)TX_BASE_PTR1 = phys_to_bus((u32) phy_tx_ring);
 			*(unsigned long*)TX_MAX_CNT1  = cpu_to_le32((u32)NUM_TX_DESC);
 			*(unsigned long*)TX_CTX_IDX1  = cpu_to_le32((u32) tx_cpu_owner_idx);
-			sysRegWrite(PDMA_RST_CFG, RT2880_PST_DTX_IDX1);
+			sysRegWrite(PDMA_RST_CFG, PST_DTX_IDX1);
 			break;
 		case 2 :
 			*(unsigned long*)TX_BASE_PTR2 = phys_to_bus((u32) phy_tx_ring);
 			*(unsigned long*)TX_MAX_CNT2  = cpu_to_le32((u32)NUM_TX_DESC);
 			*(unsigned long*)TX_CTX_IDX2  = cpu_to_le32((u32) tx_cpu_owner_idx);
-			sysRegWrite(PDMA_RST_CFG, RT2880_PST_DTX_IDX2);
+			sysRegWrite(PDMA_RST_CFG, PST_DTX_IDX2);
 			break;
 		case 3 :
 			*(unsigned long*)TX_BASE_PTR3 = phys_to_bus((u32) phy_tx_ring);
 			*(unsigned long*)TX_MAX_CNT3  = cpu_to_le32((u32)NUM_TX_DESC);
 			*(unsigned long*)TX_CTX_IDX3  = cpu_to_le32((u32) tx_cpu_owner_idx);
-			sysRegWrite(PDMA_RST_CFG, RT2880_PST_DTX_IDX3);
+			sysRegWrite(PDMA_RST_CFG, PST_DTX_IDX3);
 			break;
 		default :
 			printk("tx descriptor init failed %d\n", ring_no);
@@ -343,7 +336,12 @@ int fe_tx_desc_init(struct net_device *dev, unsigned int ring_no, unsigned int q
 
 int  pkt_classifier(struct sk_buff *skb,int gmac_no, int *ring_no, int *queue_no, int *port_no)
 {
-#if !defined(CONFIG_RALINK_RT2880)
+#if defined(CONFIG_RALINK_RT2880)
+    /* RT2880 -- Assume using 1 Ring (Ring0), Queue 0, and Port 0 */
+    *port_no 	= 0;
+    *ring_no 	= 0;
+    *queue_no 	= 0;
+#else
     unsigned int ac=0;
     unsigned int bridge_traffic=0, lan_traffic=0;
     struct iphdr *iph=NULL;
@@ -351,7 +349,7 @@ int  pkt_classifier(struct sk_buff *skb,int gmac_no, int *ring_no, int *queue_no
     unsigned int vlan_id=0;
 #if defined (CONFIG_RAETH_QOS_DSCP_BASED)
     static char DscpToAcMap[8]={1,0,0,1,2,2,3,3};
-#elif defined (CONFIG_RAETH_QOS_PORT_BASED)
+#elif defined (CONFIG_RAETH_QOS_VPRI_BASED)
     static char VlanPriToAcMap[8]={1,0,0,1,2,2,3,3};
 #endif
 
@@ -377,6 +375,9 @@ int  pkt_classifier(struct sk_buff *skb,int gmac_no, int *ring_no, int *queue_no
     static unsigned char AcToRing_GE1Map[2][4] = {{3, 3, 3, 3},{2, 2, 2, 2}}; 
     static unsigned char AcToRing_GE2Map[4] = {0, 0, 1, 1};
 #elif defined (CONFIG_RALINK_RT3052) || defined (CONFIG_RALINK_RT2883) || \
+      defined (CONFIG_RALINK_RT3352) || defined (CONFIG_RALINK_RT5350) || \
+      defined (CONFIG_RALINK_RT6855) || defined(CONFIG_RALINK_RT6855A) || \
+      defined (CONFIG_RALINK_RT6352) || defined(CONFIG_RALINK_RT71100) || \
      (defined (CONFIG_RALINK_RT3883) && !defined(CONFIG_RAETH_GMAC2))
     /* 
      * 1) Bridge: VO->Ring3, VI->Ring2, BG->Ring1, BE->Ring0 
@@ -409,7 +410,7 @@ int  pkt_classifier(struct sk_buff *skb,int gmac_no, int *ring_no, int *queue_no
 	if (veth->h_vlan_encapsulated_proto == htons(ETH_P_IP)) { //IPv4 
 #if defined (CONFIG_RAETH_QOS_DSCP_BASED)
 	    ac = DscpToAcMap[(iph->tos & 0xe0) >> 5];
-#elif defined (CONFIG_RAETH_QOS_PORT_BASED)
+#elif defined (CONFIG_RAETH_QOS_VPRI_BASED)
 	    ac = VlanPriToAcMap[skb->priority];
 #endif
 	}else { //Ipv6, ARP ...etc
@@ -420,7 +421,7 @@ int  pkt_classifier(struct sk_buff *skb,int gmac_no, int *ring_no, int *queue_no
 #if defined (CONFIG_RAETH_QOS_DSCP_BASED)
 	    iph= (struct iphdr *)(skb->data + ETH_HLEN);
 	    ac = DscpToAcMap[(iph->tos & 0xe0) >> 5];
-#elif defined (CONFIG_RAETH_QOS_PORT_BASED)
+#elif defined (CONFIG_RAETH_QOS_VPRI_BASED)
 	    ac= VlanPriToAcMap[skb->priority];
 #endif
 	}else { // IPv6, ARP ...etc
@@ -446,9 +447,9 @@ int  pkt_classifier(struct sk_buff *skb,int gmac_no, int *ring_no, int *queue_no
 
 
     /* Set Port No - PN field in Tx Descriptor*/
-#if defined (CONFIG_RALINK_RT3883) && defined(CONFIG_RAETH_GMAC2)
+#if defined(CONFIG_RAETH_GMAC2)
     *port_no = gmac_no;
-#elif defined (CONFIG_RALINK_RT3052) || (defined (CONFIG_RALINK_RT3883) && !defined(CONFIG_RAETH_GMAC2))
+#else
     if(bridge_traffic) {
 	*port_no = 1;
     }else {
@@ -458,14 +459,7 @@ int  pkt_classifier(struct sk_buff *skb,int gmac_no, int *ring_no, int *queue_no
 	    *port_no = 2;
 	}
     }
-#endif
-
-#else
-/* RT2880 -- Assume using 1 Ring (Ring0), Queue 0, and Port 0 */
-    *port_no 	= gmac_no;
-    *ring_no 	= 0;
-    *queue_no 	= 0;
-
+#endif // CONFIG_RAETH_GMAC2 //
 
 #endif
 
@@ -535,6 +529,7 @@ int  pkt_classifier(struct sk_buff *skb,int gmac_no, int *ring_no, int *queue_no
  */
 void set_scheduler_weight(void)
 {
+#if !defined (CONFIG_RALINK_RT5350)
     /* 
      * STEP1: Queue scheduling configuration 
      */
@@ -550,15 +545,28 @@ void set_scheduler_weight(void)
 	(QUEUE_WEIGHT_4  << 4) |  /* queue 1 weight */
 	(QUEUE_WEIGHT_2  << 0);   /* queue 0 weight */
     
+#endif
     /* 
      * STEP2: Ring scheduling configuration 
      */
+#if defined (CONFIG_RALINK_RT6855) || defined(CONFIG_RALINK_RT6855A) || \
+    defined (CONFIG_RALINK_RT6352) || defined(CONFIG_RALINK_RT71100)
+    /* MIN_RATE_RATIO0=0, MAX_RATE_ULMT0=1, Weight0=1 */
+    *(unsigned long *)SCH_Q01_CFG =  (0 << 10) | (1<<14) | (0 << 12);
+    /* MIN_RATE_RATIO1=0, MAX_RATE_ULMT1=1, Weight1=4 */
+    *(unsigned long *)SCH_Q01_CFG |= (0 << 26) | (1<<30) | (2 << 28);
+
+    /* MIN_RATE_RATIO2=0, MAX_RATE_ULMT2=1, Weight0=1 */
+    *(unsigned long *)SCH_Q23_CFG =  (0 << 10) | (1<<14) | (0 << 12);
+    /* MIN_RATE_RATIO3=0, MAX_RATE_ULMT3=1, Weight1=4 */
+    *(unsigned long *)SCH_Q23_CFG |= (0 << 26) | (1<<30) | (2 << 28);
+#else
     *(unsigned long *)PDMA_SCH_CFG = (WRR_SCH << 24) | 
 	(QUEUE_WEIGHT_16 << 12) | /* ring 3 weight */
 	(QUEUE_WEIGHT_4 << 8) |  /* ring 2 weight */
 	(QUEUE_WEIGHT_16 << 4) |  /* ring 1 weight */
 	(QUEUE_WEIGHT_4 << 0);   /* ring 0 weight */
-
+#endif
 }
 
 /*
@@ -589,7 +597,11 @@ void set_scheduler_weight(void)
  */
 void set_schedule_pause_condition(void)
 {
-
+#if defined (CONFIG_RALINK_RT6352)
+    
+#elif defined (CONFIG_RALINK_RT5350)
+    *(unsigned long *)SDM_TRING = (0xC << 28) | (0x3 << 24) | (0xC << 4) | 0x3;
+#else
     /* 
      * STEP1: Set queue priority is high or low 
      *
@@ -618,6 +630,8 @@ void set_schedule_pause_condition(void)
 	( PSE_P2_HQ_FULL << 16 ) | /* queue 2 */
 	( PSE_P1_HQ_FULL << 8 ) |  /* queue 1 */
 	( PSE_P1_HQ_FULL << 0 );  /* queue 0 */
+#endif
+    
 }
 
 

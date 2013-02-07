@@ -396,7 +396,7 @@ stop_ntpc(void)
 
 int start_lltd(void)
 {
-	system("lld2d br0");
+	eval("lld2d", "br0");
 	
 	return 0;
 }
@@ -404,7 +404,7 @@ int start_lltd(void)
 void stop_lltd(void)
 {
 	if (pids("lld2d"))
-		system("killall lld2d");
+		eval("killall", "lld2d");
 }
 
 int 
@@ -643,16 +643,24 @@ int start_wanduck(void)
 		return 0;
 	}
 
-	if (wan_proto_type && (strcmp(wan_proto_type, "pptp") || strcmp(wan_proto_type, "l2tp"))) // delay run
+	if (wan_proto_type && (strcmp(wan_proto_type, "pptp") && strcmp(wan_proto_type, "l2tp")))
 	{
-		printf("\nDelay run wanduck 3 seconds\n");
-		sleep(3);
+		if (nvram_match("wanduck_ft", "1"))
+		{
+			printf("\nDelay run wanduck 3 seconds\n");
+			nvram_set("wanduck_ft", "0");
+			sleep(3);
+		}
 		ret = _eval(argv, NULL, 0, &pid);
 	}
 	else
         {
-                printf("\nDelay run wanduck 5 seconds\n");
-                sleep(5);
+		if (nvram_match("wanduck_ft", "1"))
+		{
+	                printf("\nDelay run wanduck 5 seconds\n");
+			nvram_set("wanduck_ft", "0");
+        	        sleep(5);
+		}
                 ret = _eval(argv, NULL, 0, &pid);
         }
 

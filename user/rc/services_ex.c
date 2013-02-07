@@ -308,7 +308,7 @@ start_dns_dhcpd()
 	if (nvram_match("router_disable", "1"))
 		return 0;
 
-	printf("start dnsmasq\n");	// tmp test
+	dbG("start dnsmasq\n");
 
         /* Create resolv.conf with empty nameserver list */
         if (!(fp = fopen("/tmp/resolv.conf", "r")))
@@ -393,6 +393,7 @@ start_dns_dhcpd()
         	}
 
 		fprintf(fp, "dhcp-range=%s,%s,%s,%ss\n", dhcp_start, dhcp_end, lan_netmask, nvram_safe_get("dhcp_lease"));
+		fprintf(fp, "dhcp-lease-max=253\n");
 		fprintf(fp, "dhcp-leasefile=/tmp/dnsmasq.leases\n");
 
 		if (nvram_invmatch("dhcp_gateway_x", ""))
@@ -413,6 +414,7 @@ start_dns_dhcpd()
 	}
         fclose(fp);
 
+	logmessage("dnsmasq", "start");
 	return system("dnsmasq -n &");
 }
 

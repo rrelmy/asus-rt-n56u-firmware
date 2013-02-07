@@ -211,6 +211,7 @@ sysinit(void)
 
 	/* Make /etc symlinks for compatibility */
 	eval("touch", "/tmp/resolv.conf");
+	chmod("/tmp/resolv.conf", 0666);
 	symlink("/tmp/resolv.conf", "/etc/resolv.conf");
 	symlink("/etc_ro/protocols", "/etc/protocols");
 
@@ -380,7 +381,9 @@ rc_signal(int sig)
 		/*else if (sig == SIGTTIN) {
 			dbG("[rc] catch signal SIGTTIN\n");
 			signalled = HOTPLUG;
-		}//*/
+		}*/
+		else
+			dbG("[rc] catch signal %x\n", sig);
 	}
 }
 
@@ -617,17 +620,9 @@ void restart_qos()
 			goto Speedtest_Init_failed;
 		}
 
-		if (	nvram_match("sw_mode_ex", "1") &&
-			//!nvram_match("wan0_proto", "pptp") &&
-			//!nvram_match("wan0_proto", "l2tp") &&
-			is_hwnat_loaded() 
-		)
-		{
+		if (nvram_match("sw_mode_ex", "1") &&
+			is_hwnat_loaded())
 			system("rmmod hw_nat");
-			sleep(1);
-			system("echo 0 > /proc/sys/net/ipv4/conf/default/force_igmp_version");
-			system("echo 0 > /proc/sys/net/ipv4/conf/all/force_igmp_version");
-		}
 
 		nvram_set("qos_enable", "1");
 		track_set("1");
@@ -670,16 +665,13 @@ Speedtest_Init_failed:
 //			nvram_match("mr_enable_x", "0") &&
 			(nvram_match("wl_radio_x", "0") || nvram_match("wl_mrate", "0")) &&
 			(nvram_match("rt_radio_x", "0") || nvram_match("rt_mrate", "0")) &&
-			//!nvram_match("wan0_proto", "pptp") &&
-			//!nvram_match("wan0_proto", "l2tp") &&
+			!nvram_match("wan0_proto", "l2tp") &&
+			!nvram_match("wan0_proto", "pptp") &&
 			!is_hwnat_loaded() 
 		)
 		{
-			if (nvram_match("hwnat", "1") && nvram_match("fw_pt_l2tp", "0") && nvram_match("fw_pt_ipsec", "0"))
+			if (nvram_match("hwnat", "1") /*&& nvram_match("fw_pt_l2tp", "0") && nvram_match("fw_pt_ipsec", "0")*/)
 			{
-				system("echo 2 > /proc/sys/net/ipv4/conf/default/force_igmp_version");
-				system("echo 2 > /proc/sys/net/ipv4/conf/all/force_igmp_version");
-				sleep(1);
 				system("insmod -q hw_nat.ko");
 			}
 		}
@@ -692,13 +684,8 @@ Speedtest_Init_failed:
 
 void restart_vpn_pt()
 {
-	if ((nvram_match("fw_pt_l2tp", "1") || nvram_match("fw_pt_ipsec", "1")) && is_hwnat_loaded())
-	{
+	if (/*(nvram_match("fw_pt_l2tp", "1") || nvram_match("fw_pt_ipsec", "1")) &&*/ is_hwnat_loaded())
 		system("rmmod hw_nat");
-		sleep(1);
-		system("echo 0 > /proc/sys/net/ipv4/conf/default/force_igmp_version");
-		system("echo 0 > /proc/sys/net/ipv4/conf/all/force_igmp_version");
-	}
 
 	system("rmmod nf_nat_pptp 1>/dev/null 2>&1");
 	system("rmmod nf_conntrack_pptp 1>/dev/null 2>&1");
@@ -717,16 +704,15 @@ void restart_vpn_pt()
 		}
 	}
 
-	if (	nvram_match("hwnat", "1") && nvram_match("fw_pt_l2tp", "0") && nvram_match("fw_pt_ipsec", "0") &&
+	if (	nvram_match("hwnat", "1") && /*nvram_match("fw_pt_l2tp", "0") && nvram_match("fw_pt_ipsec", "0") &&*/
 		nvram_match("sw_mode_ex", "1") &&
 		(nvram_match("wl_radio_x", "0") || nvram_match("wl_mrate", "0")) &&
 		(nvram_match("rt_radio_x", "0") || nvram_match("rt_mrate", "0")) &&
+		!nvram_match("wan0_proto", "l2tp") &&
+		!nvram_match("wan0_proto", "pptp") &&
 		!enable_qos() &&
 		!is_hwnat_loaded())
 	{
-		system("echo 2 > /proc/sys/net/ipv4/conf/default/force_igmp_version");
-		system("echo 2 > /proc/sys/net/ipv4/conf/all/force_igmp_version");
-		sleep(1);
 		system("insmod -q hw_nat.ko");
 	}
 }
@@ -767,34 +753,6 @@ void rc_restart_firewall()
 
 	stop_upnp();
 	start_upnp();
-}
-
-void restart_wanduck()
-{
-	int try_count = 0;
-
-	stop_wanduck();
-
-	while (!pids("wanduck") && (++try_count < 10))
-	{
-		sleep(3);
-		start_wanduck();
-	}
-}
-
-int
-restart_wanduck_ppp()
-{
-	char *wan_proto = nvram_safe_get("wan_proto");
-	char *rw_argv[] = {"/sbin/restart_wanduck", NULL};
-	pid_t pid;
-
-	if (!strcmp(wan_proto, "pppoe") ||
-	    !strcmp(wan_proto, "pptp") ||
-	    !strcmp(wan_proto, "l2tp"))
-	{
-		return _eval(rw_argv, NULL, 0, &pid);
-	}
 }
 
 // 2008.08 magic {
@@ -1677,26 +1635,10 @@ usb_dbg("# rc: End of PRT PLUG OFF\n");
 			start_lan();
 			if (nvram_match("wan_route_x", "IP_Routed"))
 				default_filter_setting();
-#if 0
-#if (!defined(W7_LOGO) && !defined(WIFI_LOGO))
-#ifdef WEB_REDIRECT
-        		if (	nvram_match("wan_route_x", "IP_Routed") &&
-				nvram_match("wan_nat_x", "1") &&
-				nvram_match("wan_pppoe_relay_x", "0")	)
-			{
-				printf("--- START: Wait to start wanduck ---\n");
-				redirect_setting();
-				start_wanduck();
-        		}
-#endif
-#endif
-#endif
 			start_wan();
-
 			wan_proto_type = nvram_safe_get("wan0_proto");
 			if (wan_proto_type && (!strcmp(wan_proto_type, "pptp") || !strcmp(wan_proto_type, "l2tp")))	// delay run
 				sleep(5);
-
 			start_services();
 			start_usb();
 
@@ -1709,6 +1651,9 @@ RC_END:
 			do_timer();
 			/* Fall through */
 		case IDLE:
+			/* Periodically reap zombies. */
+			chld_reap(0);
+
 			state = IDLE;
 			/* Wait for user input or state change */
 			while (signalled == -1) {
@@ -2268,11 +2213,6 @@ main(int argc, char **argv)
 	else if (!strcmp(base, "stop_wanduck"))
 	{
 		stop_wanduck();
-		return 0;
-	}
-	else if (!strcmp(base, "restart_wanduck"))
-	{
-		restart_wanduck();
 		return 0;
 	}
 	else if (!strcmp(base, "run_telnetd"))

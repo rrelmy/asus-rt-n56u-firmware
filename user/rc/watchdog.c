@@ -1068,6 +1068,9 @@ void pppd_processcheck()
 	    strcmp(wan_proto, "l2tp"))
 		return;
 
+	if (nvram_match("manually_disconnect_wan", "1"))
+		return;
+
 	pppd_timer = (pppd_timer + 1) % 15;
 
 	if (pppd_timer) return;

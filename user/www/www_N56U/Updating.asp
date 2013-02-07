@@ -8,9 +8,10 @@
 <link rel="icon" href="images/favicon.png">
 </head>
 
-<body>
+<body onload="initial();">
 <script>
-parent.showLoadingBar(205);
+	parent.$("hiddenMask").style.visibility = "hidden";
+	parent.showLoadingBar(225);
 </script>
 </body>
 </html>

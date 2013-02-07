@@ -657,6 +657,10 @@ vsf_sysutil_common_sighandler(int signum)
 }
 #endif
 
+void chld_reap(int sig)
+{
+	while (waitpid(-1, NULL, WNOHANG) > 0) {}
+}
 
 #define MAX_NVPARSE 255
 
@@ -793,12 +797,13 @@ simple_eval(char *const argv[], char *path, int timeout, int *ppid)
 			*ppid = pid;
 			return 0;
 		} else {
-			printf("parent wait\n");	// tmp test
 			if (waitpid(pid, &status, 0) == -1) {
+				if (errno == ECHILD)
+					return 0;
 				perror("waitpid");
 				return errno;
 			}
-			printf("parent after wait\n");	// tmp test
+
 			if (WIFEXITED(status))
 				return WEXITSTATUS(status);
 			else
@@ -881,16 +886,31 @@ void time_zone_x_mapping()
 	doSystem("echo %s > /etc/TZ", nvram_safe_get("time_zone_x"));
 }
 
+typedef void (*sighandler_t)(int);
+
 int
 _eval(char *const argv[], char *path, int timeout, int *ppid)
 {
 	sigset_t set;
+#if 0
+	sigset_t sigmask;
+	sighandler_t chld = SIG_IGN;
+#endif
 	pid_t pid;
 	int status;
 	int fd;
 	int flags;
 	int sig, i;
-
+#if 0
+	if (!ppid) {
+		// block SIGCHLD
+		sigemptyset(&set);
+		sigaddset(&set, SIGCHLD);
+		sigprocmask(SIG_BLOCK, &set, &sigmask);
+		// without this we cannot rely on waitpid() to tell what happened to our children
+		chld = signal(SIGCHLD, SIG_DFL);
+	}
+#endif
 	switch (pid = fork()) {
 	case -1:	/* error */
 		perror("fork");
@@ -952,6 +972,11 @@ _eval(char *const argv[], char *path, int timeout, int *ppid)
 				perror("waitpid");
 				return errno;
 			}
+#if 0
+			signal(SIGCHLD, chld);
+			// reap zombies
+			chld_reap(0);
+#endif
 			if (WIFEXITED(status))
 				return WEXITSTATUS(status);
 			else

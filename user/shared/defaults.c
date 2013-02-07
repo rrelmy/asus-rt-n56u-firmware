@@ -154,7 +154,7 @@ struct nvram_tuple router_defaults[] = {
 //	{ "session_timeout_interval", "0", 0 },
 //	{ "idle_timeout_interval", "0", 0 },
 
-	{ "IgmpSnEnable", "1", 0 },
+	{ "wl_igmpsnenable", "1", 0 },
 
 	/* Miscellaneous parameters */
 	{ "timer_interval", "3600", 0 },	/* Timer interval in seconds */
@@ -375,10 +375,10 @@ struct nvram_tuple router_defaults[] = {
 	{ "rt_HT_HTC", "1", 0 },
 	{ "rt_HT_RDG", "1", 0 },
 	{ "rt_HT_LinkAdapt", "0", 0 },
-#ifdef MR
-	{ "rt_HT_BW", "1", 0 },
-#else
+#if defined (W7_LOGO) || defined (WIFI_LOGO)
 	{ "rt_HT_BW", "0", 0 },
+#else
+	{ "rt_HT_BW", "1", 0 },
 #endif
 	{ "rt_HT_EXTCHA", "1", 0 },
 	{ "rt_HT_OpMode", "0", 0 },
@@ -401,7 +401,7 @@ struct nvram_tuple router_defaults[] = {
 	{ "rt_wme_no_ack", "off", 0 },
 
 	{ "rt_GreenAP", "0", 0 },
-	{ "rt_IgmpSnEnable", "1", 0 },
+	{ "rt_igmpsnenable", "1", 0 },
 
 	{ "rt_auth_mode", "open", 0 },
 	{ "rt_crypto", "aes", 0 },

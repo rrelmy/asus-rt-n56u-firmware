@@ -171,8 +171,8 @@ function markGroup(o, s, c, b) {
 	if(b == " Add "){		
 		if(s == 'RBRList'){
 			if(document.form.wl_wdsnum_x_0.value >= c)
-				cFlag=1;
-			else if(!validate_hwaddr(document.form.wl_wdslist_x_0))
+				cFlag=1;			
+			else if(!check_macaddr(document.form.wl_wdslist_x_0, check_hwaddr_flag(document.form.wl_wdslist_x_0)))
 				return false;
 			else if(document.form.wl_wdslist_x_0.value == "")
 				bFlag = 1;
@@ -181,14 +181,14 @@ function markGroup(o, s, c, b) {
 		}
 		else if (s == 'MFList'){
 			if (document.form.macfilter_num_x_0.value >= c) cFlag=1;
-			else if (!validate_hwaddr(document.form.macfilter_list_x_0)) return false;
+			else if(!check_macaddr(document.form.macfilter_list_x_0, check_hwaddr_flag(document.form.macfilter_list_x_0))) return false;
 			else if (document.form.macfilter_list_x_0.value=="") bFlag=1;
 			else if (!validate_duplicate(document.form.MFList_s, document.form.macfilter_list_x_0.value, 12, 0)) return false;
 		}
 		else if (s == 'ACLList'){
 			if(document.form.wl_macnum_x_0.value >= c)
 				cFlag=1;
-			else if(!validate_hwaddr(document.form.wl_maclist_x_0))
+			else if(!check_macaddr(document.form.wl_maclist_x_0, check_hwaddr_flag(document.form.wl_maclist_x_0)))
 				return false;
 			else if(document.form.wl_maclist_x_0.value=="")
 				bFlag = 1;
@@ -208,7 +208,7 @@ function markGroup(o, s, c, b) {
 					document.form.dhcp_end.value = tmp;
 			}
 			if (document.form.dhcp_staticnum_x_0.value >= c) cFlag=1;
-			else if (!validate_hwaddr(document.form.dhcp_staticmac_x_0) ||
+			else if (!check_macaddr(document.form.dhcp_staticmac_x_0, check_hwaddr_flag(document.form.dhcp_staticmac_x_0)) ||
 							!validate_ipaddr_final(document.form.dhcp_staticip_x_0, "staticip")) return false;
 			else if (document.form.dhcp_staticmac_x_0.value=="" ||
 							document.form.dhcp_staticip_x_0.value=="") bFlag=1;
@@ -1084,11 +1084,12 @@ function validate_ipaddr_final(o, v){
 			;	// there is no WAN in AP mode, so it wouldn't be compared with the wan ip..., etc.
 		else if(requireWANIP(v) && (
 				(v=='wan_ipaddr' &&  matchSubnet2(o.value, document.form.wan_netmask, document.form.lan_ipaddr.value, document.form.lan_netmask)) ||
+				(v=='wan_gateway' &&  matchSubnet2(o.value, document.form.wan_netmask, document.form.lan_ipaddr.value, document.form.lan_netmask)) ||
 				(v=='lan_ipaddr' &&  matchSubnet2(o.value, document.form.lan_netmask, document.form.wan_ipaddr.value, document.form.wan_netmask)) ||
 				(isModel3() == 'WL550gE' && v=='wan_ipaddr' && matchSubnet2(o.value, document.form.wan_netmask, document.form.lan1_ipaddr.value, document.form.lan1_netmask)) ||
 				(isModel3() == 'WL550gE' && v=='lan1_ipaddr' && matchSubnet2(o.value, document.form.lan1_netmask, document.form.wan_ipaddr.value, document.form.wan_netmask))
 				)){
-			alert(o.value + " <#JS_validip#>");
+			alert("WAN and LAN should have different IP addresses and subnet.");
 			if(v == 'wan_ipaddr'){
 				document.form.wan_ipaddr.value = "10.1.1.1";
 				document.form.wan_netmask.value = "255.0.0.0";
@@ -1121,7 +1122,6 @@ function validate_ipaddr_final(o, v){
 	if((wan_route_x == "IP_Bridged" && wan_nat_x == "0") || sw_mode=="2" || sw_mode=="3")	// variables are defined in state.js
 			;	// there is no WAN in AP mode, so it wouldn't be compared with the wan ip..., etc.
 	else if(requireWANIP(v) && (
-			(v=='wan_netmask' &&  matchSubnet2(document.form.wan_ipaddr.value, o, document.form.lan_ipaddr.value, document.form.lan_netmask)) ||
 			(v=='lan_netmask' &&  matchSubnet2(document.form.lan_ipaddr.value, o, document.form.wan_ipaddr.value, document.form.wan_netmask)) ||
 			(isModel3() == 'WL550gE' && v=='wan_netmask' &&  matchSubnet2(document.form.wan_ipaddr.value, o, document.form.lan_ipaddr.value, document.form.lan_netmask)) ||
 			(isModel3() == 'WL550gE' && v=='lan1_netmask' &&  matchSubnet2(document.form.lan1_ipaddr.value, o, document.form.wan_ipaddr.value, document.form.wan_netmask))
@@ -2136,8 +2136,9 @@ function onSubmitCtrlOnly(o, s){
 		document.form.action_mode.value = s;
 	
 	if(s == 'Upload1'){
-		if(document.form.file.value){
+		if(document.form.file.value){			
 			disableCheckChangedStatus();
+			dr_advise();
 			document.form.submit();			
 		}
 		else{
@@ -3409,338 +3410,224 @@ function insertExtChannelOption(orig){
         else{		//1 : 5GHz
                 if (document.form.HT_BW.value == "0"){ 
                 	if (country == "AL" || 
-                	 country == "DZ" || 
-			 country == "AU" || 
-			 country == "BH" || 
-              	         country == "BY" ||
-              	         country == "CA" || 
-              	         country == "CL" || 
-              	         country == "CO" || 
-                	 country == "CR" ||
-                	 country == "DO" || 
-                	 country == "SV" || 
-                	 country == "GT" || 
-			 country == "HN" || 
-			 country == "HK" || 
-              	         country == "IN" ||
-              	         country == "IL" || 
-              	         country == "JO" || 
-              	         country == "KZ" || 
-                	 country == "LB" ||
-                	 country == "MO" || 
-                	 country == "MK" ||                	 
-                	 country == "MY" ||
-                	 country == "MX" || 
-			 country == "NZ" || 
-			 country == "NO" || 
-              	         country == "OM" ||
-              	         country == "PK" || 
-              	         country == "PA" || 
-              	         country == "PR" || 
-                	 country == "QA" ||
-                	 country == "RO" || 
-                	 country == "RU" || 
-                	 country == "SA" || 
-			 country == "SG" || 
-			 country == "SY" || 
-              	         country == "TH" ||
-              	         country == "UA" || 
-              	         country == "AE" || 
-              	         country == "US" || 
-                	 country == "VN" ||
-                	 country == "YE" || 
-                	 country == "ZW")
-                		channels = new Array(0, 36, 40, 44, 48, 149, 153, 157, 161); //Region 0
+                	 		country == "DZ" || 
+			 								country == "AU" || 
+			 								country == "BH" || 
+              	      country == "BY" ||
+              	      	country == "CA" || 
+              	      	country == "CL" || 
+              	      	country == "CO" || 
+												country == "CR" ||
+                	 			country == "DO" || 
+                	 		country == "SV" || 
+                	 		country == "GT" || 
+			 								country == "HN" || 
+			 								country == "HK" || 
+              	      country == "IN" ||
+              	      	country == "IL" || 
+              	        country == "JO" || 
+              	        country == "KZ" || 
+                	 			country == "LB" ||
+                	 			country == "MO" || 
+                	 		country == "MK" ||                	 
+                	 		country == "MY" ||
+                	 		country == "MX" || 
+			 								country == "NZ" || 
+			 								country == "NO" || 
+              	      	country == "OM" ||
+              	        country == "PK" || 
+              	        country == "PA" || 
+              	        country == "PR" || 
+                	 			country == "QA" ||
+                	 		country == "RO" || 
+                	 		country == "RU" || 
+                	 		country == "SA" || 
+			 								country == "SG" || 
+			 								country == "SY" || 
+              	      	country == "TH" ||
+              	        country == "UA" || 
+              	        country == "AE" || 
+              	        country == "US" || 
+                	 			country == "VN" ||
+                	 		country == "YE" || 
+                	 		country == "ZW")
+                			channels = new Array(0, 36, 40, 44, 48, 149, 153, 157, 161, 165); //Region 0
                 		
                 	else if(country == "AT" ||
-                		country == "BE" ||
-            		    	country == "BR" ||
-            		    	country == "BG" ||
-            		    	country == "CY" || 
-            		    	country == "DK" || 
-            		    	country == "EE" ||
-            		    	country == "FI" || 
-            	  	        country == "DE" || 
-            	  	        country == "GR" || 
-                		country == "HU" ||
-             		   	country == "IS" ||
-             		   	country == "IE" || 
-            		    	country == "IT" || 
-            		    	country == "LV" ||
-            		    	country == "LI" || 
-            		    	country == "LT" || 
-            		    	country == "LU" || 
-            		    	country == "NL" ||
-            		    	country == "PL" || 
-            		    	country == "PT" || 
-            		    	country == "SK" || 
-            		    	country == "SI" ||
-            		    	country == "ZA" || 
-            		    	country == "ES" || 
-            		    	country == "SE" || 
-            		    	country == "CH" ||
-            		    	country == "GB" || 
-            		    	country == "UZ")
+                					country == "BE" ||
+            		    			country == "BR" ||
+            		    			country == "BG" ||
+            		    			country == "CY" || 
+            		    		country == "DK" || 
+            		    		country == "EE" ||
+            		    		country == "FI" || 
+            	  	      country == "DE" || 
+            	  	      country == "GR" || 
+                					country == "HU" ||
+             		   				country == "IS" ||
+             		   				country == "IE" || 
+            		    			country == "IT" || 
+            		    			country == "LV" ||
+            		    		country == "LI" || 
+            		    		country == "LT" || 
+            		    		country == "LU" || 
+            		    		country == "NL" ||
+            		    		country == "PL" || 
+            		    			country == "PT" || 
+            		    			country == "SK" || 
+            		    			country == "SI" ||
+            		    			country == "ZA" || 
+            		    			country == "ES" || 
+            		    		country == "SE" || 
+            		    		country == "CH" ||
+            		    		country == "GB" || 
+            		    		country == "UZ")
                 		channels = new Array(0, 36, 40, 44 ,48); //Region 1
                 	
                 	else if(country == "AM" ||
-            		    	country == "AZ" || 
-            		    	country == "HR" ||
-            		    	country == "CZ" || 
-            		    	country == "EG" || 
-            		    	country == "FR" || 
-            		    	country == "GE" ||
-            		    	country == "MC" ||
-            		    	country == "TT" || 
-            		    	country == "TN" ||
-            		    	country == "TR")
+            		    			country == "AZ" || 
+            		    			country == "HR" ||
+            		    			country == "CZ" || 
+            		    			country == "EG" || 
+            		    		country == "FR" || 
+            		    		country == "GE" ||
+            		    		country == "MC" ||
+            		    		country == "TT" || 
+            		    		country == "TN" ||
+            		    			country == "TR")
                 		channels = new Array(0, 36, 40, 44 ,48); //Region 2
                 	
                 	else if(country == "AR" || country == "TW")
                 		channels = new Array(0, 149, 153, 157, 161); //Region 3
                 	
                 	else if(country == "BZ" ||
-                		country == "BO" || 
-            		    	country == "BN" ||
-            		    	country == "CN" || 
-            		    	country == "ID" || 
-            		    	country == "IR" || 
-            		    	country == "PE" ||
-            		    	country == "PH")
-                		channels = new Array(0, 149, 153, 157, 161); //Region 4
+                					country == "BO" || 
+            		    			country == "BN" ||
+            		    			country == "CN" || 
+            		    			country == "ID" || 
+            		    		country == "IR" || 
+            		    		country == "PE" ||
+            		    		country == "PH")
+                		channels = new Array(0, 149, 153, 157, 161, 165); //Region 4
                 	
                 	else if(country == "KP" ||
-                		country == "KR" || 
-            		    	country == "UY" ||
-            		    	country == "VE")
-                		channels = new Array(0, 149, 153, 157, 161); //Region 5
+                					country == "KR" || 
+            		    			country == "UY" ||
+            		    			country == "VE")
+                		channels = new Array(0, 149, 153, 157, 161, 165); //Region 5
                    	
 									else if(country == "JP")
                 		channels = new Array(0, 36, 40, 44, 48); //Region 9
 									
 									else
-                		channels = new Array(0, 36, 40, 44, 48, 52, 56, 60, 64, 100, 104, 108, 112, 116, 120, 124, 128, 132, 136, 140, 149, 153, 157, 161); //Region 7
+                		channels = new Array(0, 36, 40, 44, 48, 52, 56, 60, 64, 100, 104, 108, 112, 116, 120, 124, 128, 132, 136, 140, 149, 153, 157, 161, 165); //Region 7
                 }
 								else if(document.form.HT_BW.value == "1"){
                 	if (country == "AL" || 
-                	 country == "DZ" || 
-			 country == "AU" || 
-			 country == "BH" || 
-              	         country == "BY" ||
-              	         country == "CA" || 
-              	         country == "CL" || 
-              	         country == "CO" || 
-                	 country == "CR" ||
-                	 country == "DO" || 
-                	 country == "SV" || 
-                	 country == "GT" || 
-			 country == "HN" || 
-			 country == "HK" || 
-              	         country == "IN" ||
-              	         country == "IL" || 
-              	         country == "JO" || 
-              	         country == "KZ" || 
-                	 country == "LB" ||
-                	 country == "MO" || 
-                	 country == "MK" ||                	 
-                	 country == "MY" ||
-                	 country == "MX" || 
-			 country == "NZ" || 
-			 country == "NO" || 
-              	         country == "OM" ||
-              	         country == "PK" || 
-              	         country == "PA" || 
-              	         country == "PR" || 
-                	 country == "QA" ||
-                	 country == "RO" || 
-                	 country == "RU" || 
-                	 country == "SA" || 
-			 country == "SG" || 
-			 country == "SY" || 
-              	         country == "TH" ||
-              	         country == "UA" || 
-              	         country == "AE" || 
-              	         country == "US" || 
-                	 country == "VN" ||
-                	 country == "YE" || 
-                	 country == "ZW")
-                		channels = new Array(0, 36, 40, 44, 48, 149, 153, 157, 161); //Region 0
-                		
-                	else if(country == "AT" ||
-                		country == "BE" ||
-            		    	country == "BR" ||
-            		    	country == "BG" ||
-            		    	country == "CY" || 
-            		    	country == "DK" || 
-            		    	country == "EE" ||
-            		    	country == "FI" || 
-            	  	        country == "DE" || 
-            	  	        country == "GR" || 
-                		country == "HU" ||
-             		   	country == "IS" ||
-             		   	country == "IE" || 
-            		    	country == "IT" || 
-            		    	country == "LV" ||
-            		    	country == "LI" || 
-            		    	country == "LT" || 
-            		    	country == "LU" || 
-            		    	country == "NL" ||
-            		    	country == "PL" || 
-            		    	country == "PT" || 
-            		    	country == "SK" || 
-            		    	country == "SI" ||
-            		    	country == "ZA" || 
-            		    	country == "ES" || 
-            		    	country == "SE" || 
-            		    	country == "CH" ||
-            		    	country == "GB" || 
-            		    	country == "UZ")
-                		channels = new Array(0, 36, 40, 44, 48); //Region 1
-                	
-                	else if(country == "AM" ||
-            		    	country == "AZ" || 
-            		    	country == "HR" ||
-            		    	country == "CZ" || 
-            		    	country == "EG" || 
-            		    	country == "FR" || 
-            		    	country == "GE" ||
-            		    	country == "MC" ||
-            		    	country == "TT" || 
-            		    	country == "TN" ||
-            		    	country == "TR")
-                		channels = new Array(0, 36, 40, 44, 48); //Region 2
-                	
-                	else if(country == "AR" || country == "TW")
-                		channels = new Array(0, 149, 153, 157, 161); //Region 3
-                	
-                	else if(country == "BZ" ||
-                		country == "BO" || 
-            		    	country == "BN" ||
-            		    	country == "CN" || 
-            		    	country == "ID" || 
-            		    	country == "IR" || 
-            		    	country == "PE" ||
-            		    	country == "PH")
-                		channels = new Array(0, 149, 153, 157, 161); //Region 4
-                	
-                	else if(country == "KP" ||
-                		country == "KR" || 
-            		    	country == "UY" ||
-            		    	country == "VE")
-                		channels = new Array(0, 149, 153, 157, 161); //Region 5
-                	
-									else if(country == "JP")
-                		channels = new Array(0, 36, 40, 44, 48); //Region 9
-
-									else
-                		channels = new Array(36, 40, 44, 48, 52, 56, 60, 64, 100, 104, 108, 112, 116, 120, 124, 128, 132, 136, 140, 149, 153, 157, 161); //Region 7
-                }		
-                else{
-                	if (country == "AL" || 
-                	 country == "DZ" || 
-			 country == "AU" || 
-			 country == "BH" || 
-              	         country == "BY" ||
-              	         country == "CA" || 
-              	         country == "CL" || 
-              	         country == "CO" || 
-                	 country == "CR" ||
-                	 country == "DO" || 
-                	 country == "SV" || 
-                	 country == "GT" || 
-			 country == "HN" || 
-			 country == "HK" || 
-              	         country == "IN" ||
-              	         country == "IL" || 
-              	         country == "JO" || 
-              	         country == "KZ" || 
-                	 country == "LB" ||
-                	 country == "MO" || 
-                	 country == "MK" ||                	 
-                	 country == "MY" ||
-                	 country == "MX" || 
-			 country == "NZ" || 
-			 country == "NO" || 
-              	         country == "OM" ||
-              	         country == "PK" || 
-              	         country == "PA" || 
-              	         country == "PR" || 
-                	 country == "QA" ||
-                	 country == "RO" || 
-                	 country == "RU" || 
-                	 country == "SA" || 
-			 country == "SG" || 
-			 country == "SY" || 
-              	         country == "TH" ||
-              	         country == "UA" || 
-              	         country == "AE" || 
-              	         country == "US" || 
-                	 country == "VN" ||
-                	 country == "YE" || 
-                	 country == "ZW")
+                	 		country == "DZ" || 
+			 								country == "AU" || 
+			 								country == "BH" || 
+              	      country == "BY" ||
+              	      	country == "CA" || 
+              	        country == "CL" || 
+              	        country == "CO" || 
+                	 			country == "CR" ||
+                	 			country == "DO" || 
+                	 		country == "SV" || 
+                	 		country == "GT" || 
+			 								country == "HN" || 
+			 								country == "HK" || 
+              	      country == "IN" ||
+              	      	country == "IL" || 
+              	        country == "JO" || 
+              	        country == "KZ" || 
+                	 			country == "LB" ||
+                	 			country == "MO" || 
+                	 		country == "MK" ||                	 
+                	 		country == "MY" ||
+                	 		country == "MX" || 
+			 								country == "NZ" || 
+			 								country == "NO" || 
+              	      	country == "OM" ||
+              	        country == "PK" || 
+              	        country == "PA" || 
+              	        country == "PR" || 
+                	 			country == "QA" ||
+                	 		country == "RO" || 
+                	 		country == "RU" || 
+                	 		country == "SA" || 
+			 								country == "SG" || 
+			 								country == "SY" || 
+              	      	country == "TH" ||
+              	        country == "UA" || 
+              	        country == "AE" || 
+              	        country == "US" || 
+                	 			country == "VN" ||
+                	 		country == "YE" || 
+                	 		country == "ZW")
                 		channels = new Array(0, 36, 40, 44, 48, 149, 153, 157, 161, 165); //Region 0
                 		
                 	else if(country == "AT" ||
-                		country == "BE" ||
-            		    	country == "BR" ||
-            		    	country == "BG" ||
-            		    	country == "CY" || 
-            		    	country == "DK" || 
-            		    	country == "EE" ||
-            		    	country == "FI" || 
-            	  	        country == "DE" || 
-            	  	        country == "GR" || 
-                		country == "HU" ||
-             		   	country == "IS" ||
-             		   	country == "IE" || 
-            		    	country == "IT" || 
-            		    	country == "LV" ||
-            		    	country == "LI" || 
-            		    	country == "LT" || 
-            		    	country == "LU" || 
-            		    	country == "NL" ||
-            		    	country == "PL" || 
-            		    	country == "PT" || 
-            		    	country == "SK" || 
-            		    	country == "SI" ||
-            		    	country == "ZA" || 
-            		    	country == "ES" || 
-            		    	country == "SE" || 
-            		    	country == "CH" ||
-            		    	country == "GB" || 
-            		    	country == "UZ")
+                					country == "BE" ||
+            		    			country == "BR" ||
+            		    			country == "BG" ||
+            		    			country == "CY" || 
+            		    		country == "DK" || 
+            		    		country == "EE" ||
+            		    		country == "FI" || 
+            	  	      country == "DE" || 
+            	  	      country == "GR" || 
+                					country == "HU" ||
+             		   				country == "IS" ||
+             		   				country == "IE" || 
+            		    			country == "IT" || 
+            		    			country == "LV" ||
+            		    		country == "LI" || 
+            		    		country == "LT" || 
+            		    		country == "LU" || 
+            		    		country == "NL" ||
+            		    		country == "PL" || 
+            		    			country == "PT" || 
+            		    			country == "SK" || 
+            		    			country == "SI" ||
+            		    			country == "ZA" || 
+            		    			country == "ES" || 
+            		    		country == "SE" || 
+            		    		country == "CH" ||
+            		    		country == "GB" || 
+            		    		country == "UZ")
                 		channels = new Array(0, 36, 40, 44, 48); //Region 1
                 	
                 	else if(country == "AM" ||
-            		    	country == "AZ" || 
-            		    	country == "HR" ||
-            		    	country == "CZ" || 
-            		    	country == "EG" || 
-            		    	country == "FR" || 
-            		    	country == "GE" ||
-            		    	country == "MC" ||
-            		    	country == "TT" || 
-            		    	country == "TN" ||
-            		    	country == "TR")
-                		channels = new Array(0, 36, 40, 44, 48); //Region 2
+            		    			country == "AZ" || 
+            		    			country == "HR" ||
+            		    			country == "CZ" || 
+            		    			country == "EG" || 
+            		    		country == "FR" || 
+            		    		country == "GE" ||
+            		    		country == "MC" ||
+            		    		country == "TT" || 
+            		    		country == "TN" ||
+            		    			country == "TR")
+                			channels = new Array(0, 36, 40, 44, 48); //Region 2
                 	
                 	else if(country == "AR" || country == "TW")
                 		channels = new Array(0, 149, 153, 157, 161); //Region 3
                 	
                 	else if(country == "BZ" ||
-                		country == "BO" || 
-            		    	country == "BN" ||
-            		    	country == "CN" || 
-            		    	country == "ID" || 
-            		    	country == "IR" || 
-            		    	country == "PE" ||
-            		    	country == "PH")
+                					country == "BO" || 
+            		    			country == "BN" ||
+            		    			country == "CN" || 
+            		    			country == "ID" || 
+            		    		country == "IR" || 
+            		    		country == "PE" ||
+            		    		country == "PH")
                 		channels = new Array(0, 149, 153, 157, 161, 165); //Region 4
                 	
                 	else if(country == "KP" ||
-                		country == "KR" || 
-            		    	country == "UY" ||
-            		    	country == "VE")
+                					country == "KR" || 
+            		    			country == "UY" ||
+            		    			country == "VE")
                 		channels = new Array(0, 149, 153, 157, 161, 165); //Region 5
                 	
 									else if(country == "JP")
@@ -3748,6 +3635,120 @@ function insertExtChannelOption(orig){
 
 									else
                 		channels = new Array(36, 40, 44, 48, 52, 56, 60, 64, 100, 104, 108, 112, 116, 120, 124, 128, 132, 136, 140, 149, 153, 157, 161, 165); //Region 7
+                }		
+                else{
+                	if (country == "AL" || 
+                	 		country == "DZ" || 
+			 								country == "AU" || 
+			 								country == "BH" || 
+              	      country == "BY" ||
+              	      	country == "CA" || 
+              	        country == "CL" || 
+              	        country == "CO" || 
+                	 			country == "CR" ||
+                	 			country == "DO" || 
+                	 		country == "SV" || 
+                	 		country == "GT" || 
+			 								country == "HN" || 
+			 								country == "HK" || 
+              	      country == "IN" ||
+              	      	country == "IL" || 
+              	        country == "JO" || 
+              	        country == "KZ" || 
+                	 			country == "LB" ||
+                	 			country == "MO" || 
+                	 		country == "MK" ||                	 
+                	 		country == "MY" ||
+                	 		country == "MX" || 
+			 								country == "NZ" || 
+			 								country == "NO" || 
+              	      	country == "OM" ||
+              	        country == "PK" || 
+              	        country == "PA" || 
+              	        country == "PR" || 
+                	 			country == "QA" ||
+                	 		country == "RO" || 
+                	 		country == "RU" || 
+                	 		country == "SA" || 
+			 								country == "SG" || 
+			 								country == "SY" || 
+              	      	country == "TH" ||
+              	        country == "UA" || 
+              	        country == "AE" || 
+              	        country == "US" || 
+                	 			country == "VN" ||
+                	 		country == "YE" || 
+                	 		country == "ZW")
+                		channels = new Array(0, 36, 40, 44, 48, 149, 153, 157, 161); //Region 0
+                		
+                	else if(country == "AT" ||
+                					country == "BE" ||
+            		    			country == "BR" ||
+            		    			country == "BG" ||
+            		    			country == "CY" || 
+            		    		country == "DK" || 
+            		    		country == "EE" ||
+            		    		country == "FI" || 
+            	  	      country == "DE" || 
+            	  	      country == "GR" || 
+                					country == "HU" ||
+             		   				country == "IS" ||
+             		   				country == "IE" || 
+            		    			country == "IT" || 
+            		    			country == "LV" ||
+            		    		country == "LI" || 
+            		    		country == "LT" || 
+            		    		country == "LU" || 
+            		    		country == "NL" ||
+            		    		country == "PL" || 
+            		    			country == "PT" || 
+            		    			country == "SK" || 
+            		    			country == "SI" ||
+            		    			country == "ZA" || 
+            		    			country == "ES" || 
+            		    		country == "SE" || 
+            		    		country == "CH" ||
+            		    		country == "GB" || 
+            		    		country == "UZ")
+                		channels = new Array(0, 36, 40, 44, 48); //Region 1
+                	
+                	else if(country == "AM" ||
+            		    			country == "AZ" || 
+            		    			country == "HR" ||
+            		    			country == "CZ" || 
+            		    			country == "EG" || 
+            		    		country == "FR" || 
+            		    		country == "GE" ||
+            		    		country == "MC" ||
+            		    		country == "TT" || 
+            		    		country == "TN" ||
+            		    			country == "TR")
+                			channels = new Array(0, 36, 40, 44, 48); //Region 2
+                	
+                	else if(country == "AR" || country == "TW")
+                		channels = new Array(0, 149, 153, 157, 161); //Region 3
+                	
+                	else if(country == "BZ" ||
+                					country == "BO" || 
+            		    			country == "BN" ||
+            		    			country == "CN" || 
+            		    			country == "ID" || 
+            		    			country == "IR" || 
+            		    			country == "PE" ||
+            		    			country == "PH")
+                		channels = new Array(0, 149, 153, 157, 161); //Region 4
+                	
+                	else if(country == "KP" ||
+                					country == "KR" || 
+            		    			country == "UY" ||
+            		    			country == "VE")
+                		channels = new Array(0, 149, 153, 157, 161); //Region 5
+                	
+									else if(country == "JP")
+                		channels = new Array(0, 36, 40, 44, 48); //Region 9
+
+									else
+                		channels = new Array(36, 40, 44, 48, 52, 56, 60, 64, 100, 104, 108, 112, 116, 120, 124, 128, 132, 136, 140, 149, 153, 157, 161); //Region 7
                 }                
         }
         
@@ -4060,4 +4061,47 @@ function is_number_sp(event, o){
 	{
 		return false;
 	}
+}
+
+function check_hwaddr_flag(obj){  //check_hwaddr() remove alert() 
+	if(obj.value == ""){
+			return 0;
+	}else{
+		var hwaddr = new RegExp("([a-fA-F0-9]{12})", "gi");			
+		var legal_hwaddr = new RegExp("([a-fA-F0-9][cC048][a-fA-F0-9]{10})", "gi"); // for legal MAC, unicast & globally unique (OUI enforced)
+		
+		if(!hwaddr.test(obj.value))
+    	return 1;
+  	else if(!legal_hwaddr.test(obj.value))
+    	return 2;
+		else
+			return 0;
+  }
+}
+function check_macaddr(obj,flag){ //control hint of input mac address
+
+	if(flag == 1){
+		var childsel=document.createElement("div");
+		childsel.setAttribute("id","check_mac");
+		childsel.style.color="#FF3300";
+		obj.parentNode.appendChild(childsel);
+		$("check_mac").innerHTML="<#JS_validmac#>";
+		$("check_mac").style.display = "";
+		obj.focus();
+		obj.select();
+		return false;	
+	}else if(flag == 2){
+		var childsel=document.createElement("div");
+		childsel.setAttribute("id","check_mac");
+		childsel.style.color="#FF3300";
+		obj.parentNode.appendChild(childsel);
+		$("check_mac").innerHTML="<#IPConnection_x_illegal_mac#>";
+		$("check_mac").style.display = "";
+		obj.focus();
+		obj.select();
+		return false;			
+	}else{	
+		$("check_mac") ? $("check_mac").style.display="none" : true;
+		return true;
+	}	
 }

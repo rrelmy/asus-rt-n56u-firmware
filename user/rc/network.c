@@ -868,16 +868,17 @@ vconfig()
 		system("brctl addif br0 wdsi2");
 		system("brctl addif br0 wdsi3");
 	}
+#if 0
 #if (!defined(W7_LOGO) && !defined(WIFI_LOGO))
-//	if (nvram_match("IgmpSnEnable", "1"))
+//	if (nvram_match("wl_igmpsnenable", "1"))
 	if (atoi(nvram_safe_get("wl_mrate")))
 		doSystem("iwpriv %s set IgmpSnEnable=1", WIF);
 
-//	if (nvram_match("rt_IgmpSnEnable", "1"))
+//	if (nvram_match("rt_igmpsnenable", "1"))
 	if (atoi(nvram_safe_get("rt_mrate")))
 		doSystem("iwpriv %s set IgmpSnEnable=1", WIF2G);
 #endif
-
+#endif
 	printf("[rc] set lan_if as %s/%s\n", nvram_safe_get("lan_ipaddr"), nvram_safe_get("lan_netmask"));
 	doSystem("ifconfig br0 hw ether %s", nvram_safe_get("lan_hwaddr"));
 	ifconfig("br0", IFUP, nvram_safe_get("lan_ipaddr"), nvram_safe_get("lan_netmask"));
@@ -947,6 +948,26 @@ restart_switch_config()
 }
 
 void
+restart_hwnat()
+{
+	if (    nvram_match("sw_mode_ex", "1") &&
+//		nvram_match("mr_enable_x", "0") &&
+		(nvram_match("wl_radio_x", "0") || nvram_match("wl_mrate", "0")) &&
+		(nvram_match("rt_radio_x", "0") || nvram_match("rt_mrate", "0")) &&
+		!nvram_match("wan0_proto", "l2tp") &&
+		!nvram_match("wan0_proto", "pptp") &&
+		!enable_qos() &&
+		!is_hwnat_loaded()
+	)
+	{
+		if (nvram_match("hwnat", "1") /*&& nvram_match("fw_pt_l2tp", "0") && nvram_match("fw_pt_ipsec", "0")*/)
+			system("insmod -q hw_nat.ko");
+	}
+	else if (is_hwnat_loaded())
+		system("rmmod hw_nat");
+}
+
+void
 restart_wifi()
 {
 	ifconfig("ra0", 0, NULL, NULL);
@@ -995,16 +1016,19 @@ restart_wifi()
 			doSystem("iwpriv %s set HtBw=%d", "ra0", 1);
 		}
 	}
-
-//	if (nvram_match("rt_IgmpSnEnable", "1"))
+#if 0
+//	if (nvram_match("wl_igmpsnenable", "1"))
 	if (atoi(nvram_safe_get("wl_mrate")))
 		doSystem("iwpriv %s set IgmpSnEnable=1", "ra0");
+#endif
 #endif
 	nvram_set("reload_svc_wl", "1");
 
 	start_8021x();
 	stop_lltd();
 	start_lltd();
+
+	restart_hwnat();
 }
 
 void
@@ -1056,14 +1080,17 @@ restart_wifi_rt()
 			doSystem("iwpriv %s set HtBw=%d", "rai0", 1);
 		}
 	}
-
-//	if (nvram_match("rt_IgmpSnEnable", "1"))
+#if 0
+//	if (nvram_match("rt_igmpsnenable", "1"))
 	if (atoi(nvram_safe_get("rt_mrate")))
 		doSystem("iwpriv %s set IgmpSnEnable=1", "rai0");
+#endif
 #endif
 	nvram_set("reload_svc_rt", "1");
 
 	start_8021x_rt();
+
+	restart_hwnat();
 }
 
 void
@@ -1422,24 +1449,18 @@ start_wan(void)
 	/* check if we need to setup WAN */
 	if (nvram_match("router_disable", "1"))
 		return;
-
 	if (	nvram_match("sw_mode_ex", "1") &&
 //		nvram_match("mr_enable_x", "0") &&
 		(nvram_match("wl_radio_x", "0") || nvram_match("wl_mrate", "0")) &&
 		(nvram_match("rt_radio_x", "0") || nvram_match("rt_mrate", "0")) &&
-		//!nvram_match("wan0_proto", "pptp") &&
-		//!nvram_match("wan0_proto", "l2tp") &&
+		!nvram_match("wan0_proto", "l2tp") &&
+		!nvram_match("wan0_proto", "pptp") &&
 		!enable_qos() &&
 		!is_hwnat_loaded()
 	)
 	{
-		if (nvram_match("hwnat", "1") && nvram_match("fw_pt_l2tp", "0") && nvram_match("fw_pt_ipsec", "0"))
-		{
-			system("echo 2 > /proc/sys/net/ipv4/conf/default/force_igmp_version");
-			system("echo 2 > /proc/sys/net/ipv4/conf/all/force_igmp_version");
-			sleep(1);
+		if (nvram_match("hwnat", "1") /*&& nvram_match("fw_pt_l2tp", "0") && nvram_match("fw_pt_ipsec", "0")*/)
 			system("insmod -q hw_nat.ko");
-		}
 	}
 #ifdef ASUS_EXT
 	update_wan_status(0);
@@ -1838,16 +1859,9 @@ stop_wan(void)
 	char name[80], *next;
 
 	if (	nvram_match("sw_mode_ex", "1") &&
-		//!nvram_match("wan0_proto", "pptp") &&
-		//!nvram_match("wan0_proto", "l2tp") &&
 		is_hwnat_loaded()
 	)
-	{
 		system("rmmod hw_nat");
-		sleep(1);
-		system("echo 0 > /proc/sys/net/ipv4/conf/default/force_igmp_version");
-		system("echo 0 > /proc/sys/net/ipv4/conf/all/force_igmp_version");
-	}
 
 	if (pids("stats"))
 		system("killall stats");
@@ -1997,6 +2011,7 @@ add_dns(const char *wan_ifname)
 	if (nvram_match("wan0_proto", "static"))
 	{
 		eval("touch", "/tmp/resolv.conf");
+		chmod("/tmp/resolv.conf", 0666);
 		unlink("/etc/resolv.conf");
 		symlink("/tmp/resolv.conf", "/etc/resolv.conf");
 
@@ -2009,11 +2024,19 @@ add_dns(const char *wan_ifname)
 
 	/* Open resolv.conf to read */
 	if (!(fp = fopen("/tmp/resolv.conf", "r+"))) {
-		dbG("error open /tmp/resolv.conf\n");
-		perror("/tmp/resolv.conf");
-		return errno;
+		dbG("error open /tmp/resolv.conf r+\n");
+		logmessage("add_dns()", "error open /tmp/resolv.conf r+\n");
+		perror("/tmp/resolv.conf r+");
+
+		if (!(fp = fopen("/tmp/resolv.conf", "w+"))) {
+			dbG("error open /tmp/resolv.conf w+\n");
+			logmessage("add_dns()", "error open /tmp/resolv.conf w+\n");
+			perror("/tmp/resolv.conf w+");
+
+			return errno;
+		}
 	}
-#if 0
+#if 1
 	dbG("wan_ifname: %s, wan0_dns: %s, wanx_dns: %s\n",
 		wan_ifname,
 		nvram_get("wan0_dns") ? nvram_get("wan0_dns") : "NULL",
@@ -2048,6 +2071,7 @@ add_dns(const char *wan_ifname)
 	fclose(fp);
 
 	eval("touch", "/tmp/resolv.conf");
+	chmod("/tmp/resolv.conf", 0666);
 	unlink("/etc/resolv.conf");
 	symlink("/tmp/resolv.conf", "/etc/resolv.conf");
 
@@ -2076,6 +2100,7 @@ del_dns(const char *wan_ifname)
 	if (nvram_match("wan0_proto", "static"))
 	{
 		eval("touch", "/tmp/resolv.conf");
+		chmod("/tmp/resolv.conf", 0666);
 		unlink("/etc/resolv.conf");
 		symlink("/tmp/resolv.conf", "/etc/resolv.conf");
                 
@@ -2089,17 +2114,20 @@ del_dns(const char *wan_ifname)
 	/* Open resolv.conf to read */
 	if (!(fp = fopen("/tmp/resolv.conf", "r"))) {
 		dbG("error open /tmp/resolv.conf\n");
+		logmessage("del_dns()", "error open /tmp/resolv.conf\n");
 		perror("fopen /tmp/resolv.conf");
 		return errno;
 	}
 
 	/* Open resolv.tmp to save updated name server list */
 	if (!(fp2 = fopen("/tmp/resolv.tmp", "w"))) {
+		dbG("error open /tmp/resolv.tmp\n");
+		logmessage("del_dns()", "error open /tmp/resolv.tmp\n");
 		perror("fopen /tmp/resolv.tmp");
 		fclose(fp);
 		return errno;
 	}
-#if 0
+#if 1
 	dbG("wan_ifname: %s, wan0_dns: %s, wanx_dns: %s\n",
 		wan_ifname,
                 nvram_get("wan0_dns") ? nvram_get("wan0_dns") : "NULL",
@@ -2142,6 +2170,7 @@ del_dns(const char *wan_ifname)
 	unlink("/tmp/resolv.conf");
 	rename("/tmp/resolv.tmp", "/tmp/resolv.conf");
 	eval("touch", "/tmp/resolv.conf");
+	chmod("/tmp/resolv.conf", 0666);
         unlink("/etc/resolv.conf");
         symlink("/tmp/resolv.conf", "/etc/resolv.conf");
 	
@@ -2238,6 +2267,14 @@ wan_up(char *wan_ifname)	// oleg patch, replace
 		if (!nvram_match(strcat_r(prefix, "proto", tmp), "static") && nvram_match("wan0_dnsenable_x", "1"))
 			restart_dhcpd();
 #else
+                dbG("call add_dns(), wan_ifname: %s, wan0_dns: %s, wanx_dns: %\ns",
+                        wan_ifname,
+                        nvram_get("wan0_dns") ? nvram_get("wan0_dns") : "NULL",
+                        nvram_get("wanx_dns") ? nvram_get("wanx_dns") : "NULL");
+		logmessage("wan up", "call add_dns(), wan_ifname: %s, wan0_dns: %s, wanx_dns: %s",
+			wan_ifname,
+			nvram_get("wan0_dns") ? nvram_get("wan0_dns") : "NULL",
+			nvram_get("wanx_dns") ? nvram_get("wanx_dns") : "NULL");
 		add_dns(wan_ifname);
 #endif
 
@@ -2291,6 +2328,14 @@ wan_up(char *wan_ifname)	// oleg patch, replace
 	if (strcmp(wan_proto, "static") && nvram_match("wan0_dnsenable_x", "1"))
 		restart_dhcpd();
 #else
+        dbG("call add_dns(), wan_ifname: %s, wan0_dns: %s, wanx_dns: %s",
+                wan_ifname,
+                nvram_get("wan0_dns") ? nvram_get("wan0_dns") : "NULL",
+                nvram_get("wanx_dns") ? nvram_get("wanx_dns") : "NULL");
+	logmessage("wan up", "call add_dns(), wan_ifname: %s, wan0_dns: %s, wanx_dns: %s",
+		wan_ifname,
+		nvram_get("wan0_dns") ? nvram_get("wan0_dns") : "NULL",
+		nvram_get("wanx_dns") ? nvram_get("wanx_dns") : "NULL");
 	add_dns(wan_ifname);
 #endif
 
@@ -2388,17 +2433,9 @@ wan_up(char *wan_ifname)	// oleg patch, replace
 		nvram_set("qos_enable", "1");
 		track_set("1");
 
-		if (	nvram_match("sw_mode_ex", "1") &&
-			//!nvram_match("wan0_proto", "pptp") &&
-			//!nvram_match("wan0_proto", "l2tp") &&
-			is_hwnat_loaded()
-		)
-		{
+		if (nvram_match("sw_mode_ex", "1") &&
+			is_hwnat_loaded())
 			system("rmmod hw_nat");
-			sleep(1);
-			system("echo 0 > /proc/sys/net/ipv4/conf/default/force_igmp_version");
-			system("echo 0 > /proc/sys/net/ipv4/conf/all/force_igmp_version");
-		}
 
 		dbg("wan_up rebuild QoS rules...\n");
 		Speedtest_Init();
@@ -2439,18 +2476,13 @@ Speedtest_Init_failed_wan_up:
 //			nvram_match("mr_enable_x", "0") &&
 			(nvram_match("wl_radio_x", "0") || nvram_match("wl_mrate", "0")) &&
 			(nvram_match("rt_radio_x", "0") || nvram_match("rt_mrate", "0")) &&
-			//!nvram_match("wan0_proto", "pptp") &&
-			//!nvram_match("wan0_proto", "l2tp") &&
+			!nvram_match("wan0_proto", "l2tp") &&
+			!nvram_match("wan0_proto", "pptp") &&
 			!is_hwnat_loaded()
 		)
 		{
-			if (nvram_match("hwnat", "1") && nvram_match("fw_pt_l2tp", "0") && nvram_match("fw_pt_ipsec", "0"))
-			{
-				system("echo 2 > /proc/sys/net/ipv4/conf/default/force_igmp_version");
-				system("echo 2 > /proc/sys/net/ipv4/conf/all/force_igmp_version");
-				sleep(1);
+			if (nvram_match("hwnat", "1") /*&& nvram_match("fw_pt_l2tp", "0") && nvram_match("fw_pt_ipsec", "0")*/)
 				system("insmod -q hw_nat.ko");
-			}
 		}
 	}
 
@@ -2471,7 +2503,7 @@ Speedtest_Init_failed_wan_up:
 #if (!defined(W7_LOGO) && !defined(WIFI_LOGO))
 	if (nvram_match("wan0_proto", "dhcp"))	// 0712 ASUS
 	{
-		if (!nvram_match("detectWan", "0") && !pids("detectWan"))
+		if (nvram_match("detectWan", "1") && !pids("detectWan"))
 		{
 			printf("start detectWan\n");	// tmp test
 			system("detectWan &");
@@ -2504,11 +2536,15 @@ wan_down(char *wan_ifname)
 	del_wan_routes(wan_ifname);
 
 	/* Update resolv.conf -- leave as is if no dns servers left for demand to work */
+	logmessage("wan down", "call del_dns(), wan_ifname: %s, wan0_dns: %s, wanx_dns: %s",
+		wan_ifname,
+		nvram_get("wan0_dns") ? nvram_get("wan0_dns") : "NULL",
+		nvram_get("wanx_dns") ? nvram_get("wanx_dns") : "NULL");
 	del_dns(wan_ifname);
 #if 0
 	if (nvram_get("wanx_dns"))	// oleg patch
 #endif
-		nvram_unset(strcat_r(prefix, "dns", tmp));
+	nvram_unset(strcat_r(prefix, "dns", tmp));
 #if 0
 	update_resolvconf();
 #endif
@@ -2556,17 +2592,25 @@ lan_up(char *lan_ifname)
 			"0.0.0.0");
 
 	/* Open resolv.conf to read */
-	if (!(fp = fopen("/tmp/resolv.conf", "w"))) {
-		dbG("error open /tmp/resolv.conf\n");
-		perror("/tmp/resolv.conf");
-		return;
-	}
+//	if (!(fp = fopen("/tmp/resolv.conf", "r"))) {
+//		dbG("error open /tmp/resolv.conf\n");
+//		perror("/tmp/resolv.conf");
+
+                if (!(fp = fopen("/tmp/resolv.conf", "w+"))) {
+                        dbG("error open /tmp/resolv.conf w+\n");
+                        logmessage("lan_up", "error open /tmp/resolv.conf w+\n");
+                        perror("/tmp/resolv.conf w+");
+
+			return;
+                }
+//	}
 
 	if (!nvram_match("lan_gateway", ""))
 		fprintf(fp, "nameserver %s\n", nvram_safe_get("lan_gateway"));
 
 	foreach(word, nvram_safe_get("lan_dns"), next)
 	{
+		if (strcmp(word, nvram_safe_get("lan_gateway")))
 		fprintf(fp, "nameserver %s\n", word);
 	}
 	fclose(fp);
@@ -2601,22 +2645,31 @@ lan_up_ex(char *lan_ifname)
 			"0.0.0.0");
 
 	/* Open resolv.conf to read */
-	if (!(fp = fopen("/tmp/resolv.conf", "w"))) {
-		dbG("error open /tmp/resolv.conf\n");
-		perror("/tmp/resolv.conf");
-		return;
-	}
+//	if (!(fp = fopen("/tmp/resolv.conf", "r"))) {
+//		dbG("error open /tmp/resolv.conf\n");
+//		perror("/tmp/resolv.conf");
+
+                if (!(fp = fopen("/tmp/resolv.conf", "w+"))) {
+                        dbG("error open /tmp/resolv.conf w+\n");
+                        logmessage("lan_up_ex", "error open /tmp/resolv.conf w+\n");
+                        perror("/tmp/resolv.conf w+");
+
+			return;
+                }
+//	}
 
 	if (!nvram_match("lan_gateway_t", ""))
 		fprintf(fp, "nameserver %s\n", nvram_safe_get("lan_gateway_t"));
 
 	foreach(word, nvram_safe_get("lan_dns_t"), next)
 	{
+		if (strcmp(word, nvram_safe_get("lan_gateway_t")))
 		fprintf(fp, "nameserver %s\n", word);
 	}
 	fclose(fp);
+
 #if (!defined(W7_LOGO) && !defined(WIFI_LOGO))
-	if (!nvram_match("detectWan", "0") && !pids("detectWan"))
+	if (nvram_match("detectWan", "1") && !pids("detectWan"))
 	{
 		printf("start detectWan\n");
 		system("detectWan &");

@@ -488,6 +488,11 @@ function submitForm(){
 		return;
 	if(!validate_dns())
 		return;
+	if(!check_macaddr(document.form.wan_hwaddr_x, check_hwaddr_flag(document.form.wan_hwaddr_x))){
+		document.form.wan_hwaddr_x.select();
+		document.form.wan_hwaddr_x.focus();
+		return;		
+	}		
 	
 	if((now_flag != "auto_way_static" && now_flag != "auto_way")
 			&& (document.form.wan_proto.value == "pptp"
@@ -840,14 +845,11 @@ function submitForm(){
 				<#BOP_isp_mac_item#>
 			</th>
 			<td class="QISformtd">
-				<input type="text" name="wan_hwaddr_x" onkeypress="return is_hwaddr(this);" class="input" size="36" value="">
+				<input type="text" name="wan_hwaddr_x" onkeypress="return is_hwaddr(this);" class="input" maxlength="12" size="16" value="">
 			</td>
-		</tr>
-		
-		<tr valign="top">
-			<td colspan="2" align="right">
+			<td align="right">
 				<input type="button" class="button" onclick="showMAC();" value="<#BOP_isp_MACclone#>">
-			</td>
+			</td>			
 		</tr>
 	</table>
 	</fieldset>

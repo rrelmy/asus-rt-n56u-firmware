@@ -120,7 +120,11 @@ bound(void)	// udhcpc bound here, also call wanup
         if ((value = getenv("router")))
 		nvram_set(strcat_r(prefix, "gateway", tmp), trim_r(value));
 	if ((value = getenv("dns")))
+	{
 		nvram_set(strcat_r(prefix, "dns", tmp), trim_r(value));
+		dbG("dhcp client::bound", "dns: %s", nvram_safe_get(strcat_r(prefix, "dns", tmp)));
+		logmessage("dhcp client::bound", "dns: %s", nvram_safe_get(strcat_r(prefix, "dns", tmp)));
+	}
 	if ((value = getenv("wins")))
 		nvram_set(strcat_r(prefix, "wins", tmp), trim_r(value));
 	else
@@ -186,9 +190,12 @@ renew(void)
 
 	if ((value = getenv("dns")) && !nvram_match(strcat_r(prefix, "dns", tmp), trim_r(value))) {
 		nvram_set(strcat_r(prefix, "dns", tmp), trim_r(value));
+		logmessage("dhcp client::renew", "dns: %s", nvram_safe_get(strcat_r(prefix, "dns", tmp)));
 #if 0
 		update_resolvconf();
 #else
+		dbG("dhcp client::renew", "call add_dns() with dns: %s", nvram_safe_get(strcat_r(prefix, "dns", tmp)));
+		logmessage("dhcp client::renew", "call add_dns() with dns: %s", nvram_safe_get(strcat_r(prefix, "dns", tmp)));
 		add_dns(wan_ifname);
 #endif
 	}

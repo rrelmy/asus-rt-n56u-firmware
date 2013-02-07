@@ -78,9 +78,10 @@ function saveMode(){
 		document.form.current_page.value = "Advanced_OperationMode_Content.asp";
 		document.form.action_mode.value = " Apply ";
 	}else if(document.form.sw_mode[2].checked == true){
-		if(ssid_2g == "ASUS" && ssid_5g == "ASUS_5G" && auth_mode == "open" && wep_x == "0" && auth_mode2 == "open" && wep_x2 == "0")
+		if(ssid_2g == "ASUS" && ssid_5g == "ASUS_5G" && auth_mode == "open" && wep_x == "0" && auth_mode2 == "open" && wep_x2 == "0"){
 			document.form.flag.value = 'adv_ap_mode';
-		else{
+		}else{
+			showLoading(80, "waiting");
 			document.form.flag.value = 'ap_mode_AOC';
 			document.form.action="/start_apply2.htm";
 			document.form.target="hidden_frame";
@@ -216,12 +217,13 @@ function setScenerion(mode){
 	  <td bgcolor="#C0DAE4">
 	<fieldset style="width:95%; margin:0 auto; padding-bottom:3px;">
 	<legend>
-		<span style="font-size:13px; font-weight:bold;">
-			<div id="wl_rt" style="display:none;"><input type="radio" name="sw_mode" class="input" value="1" onclick="setScenerion(1);" <% nvram_match_x("IPConnection", "sw_mode", "1", "checked"); %>><#OP_GW_item#></div>
-			<div id="rt_wo_nat" style="display:none;"><input type="radio" name="sw_mode" class="input" value="4" onclick="setScenerion(4);" <% nvram_match_x("IPConnection", "sw_mode", "4", "checked"); %>><#OP_GW_item#></div>	
-			<!--input type="radio" name="sw_mode" class="input" value="4" onclick="setScenerion(4);" <% nvram_match_x("IPConnection", "sw_mode", "4", "checked"); %>> <#OP_RT_item#>  -->
-			<div id="wl_ap" style="margin-left:270px;margin-top:-22px;"><input type="radio" name="sw_mode" class="input" value="3" onclick="setScenerion(3);" <% nvram_match_x("IPConnection", "sw_mode", "3", "checked"); %>><#OP_AP_item#></div>
-		</span>
+		<table cellpadding="5" cellspacing="0">
+			<tr style="font-size:13px; font-weight:bold;">
+				<td id="wl_rt" style="display:none;"><input type="radio" name="sw_mode" class="input" value="1" onclick="setScenerion(1);" <% nvram_match_x("IPConnection", "sw_mode", "1", "checked"); %>><#OP_GW_item#></td>
+				<td id="rt_wo_nat" style="display:none;"><input type="radio" name="sw_mode" class="input" value="4" onclick="setScenerion(4);" <% nvram_match_x("IPConnection", "sw_mode", "4", "checked"); %>><#OP_RT_item#></td>	
+				<td id="wl_ap"><input type="radio" name="sw_mode" class="input" value="3" onclick="setScenerion(3);" <% nvram_match_x("IPConnection", "sw_mode", "3", "checked"); %>><#OP_AP_item#></td>
+			</tr>	
+		</table>	
 	</legend>
 	<div id="mode_desc" style="position:relative;display:block; height:60px;z-index:90;">
 		<#OP_GW_desc1#>

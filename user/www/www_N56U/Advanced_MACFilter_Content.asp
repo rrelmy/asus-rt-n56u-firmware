@@ -132,12 +132,11 @@ function done_validating(action){
         <tr>
           <th id="UrlList"><#FirewallConfig_MFhwaddr_itemname#>
               <input type="hidden" name="macfilter_num_x_0" value="<% nvram_get_x("FirewallConfig", "macfilter_num_x"); %>" readonly="1" />
-		  </th>
-          <td><input type="text" maxlength="12" class="input" size="20" name="macfilter_list_x_0" onKeyPress="return is_hwaddr()">
-   		  	  <input class="button" type="submit" onclick="markGroup(this, 'MFList', 32, ' Add ');" name="MFList" value="<#CTL_add#>" size="12"/>
-			  <br/><span>*<#JS_validmac#></span>
-		  </td>
-        </tr>
+		  		</th>
+          <td><input type="text" maxlength="12" class="input" size="16" name="macfilter_list_x_0" onKeyPress="return is_hwaddr()">
+   		  		  <input class="button" type="submit" onclick="markGroup(this, 'MFList', 32, ' Add ');" name="MFList" value="<#CTL_add#>" size="12"/>
+		  		</td>
+      	</tr>
         <tr>
           <th><#FirewallConfig_MFList_groupitemname#></th>
           <td>

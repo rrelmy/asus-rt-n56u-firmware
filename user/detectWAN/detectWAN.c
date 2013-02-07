@@ -129,36 +129,20 @@ chk_udhcpc()
 
 		if (nvram_match("wan_route_x", "IP_Routed"))
 		{
-			{
-#if 0
-				if (strcmp(get_wan_ipaddr(), "0.0.0.0"))
-				{
-					logmessage("detectWAN", "perform DHCP release");
-					system("killall -SIGUSR2 udhcpc");
+			system("/sbin/stop_wanduck");
 
-					sleep(1);
-//					fprintf(stderr, "[detectWAN] wan_ipaddr_t: %s, wan_gateway_t: %s\n", nvram_safe_get("wan_ipaddr_t"), nvram_safe_get("wan_gateway_t"));
-					kill_pidfile_s("/var/run/wanduck.pid", SIGUSR1);
-					kill_pidfile_s("/var/run/wanduck.pid", SIGUSR2);
-				}
-#else
-//				system("killall -SIGTERM wanduck");
-				system("/sbin/stop_wanduck");
-#endif
-				logmessage("detectWAN", "perform DHCP renew");
-				system("killall -SIGUSR1 udhcpc");
+			logmessage("detectWAN", "perform DHCP renew");
+			system("killall -SIGUSR1 udhcpc");
 
-				try_count = 0;
-				while (pids("wanduck") && (++try_count < 10))
-					sleep(1);
+			try_count = 0;
+			while (pids("wanduck") && (try_count++ < 10))
+				sleep(1);
 
-				try_count = 0;
-				while (!pids("wanduck") && (++try_count < 10))
-				{
-					sleep(3);
-					system("/sbin/start_wanduck");
-				}
-			}
+			system("/sbin/start_wanduck");
+
+			try_count = 0;
+			while (!pids("wanduck") && (try_count++ < 10))
+				sleep(1);
 		}
 		else
 		{

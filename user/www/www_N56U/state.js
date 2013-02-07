@@ -929,7 +929,7 @@ function reboot(){
   		 window.frames["statusframe"].stopFlag = 1;
   		 //alert(window.frames["statusframe"].stopFlag);
  		 }
-		showLoading(60);
+		showLoading(80);
 		setTimeout("location.href = '/index.asp';", 60000);
 		$("hidden_frame").src = "Reboot.asp";
 	}
@@ -1374,6 +1374,7 @@ function blocking(obj_id, show){
 		document.all[obj_id].style.display = state;
 }
 
+var current_url = location.pathname.substring(location.pathname.lastIndexOf('/') + 1);
 function inputCtrl(obj, flag){
 	if(flag == 0){
 		obj.disabled = true;
@@ -1387,4 +1388,24 @@ function inputCtrl(obj, flag){
 		if(obj.type == "radio" || obj.type == "checkbox")
 			obj.style.backgroundColor = "#C0DAE4";
 	}
+	
+	if(current_url.indexOf("Advanced_Modem_others") >= 0){
+		if(obj.type == "checkbox")
+			return true;
+		if(flag == 0)
+			obj.parentNode.parentNode.style.display = "none";
+		else
+			obj.parentNode.parentNode.style.display = "";
+		return true;		
+	}	
+}
+
+function inputHideCtrl(obj, flag){
+	if(obj.type == "checkbox")
+		return true;
+	if(flag == 0)
+		obj.parentNode.parentNode.style.display = "none";
+	else
+		obj.parentNode.parentNode.style.display = "";
+	return true;
 }

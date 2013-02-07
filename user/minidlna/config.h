@@ -6,7 +6,7 @@
 #define __CONFIG_H__
 
 #define OS_NAME			"Linux"
-#define OS_VERSION		"Linux/2.6.34.9-69.fc13.i686.PAE"
+#define OS_VERSION		"Linux/2.6.21"
 #define OS_URL			"http://www.kernel.org/"
 
 /* full path of the file database */

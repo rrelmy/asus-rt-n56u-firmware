@@ -20,13 +20,13 @@ LANG_SV=Svensk
 LANG_BR=Brazil
 LANG_JP=日本語
 LANG_ES=Español
-[VPN Passthrough]
+[NAT Passthrough]
 Enable_NAT=NAT を有効
-VPN_PPTP_Passthrough=VPN PPTP パススルー
-VPN_L2TP_Passthrough=VPN L2TP パススルー
-VPN_IPSec_Passthrough=VPNIPSec パススルー
-vpn_passthrough_itemname=VPN パススルー
-vpn_passthrough_desc=VPNパススルーを有効にすると、Virtual Private Network (VPN) 接続でルーターをネットワーククライアントにパススルーできます。
+NAT_PPTP_Passthrough=PPTP パススルー
+NAT_L2TP_Passthrough=L2TP パススルー
+NAT_IPSec_Passthrough=IPSec パススルー
+NAT_passthrough_itemname=NAT パススルー
+NAT_passthrough_desc=VPNパススルーを有効にすると、Virtual Private Network (VPN) 接続でルーターをネットワーククライアントにパススルーできます。
 [Malaysia Unifi]
 PPPConnection_x_Unifi=UniFi サポート：
 PPPConnection_x_Unifi_Describe=Telekom Malaysia UniFi service をサポートするには、「はい」を選択します。
@@ -236,7 +236,7 @@ Security=セキュリティ
 Radio=ワイヤレス信号
 AP_fail_get_IPaddr=IP情報取得に失敗しました。
 AP_Remote_IP=AP IPアドレス
-AP_survey=AP検索
+AP_survey=AP 検索
 statusTitle_AP=アクセスポイントの状態
 [USB Application - HSDPA]
 HSDPAConfig_connection=接続設定
@@ -728,6 +728,7 @@ IPConnection_x_DNSServer1_itemname=DNSサーバー1：
 IPConnection_x_DNSServer2_itemdesc=このフィールドはRT-N56Uが通信するDNSのIPアドレスが表示されます。
 IPConnection_x_DNSServer2_itemname=DNSサーバー2：
 IPConnection_warning_WANIPEQUALGatewayIP=WAN IPをRT-N56Uのゲートウェイとして設定したため、RT-N56Uはインターネットに接続できません。ゲートウェイは正しい数値で入力してください。
+IPConnection_x_illegal_mac=MAC アドレスが正しくありません。
 [QIS_internet_isp.js]
 BOP_isp_host_desc=このフィールドでは、RT-N56Uのホスト名を設定します。ホスト名はISPが通常要求する情報です。
 BOP_isp_host_item=ホスト名（オプション）：
@@ -1175,9 +1176,9 @@ WLANAuthentication11a_ExAuthDBPortNumber_itemname=サーバーポート：
 WLANAuthentication11a_ExAuthDBPortNumber_itemdesc=RADIUS サーバーに接続するためのUDPポートナンバー
 WLANAuthentication11a_ExAuthDBPassword_itemname=接続シークレット：
 WLANAuthentication11a_ExAuthDBPassword_itemdesc=RADIUS サーバーに接続するためのパスワード
-WLANConfig11b_display3_sectiondesc=ブリッジ（またはWDS - Wireless Distribution System）機能は、ワイヤレス環境でAPに接続可能です。下のリストの指示に従い、この機能を有効にします。
+WLANConfig11b_display3_sectiondesc=ブリッジ（または WDS - Wireless Distribution System）機能は、ワイヤレス環境で AP に接続可能です。下のリストの指示に従い、この機能を有効にします。
 WLANConfig11b_display3_sectiondesc1=「WDS Only」または「Hybrid」モードを選択し、Remote Bridge ListのAPのMACアドレスを追加
-WLANConfig11b_display3_sectiondesc2=接続を構築するには、複数のAP間で同じチャンネルと<a href="Advanced_Wireless_Content.asp>セキュリティ方式</a> を設定します。
+WLANConfig11b_display3_sectiondesc2=接続を構築するには、複数のAP間で同じチャンネルと <a href="Advanced_Wireless_Content.asp">セキュリティ方式</a> を設定します。
 WLANConfig11b_display3_sectiondesc3=この機能はRT-N56U [Open System/NONE、Open System/WEP、 WPA2-Personal/AES] セキュリティ認証方式のみをサポートしています。
 WLANConfig11b_x_APMode_itemname=APモード
 WLANConfig11b_x_APMode_itemdesc=ワイヤレスブリッジ機能を無効にする場合は、「AP Only」を選択します。ローカルワイヤレスステーション接続を無効にする場合は、「WDS Only」を選択します。ワイヤレスブリッジ機能を有効にしワイヤレスステーションをAPに接続する場合は、「Hybrid」を選択します。
@@ -1309,8 +1310,8 @@ WLANConfig11b_WPAType_itemname=WPA暗号化：
 WLANConfig11b_WPAType_itemdesc=WPA暗号化を有効にし、データを暗号化します
 WLANConfig11b_x_IsolateAP_itemname=APを隔離しますか？
 WLANConfig11b_x_IsolateAP_itemdesc=「はい」を選択すると、ワイヤレスモバイルクライアントの接続から隔離します。
-WLANConfig11b_x_AfterBurner_itemname=AfterBurnerを有効にしますか？
-WLANConfig11b_x_AfterBurner_itemdesc=AfterBurner を有効にすると、（Afterburner機能対応の）ワイヤレスカードを使用してルーターに接続した場合、転送パフォーマンスが上がります。AfterBurner モードは次の項目が条件となります：[Authentication Method] を [Open System or Shared Key]に設定し、[APモード] を [AP only]に、[Allow Anonymous] を[いいえ]に設定します。
+WLANConfig11b_x_IGMPSnooping_itemname=IGMP Snooping:
+WLANConfig11b_x_IGMPSnooping_itemdesc=When enabled, it monitors IGMP conversation between devices and optimize wireless multicast traffic.
 LANHostConfig_x_NTPServer1_itemname=NTPサーバー：
 RouterConfig_GWStaticMT_itemname=メトリック
 RouterConfig_GWStaticIF_itemname=インターフェース
@@ -1403,7 +1404,9 @@ BM_desc0=インターネットアプリケーションをクリックすると�
 BM_desc1=Gaming Blaster では、RT-N56Uはゲームトラフィックを1番に優先して処理します。遅延なしのゲーム環境をお楽しみいただけます。
 BM_desc2=Eメール、ネット検索等のインターネットアプリケーションが最優先されます。
 BM_desc3=FTPへのダウンロード/アップロードスピードのほうが高速です。\"ユーザー指定サービス\"画面でより大きい帯域をこのサービスに割り当てることもできます。
-BM_desc4=RT-N56Uは全てのオーディオ/ビデオトラフィックを管理します。 IPフォンやオンラインビデオ再生時のレイテンシを大幅に低減可能です。P2P方式でこのオプションを選択すると、P2Pの帯域は10%に制限されます
+BM_desc4=RT-N56U は全てのオーディオ/ビデオトラフィックを管理します。 IPフォンやオンラインビデオ再生時のレイテンシを大幅に低減可能です。P2P方式でこのオプションを選択すると、P2Pの帯域は10%に制限されます
+BM_notice1=QoS は、アップリンクスピード を手動で設定した場合にのみ有効にすることができます。
+BM_notice2=アップリンクスピード は ISP (インターネットサービスプロバイダ)より提供される値よりも高い値を設定することを推奨します。
 BM_hint=アップリンクスピードが理論値に達しました。システムリソースを確保するため、EzQoSを有効にする必要はありません。
 BM_GB=Gaming Blaster
 BM_IA=インターネットアプリケーション

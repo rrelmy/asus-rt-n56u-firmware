@@ -84,7 +84,7 @@ function markGroup(o, s, c, b) {
 		if(s == 'rt_RBRList'){
 			if(document.form.rt_wdsnum_x_0.value >= c)
 				cFlag=1;
-			else if(!validate_hwaddr(document.form.rt_wdslist_x_0))
+			else if(!check_macaddr(document.form.rt_wdslist_x_0, check_hwaddr_flag(document.form.rt_wdslist_x_0)))
 				return false;
 			else if(document.form.rt_wdslist_x_0.value == "")
 				bFlag = 1;
@@ -100,7 +100,7 @@ function markGroup(o, s, c, b) {
 		else if (s == 'rt_ACLList'){
 			if(document.form.rt_macnum_x_0.value >= c)
 				cFlag=1;
-			else if(!validate_hwaddr(document.form.rt_maclist_x_0))
+			else if(!check_macaddr(document.form.rt_maclist_x_0, check_hwaddr_flag(document.form.rt_maclist_x_0)))
 				return false;
 			else if(document.form.rt_maclist_x_0.value=="")
 				bFlag = 1;
@@ -3497,4 +3497,47 @@ function is_number_sp(event, o){
 	{
 		return false;
 	}
+}
+
+function check_hwaddr_flag(obj){  //check_hwaddr() remove alert() 
+	if(obj.value == ""){
+			return 0;
+	}else{
+		var hwaddr = new RegExp("([a-fA-F0-9]{12})", "gi");			
+		var legal_hwaddr = new RegExp("([a-fA-F0-9][cC048][a-fA-F0-9]{10})", "gi"); // for legal MAC, unicast & globally unique (OUI enforced)
+		
+		if(!hwaddr.test(obj.value))
+    	return 1;
+  	else if(!legal_hwaddr.test(obj.value))
+    	return 2;
+		else
+			return 0;
+  }
+}
+function check_macaddr(obj,flag){ //control hint of input mac address
+
+	if(flag == 1){
+		var childsel=document.createElement("div");
+		childsel.setAttribute("id","check_mac");
+		childsel.style.color="#FF3300";
+		obj.parentNode.appendChild(childsel);
+		$("check_mac").innerHTML="<#JS_validmac#>";
+		$("check_mac").style.display = "";
+		obj.focus();
+		obj.select();
+		return false;	
+	}else if(flag == 2){
+		var childsel=document.createElement("div");
+		childsel.setAttribute("id","check_mac");
+		childsel.style.color="#FF3300";
+		obj.parentNode.appendChild(childsel);
+		$("check_mac").innerHTML="<#IPConnection_x_illegal_mac#>";
+		$("check_mac").style.display = "";
+		obj.focus();
+		obj.select();
+		return false;			
+	}else{	
+		$("check_mac") ? $("check_mac").style.display="none" : true;
+		return true;
+	}	
 }

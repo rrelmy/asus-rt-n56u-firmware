@@ -23,7 +23,7 @@
 }
 #WDSAPList{
 	margin-left: 2px;
-	margin-left: -117px \9;
+	margin-left: -128px \9;
 	margin-top: 22px;
 	border:2px outset #999;
 	background-color:#EFEFEF;
@@ -314,11 +314,10 @@ function hideClients_Block(){
           <tr>
             <th align="right" id="RBRList"> <#WLANConfig11b_RBRList_groupitemdesc#>
             <td width="60%">
-              <input type="text" maxlength="12" class="input" size="14" name="wl_wdslist_x_0" onKeyPress="return is_hwaddr()" style="float:left;">
+              <input type="text" maxlength="12" class="input" size="16" name="wl_wdslist_x_0" onKeyPress="return is_hwaddr()" style="float:left;">
 							<div id="WDSAPList" class="WDSAPList"></div>
 							<img id="pull_arrow" src="/images/arrow-down.gif" onclick="pullLANIPList(this);" title="Select the Access Point" onmouseover="over_var=1;" onmouseout="over_var=0;">
               <input class="button" style="margin-top:3px;" type="submit" onClick="return markGroup(this, 'RBRList', 2, ' Add ');" name="RBRList" value="<#CTL_add#>" size="12">
-              <br/><span style="float:left;">* <#JS_validmac#></span>
 						</td>
           </tr>
           <tr>

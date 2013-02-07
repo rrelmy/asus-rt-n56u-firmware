@@ -1302,6 +1302,9 @@
 						"allow:Accept",
 						"deny:Reject",
 						0), FALSE, RESTART_WIFI},*/
+                        {"rt_igmpsnenable", "", validate_choice, ARGV(
+                                                "0:Disable",
+                                                "1:Enable", 0), FALSE, RESTART_WIFI},
 			{"rt_mrate", "", validate_choice, ARGV(
 						"0:Auto",
 						"1:1 Mbps",
@@ -1340,7 +1343,6 @@
 						"off:Disabled",
 						"on:Enabled", 0), FALSE, RESTART_WIFI},	
 //			{"rt_GreenAP", "0", 0 },
-//			{"rt_IgmpSnEnable", "1", 0 },
 			{"rt_auth_mode", "", validate_choice, ARGV(
 						"open:Open System or Shared Key",
 						"shared:Shared Key",
@@ -1658,6 +1660,10 @@
 		   "54000000:54",
 	      
 	      0), FALSE, RESTART_WIFI},	// 2007.10 James
+	
+	      {"wl_igmpsnenable", "", validate_choice, ARGV(
+                                                "0:Disable",
+                                                "1:Enable", 0), FALSE, RESTART_WIFI},
 
 	      {"wl_mrate", "", validate_choice, ARGV(	      
 									"0:Auto",

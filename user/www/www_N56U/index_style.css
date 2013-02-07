@@ -66,9 +66,9 @@ body {
 #option2 a:link, #option2 a:visited {background: url(images/m-button-02.gif); line-height:34px;}
 #option2 a:hover,#option2 a:active {color:#ffffff; background: url(images/m-button-02.gif) 0 -44px;}
 
-#option3 a{height:38px; line-height:100%;}
-#option3 a:link, #option3 a:visited {background: url(images/m-button-03.gif); line-height:34px;}
-#option3 a:hover,#option3 a:active {color:#ffffff; background: url(images/m-button-03.gif) 0 -44px;}
+/*#option3 a{height:38px; line-height:100%;}*/
+#option3 a:link, #option3 a:visited {background: url(images/m-button-03.gif);padding-top:10px;} /* line-height:34px;*/
+#option3 a:hover,#option3 a:active {color:#ffffff; background: url(images/m-button-03.gif) 0 -44px;padding-top:10px;}
 
 #option4 {height:55px; }
 #option4 a:link, #option4 a:visited {height:55px; background: url(images/m-button-04.gif);}

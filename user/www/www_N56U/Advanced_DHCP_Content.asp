@@ -305,7 +305,7 @@ var nm = new Array("0", "128", "192", "224", "240", "248", "252");
 			  
 			  <tr bgcolor="#FFFFFF">
             <td align="center"><input type="hidden" name="dhcp_staticnum_x_0" value="<% nvram_get_x("LANHostConfig", "dhcp_staticnum_x"); %>" readonly="1" />
-                <input type="text" maxlength="12" class="input" size="12" name="dhcp_staticmac_x_0" onkeypress="return is_hwaddr()" /></td>
+                <input type="text" maxlength="12" class="input" size="16" name="dhcp_staticmac_x_0" onkeypress="return is_hwaddr()" /></td>
             <td align="center"><input type="text" maxlength="15" class="input" size="15" name="dhcp_staticip_x_0" onkeypress="return is_ipaddr(this)" onkeyup="change_ipaddr(this)" /></td>
             <td width="40"><input class="button" type="submit" onclick="return markGroup(this, 'ManualDHCPList', 32, ' Add ');" name="ManualDHCPList2" value="<#CTL_add#>" size="12" /></td>
 			  </tr>

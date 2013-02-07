@@ -411,18 +411,18 @@ foreach_interface(foreach_interface_fn fn, void *state)
     return TRUE;
 }
 
-void reapchild()	// 0527 add
-{
-	signal(SIGCHLD, reapchild);
-	wait(NULL);
-}
+//void reapchild()	// 0527 add
+//{
+//	signal(SIGCHLD, reapchild);
+//	wait(NULL);
+//}
 
 /* Recipe from section 1.7 of the Unix Programming FAQ */
 /* http://www.erlenstar.demon.co.uk/unix/faq_toc.html */
 void
 osl_become_daemon(osl_t *osl)
 {
-    signal(SIGCHLD, reapchild); // 0527 add
+//    signal(SIGCHLD, reapchild); // 0527 add
 
     /* 1) fork */
     pid_t pid = fork();

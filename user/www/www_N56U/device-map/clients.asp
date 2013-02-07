@@ -197,7 +197,7 @@ function show_clients(){
 		  clientType = addClient.insertCell(0);
 	  	clientName = addClient.insertCell(1);
 		  clientIP = addClient.insertCell(2);
-		  clientPriority = addClient.insertCell(3);
+		  // Viz 2012.08.03 clientPriority = addClient.insertCell(3);
 			simplyName(clients[j][0], j);
 		  	  	  	  
 		  clients[j][5] = (clients[j][5] == undefined)?6:clients[j][5];
@@ -246,15 +246,17 @@ function show_clients(){
 			else
 				selected_one[1] = "selected";   
 	
+			/* Viz 2012.08.03
 			if(clients[j][1].length > 0){
 		  	clientPriority.innerHTML = "<select id='client_priority_"+j+"' class='input' onchange='get_changed_priority(this);'><option value='1' "+selected_one[0]+"><#Priority_Level_1#></option><option value='4' "+selected_one[1]+"><#Priority_Level_2#></option><option value='6'  "+selected_one[2]+"><#Priority_Level_3#></option></select>";
 			}
 			else{
 				clientPriority.innerHTML = "<select disabled=disabled class='input'><option value=1><#btn_Disabled#></option></select>";
-			}
+			}*/
 		  
 		  if(list_type != "1"){
-			  clientBlock = addClient.insertCell(4);
+			  //Viz 2012.08.03 clientBlock = addClient.insertCell(4);
+			  clientBlock = addClient.insertCell(3);
 			  clientBlock.style.textAlign = "center";
 			  clientBlock.innerHTML = '<img src="/images/icon-01.gif" id=unblock_client'+j+' onClick="blockClient('+j+')" style="cursor:pointer;">\n'
 		  }
@@ -576,10 +578,11 @@ function networkmap_update(s){
 	addClientTitle.insertCell(0).innerHTML = "<#Type#>"
   addClientTitle.insertCell(1).innerHTML = "<#Computer_Name#>";
 	addClientTitle.insertCell(2).innerHTML = "<#LAN_IP#>";
-	addClientTitle.insertCell(3).innerHTML = "<#Priority#>";
+	//Viz 2012.08.03 addClientTitle.insertCell(3).innerHTML = "<#Priority#>";
 	
   if(list_type != "1"){
-	  addClientTitle.insertCell(4).innerHTML = "<#Block#>";
+	  //Viz 2012.08.03 addClientTitle.insertCell(4).innerHTML = "<#Block#>";
+	  addClientTitle.insertCell(3).innerHTML = "<#Block#>";
 	}
 		  
   addClientTitle.style.textAlign = "center";

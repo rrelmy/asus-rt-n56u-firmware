@@ -1,5 +1,5 @@
 
-#line 3 "lexer.c"
+#line 3 "<stdout>"
 
 #define  YY_INT_ALIGNED short int
 
@@ -578,7 +578,7 @@ char *yytext;
 #line 1 "lexer.l"
 #line 2 "lexer.l"
 
-/* $Id: lexer.c,v 1.1 2009-06-30 02:31:08 steven Exp $
+/* $Id: lexer.l,v 1.1 2009-06-30 02:31:08 steven Exp $
  * Simple playlist lexer
  *
  * Copyright (C) 2003 Ron Pedde (ron@pedde.com)
@@ -611,7 +611,7 @@ extern int yydebug;
 time_t l_converttime(int day, int month, int year);
 time_t l_convertyyyymmdd(char *date);
 
-#line 615 "lexer.c"
+#line 615 "<stdout>"
 
 #define INITIAL 0
 
@@ -767,7 +767,7 @@ YY_DECL
 #line 44 "lexer.l"
 
 
-#line 771 "lexer.c"
+#line 771 "<stdout>"
 
 	if ( !(yy_init) )
 		{
@@ -1087,7 +1087,7 @@ YY_RULE_SETUP
 #line 109 "lexer.l"
 ECHO;
 	YY_BREAK
-#line 1091 "lexer.c"
+#line 1091 "<stdout>"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -1497,7 +1497,7 @@ static int yy_get_next_buffer (void)
 				case EOB_ACT_END_OF_FILE:
 					{
 					if ( yywrap( ) )
-						return 0;
+						return EOF;
 
 					if ( ! (yy_did_buffer_switch_on_eof) )
 						YY_NEW_FILE;

@@ -7,7 +7,6 @@
 #include <linux/types.h>
 #include <linux/netdevice.h>
 #include <linux/if_vlan.h>
-#include <asm/semaphore.h>
 
 
 #define MAX_MCAST_ENTRY	    16
@@ -37,7 +36,7 @@ DECLARE_MUTEX(mtbl_lock);
 
 uint32_t inline is_multicast_pkt(uint8_t *mac)
 {
-    if(mac[0]==0x01) {
+    if(mac[0]==0x01 && mac[1]==0x00 && mac[2]==0x5E) {
 	return 1;
     }else{
 	return 0;

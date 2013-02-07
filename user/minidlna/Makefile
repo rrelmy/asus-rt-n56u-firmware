@@ -1,3 +1,5 @@
+include ../../vendors/Ralink/RT3883/version.conf
+
 # $Id: Makefile,v 1.31.2.1 2012/01/17 22:49:01 jmaggard Exp $
 # MiniDLNA project
 # http://sourceforge.net/projects/minidlna/
@@ -75,15 +77,22 @@ EXECUTABLES = minidlna testupnpdescgen
 
 .PHONY:	all clean distclean install depend
 
-all:	$(EXECUTABLES)
+all:	rt_ver $(EXECUTABLES)
+
+rt_ver:
+	$(RM) rtversion.h
+	echo '#ifndef RTVERSION' > rtversion.h
+	echo '#define RT_VERSION "RT-N56U/$(KERNEL_VER).$(FS_VER)"' >> rtversion.h
+	echo '#endif' >> rtversion.h
 
 clean:
 	$(RM) $(ALLOBJS)
 	$(RM) $(EXECUTABLES)
 	$(RM) testupnpdescgen.o
+	$(RM) rtversion.h
 
 distclean: clean
-	$(RM) config.h
+#	$(RM) config.h
 
 install:	minidlna
 	$(INSTALL) -d $(SBININSTALLDIR)
@@ -98,7 +107,7 @@ minidlna:	$(BASEOBJS) $(LNXOBJS)
 	@echo Linking $@
 	@$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $(BASEOBJS) $(LNXOBJS) $(LIBS)
 
-romfs:		minidlna
+romfs:	minidlna
 	$(ROMFSINST) /usr/bin/minidlna
 	$(STRIP) $(INSTALLDIR)/usr/bin/minidlna
 	$(ROMFSINST) /etc_ro/minidlna.conf
@@ -108,7 +117,7 @@ testupnpdescgen:	$(TESTUPNPDESCGENOBJS)
 	@$(CC) $(CFLAGS) -o $@ $(TESTUPNPDESCGENOBJS)
 
 config.h:	genconfig.sh
-	./genconfig.sh
+#	./genconfig.sh
 
 depend:	config.h
 	makedepend -f$(MAKEFILE_LIST) -Y \

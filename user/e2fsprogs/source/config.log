@@ -935,7 +935,7 @@ configure:7916: $? = 0
 configure:7916: result: yes
 configure:7916: checking for __argz_count
 configure:7916: /opt/buildroot-gcc342/bin/mipsel-linux-uclibc-gcc  -o conftest -O2 -fomit-frame-pointer -pipe  -Dlinux -D__linux__ -Dunix -DEMBED -I/home/defjovi/projects/RT-N56U/source/lib/include -I/home/defjovi/projects/RT-N56U/source/uClibc++/include -I/home/defjovi/projects/RT-N56U/source   -Wl,--fatal-warnings -L/home/defjovi/projects/RT-N56U/source/lib/lib -L/home/defjovi/projects/RT-N56U/source/uClibc++/src -Wl,--fatal-warnings -L/home/defjovi/projects/RT-N56U/source/lib/lib -L/home/defjovi/projects/RT-N56U/source/uClibc++/src conftest.c  >&5
-/tmp/cccfGjp3.o: In function `main':conftest.c:(.text+0x18): undefined reference to `__argz_count'
+/tmp/cc1dITp4.o: In function `main':conftest.c:(.text+0x18): undefined reference to `__argz_count'
 collect2: ld returned 1 exit status
 configure:7916: $? = 1
 configure: failed program was:
@@ -1051,7 +1051,7 @@ configure: failed program was:
 configure:7916: result: no
 configure:7916: checking for __argz_stringify
 configure:7916: /opt/buildroot-gcc342/bin/mipsel-linux-uclibc-gcc  -o conftest -O2 -fomit-frame-pointer -pipe  -Dlinux -D__linux__ -Dunix -DEMBED -I/home/defjovi/projects/RT-N56U/source/lib/include -I/home/defjovi/projects/RT-N56U/source/uClibc++/include -I/home/defjovi/projects/RT-N56U/source   -Wl,--fatal-warnings -L/home/defjovi/projects/RT-N56U/source/lib/lib -L/home/defjovi/projects/RT-N56U/source/uClibc++/src -Wl,--fatal-warnings -L/home/defjovi/projects/RT-N56U/source/lib/lib -L/home/defjovi/projects/RT-N56U/source/uClibc++/src conftest.c  >&5
-/tmp/ccEsP5m7.o: In function `main':conftest.c:(.text+0x18): undefined reference to `__argz_stringify'
+/tmp/ccB9SQOb.o: In function `main':conftest.c:(.text+0x18): undefined reference to `__argz_stringify'
 collect2: ld returned 1 exit status
 configure:7916: $? = 1
 configure: failed program was:
@@ -1167,7 +1167,7 @@ configure: failed program was:
 configure:7916: result: no
 configure:7916: checking for __argz_next
 configure:7916: /opt/buildroot-gcc342/bin/mipsel-linux-uclibc-gcc  -o conftest -O2 -fomit-frame-pointer -pipe  -Dlinux -D__linux__ -Dunix -DEMBED -I/home/defjovi/projects/RT-N56U/source/lib/include -I/home/defjovi/projects/RT-N56U/source/uClibc++/include -I/home/defjovi/projects/RT-N56U/source   -Wl,--fatal-warnings -L/home/defjovi/projects/RT-N56U/source/lib/lib -L/home/defjovi/projects/RT-N56U/source/uClibc++/src -Wl,--fatal-warnings -L/home/defjovi/projects/RT-N56U/source/lib/lib -L/home/defjovi/projects/RT-N56U/source/uClibc++/src conftest.c  >&5
-/tmp/ccC27Zge.o: In function `main':conftest.c:(.text+0x18): undefined reference to `__argz_next'
+/tmp/cc4fDkof.o: In function `main':conftest.c:(.text+0x18): undefined reference to `__argz_next'
 collect2: ld returned 1 exit status
 configure:7916: $? = 1
 configure: failed program was:
@@ -1603,7 +1603,7 @@ configure:8484: checking whether included gettext is requested
 configure:8494: result: no
 configure:8505: checking for GNU gettext in libc
 configure:8524: /opt/buildroot-gcc342/bin/mipsel-linux-uclibc-gcc  -o conftest -O2 -fomit-frame-pointer -pipe  -Dlinux -D__linux__ -Dunix -DEMBED -I/home/defjovi/projects/RT-N56U/source/lib/include -I/home/defjovi/projects/RT-N56U/source/uClibc++/include -I/home/defjovi/projects/RT-N56U/source   -Wl,--fatal-warnings -L/home/defjovi/projects/RT-N56U/source/lib/lib -L/home/defjovi/projects/RT-N56U/source/uClibc++/src -Wl,--fatal-warnings -L/home/defjovi/projects/RT-N56U/source/lib/lib -L/home/defjovi/projects/RT-N56U/source/uClibc++/src conftest.c  >&5
-/tmp/ccNHoUXX.o: In function `main':conftest.c:(.text+0x20): undefined reference to `bindtextdomain'
+/tmp/ccfpyenZ.o: In function `main':conftest.c:(.text+0x20): undefined reference to `bindtextdomain'
 :conftest.c:(.text+0x38): undefined reference to `dcgettext'
 :conftest.c:(.text+0x50): undefined reference to `_nl_domain_bindings'
 :conftest.c:(.text+0x54): undefined reference to `_nl_msg_cat_cntr'
@@ -3315,7 +3315,7 @@ configure:10068: $? = 0
 configure:10068: result: yes
 configure:10074: checking for _doprnt
 configure:10074: /opt/buildroot-gcc342/bin/mipsel-linux-uclibc-gcc  -o conftest -O2 -fomit-frame-pointer -pipe  -Dlinux -D__linux__ -Dunix -DEMBED -I/home/defjovi/projects/RT-N56U/source/lib/include -I/home/defjovi/projects/RT-N56U/source/uClibc++/include -I/home/defjovi/projects/RT-N56U/source   -Wl,--fatal-warnings -L/home/defjovi/projects/RT-N56U/source/lib/lib -L/home/defjovi/projects/RT-N56U/source/uClibc++/src -Wl,--fatal-warnings -L/home/defjovi/projects/RT-N56U/source/lib/lib -L/home/defjovi/projects/RT-N56U/source/uClibc++/src conftest.c  >&5
-/tmp/cc15qcG8.o: In function `main':conftest.c:(.text+0x18): undefined reference to `_doprnt'
+/tmp/cccXdeX3.o: In function `main':conftest.c:(.text+0x18): undefined reference to `_doprnt'
 collect2: ld returned 1 exit status
 configure:10074: $? = 1
 configure: failed program was:
@@ -6758,7 +6758,7 @@ configure: failed program was:
 configure:10581: result: no
 configure:10653: checking for chflags
 configure:10653: /opt/buildroot-gcc342/bin/mipsel-linux-uclibc-gcc  -o conftest -O2 -fomit-frame-pointer -pipe  -Dlinux -D__linux__ -Dunix -DEMBED -I/home/defjovi/projects/RT-N56U/source/lib/include -I/home/defjovi/projects/RT-N56U/source/uClibc++/include -I/home/defjovi/projects/RT-N56U/source   -Wl,--fatal-warnings -L/home/defjovi/projects/RT-N56U/source/lib/lib -L/home/defjovi/projects/RT-N56U/source/uClibc++/src -Wl,--fatal-warnings -L/home/defjovi/projects/RT-N56U/source/lib/lib -L/home/defjovi/projects/RT-N56U/source/uClibc++/src conftest.c  >&5
-/tmp/ccEsNNj7.o: In function `main':conftest.c:(.text+0x18): undefined reference to `chflags'
+/tmp/ccy4WD7n.o: In function `main':conftest.c:(.text+0x18): undefined reference to `chflags'
 collect2: ld returned 1 exit status
 configure:10653: $? = 1
 configure: failed program was:
@@ -6955,7 +6955,7 @@ configure:10653: $? = 0
 configure:10653: result: yes
 configure:10653: checking for getmntinfo
 configure:10653: /opt/buildroot-gcc342/bin/mipsel-linux-uclibc-gcc  -o conftest -O2 -fomit-frame-pointer -pipe  -Dlinux -D__linux__ -Dunix -DEMBED -I/home/defjovi/projects/RT-N56U/source/lib/include -I/home/defjovi/projects/RT-N56U/source/uClibc++/include -I/home/defjovi/projects/RT-N56U/source   -Wl,--fatal-warnings -L/home/defjovi/projects/RT-N56U/source/lib/lib -L/home/defjovi/projects/RT-N56U/source/uClibc++/src -Wl,--fatal-warnings -L/home/defjovi/projects/RT-N56U/source/lib/lib -L/home/defjovi/projects/RT-N56U/source/uClibc++/src conftest.c  >&5
-/tmp/ccfLoBUM.o: In function `main':conftest.c:(.text+0x18): undefined reference to `getmntinfo'
+/tmp/ccFhX9Na.o: In function `main':conftest.c:(.text+0x18): undefined reference to `getmntinfo'
 collect2: ld returned 1 exit status
 configure:10653: $? = 1
 configure: failed program was:
@@ -7178,7 +7178,7 @@ configure:10653: $? = 0
 configure:10653: result: yes
 configure:10653: checking for posix_memalign
 configure:10653: /opt/buildroot-gcc342/bin/mipsel-linux-uclibc-gcc  -o conftest -O2 -fomit-frame-pointer -pipe  -Dlinux -D__linux__ -Dunix -DEMBED -I/home/defjovi/projects/RT-N56U/source/lib/include -I/home/defjovi/projects/RT-N56U/source/uClibc++/include -I/home/defjovi/projects/RT-N56U/source   -Wl,--fatal-warnings -L/home/defjovi/projects/RT-N56U/source/lib/lib -L/home/defjovi/projects/RT-N56U/source/uClibc++/src -Wl,--fatal-warnings -L/home/defjovi/projects/RT-N56U/source/lib/lib -L/home/defjovi/projects/RT-N56U/source/uClibc++/src conftest.c  >&5
-/tmp/ccJkEkHZ.o: In function `main':conftest.c:(.text+0x18): undefined reference to `posix_memalign'
+/tmp/ccbf6XuN.o: In function `main':conftest.c:(.text+0x18): undefined reference to `posix_memalign'
 collect2: ld returned 1 exit status
 configure:10653: $? = 1
 configure: failed program was:
@@ -7377,7 +7377,7 @@ configure:10653: $? = 0
 configure:10653: result: yes
 configure:10653: checking for __secure_getenv
 configure:10653: /opt/buildroot-gcc342/bin/mipsel-linux-uclibc-gcc  -o conftest -O2 -fomit-frame-pointer -pipe  -Dlinux -D__linux__ -Dunix -DEMBED -I/home/defjovi/projects/RT-N56U/source/lib/include -I/home/defjovi/projects/RT-N56U/source/uClibc++/include -I/home/defjovi/projects/RT-N56U/source   -Wl,--fatal-warnings -L/home/defjovi/projects/RT-N56U/source/lib/lib -L/home/defjovi/projects/RT-N56U/source/uClibc++/src -Wl,--fatal-warnings -L/home/defjovi/projects/RT-N56U/source/lib/lib -L/home/defjovi/projects/RT-N56U/source/uClibc++/src conftest.c  >&5
-/tmp/ccNbDMDb.o: In function `main':conftest.c:(.text+0x18): undefined reference to `__secure_getenv'
+/tmp/ccTHxPwf.o: In function `main':conftest.c:(.text+0x18): undefined reference to `__secure_getenv'
 collect2: ld returned 1 exit status
 configure:10653: $? = 1
 configure: failed program was:
@@ -7606,7 +7606,7 @@ configure:10653: $? = 0
 configure:10653: result: yes
 configure:10653: checking for blkid_probe_get_topology
 configure:10653: /opt/buildroot-gcc342/bin/mipsel-linux-uclibc-gcc  -o conftest -O2 -fomit-frame-pointer -pipe  -Dlinux -D__linux__ -Dunix -DEMBED -I/home/defjovi/projects/RT-N56U/source/lib/include -I/home/defjovi/projects/RT-N56U/source/uClibc++/include -I/home/defjovi/projects/RT-N56U/source   -Wl,--fatal-warnings -L/home/defjovi/projects/RT-N56U/source/lib/lib -L/home/defjovi/projects/RT-N56U/source/uClibc++/src -Wl,--fatal-warnings -L/home/defjovi/projects/RT-N56U/source/lib/lib -L/home/defjovi/projects/RT-N56U/source/uClibc++/src conftest.c  >&5
-/tmp/ccNRRHJk.o: In function `main':conftest.c:(.text+0x18): undefined reference to `blkid_probe_get_topology'
+/tmp/ccoaYLBl.o: In function `main':conftest.c:(.text+0x18): undefined reference to `blkid_probe_get_topology'
 collect2: ld returned 1 exit status
 configure:10653: $? = 1
 configure: failed program was:
@@ -7989,7 +7989,7 @@ configure:10705: checking for optreset
 configure:10724: result: no
 configure:10731: checking for sem_init
 configure:10731: /opt/buildroot-gcc342/bin/mipsel-linux-uclibc-gcc  -o conftest -O2 -fomit-frame-pointer -pipe  -Dlinux -D__linux__ -Dunix -DEMBED -I/home/defjovi/projects/RT-N56U/source/lib/include -I/home/defjovi/projects/RT-N56U/source/uClibc++/include -I/home/defjovi/projects/RT-N56U/source   -Wl,--fatal-warnings -L/home/defjovi/projects/RT-N56U/source/lib/lib -L/home/defjovi/projects/RT-N56U/source/uClibc++/src -Wl,--fatal-warnings -L/home/defjovi/projects/RT-N56U/source/lib/lib -L/home/defjovi/projects/RT-N56U/source/uClibc++/src conftest.c  >&5
-/tmp/cc5SyqGm.o: In function `main':conftest.c:(.text+0x18): undefined reference to `sem_init'
+/tmp/ccy0zNOA.o: In function `main':conftest.c:(.text+0x18): undefined reference to `sem_init'
 collect2: ld returned 1 exit status
 configure:10731: $? = 1
 configure: failed program was:

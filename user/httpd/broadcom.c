@@ -436,7 +436,7 @@ ej_lan_leases(int eid, webs_t wp, int argc, char_t **argv)
         if (!(fp = fopen("/tmp/dnsmasq.leases", "r")))
                 return ret;
 
-        ret += websWrite(wp, "Host Name       Mac Address       IP Address      Lease\n");
+        ret += websWrite(wp, "Host Name               Mac Address       IP Address      Lease\n");
 
         memset(buff, 0, MAXLEN);
         while (fgets(buff, MAXLEN, fp))
@@ -452,7 +452,7 @@ ej_lan_leases(int eid, webs_t wp, int argc, char_t **argv)
                                 lease_log[i] = tmp = p;
                         }
                 }
-		ret += websWrite(wp, "%-16s", lease_log[L_HOST] ? (*lease_log[L_HOST]=='*' ? "<null>" : lease_log[L_HOST]) : " ");
+		ret += websWrite(wp, "%-24s", lease_log[L_HOST] ? (*lease_log[L_HOST]=='*' ? "<null>" : lease_log[L_HOST]) : " ");
 		ret += websWrite(wp, "%-18s", lease_log[L_MAC] ? lease_log[L_MAC] : " " );
 		ret += websWrite(wp, "%-16s", lease_log[L_IP] ? lease_log[L_IP] : " ");
 		ret += websWrite(wp, "%s\n",    lease_log[L_LEASE] ? lease_log[L_LEASE] : " ");
@@ -1201,10 +1201,10 @@ ej_wl_status(int eid, webs_t wp, int argc, char_t **argv)
 
 	ret+=websWrite(wp, "Channel		: %d\n", channel);
 
-	char data[2048];
-	memset(data, 0, 2048);
+	char data[16384];
+	memset(data, 0, sizeof(data));
 	wrq3.u.data.pointer = data;
-	wrq3.u.data.length = 2048;
+	wrq3.u.data.length = sizeof(data);
 	wrq3.u.data.flags = 0;
 
 	if (wl_ioctl(WIF, RTPRIV_IOCTL_GET_MAC_TABLE, &wrq3) < 0)
@@ -1374,10 +1374,10 @@ ej_wl_status_2g(int eid, webs_t wp, int argc, char_t **argv)
 
 	ret+=websWrite(wp, "Channel		: %d\n", channel);
 
-	char data[2048];
-	memset(data, 0, 2048);
+	char data[16384];
+	memset(data, 0, sizeof(data));
 	wrq3.u.data.pointer = data;
-	wrq3.u.data.length = 2048;
+	wrq3.u.data.length = sizeof(data);
 	wrq3.u.data.flags = 0;
 
 	if (wl_ioctl(WIF2G, RTPRIV_IOCTL_GET_MAC_TABLE, &wrq3) < 0)
@@ -1419,53 +1419,6 @@ ej_wl_status_2g(int eid, webs_t wp, int argc, char_t **argv)
 				hr, min, sec
 		);
 #endif
-	}
-
-	return ret;
-}
-
-int
-ej_getclientlist(int eid, webs_t wp, int argc, char_t **argv)
-{
-	int i, ret = 0;
-
-	struct iwreq wrq0;
-	struct iwreq wrq1;
-
-	if (wl_ioctl(WIF, SIOCGIWAP, &wrq0) < 0)
-	{
-		ret+=websWrite(wp, "Radio is disabled\n");
-		return ret;
-	}
-
-	char data[2048];
-	memset(data, 0, 2048);
-	wrq1.u.data.pointer = data;
-	wrq1.u.data.length = 2048;
-	wrq1.u.data.flags = 0;
-	char MAC_asus[13];
-	char MAC[18];
-	memset(MAC_asus, 0, 13);
-	memset(MAC, 0 ,18);
-
-	if (wl_ioctl(WIF, RTPRIV_IOCTL_GET_MAC_TABLE, &wrq1) < 0)
-		return ret;
-
-	RT_802_11_MAC_TABLE* mp=(RT_802_11_MAC_TABLE*)wrq1.u.data.pointer;
-
-	for (i=0;i<mp->Num;i++)
-	{
-		sprintf(MAC_asus, "%02X%02X%02X%02X%02X%02X",
-				mp->Entry[i].Addr[0], mp->Entry[i].Addr[1],
-				mp->Entry[i].Addr[2], mp->Entry[i].Addr[3],
-				mp->Entry[i].Addr[4], mp->Entry[i].Addr[5]
-		);
-	sprintf(MAC, "%02X:%02X:%02X:%02X:%02X:%02X",
-				mp->Entry[i].Addr[0], mp->Entry[i].Addr[1],
-				mp->Entry[i].Addr[2], mp->Entry[i].Addr[3],
-				mp->Entry[i].Addr[4], mp->Entry[i].Addr[5]
-		);
-		ret+=websWrite(wp, "<option class=\"content_input_fd\" value=\"%s\">%s</option>", MAC_asus, MAC);
 	}
 
 	return ret;

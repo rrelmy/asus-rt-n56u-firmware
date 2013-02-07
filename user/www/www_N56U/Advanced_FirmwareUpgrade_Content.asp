@@ -53,7 +53,21 @@ function initial(){
 <body onload="initial();">
 
 <div id="TopBanner"></div>
-
+<div id="hiddenMask" class="popup_bg">
+	<table cellpadding="5" cellspacing="0" id="dr_sweet_advise" class="dr_sweet_advise" align="center">
+		<tr>
+		<td>
+			<div class="drword" id="drword" style="height:110px;"><#Main_alert_proceeding_desc4#> <#Main_alert_proceeding_desc1#>...
+				<br/>
+				<br/>
+	    </div>
+		  <div class="drImg"><img src="images/DrsurfImg.gif"></div>
+			<div style="height:70px;"></div>
+		</td>
+		</tr>
+	</table>
+<!--[if lte IE 6.5]><iframe class="hackiframe"></iframe><![endif]-->
+</div>
 <div id="LoadingBar" class="popup_bar_bg" style="background-image: url(/images/popup_bg2.gif);">
 <table cellpadding="5" cellspacing="0" id="loadingBarBlock" class="loadingBarBlock" align="center">
 	<tr>

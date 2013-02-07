@@ -1,13 +1,10 @@
 #ifndef RA_MAC_H
 #define RA_MAC_H
 
-void ra2880start(END_DEVICE *ei_local);
 void ra2880stop(END_DEVICE *ei_local);
-void ra2880dmaRest(MAC_INFO *macinfo);
-
-void ra2880MacAddressSet(MAC_INFO *macinfo, unsigned char p[6]);
-void ra2880Mac2AddressSet(MAC_INFO *macinfo, unsigned char p[6]);
-void hard_init(struct net_device *dev);
+void ra2880MacAddressSet(unsigned char p[6]);
+void ra2880Mac2AddressSet(unsigned char p[6]);
+void ethtool_init(struct net_device *dev);
 
 void ra2880EnableInterrupt(void);
 

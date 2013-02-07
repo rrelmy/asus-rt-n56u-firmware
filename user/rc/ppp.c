@@ -141,9 +141,6 @@ ipup_main(int argc, char **argv)
 	logmessage(nvram_safe_get("wan_proto_t"), "connect to ISP");
 	wanmessage("");
 
-//	logmessage(nvram_safe_get("wan_proto_t"), "restart wanduck");
-//	restart_wanduck_ppp();
-
 	return 0;
 }
 

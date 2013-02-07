@@ -1222,8 +1222,6 @@ ej_dump(int eid, webs_t wp, int argc, char_t **argv)
 		return (ej_nat_table(eid, wp, 0, NULL));
 	else if (strcmp(file, "route.log")==0)
 		return (ej_route_table(eid, wp, 0, NULL));
-	else if (strcmp(file, "client_list.log")==0)
-		return (ej_getclientlist(eid, wp, 0, NULL));
 	else if (strcmp(file, "wps_info.log")==0)
 	{
 		if (nvram_match("wps_band", "0"))
@@ -1554,7 +1552,9 @@ static int validate_asp_apply(webs_t wp, int sid, int groupFlag) {
 						!strcmp(v->name, "HT_AMSDU") ||
 						!strcmp(v->name, "HT_EXTCHA") ||
 						!strcmp(v->name, "APSDCapable") ||
-						!strcmp(v->name, "DLSCapable")	)
+						!strcmp(v->name, "DLSCapable") /*||
+						!strcmp(v->name, "igmpsnenable")*/
+						)
 					{
 						dbg("5G setting changed!!!\n");
 						wl_modified = 1;
@@ -3614,7 +3614,7 @@ static int ej_wl_auth_list(int eid, webs_t wp, int argc, char_t **argv)
 {
 	struct iwreq wrq;
 	int i, firstRow;
-	char data[4096];
+	char data[16384];
 	char mac[ETHER_ADDR_STR_LEN];	
 	RT_802_11_MAC_TABLE *mp;
 	RT_802_11_MAC_TABLE_2G *mp2;
@@ -3623,9 +3623,9 @@ static int ej_wl_auth_list(int eid, webs_t wp, int argc, char_t **argv)
 	memset(mac, 0, sizeof(mac));
 	
 	/* query wl for authenticated sta list */
-	memset(data, 0, 4096);
+	memset(data, 0, sizeof(data));
 	wrq.u.data.pointer = data;
-	wrq.u.data.length = 4096;
+	wrq.u.data.length = sizeof(data);
 	wrq.u.data.flags = 0;	
 	if (wl_ioctl(WIF, RTPRIV_IOCTL_GET_MAC_TABLE, &wrq) < 0)
 		goto exit;
@@ -3654,9 +3654,9 @@ static int ej_wl_auth_list(int eid, webs_t wp, int argc, char_t **argv)
 	}
 
 	/* query wl for authenticated sta list */
-	memset(data, 0, 4096);
+	memset(data, 0, sizeof(data));
 	wrq.u.data.pointer = data;
-	wrq.u.data.length = 4096;
+	wrq.u.data.length = sizeof(data);
 	wrq.u.data.flags = 0;	
 	if (wl_ioctl(WIF2G, RTPRIV_IOCTL_GET_MAC_TABLE, &wrq) < 0)
 		goto exit;
@@ -4127,9 +4127,43 @@ static int ej_disk_pool_mapping_info(int eid, webs_t wp, int argc, char_t **argv
 	return 0;
 }
 
+int char_to_ascii_safe(const char *output, const char *input, int outsize)
+{
+        char *src = (char *)input;
+        char *dst = (char *)output;
+        char *end = (char *)output + outsize - 1;
+        char *escape = "[]"; // shouldn't be more?
+
+        if (src == NULL || dst == NULL || outsize <= 0)
+                return 0;
+
+        for ( ; *src && dst < end; src++) {
+                if ((*src >='0' && *src <='9') ||
+                    (*src >='A' && *src <='Z') ||
+                    (*src >='a' && *src <='z')) {
+                        *dst++ = *src;
+                } else if (strchr(escape, *src)) {
+                        if (dst + 2 > end)
+                                break;
+                        *dst++ = '\\';
+                        *dst++ = *src;
+                } else {
+                        if (dst + 3 > end)
+                                break;
+                        dst += sprintf(dst, "%%%.02X", *src);
+                }
+        }
+        if (dst <= end)
+                *dst = '\0';
+
+        return dst - output;
+}
+
+
 static int ej_available_disk_names_and_sizes(int eid, webs_t wp, int argc, char_t **argv) {
 	disk_info_t *disks_info, *follow_disk;
 	int first;
+	char ascii_tag[PATH_MAX], ascii_vendor[PATH_MAX], ascii_model[PATH_MAX];
 
 	websWrite(wp, "function available_disks() { return [];}\n\n");
 	websWrite(wp, "function available_disk_sizes() { return [];}\n\n");
@@ -4160,7 +4194,9 @@ static int ej_available_disk_names_and_sizes(int eid, webs_t wp, int argc, char_
 		else
 			websWrite(wp, ", ");
 
-		websWrite(wp, "\"%s\"", follow_disk->tag);
+		memset(ascii_tag, 0, PATH_MAX);
+		char_to_ascii_safe(ascii_tag, follow_disk->tag, PATH_MAX);
+		websWrite(wp, "\"%s\"", ascii_tag);
 	}
 	websWrite(wp, "];\n");
 	websWrite(wp, "}\n\n");
@@ -4193,14 +4229,19 @@ static int ej_available_disk_names_and_sizes(int eid, webs_t wp, int argc, char_
 
 		websWrite(wp, "\"");
 
-		if (follow_disk->vendor != NULL)
-			websWrite(wp, "%s", follow_disk->vendor);
-		if (follow_disk->model != NULL) {
-			if (follow_disk->vendor != NULL)
-				websWrite(wp, " ");
+                if (follow_disk->vendor != NULL){
+                        memset(ascii_vendor, 0, PATH_MAX);
+                        char_to_ascii_safe(ascii_vendor, follow_disk->vendor, PATH_MAX);
+                        websWrite(wp, "%s", ascii_vendor);
+                }
+                if (follow_disk->model != NULL){
+                        if (follow_disk->vendor != NULL)
+                                websWrite(wp, " ");
 
-			websWrite(wp, "%s", follow_disk->model);
-		}
+                        memset(ascii_model, 0, PATH_MAX);
+                        char_to_ascii_safe(ascii_model, follow_disk->model, PATH_MAX);
+                        websWrite(wp, "%s", ascii_model);
+                }
 		websWrite(wp, "\"");
 	}
 	websWrite(wp, "];\n");
@@ -5815,12 +5856,19 @@ struct mime_handler mime_handlers[] = {
 	
 	{ "**.js",  "text/javascript", no_cache_IE7, NULL, do_ej, do_auth },
 	{ "**.cab", "text/txt", NULL, NULL, do_file, do_auth },
+#if 0
 	{ "**.CFG", "text/txt", NULL, NULL, do_prf_file, do_auth },
-	
+#else
+	{ "**.CFG", "application/force-download", NULL, NULL, do_prf_file, do_auth },
+#endif	
 	{ "apply.cgi*", "text/html", no_cache_IE7, do_html_post_and_get, do_apply_cgi, do_auth },
 	{ "upgrade.cgi*", "text/html", no_cache_IE7, do_upgrade_post, do_upgrade_cgi, do_auth},
 	{ "upload.cgi*", "text/html", no_cache_IE7, do_upload_post, do_upload_cgi, do_auth },
+#if 0
  	{ "syslog.cgi*", "text/txt", no_cache_IE7, do_html_post_and_get, do_log_cgi, do_auth },
+#else
+	{ "syslog.cgi*", "application/force-download", no_cache_IE7, do_html_post_and_get, do_log_cgi, do_auth },
+#endif
         // Viz 2010.08 vvvvv  
         { "update.cgi*", "text/javascript", no_cache_IE7, do_html_post_and_get, do_update_cgi, do_auth }, // jerry5 
         { "bwm/*.gz", NULL, no_cache, do_html_post_and_get, wo_bwmbackup, do_auth }, // jerry5

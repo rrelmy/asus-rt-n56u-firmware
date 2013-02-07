@@ -23,7 +23,7 @@
 }
 #WDSAPList{
 	margin-left: 2px;
-	margin-left: -117px \9;
+	margin-left: -128px \9;
 	margin-top: 22px;
 	border:2px outset #999;
 	background-color:#EFEFEF;
@@ -83,7 +83,7 @@ function initial(){
 	show_footer();
 	enable_auto_hint(1, 3);
 	load_body();
-	insertExtChannelOption_wmode();
+	//Viz 2012.08.06 ineeded: insertExtChannelOption_wmode();
 	showLANIPList();
 	setTimeout("wds_scan();", 1000);
 }
@@ -229,7 +229,7 @@ function pullLANIPList(obj){
 	
 	if(isMenuopen == 0){		
 		obj.src = "/images/arrow-top.gif"
-		document.getElementById("WDSAPList").style.display = 'block';		
+		document.getElementById("WDSAPList").style.display = "block";		
 		document.form.rt_wdslist_x_0.focus();		
 		isMenuopen = 1;
 	}
@@ -241,7 +241,7 @@ var isMenuopen = 0;
 
 function hideClients_Block(){
 	document.getElementById("pull_arrow").src = "/images/arrow-down.gif";
-	document.getElementById('WDSAPList').style.display='none';
+	document.getElementById("WDSAPList").style.display="none";
 	isMenuopen = 0;
 }
 /*----------} Mouse event of fake LAN IP select menu-----------------*/
@@ -359,11 +359,10 @@ function hideClients_Block(){
           <tr>
             <th align="right" id="rt_RBRList"> <#WLANConfig11b_RBRList_groupitemdesc#>
             <td width="60%">
-              <input type="text" maxlength="12" class="input" size="14" name="rt_wdslist_x_0" onKeyPress="return is_hwaddr()" style="float:left;">
+              <input type="text" maxlength="12" class="input" size="16" name="rt_wdslist_x_0" onKeyPress="return is_hwaddr()" style="float:left;">
 							<div id="WDSAPList" class="WDSAPList"></div>
 							<img id="pull_arrow" src="/images/arrow-down.gif" onclick="pullLANIPList(this);" title="Select the Access Point" onmouseover="over_var=1;" onmouseout="over_var=0;">
               <input class="button" style="margin-top:3px;" type="submit" onClick="return markGroup(this, 'rt_RBRList', 2, ' Add ');" name="rt_RBRList" value="<#CTL_add#>" size="12">
-              <br/><span style="float:left;">* <#JS_validmac#></span>
 						</td>
           </tr>
           <tr>

@@ -2,6 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <html xmlns:v>
 <head>
+<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7"/>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta HTTP-EQUIV="Pragma" CONTENT="no-cache">
 <meta HTTP-EQUIV="Expires" CONTENT="-1">
@@ -12,6 +13,7 @@
 <link rel="stylesheet" type="text/css" href="form_style.css">
 <link rel="stylesheet" type="text/css" href="usp_style.css">
 <script type="text/javascript" src="/state.js"></script>
+<script type="text/javascript" src="/general.js"></script>
 <script type="text/javascript" src="/help.js"></script>
 <script type="text/javascript" src="/popup.js"></script>
 <script>
@@ -56,14 +58,14 @@ function initial(){
 	}
 	
 	openHint(16, 1);
-	if(qos_ubw >= 40000 || qos_manual_ubw >= 40000){
+	if (!qos_ubw){
+		$('detect_qos_ubw').style.display = "none";
+	}else if(qos_ubw >= 40000 || qos_manual_ubw >= 40000){
+		$('detect_qos_ubw').style.display = "";
 		$('qosdespblock').innerHTML = "<span><#BM_hint#></span>";
-	}
-	if(document.form.qos_manual_ubw.value > "0"){
-		document.form.ubw_method[1].checked = "1";
-	}
-	else
-		document.form.ubw_method[0].checked = "1";
+	}else{
+		$('detect_qos_ubw').style.display = "";	
+	}	
 }
 
 function showDescription(a, btn_obj){
@@ -136,9 +138,10 @@ function show_all_bar(){
 }
 
 function submitQoS(){
+	if(!validate_range(document.form.qos_manual_ubw, 1, 1048576))	//1024^2
+			return;	
+	
 	with(document.form){
-		if(ubw_method[0].checked == 1)
-			qos_manual_ubw.value = "";
 	
 		if(qosflag[0] != qos_pshack ||
 				qosflag[1] != qos_shortpkt ||
@@ -311,11 +314,20 @@ function is_number_sp(event, o){
 			</div>
 			
 			<div id="qosenableblock">
-				<input type="radio" name="ubw_method" value="0" onClick="openHint(20, 1);">
-        <a class="hintstyle" href="javascript:void(0);" onClick="openHint(20, 1);"><#BM_measured_uplink_speed#></a>
-				<span id="qos_ubw"><% nvram_get_x("PrinterStatus", "qos_ubw"); %> Kb/s</span><br>
-				<input type="radio" name="ubw_method" value="1" onClick="openHint(20, 2);">
-        	<a class="hintstyle" href="javascript:void(0);" onClick="openHint(20, 2);"><#BM_manual_uplink_speed#></a>
+				<div style="margin-left: -23px; text-align:left; color:#FF3300; font-size: 12px; font-family:Arial, Helvetica, sans-serif;"><#BM_note#><br>
+					<div style="margin-left: -17px;">
+					<ul>
+						<li><#BM_notice1#></li>
+						<li><#BM_notice2#></li>	
+					</ul>
+					</div>
+				</div>			
+				
+				<div id="detect_qos_ubw">
+        	<a  id="qos_ubw_a" class="hintstyle" href="javascript:void(0);" onClick="openHint(20, 1);"><#BM_measured_uplink_speed#></a>
+					<span id="qos_ubw"><% nvram_get_x("PrinterStatus", "qos_ubw"); %> Kb/s</span><br>
+				</div>
+        <a class="hintstyle" href="javascript:void(0);" onClick="openHint(20, 2);"><#BM_manual_uplink_speed#></a>
 				<input type="text" maxlength="10" name="qos_manual_ubw" onKeyPress="return is_number_sp(event, this);" class="input" size="8" value="<% nvram_get_x("PrinterStatus", "qos_manual_ubw"); %>"> Kb/s
 			</div>
 

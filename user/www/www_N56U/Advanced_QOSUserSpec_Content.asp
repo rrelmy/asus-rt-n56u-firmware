@@ -49,9 +49,21 @@ function initial(){
 	
 	enable_auto_hint(20, 2);
 	showBMUserSpec();
-
+	detect_qos_ubw();
+	//check_qos_enable();
 	/*if(check_hwnat == "1" && hwnat == "1" && sw_mode == "1")
 		alert("<#BasicConfig_HWNAT_alert#>");*/
+}
+function check_qos_enable(){
+		if('<% nvram_get_x("", "qos_enable"); %>' == 0 )
+				document.form.qos_manual_ubw.value = 0;				
+}
+
+function detect_qos_ubw(){
+		if('<% nvram_get_x("", "qos_ubw"); %>' > 0 )
+				$('detect_qos_ubw').style.display = "";
+		else
+				$('detect_qos_ubw').style.display = "none";	
 }
 
 function frmload(){
@@ -77,6 +89,9 @@ function Fragment_display(){
 function applyRule(){
 	if(document.form.qos_dfragment_enable_w.checked && !validate_dfragment_size())
 		return 0;
+
+	if(!validate_range(document.form.qos_manual_ubw, 1, 1048576))	//1024^2
+		return;
 	
 	/*if(document.form.qos_manual_ubw.value >= "0")
 		document.form.hwnat_suggest.value = 1;
@@ -170,6 +185,56 @@ function changeBgColor(obj, num){
 	else
  		$("row" + num).style.background='#FFF';
 }
+
+
+function Valid_subnet(){
+			
+					if(document.form.qos_ip_x_0.value.split("*").length >= 2){
+								if(!valid_IP_subnet(document.form.qos_ip_x_0)){
+										return false;
+								}		
+					}else if(!valid_IP_form(document.form.qos_ip_x_0)){
+								return false;
+					}					
+		return true;								
+}
+
+
+function valid_IP_subnet(obj){
+	var ipPattern1 = new RegExp("(^([0-9]{1,3})\\.([0-9]{1,3})\\.([0-9]{1,3})\\.(\\*)$)", "gi");
+	var ipPattern2 = new RegExp("(^([0-9]{1,3})\\.([0-9]{1,3})\\.(\\*)\\.(\\*)$)", "gi");
+	var ipPattern3 = new RegExp("(^([0-9]{1,3})\\.(\\*)\\.(\\*)\\.(\\*)$)", "gi");
+	var ipPattern4 = new RegExp("(^(\\*)\\.(\\*)\\.(\\*)\\.(\\*)$)", "gi");
+	var parts = obj.value.split(".");
+	if(!ipPattern1.test(obj.value) && !ipPattern2.test(obj.value) && !ipPattern3.test(obj.value) && !ipPattern4.test(obj.value)){
+			alert(obj.value + " <#JS_validip#>");
+    	obj.focus();
+    	obj.select();
+    	return false;
+	
+	}else if(parts[0] == 0 || parts[0] > 255 || parts[1] > 255 || parts[2] > 255){			
+			alert(obj.value + " <#JS_validip#>");
+			obj.focus();
+    	obj.select();
+    	return false;
+    	
+	}else
+			return true;
+}
+
+function valid_IP_form(obj){
+	if(obj.value == ""){
+			return true;
+	}else{	//without netMask
+			if(!validate_ipaddr_final(obj, obj.name)){
+				obj.focus();
+				obj.select();		
+				return false;	
+			}else
+				return true;
+	}
+	
+}
 </script>
 </head>
 
@@ -223,7 +288,19 @@ function changeBgColor(obj, num){
 				
 				<tbody>
 				<tr>
-					<td bgcolor="#FFFFFF"><#BM_user_desc#></td>
+					<td bgcolor="#FFFFFF">
+						<#BM_user_desc#><br>
+						<div style="text-align:left; color:#FF3300; font-size: 12px; font-family:Arial, Helvetica, sans-serif;">	
+							<#BM_note#>	
+							<div style="margin-top: -15px;margin-left: -17px;">
+								<ul>
+									<li><#BM_notice1#></li>
+									<li><#BM_notice2#></li>	
+								</ul>
+							</div>
+						</div>							
+							
+					</td>
 				</tr>
 				</tbody>
 				
@@ -236,7 +313,7 @@ function changeBgColor(obj, num){
 							</tr>
 							</thead>
 							
-							<tr>
+							<tr id="detect_qos_ubw">
 								<th width="40%"><a class="hintstyle" href="javascript:void(0);" onClick="openHint(20, 1);"><#BM_measured_uplink_speed#></a></th>
 								<td width="60%"><% nvram_get_x("PrinterStatus", "qos_ubw"); %> Kb/s</td>
 							</tr>
@@ -278,12 +355,12 @@ function changeBgColor(obj, num){
 									</select>
 								</td>
 								<td valign="bottom" bgcolor="#FFFFFF" width="60">
-									<input type="submit" name="x_USRRuleList2" class="button" onClick="return markGroup(this, 'x_USRRuleList', 32, ' Add ');" value="<#CTL_add#>" size="12" />
+									<input type="submit" name="x_USRRuleList2" class="button" onClick="if(Valid_subnet()){return markGroup(this, 'x_USRRuleList', 32, ' Add ');}" value="<#CTL_add#>" size="12" />
 								</td>
 							</tr>
 							</table>
 							  <div id="BMUSerSpec_Block"></div>
-							<table width="100%"  border="1" align="center" cellpadding="4" cellspacing="0" bordercolor="#6b8fa3" class="FormTable">							
+							<table width="100%"  border="1" align="center" cellpadding="4" cellspacing="0" bordercolor="#6b8fa3" class="FormTable">
 							<tr bgcolor="#FFFFFF">
 								<td colspan="5"><input type="checkbox" name="qos_dfragment_enable_w" onclick='Fragment_display();' style="vertical-align:middle; "><#BM_pkt_flg#></td>
 							</tr>
