@@ -1,3 +1,0 @@
-all:
-#	./configure --host=$(TARGET_HOST) --build=i386
-	./configure --host=$(TARGET_HOST)

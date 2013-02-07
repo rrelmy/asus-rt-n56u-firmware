@@ -1,9 +1,0 @@
-Planned and desired features:
-
- - support for multiple internal interfaces
-
- - improved security through validation
-
- - detection of connection speed
-
- - detection of connection type (ie ppp0 -> ADSL, else cable)

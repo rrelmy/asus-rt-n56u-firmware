@@ -1,3 +1,0 @@
-- change daemon running user (currently root)
-- add static libupnp in sources for easier maintaining and fixes
-- add authentication to web interface ??

@@ -1,0 +1,189 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title></title>
+<style>
+html{
+margin:0 0;
+padding:0px;
+}
+body{
+display: block;
+overflow: hidden;
+background: #e8e8e8;
+}
+button#cancel{	
+position: absolute;
+width: 80px;
+height: 30px;
+right: 10px;
+top: 98px;
+}
+
+div#save{	
+width: 100px;
+height: 30px;
+right: 100px;
+position: absolute;
+top: 98px;
+cursor:pointer;
+background:transparent url("/smb/css/installapplet.png") no-repeat top left;
+}
+
+#progressbar {
+background-color: black;
+border-radius: 1px; /* (height of inner div) / 2 + padding */
+padding: 1px;
+}
+
+#progressbar div {
+width: 0; /* Adjust with JavaScript */
+height: 20px;
+border-radius: 1px;
+}
+
+#progressbar #div_progress {
+background-color: #16A8E4;
+}
+
+span{
+display: inline-block;
+width: 250px;
+white-space: nowrap;
+}
+</style>
+<script type="text/javascript" src="/smb/js/tools.js"></script>
+<script type="text/javascript" src="/smb/js/davclient_tools.js"></script>
+<script type="text/javascript">
+var this_url;
+var m = new lang();
+var g_storage = new myStorage();
+var is_private_ip = 0;
+var array_download_folder = [];
+var array_download_file = [];
+
+$("document").ready(function() {
+	var loc_lan = String(window.navigator.userLanguage || window.navigator.language).toLowerCase();		
+	var lan = ( g_storage.get('lan') == undefined ) ? loc_lan : g_storage.get('lan');
+	m.setLanguage(lan);
+	
+	$('button#cancel').text(m.getString('btn_cancel'));
+	
+	var msg = "";
+	if (!navigator.javaEnabled()) {
+    msg = m.getString("title_not_support_java");
+    refresh_status(msg);
+    
+    $("div#save").click(function(){
+    	window.open("http://java.com/download", "_blank");
+    });
+    return;
+	}
+	
+	var media_hostName = window.location.host;
+	if(media_hostName.indexOf(":")!=-1)
+		media_hostName = media_hostName.substring(0, media_hostName.indexOf(":"));		
+	var jar_file = "http://" + media_hostName + ":" + g_storage.get("http_port") + '/smb/css/CloudUtil.jar';
+				
+	var applet_html = '<applet name="AiCloud_Applet" id="AiCloud_Applet" ARCHIVE="';
+	applet_html += jar_file;
+	applet_html += '" code="com.asus.aicloud.UploadFile.class" width="100%" height="100%" >';
+	applet_html += 'Sorry your brower not supper Java applet!!';
+	applet_html += '<PARAM NAME="MAYSCRIPT" VALUE="true">';
+	applet_html += '</applet>';
+	$(applet_html).appendTo($("#save"));
+	
+	array_download_folder = [];
+	array_download_file = [];
+	
+	$("#progressbar").hide();
+	
+	var msg = m.getString("title_upload_file_select");
+	refresh_status(msg);
+});
+
+function doCancel(e) {
+	parent.closeJqmWindow(1);
+};
+
+function getUrlVars(){
+	var vars = [], hash;
+  var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+  for(var i = 0; i < hashes.length; i++){
+  	hash = hashes[i].split('=');
+    vars.push(hash[0]);
+    vars[hash[0]] = hash[1];
+  }
+  return vars;
+}
+
+function get_user_agent(){
+	return g_storage.get('user_agent');
+}
+  	
+function get_server_url(){
+	var openurl = window.location.protocol + "//" + window.location.host + addPathSlash(g_storage.get('openurl'));
+	return openurl;
+}
+
+function get_remote_folder(){
+	return array_download_folder;	
+} 	
+
+function get_remote_file(){
+  return array_download_file;
+}
+
+function start_upload(){
+	$("#save").css("left", "999px");
+}
+
+function finish_upload(){
+	$("span#desc").text(m.getString("title_upload_finish"));
+	parent.closeJqmWindow(1);
+} 
+
+function refresh_status(status){
+	$("span#desc").text(decodeURI(status));
+}
+    
+function refresh_progress(progress){
+	$("#lb_Progress").text(progress+"%");
+  $("#progressbar #div_progress").css("width", progress + "%");
+  $("#progressbar").show();
+}
+</script>
+</head>
+<body>
+
+<table width="100%" border="0" align="center" cellpadding="0" cellspacing="0" style="overflow:hidden;">	
+	<tr height="50px">
+  	<td>
+			<table width="100%">
+				<td><tr>				  
+					<span id='desc'></span>
+				</td></tr>				
+			</table>  
+    </td>    
+  </tr>
+  <tr>
+  	<td>  		
+			<div id="progressbar" style="text-align:center;position:relative;">
+				<div id="div_progress" style="position: absolute;"></div>
+				<div style="position:relative;width:100%;"><label id="lb_Progress" style="color:#ffffff;"></label></div>
+			</div>
+    </td>    
+  </tr>  
+  <tr>
+  	<td>
+  	<div class="table_block_footer" style="float:right;height:30px;">
+  		<button id="cancel" class="btnStyle" onClick="doCancel();">Close</button>
+  		<div id="save">
+			</div>
+    </div>
+    </td>
+  </tr>
+</table>
+</body>
+</html>
